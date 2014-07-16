@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import ru.trader.view.support.cells.OfferListCell?>
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ru.trader.controllers.ItemDescController">
+    <Label text="Продавцы:"/>
+    <ListView fx:id="seller" maxHeight="200.0">
+        <cellFactory>
+            <OfferListCell/>
+        </cellFactory>
+    </ListView>
+    <Label text="Покупатели:"/>
+    <ListView fx:id="buyer" maxHeight="200.0">
+        <cellFactory>
+            <OfferListCell/>
+        </cellFactory>
+    </ListView>
+</VBox>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import ru.trader.view.support.cells.PriceCellImpl?>
+<?import ru.trader.view.support.cells.OfferCellValueImpl?>
+
+<?import ru.trader.view.support.cells.DoubleCell?>
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="ru.trader.controllers.OffersController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" prefWidth="100.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints fillHeight="false" maxHeight="40.0" valignment="CENTER" vgrow="SOMETIMES"/>
+        <RowConstraints valignment="TOP" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <HBox alignment="TOP_CENTER" fillHeight="false" spacing="10.0">
+        <GridPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+        </GridPane.margin>
+        <Label text="Продавец:"/>
+        <ComboBox fx:id="vendors" prefHeight="25.0" prefWidth="222.0"/>
+    </HBox>
+    <Accordion fx:id="list" GridPane.rowIndex="1">
+      <panes>
+          <TitledPane fx:id="sells" animated="false" text="Продаваемые товары">
+              <TableView fx:id="tblSell" editable="true">
+                  <columns>
+                      <TableColumn minWidth="200.0" prefWidth="200.0" text="Товар">
+                          <cellValueFactory>
+                              <PropertyValueFactory property="name"/>
+                          </cellValueFactory>
+                      </TableColumn>
+                      <TableColumn minWidth="100.0" prefWidth="100.0" resizable="false" text="Цена"
+                                   onEditCommit="#editPrice">
+                          <cellFactory>
+                              <PriceCellImpl/>
+                          </cellFactory>
+                          <cellValueFactory>
+                              <PropertyValueFactory property="price"/>
+                          </cellValueFactory>
+                      </TableColumn>
+                      <TableColumn fx:id="sortSell" minWidth="80.0" prefWidth="80.0" resizable="false"
+                                   text="Прибыль" sortType="DESCENDING">
+                          <cellFactory>
+                              <DoubleCell/>
+                          </cellFactory>
+                          <cellValueFactory>
+                              <PropertyValueFactory property="profit"/>
+                          </cellValueFactory>
+                      </TableColumn>
+                      <TableColumn minWidth="80.0" prefWidth="80.0" resizable="false" text="AVG SELL">
+                          <cellFactory>
+                              <DoubleCell/>
+                          </cellFactory>
+                          <cellValueFactory>
+                              <PropertyValueFactory property="avgSell"/>
+                          </cellValueFactory>
+                      </TableColumn>
+                      <TableColumn minWidth="80.0" prefWidth="80.0" resizable="false" text="AVG BUY">
+                          <cellFactory>
+                              <DoubleCell/>
+                          </cellFactory>
+                          <cellValueFactory>
+                              <PropertyValueFactory property="avgBuy"/>
+                          </cellValueFactory>
+                      </TableColumn>
+                      <TableColumn minWidth="120.0" prefWidth="120.0" text="BEST SELL">
+                          <cellValueFactory>
+                              <OfferCellValueImpl property="bestSell"/>
+                          </cellValueFactory>
+                      </TableColumn>
+                      <TableColumn minWidth="120.0" prefWidth="120.0" text="BEST BUY">
+                          <cellValueFactory>
+                              <OfferCellValueImpl property="bestBuy"/>
+                          </cellValueFactory>
+                      </TableColumn>
+                  </columns>
+                  <columnResizePolicy>
+                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                  </columnResizePolicy>
+                  <sortOrder>
+                      <fx:reference source="sortSell"/>
+                  </sortOrder>
+              </TableView>
+          </TitledPane>
+          <TitledPane animated="false" layoutX="10.0" layoutY="10.0" text="Покупаемые товары">
+              <content>
+                  <TableView fx:id="tblBuy" editable="true">
+                      <columns>
+                          <TableColumn minWidth="200.0" prefWidth="200.0" text="Товар">
+                              <cellValueFactory>
+                                  <PropertyValueFactory property="name"/>
+                              </cellValueFactory>
+                          </TableColumn>
+                          <TableColumn minWidth="100.0" prefWidth="100.0" resizable="false" text="Цена"
+                                       editable="true" onEditCommit="#editPrice">
+                              <cellFactory>
+                                  <PriceCellImpl/>
+                              </cellFactory>
+                              <cellValueFactory>
+                                  <PropertyValueFactory property="price"/>
+                              </cellValueFactory>
+                          </TableColumn>
+                          <TableColumn fx:id="sortBuy" minWidth="80.0" prefWidth="80.0" resizable="false"
+                                       text="Прибыль" sortType="DESCENDING">
+                              <cellFactory>
+                                  <DoubleCell/>
+                              </cellFactory>
+                              <cellValueFactory>
+                                  <PropertyValueFactory property="profit"/>
+                              </cellValueFactory>
+                          </TableColumn>
+                          <TableColumn minWidth="80.0" prefWidth="80.0" resizable="false" text="AVG SELL">
+                              <cellFactory>
+                                  <DoubleCell/>
+                              </cellFactory>
+                              <cellValueFactory>
+                                  <PropertyValueFactory property="avgSell"/>
+                              </cellValueFactory>
+                          </TableColumn>
+                          <TableColumn minWidth="80.0" prefWidth="80.0" resizable="false" text="AVG BUY">
+                              <cellFactory>
+                                  <DoubleCell/>
+                              </cellFactory>
+                              <cellValueFactory>
+                                  <PropertyValueFactory property="avgBuy"/>
+                              </cellValueFactory>
+                          </TableColumn>
+                          <TableColumn minWidth="120.0" prefWidth="120.0" text="BEST SELL">
+                              <cellValueFactory>
+                                  <OfferCellValueImpl property="bestSell"/>
+                              </cellValueFactory>
+                          </TableColumn>
+                          <TableColumn minWidth="120.0" prefWidth="120.0" text="BEST BUY">
+                              <cellValueFactory>
+                                  <OfferCellValueImpl property="bestBuy"/>
+                              </cellValueFactory>
+                          </TableColumn>
+                      </columns>
+                      <columnResizePolicy>
+                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                      </columnResizePolicy>
+                      <sortOrder>
+                          <fx:reference source="sortBuy"/>
+                      </sortOrder>
+                  </TableView>
+              </content>
+          </TitledPane>
+      </panes>
+      <expandedPane>
+          <fx:reference source="sells"/>
+      </expandedPane>
+    </Accordion>
+</GridPane>

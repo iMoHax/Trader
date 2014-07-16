@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="market" type="marketType"/>
+
+    <xs:complexType name="marketType">
+        <xs:sequence>
+            <xs:element name="items" type="itemsType"/>
+            <xs:element name="vendors" type="vendorsType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="vendorsType">
+        <xs:sequence>
+            <xs:element name="vendor" type="vendorType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="itemsType">
+        <xs:sequence>
+            <xs:element name="item" type="itemType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="itemType">
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="vendorType" mixed="true">
+        <xs:sequence>
+            <xs:element name="offer" type="offerType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="offerType">
+        <xs:attribute name="item" type="xs:IDREFS" use="required"/>
+        <xs:attribute name="type" type="OFFER_TYPE" use="required"/>
+        <xs:attribute name="price" type="xs:double" use="required"/>
+    </xs:complexType>
+
+    <xs:simpleType name="OFFER_TYPE">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SELL"/>
+            <xs:enumeration value="BUY"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

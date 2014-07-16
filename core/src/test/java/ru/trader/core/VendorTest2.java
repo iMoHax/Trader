@@ -1,0 +1,66 @@
+package ru.trader.core;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import ru.trader.TestUtil;
+
+import java.util.Collection;
+
+public class VendorTest2 extends Assert {
+    private final static Item ITEM1 = new Item("Item1");
+    private final static Item ITEM2 = new Item("Item2");
+    private final static Item ITEM3 = new Item("Item3");
+    private final static Offer SELL_OFFER1 = new Offer(OFFER_TYPE.SELL, ITEM1, 10);
+    private final static Offer SELL_OFFER2 = new Offer(OFFER_TYPE.SELL, ITEM2, 10);
+    private final static Offer SELL_OFFER3 = new Offer(OFFER_TYPE.SELL, ITEM3, 10);
+    private final static Offer DUBLE_SELL_OFFER1 = new Offer(OFFER_TYPE.SELL, ITEM1, 100);
+
+    private final static Offer BUY_OFFER1 = new Offer(OFFER_TYPE.BUY, ITEM1, 100);
+    private final static Offer BUY_OFFER2 = new Offer(OFFER_TYPE.BUY, ITEM2, 10);
+    private final static Offer BUY_OFFER3 = new Offer(OFFER_TYPE.BUY, ITEM3, 10);
+    private final static Offer DUBLE_BUY_OFFER1 = new Offer(OFFER_TYPE.BUY, ITEM1, 10);
+
+
+    private Vendor sellVendor;
+    private Vendor buyVendor;
+
+    @Before
+    public void fillVendor(){
+        sellVendor = new SimpleVendor();
+        sellVendor.add(SELL_OFFER1);
+        sellVendor.add(SELL_OFFER2);
+        sellVendor.add(SELL_OFFER3);
+        sellVendor.add(DUBLE_SELL_OFFER1);
+
+        buyVendor = new SimpleVendor();
+        buyVendor.add(BUY_OFFER1);
+        buyVendor.add(BUY_OFFER2);
+        buyVendor.add(BUY_OFFER3);
+        buyVendor.add(DUBLE_BUY_OFFER1);
+    }
+
+    @Test
+    public void testGetSellOffer(){
+        final Offer test = sellVendor.getSell(ITEM1);
+        assertEquals(test, DUBLE_SELL_OFFER1);
+    }
+
+    @Test
+    public void testGetBuyOffer(){
+        final Offer test = buyVendor.getBuy(ITEM1);
+        assertEquals(test, DUBLE_BUY_OFFER1);
+    }
+
+    @Test
+    public void testGetAllSellOffer(){
+        final Collection<Offer> test = sellVendor.getAllSellOffers();
+        TestUtil.assertCollectionContainAll(test, DUBLE_SELL_OFFER1, SELL_OFFER2, SELL_OFFER3);
+    }
+
+    @Test
+    public void testGetAllBuyOffer(){
+        final Collection<Offer> test = buyVendor.getAllBuyOffers();
+        TestUtil.assertCollectionContainAll(test, DUBLE_BUY_OFFER1, BUY_OFFER3, BUY_OFFER2);
+    }
+}

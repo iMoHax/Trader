@@ -1,0 +1,148 @@
+package ru.trader.view.support.cells;
+
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+public class TextFieldCell<S,T> extends TableCell<S,T> {
+    private final static Logger LOG = LoggerFactory.getLogger(TextFieldCell.class);
+
+    private TextField textField;
+    private final StringConverter<T> converter;
+
+
+    public TextFieldCell(StringConverter<T> converter) {
+        this.converter = converter;
+
+        this.setOnMouseClicked((e) -> {
+            if (e.getButton() == MouseButton.PRIMARY)
+                if (!isEditing())
+                    getTableView().edit(getTableRow().getIndex(), getTableColumn());
+        });
+
+    }
+
+
+    public static <S,T> Callback<TableColumn<S,T>, TableCell<S,T>> forTableColumn(final StringConverter<T> converter) {
+        return list -> new TextFieldCell<>(converter);
+    }
+
+    @Override
+    public void startEdit() {
+        LOG.trace("Start edit");
+        if (! isEditable()) return;
+        super.startEdit();
+        if (isEditing()){
+            if (textField == null) {
+                createTextField();
+            } else {
+                textField.setText(getItemText());
+            }
+            setText(null);
+            setGraphic(textField);
+            textField.selectAll();
+            textField.requestFocus();
+        }
+    }
+
+    @Override
+    public void updateItem(T item, boolean empty) {
+        LOG.trace("Update edit");
+        super.updateItem(item, empty);
+        if (empty) {
+            setText(null);
+            setGraphic(null);
+
+        } else {
+            if (isEditing()) {
+                if (textField != null) {
+                    textField.setText(getItemText());
+                }
+                setText(null);
+                setGraphic(textField);
+            } else {
+                outItem();
+            }
+        }
+    }
+
+    @Override
+    public void cancelEdit() {
+        LOG.trace("Cancel edit");
+        if (!isCommit()) commit(false);
+        if (isCommit()) {
+            super.cancelEdit();
+            outItem();
+        }
+    }
+
+
+    public TextField getTextField(){
+        return this.textField;
+    }
+
+    private void createTextField(){
+        this.textField = new TextField(getItemText());
+        this.setGraphic(textField);
+        textField.prefWidthProperty().bind(this.getTableColumn().widthProperty());
+        textField.setOnKeyPressed(t -> {
+            if (t.getCode() == KeyCode.ENTER) {
+                if (commit(true)) editNext();
+            } else if (t.getCode() == KeyCode.ESCAPE) {
+                textField = null;
+                cancelEdit();
+            }
+
+        });
+    }
+
+
+    private String getItemText(){
+        return converter.toString(getItem());
+    }
+
+    public boolean commit(boolean noSkip) {
+        if (isCommit()) return true;
+        LOG.trace("Commit text {}", textField.getText());
+        try {
+            commitEdit(converter.fromString(textField.getText()));
+        } catch (NumberFormatException e){
+            if (noSkip) {
+                Platform.runLater(textField::requestFocus);
+                return false;
+            }
+        }
+        textField = null;
+        return true;
+    }
+
+    protected void outItem(){
+        setText(getItemText());
+        setGraphic(null);
+    }
+
+    protected boolean isCommit(){
+        return textField == null;
+    }
+
+    protected void editNext(){
+        TableView.TableViewSelectionModel sm = getTableView().getSelectionModel();
+        sm.selectNext();
+        ObservableList<TablePosition<S,T>> pos = sm.getSelectedCells();
+        for (TablePosition<S,T> p : pos) {
+            if (p.getTableColumn().isEditable()) {
+                getTableView().scrollTo(p.getRow()>0? p.getRow()-1 : 0);
+                getTableView().edit(p.getRow(), p.getTableColumn());
+                return;
+            }
+        }
+        editNext();
+    }
+}

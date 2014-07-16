@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import ru.trader.view.support.NumberField?>
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ru.trader.controllers.RoutersController">
+    <HBox>
+        <HBox>
+            <Label text="Баланс:"/>
+            <NumberField fx:id="balance" value="1000"/>
+        </HBox>
+        <HBox>
+            <Label text="Трюм:"/>
+            <NumberField fx:id="cargo" value="4"/>
+        </HBox>
+        <Label text="Станция:"/>
+        <ComboBox fx:id="vendors"/>
+        <Button fx:id="buy" text="Купить"/>
+        <Button fx:id="sell" text="Продать"/>
+    </HBox>
+</VBox>

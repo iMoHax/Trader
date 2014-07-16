@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+
+<?import ru.trader.view.support.cells.OfferCellValueImpl?>
+<?import ru.trader.view.support.cells.DoubleCell?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ru.trader.controllers.ItemsController">
+    <TableView fx:id="tblItems" editable="true" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn editable="true" minWidth="200.0" prefWidth="200.0" text="Товар">
+                <cellValueFactory>
+                    <PropertyValueFactory property="name"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn editable="true" resizable="false" text="Покупка">
+                <columns>
+                    <TableColumn minWidth="120.0" prefWidth="120.0" text="Мин.">
+                        <cellValueFactory>
+                            <OfferCellValueImpl property="minSell"/>
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn minWidth="80.0" prefWidth="80.0" text="Ср.">
+                        <cellFactory>
+                            <DoubleCell/>
+                        </cellFactory>
+                        <cellValueFactory>
+                            <PropertyValueFactory property="avgSell"/>
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn minWidth="120.0" prefWidth="120.0" text="Макс.">
+                        <cellValueFactory>
+                            <OfferCellValueImpl property="maxSell"/>
+                        </cellValueFactory>
+                    </TableColumn>
+                </columns>
+            </TableColumn>
+            <TableColumn editable="true" resizable="false" text="Продажа">
+                <columns>
+                    <TableColumn minWidth="120.0" prefWidth="120.0" text="Мин.">
+                        <cellValueFactory>
+                            <OfferCellValueImpl property="minBuy"/>
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn minWidth="80.0" prefWidth="80.0" text="Ср.">
+                        <cellFactory>
+                            <DoubleCell/>
+                        </cellFactory>
+                        <cellValueFactory>
+                            <PropertyValueFactory property="avgBuy"/>
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn minWidth="120.0" prefWidth="120.0" text="Макс.">
+                        <cellValueFactory>
+                            <OfferCellValueImpl property="maxBuy"/>
+                        </cellValueFactory>
+                    </TableColumn>
+                </columns>
+            </TableColumn>
+            <TableColumn editable="true" resizable="false" text="Прибыль">
+                <columns>
+                    <TableColumn fx:id="minProfit" minWidth="80.0" prefWidth="80.0" text="Мин.">
+                        <cellFactory>
+                            <DoubleCell/>
+                        </cellFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="avgProfit" minWidth="80.0" prefWidth="80.0" text="Ср.">
+                        <cellFactory>
+                            <DoubleCell/>
+                        </cellFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="maxProfit" minWidth="80.0" prefWidth="80.0" text="Макс." sortType="DESCENDING">
+                        <cellFactory>
+                            <DoubleCell/>
+                        </cellFactory>
+                    </TableColumn>
+                </columns>
+            </TableColumn>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+        <sortOrder>
+            <fx:reference source="maxProfit"/>
+        </sortOrder>
+    </TableView>
+</VBox>

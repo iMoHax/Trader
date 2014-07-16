@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.trader.controllers.MainController"
+            fx:id="mainPane"
+        >
+   <top>
+       <MenuBar>
+           <Menu text="Файл">
+               <MenuItem text="Сохранить" onAction="#save"/>
+               <MenuItem text="Импорт..." onAction="#importWorld"/>
+           </Menu>
+           <Menu text="Правка">
+               <MenuItem text="Добавить станцию" onAction="#addVendor"/>
+               <MenuItem text="Добавить товар" onAction="#addItem"/>
+               <MenuItem text="Редактировать станцию" onAction="#editVendor"/>
+           </Menu>
+       </MenuBar>
+   </top>
+   <center>
+       <TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+           <Tab text="Товары">
+               <fx:include fx:id="items" source="items.fxml"/>
+           </Tab>
+           <Tab text="Станции">
+               <fx:include fx:id="offers" source="offers.fxml"/>
+           </Tab>
+           <Tab text="Маршруты">
+               <fx:include source="routers.fxml"/>
+           </Tab>
+       </TabPane>
+   </center>
+
+</BorderPane>

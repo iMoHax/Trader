@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+      fx:controller="ru.trader.controllers.VendorEditorController">
+    <HBox alignment="CENTER" GridPane.columnSpan="3">
+        <TextField fx:id="name" alignment="CENTER"/>
+    </HBox>
+    <TableView fx:id="items" editable="true" prefWidth="400.0">
+        <columns>
+            <TableColumn minWidth="200.0" prefWidth="200.0" text="Товар" editable="false">
+                <cellValueFactory>
+                    <PropertyValueFactory property="name"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="buy" minWidth="80.0" prefWidth="80.0" maxWidth="80.0" text="Продажа">
+                <cellValueFactory>
+                    <PropertyValueFactory property="bprice"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="sell" minWidth="80.0" prefWidth="80.0" maxWidth="80.0" text="Покупка">
+                <cellValueFactory>
+                    <PropertyValueFactory property="sprice"/>
+                </cellValueFactory>
+            </TableColumn>
+        </columns>
+    </TableView>
+</VBox>

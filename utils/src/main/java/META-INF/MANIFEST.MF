@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: slf4j-api-1.7.5.jar poi-3.10-FINAL-20140208.jar poi-ooxml-
+ 3.10-FINAL-20140208.jar poi-ooxml-schemas-3.10-FINAL-20140208.jar
+

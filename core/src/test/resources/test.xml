@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<market xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation = "../../main/resources/store/trader.xsd">
+    <items>
+        <item name="Item 1" id="i1"/>
+        <item name="Item 2" id="i2"/>
+        <item name="Item 3" id="i3"/>
+        <item name="Item 4" id="i4"/>
+        <item name="Item 5" id="i5"/>
+        <item name="Item 6" id="i6"/>
+    </items>
+    <vendors>
+        <vendor name="Vendor 1">
+            <offer item="i1" type="SELL" price="140"/>
+        </vendor>
+    </vendors>
+</market>

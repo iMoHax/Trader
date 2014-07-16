@@ -1,0 +1,11 @@
+.good .diff {
+    -fx-fill: green;
+    -fx-font-weight: bold;
+}
+
+.bad .diff {
+    -fx-fill: blue;
+    -fx-font-weight: bold;
+}
+
+
