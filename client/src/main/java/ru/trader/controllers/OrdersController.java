@@ -65,7 +65,7 @@ public class OrdersController {
     }
 
 
-    public Optional<OrderModel> showDialog(Parent parent, Parent content, Collection<OfferDescModel> offers, double balance, long max) {
+    public Collection<OrderModel> showDialog(Parent parent, Parent content, Collection<OfferDescModel> offers, double balance, long max) {
 
         init(offers, balance, max);
 
@@ -73,7 +73,11 @@ public class OrdersController {
         dlg.setContent(content);
         dlg.getActions().addAll(OK, Dialog.Actions.CANCEL);
         dlg.setResizable(false);
-        return Optional.ofNullable(dlg.show() == OK ? tblOrders.getSelectionModel().getSelectedItem() : null);
+        return dlg.show() == OK ? getOrders() : null;
+    }
+
+    private Collection<OrderModel> getOrders() {
+        return tblOrders.getItems().filtered((o) -> o.getCount()>0 && o.getBuyer()!=null);
     }
 
     private void init(Collection<OfferDescModel> offers, double balance, long max) {
@@ -93,7 +97,7 @@ public class OrdersController {
     }
 
     private void setBuyer(OfferModel offer) {
-        if (order != null) {
+        if (order != null && offer!=null) {
             order.setBuyer(offer);
             order.setCount(order.getMax());
         }

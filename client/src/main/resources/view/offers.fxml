@@ -57,7 +57,7 @@
                       </TableColumn>
                   </columns>
                   <columnResizePolicy>
-                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                      <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
                   </columnResizePolicy>
                   <sortOrder>
                       <fx:reference source="sortSell"/>
@@ -95,7 +95,7 @@
                           </TableColumn>
                       </columns>
                       <columnResizePolicy>
-                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                          <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
                       </columnResizePolicy>
                       <sortOrder>
                           <fx:reference source="sortBuy"/>

@@ -83,6 +83,10 @@ public class OrderModel {
         return buyer.priceProperty().subtract(offer.getOffer().priceProperty()).multiply(max).asObject();
     }
 
+    public double getProfit() {
+        return profitProperty().get();
+    }
+
     public ObjectProperty<OfferModel> buyerProperty() {
         return buyer;
     }
@@ -93,6 +97,10 @@ public class OrderModel {
 
     public OfferModel getBuyer() {
         return buyer.get();
+    }
+
+    public VendorModel getVendor() {
+        return offer.getOffer().getVendor();
     }
 
     public long getMax() {
@@ -106,4 +114,5 @@ public class OrderModel {
     public List<OfferModel> getBuyers(){
         return offer.getBuyer();
     }
+
 }

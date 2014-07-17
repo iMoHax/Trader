@@ -98,7 +98,7 @@ public class Screeners {
     }
 
 
-    public static Optional<OrderModel> showOrders(Collection<OfferDescModel> offers, double balance, long cargo) {
+    public static Collection<OrderModel> showOrders(Collection<OfferDescModel> offers, double balance, long cargo) {
         return ordersController.showDialog(mainScreen, ordersScreen, offers, balance, cargo);
     }
 
