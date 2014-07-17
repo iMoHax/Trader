@@ -13,70 +13,46 @@
     <TableView fx:id="tblItems" editable="true" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn editable="true" minWidth="200.0" prefWidth="200.0" text="Товар">
-                <cellValueFactory>
-                    <PropertyValueFactory property="name"/>
-                </cellValueFactory>
+                <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
             <TableColumn editable="true" resizable="false" text="Покупка">
                 <columns>
                     <TableColumn minWidth="120.0" prefWidth="120.0" text="Мин.">
-                        <cellValueFactory>
-                            <OfferCellValueImpl property="minSell"/>
-                        </cellValueFactory>
+                        <cellValueFactory><OfferCellValueImpl property="minSell"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn minWidth="80.0" prefWidth="80.0" text="Ср.">
-                        <cellFactory>
-                            <DoubleCell/>
-                        </cellFactory>
-                        <cellValueFactory>
-                            <PropertyValueFactory property="avgSell"/>
-                        </cellValueFactory>
+                        <cellFactory><DoubleCell/></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="avgSell"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn minWidth="120.0" prefWidth="120.0" text="Макс.">
-                        <cellValueFactory>
-                            <OfferCellValueImpl property="maxSell"/>
-                        </cellValueFactory>
+                        <cellValueFactory><OfferCellValueImpl property="maxSell"/></cellValueFactory>
                     </TableColumn>
                 </columns>
             </TableColumn>
             <TableColumn editable="true" resizable="false" text="Продажа">
                 <columns>
                     <TableColumn minWidth="120.0" prefWidth="120.0" text="Мин.">
-                        <cellValueFactory>
-                            <OfferCellValueImpl property="minBuy"/>
-                        </cellValueFactory>
+                        <cellValueFactory><OfferCellValueImpl property="minBuy"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn minWidth="80.0" prefWidth="80.0" text="Ср.">
-                        <cellFactory>
-                            <DoubleCell/>
-                        </cellFactory>
-                        <cellValueFactory>
-                            <PropertyValueFactory property="avgBuy"/>
-                        </cellValueFactory>
+                        <cellFactory><DoubleCell/></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="avgBuy"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn minWidth="120.0" prefWidth="120.0" text="Макс.">
-                        <cellValueFactory>
-                            <OfferCellValueImpl property="maxBuy"/>
-                        </cellValueFactory>
+                        <cellValueFactory><OfferCellValueImpl property="maxBuy"/></cellValueFactory>
                     </TableColumn>
                 </columns>
             </TableColumn>
             <TableColumn editable="true" resizable="false" text="Прибыль">
                 <columns>
                     <TableColumn fx:id="minProfit" minWidth="80.0" prefWidth="80.0" text="Мин.">
-                        <cellFactory>
-                            <DoubleCell/>
-                        </cellFactory>
+                        <cellFactory><DoubleCell/></cellFactory>
                     </TableColumn>
                     <TableColumn fx:id="avgProfit" minWidth="80.0" prefWidth="80.0" text="Ср.">
-                        <cellFactory>
-                            <DoubleCell/>
-                        </cellFactory>
+                        <cellFactory><DoubleCell/></cellFactory>
                     </TableColumn>
                     <TableColumn fx:id="maxProfit" minWidth="80.0" prefWidth="80.0" text="Макс." sortType="DESCENDING">
-                        <cellFactory>
-                            <DoubleCell/>
-                        </cellFactory>
+                        <cellFactory><DoubleCell/></cellFactory>
                     </TableColumn>
                 </columns>
             </TableColumn>

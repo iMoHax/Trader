@@ -13,19 +13,13 @@
     <TableView fx:id="items" editable="true" prefWidth="400.0">
         <columns>
             <TableColumn minWidth="200.0" prefWidth="200.0" text="Товар" editable="false">
-                <cellValueFactory>
-                    <PropertyValueFactory property="name"/>
-                </cellValueFactory>
+                <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="buy" minWidth="80.0" prefWidth="80.0" maxWidth="80.0" text="Продажа">
-                <cellValueFactory>
-                    <PropertyValueFactory property="bprice"/>
-                </cellValueFactory>
+                <cellValueFactory><PropertyValueFactory property="bprice"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="sell" minWidth="80.0" prefWidth="80.0" maxWidth="80.0" text="Покупка">
-                <cellValueFactory>
-                    <PropertyValueFactory property="sprice"/>
-                </cellValueFactory>
+                <cellValueFactory><PropertyValueFactory property="sprice"/></cellValueFactory>
             </TableColumn>
         </columns>
     </TableView>

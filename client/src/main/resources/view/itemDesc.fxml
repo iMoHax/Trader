@@ -8,14 +8,10 @@
       fx:controller="ru.trader.controllers.ItemDescController">
     <Label text="Продавцы:"/>
     <ListView fx:id="seller" maxHeight="200.0">
-        <cellFactory>
-            <OfferListCell/>
-        </cellFactory>
+        <cellFactory><OfferListCell/></cellFactory>
     </ListView>
     <Label text="Покупатели:"/>
     <ListView fx:id="buyer" maxHeight="200.0">
-        <cellFactory>
-            <OfferListCell/>
-        </cellFactory>
+        <cellFactory><OfferListCell/></cellFactory>
     </ListView>
 </VBox>
