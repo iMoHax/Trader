@@ -2,6 +2,7 @@ package ru.trader.view.support;
 
 import javafx.beans.property.*;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.util.converter.NumberStringConverter;
@@ -54,6 +55,7 @@ public class NumberField extends TextField {
 
         setOnAction((e) -> parseNumber());
         focusedProperty().addListener((ob, o, n) -> {if (o) parseNumber();});
+        setAlignment(Pos.BASELINE_RIGHT);
     }
 
     private void parseNumber(){
