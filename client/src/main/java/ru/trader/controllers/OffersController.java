@@ -21,7 +21,7 @@ public class OffersController {
     private VendorModel vendor;
 
     @FXML
-    private ComboBox<Vendor> vendors;
+    private ComboBox<VendorModel> vendors;
 
     @FXML
     private TableView<OfferDescModel> tblSell;
@@ -35,7 +35,7 @@ public class OffersController {
         vendors.getSelectionModel().selectedItemProperty().addListener((ob, oldValue, newValue) ->{
             if (newValue != null){
                 LOG.info("Change vendor to {}", newValue);
-                setVendor(newValue);
+                this.vendor = newValue;
                 fillTables(vendor);
             } else {
                 vendors.getSelectionModel().select(oldValue);
@@ -78,9 +78,6 @@ public class OffersController {
         return vendor;
     }
 
-    private void setVendor(Vendor vendor){
-        this.vendor = MainController.getMarket().asModel(vendor);
-    }
 
     private OfferDescModel asOfferDescModel(OfferModel offer){
         return MainController.getMarket().asOfferDescModel(offer);

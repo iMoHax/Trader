@@ -12,6 +12,7 @@ import ru.trader.core.Vendor;
 import ru.trader.model.MarketModel;
 import ru.trader.model.OfferDescModel;
 import ru.trader.model.OrderModel;
+import ru.trader.model.VendorModel;
 import ru.trader.view.support.NumberField;
 
 
@@ -32,7 +33,7 @@ public class RoutersController {
     private Button add;
 
     @FXML
-    private ComboBox<Vendor> vendors;
+    private ComboBox<VendorModel> vendors;
 
     @FXML
     private TableView<OrderModel> tblOrders;
@@ -49,17 +50,18 @@ public class RoutersController {
             while (c.next()) {
                 if (c.wasRemoved()){
                     for (OrderModel o : c.getRemoved()) {
-                        totalProfit.setValue(totalProfit.getValue().doubleValue()-o.getProfit());
+                        onRemove(o);
                     }
                 }
                 if (c.wasAdded()){
                     for (OrderModel o : c.getAddedSubList()) {
-                        totalProfit.setValue(totalProfit.getValue().doubleValue()+o.getProfit());
+                       onAdd(o);
                     }
                 }
             }
         });
     }
+
 
     void init(){
         MarketModel market = MainController.getMarket();
@@ -71,8 +73,20 @@ public class RoutersController {
 
     private Collection<OfferDescModel> getOffers(){
         MarketModel market = MainController.getMarket();
-        Vendor vendor = vendors.getSelectionModel().getSelectedItem();
-        return vendor.getAllSellOffers().stream().map(market::asOfferDescModel).collect(Collectors.toList());
+        VendorModel vendor = vendors.getSelectionModel().getSelectedItem();
+        return vendor.getSells(market::asOfferDescModel);
+    }
+
+    private void onAdd(OrderModel order){
+        balance.add(order.getProfit());
+        totalProfit.add(order.getProfit());
+        vendors.getSelectionModel().select(order.getBuyer().getVendor());
+    }
+
+    private void onRemove(OrderModel order) {
+        balance.sub(order.getProfit());
+        totalProfit.sub(order.getProfit());
+        vendors.getSelectionModel().select(order.getVendor());
     }
 
     public void addOrders(ActionEvent e){

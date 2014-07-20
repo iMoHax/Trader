@@ -51,5 +51,5 @@
             <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
         </columnResizePolicy>
     </TableView>
-    <HBox><Label text="Итого:"/><NumberField editable="false" fx:id="totalProfit"/></HBox>
+    <HBox><Label text="Суммарная прибыль:"/><NumberField editable="false" fx:id="totalProfit"/></HBox>
 </VBox>

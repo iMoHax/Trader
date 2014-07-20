@@ -21,12 +21,12 @@ public class MarketModel {
 
     private final Collection<ChangeMarketListener> listener = new ArrayList<>();
 
-    private final ListProperty<Vendor> vendors;
+    private final ListProperty<VendorModel> vendors;
     private final ListProperty<ItemDescModel> items;
 
     private boolean alert = true;
 
-    public ReadOnlyListProperty<Vendor> vendorsProperty() {
+    public ReadOnlyListProperty<VendorModel> vendorsProperty() {
         return vendors;
     }
 
@@ -40,8 +40,8 @@ public class MarketModel {
 
     public MarketModel(Market market) {
         this.market = market;
-        items = new SimpleListProperty<>(BindingsHelper.observableList(market.getItems(), this::getItemDesc));
-        vendors = new SimpleListProperty<>(FXCollections.observableArrayList(market.get()));
+        items = new SimpleListProperty<ItemDescModel>(BindingsHelper.observableList(market.getItems(), this::getItemDesc));
+        vendors = new SimpleListProperty<VendorModel>(BindingsHelper.observableList(market.get(), this::asModel));
     }
 
     public void addListener(ChangeMarketListener listener){
@@ -101,7 +101,7 @@ public class MarketModel {
         LOG.info("Add vendor {} to market {}", vendor, this);
         market.add(vendor.getVendor());
         if (alert) listener.forEach((c) -> c.add(vendor));
-        vendors.add(vendor.getVendor());
+        vendors.add(vendor);
     }
 
     public void add(ItemModel item) {

@@ -28,6 +28,14 @@ public class NumberField extends TextField {
         setText(converter.toString(value));
     }
 
+    public void add(Number value){
+        setValue(number.getValue().doubleValue() + value.doubleValue());
+    }
+
+    public void sub(Number value){
+        setValue(number.getValue().doubleValue() - value.doubleValue());
+    }
+
     public boolean isWrong() {
         return wrong.get();
     }
