@@ -8,23 +8,21 @@
 <?import ru.trader.view.support.cells.DoubleCell?>
 <?import ru.trader.view.support.cells.OfferCellValueImpl?>
 
+<?import javafx.geometry.Insets?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.RoutersController">
-    <HBox>
-        <HBox>
-            <Label text="Баланс:"/>
-            <NumberField fx:id="balance" value="1000"/>
-        </HBox>
-        <HBox>
-            <Label text="Трюм:"/>
-            <NumberField fx:id="cargo" value="4"/>
-        </HBox>
+    <fx:define><Insets fx:id="fields_group_margin" left="2" right="10"/></fx:define>
+    <HBox styleClass="fields-group">
+        <Label text="Баланс:"/>
+        <NumberField fx:id="balance" prefWidth="100" HBox.margin="$fields_group_margin" value="1000" />
+        <Label text="Трюм:"/>
+        <NumberField fx:id="cargo" prefWidth="50" HBox.margin="$fields_group_margin" value="4" />
         <Label text="Станция:"/>
-        <ComboBox fx:id="vendors"/>
+        <ComboBox fx:id="vendors" prefWidth="160" HBox.margin="$fields_group_margin"/>
         <Button fx:id="add" text="Добавить" onAction="#addOrders"/>
         <Button text="Удалить" onAction="#removeSelected"/>
     </HBox>
-    <TableView fx:id="tblOrders">
+    <TableView fx:id="tblOrders" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn minWidth="120.0" prefWidth="120.0" text="Продавец">
                 <cellValueFactory><PropertyValueFactory property="vendor"/></cellValueFactory>
@@ -48,8 +46,11 @@
             </TableColumn>
         </columns>
         <columnResizePolicy>
-            <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
         </columnResizePolicy>
     </TableView>
-    <HBox><Label text="Суммарная прибыль:"/><NumberField editable="false" fx:id="totalProfit"/></HBox>
+    <HBox styleClass="fields-group, center">
+        <Label text="Суммарная прибыль:"/>
+        <NumberField fx:id="totalProfit" prefWidth="100" HBox.margin="$fields_group_margin" editable="false"/>
+    </HBox>
 </VBox>

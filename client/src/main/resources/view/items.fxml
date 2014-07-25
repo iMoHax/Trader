@@ -10,7 +10,7 @@
 
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.ItemsController">
-    <TableView fx:id="tblItems" editable="true" VBox.vgrow="ALWAYS">
+    <TableView fx:id="tblItems" editable="true" VBox.vgrow="ALWAYS" prefWidth="1095.0">
         <columns>
             <TableColumn editable="true" minWidth="200.0" prefWidth="200.0" text="Товар">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
