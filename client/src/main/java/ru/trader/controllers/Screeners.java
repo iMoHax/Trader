@@ -37,16 +37,21 @@ public class Screeners {
         return mainScreen;
     }
 
+    private static void addStylesheet(Parent screen){
+        screen.getStylesheets().addAll(mainScreen.getStylesheets());
+    }
 
     public static void loadItemDescStage(URL fxml) throws IOException {
         FXMLLoader loader = new FXMLLoader(fxml);
         itemDescScreen = loader.load();
+        addStylesheet(itemDescScreen);
         itemDescController = loader.getController();
     }
 
     public static void loadVEditorStage(URL fxml) throws IOException {
         FXMLLoader loader =  new FXMLLoader(fxml);
         vEditorScreen = loader.load();
+        addStylesheet(vEditorScreen);
         vEditorController = loader.getController();
         Stage stage = new Stage();
         stage.setScene(new Scene(vEditorScreen));
@@ -55,6 +60,7 @@ public class Screeners {
     public static void loadAddOfferStage(URL fxml) throws IOException {
         FXMLLoader loader =  new FXMLLoader(fxml);
         editOffersScreen = loader.load();
+        addStylesheet(editOffersScreen);
         oEditorController = loader.getController();
         Stage stage = new Stage();
         stage.setScene(new Scene(editOffersScreen));
@@ -63,6 +69,7 @@ public class Screeners {
     public static void loadOrdersStage(URL fxml) throws IOException {
         FXMLLoader loader =  new FXMLLoader(fxml);
         ordersScreen = loader.load();
+        addStylesheet(ordersScreen);
         ordersController = loader.getController();
         Stage stage = new Stage();
         stage.setScene(new Scene(ordersScreen));

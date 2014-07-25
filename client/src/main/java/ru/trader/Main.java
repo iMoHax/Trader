@@ -23,7 +23,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-            loadResources();
             primaryStage.setTitle("Trader");
             primaryStage.setScene(new Scene(Screeners.newScreeners(Main.class.getResource("/view/main.fxml"),getUrl("style.css").toExternalForm())));
             primaryStage.setOnCloseRequest((we)->{
@@ -39,6 +38,7 @@ public class Main extends Application {
                     Screeners.showException(e);
                 }
             });
+            loadResources();
             primaryStage.show();
     }
 

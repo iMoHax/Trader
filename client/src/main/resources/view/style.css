@@ -8,4 +8,36 @@
     -fx-font-weight: bold;
 }
 
+.table-view:focused {
+    -fx-background-color: -fx-box-border, -fx-control-inner-background;
+    -fx-background-insets: 0,1;
+    -fx-background-radius: 0, 0;
+}
 
+HBox.fields-group {
+    -fx-spacing: 2;
+    -fx-padding: 5 10;
+    -fx-alignment: baseline-left;
+}
+
+HBox.fields-group hbox-margin{
+    -fx-left: 100px;
+}
+
+
+/* Dialogs */
+.dialog {
+    -fx-background-color: inherit;
+}
+
+/* Items */
+
+#tblItems {
+    -fx-padding: 0;
+}
+
+/* support styles */
+
+.center {
+    -fx-alignment: center;
+}

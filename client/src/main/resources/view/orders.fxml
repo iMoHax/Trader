@@ -10,7 +10,7 @@
 <?import ru.trader.view.support.cells.OfferCellValueImpl?>
 <?import ru.trader.view.support.cells.OfferTableCell?>
 <HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="ru.trader.controllers.OrdersController">
+      fx:controller="ru.trader.controllers.OrdersController" styleClass="dialog">
     <TableView fx:id="tblOrders" editable="true">
         <columns>
             <TableColumn minWidth="200.0" prefWidth="200.0" text="Товар">
