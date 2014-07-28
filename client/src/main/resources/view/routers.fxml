@@ -14,12 +14,12 @@
     <fx:define><Insets fx:id="fields_group_margin" left="2" right="10"/></fx:define>
     <fx:define><Insets fx:id="separator_margin" top="20" bottom="20"/></fx:define>
 
-    <VBox>
-        <TitledPane text="Параметры" prefHeight="400" collapsible="false">
+    <VBox minWidth="260">
+        <TitledPane text="Параметры" minHeight="400" collapsible="false">
             <GridPane vgap="4">
                 <columnConstraints>
-                    <ColumnConstraints prefWidth="70"/>
-                    <ColumnConstraints prefWidth="160"/>
+                    <ColumnConstraints minWidth="70"/>
+                    <ColumnConstraints minWidth="160"/>
                 </columnConstraints>
                 <Label text="Баланс:"/>
                 <NumberField fx:id="balance" prefWidth="100" value="1000" GridPane.columnIndex="1" />
@@ -36,11 +36,11 @@
             </GridPane>
         </TitledPane>
         <Pane VBox.vgrow="ALWAYS"/>
-        <TitledPane text="Итого" collapsible="false">
+        <TitledPane text="Итого" minHeight="100" collapsible="false">
             <GridPane vgap="4">
                 <columnConstraints>
-                    <ColumnConstraints prefWidth="70"/>
-                    <ColumnConstraints prefWidth="160"/>
+                    <ColumnConstraints minWidth="70"/>
+                    <ColumnConstraints minWidth="160"/>
                 </columnConstraints>
                 <Label text="Баланс:"/>
                 <NumberField fx:id="totalBalance" prefWidth="100" GridPane.columnIndex="1" editable="false"/>
@@ -51,23 +51,23 @@
     </VBox>
     <TableView fx:id="tblOrders" HBox.hgrow="ALWAYS">
         <columns>
-            <TableColumn minWidth="235.0" prefWidth="235.0" text="Продавец">
+            <TableColumn minWidth="235.0" text="Продавец">
                 <cellValueFactory><PropertyValueFactory property="vendor"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="240.0" prefWidth="240.0" text="Товар">
+            <TableColumn minWidth="235.0" text="Товар">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="80.0" prefWidth="80.0" text="Цена">
+            <TableColumn minWidth="80.0" text="Цена">
                 <cellFactory><DoubleCell/></cellFactory>
                 <cellValueFactory><PropertyValueFactory property="price"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="80.0" prefWidth="80.0" text="Кол-во">
+            <TableColumn minWidth="80.0" text="Кол-во">
                 <cellValueFactory><PropertyValueFactory property="count"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="120.0" prefWidth="120.0" text="Покупатель">
+            <TableColumn minWidth="120.0" text="Покупатель">
                 <cellValueFactory><OfferCellValueImpl property="buyer"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="80.0" prefWidth="80.0" text="Прибыль">
+            <TableColumn minWidth="80.0" text="Прибыль">
                 <cellFactory><DoubleCell/></cellFactory>
                 <cellValueFactory><PropertyValueFactory property="profit"/></cellValueFactory>
             </TableColumn>
