@@ -31,6 +31,7 @@
                 <HBox GridPane.columnSpan="2" GridPane.rowIndex="4" alignment="CENTER" spacing="5">
                     <Button fx:id="add" text="Добавить" onAction="#addOrders"/>
                     <Button text="Удалить" onAction="#removeSelected"/>
+                    <Button text="Очистить" onAction="#removeAll" />
                 </HBox>
             </GridPane>
         </TitledPane>
@@ -41,6 +42,8 @@
                     <ColumnConstraints prefWidth="70"/>
                     <ColumnConstraints prefWidth="160"/>
                 </columnConstraints>
+                <Label text="Баланс:"/>
+                <NumberField fx:id="totalBalance" prefWidth="100" GridPane.columnIndex="1" editable="false"/>
                 <Label text="Прибыль:"  GridPane.rowIndex="1"/>
                 <NumberField fx:id="totalProfit" prefWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="1" editable="false"/>
             </GridPane>

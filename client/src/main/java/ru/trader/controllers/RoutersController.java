@@ -42,8 +42,12 @@ public class RoutersController {
     private NumberField totalProfit;
 
     @FXML
+    private NumberField totalBalance;
+
+    @FXML
     private void initialize(){
         init();
+        balance.numberProperty().addListener((ov, o, n) -> totalBalance.setValue(n));
         add.disableProperty().bind(this.balance.wrongProperty().or(this.cargo.wrongProperty()));
         tblOrders.setItems(FXCollections.observableArrayList());
         tblOrders.getItems().addListener((ListChangeListener<OrderModel>) c -> {
@@ -68,6 +72,7 @@ public class RoutersController {
         vendors.setItems(market.vendorsProperty());
         vendors.getSelectionModel().selectFirst();
         tblOrders.getItems().clear();
+        totalBalance.setValue(balance.getValue());
         totalProfit.setValue(0);
     }
 
@@ -78,19 +83,19 @@ public class RoutersController {
     }
 
     private void onAdd(OrderModel order){
-        balance.add(order.getProfit());
         totalProfit.add(order.getProfit());
+        totalBalance.add(order.getProfit());
         vendors.getSelectionModel().select(order.getBuyer().getVendor());
     }
 
     private void onRemove(OrderModel order) {
-        balance.sub(order.getProfit());
         totalProfit.sub(order.getProfit());
+        totalBalance.sub(order.getProfit());
         vendors.getSelectionModel().select(order.getVendor());
     }
 
     public void addOrders(ActionEvent e){
-        Collection<OrderModel> orders = Screeners.showOrders(getOffers(), balance.getValue().doubleValue(), cargo.getValue().longValue());
+        Collection<OrderModel> orders = Screeners.showOrders(getOffers(), totalBalance.getValue().doubleValue(), cargo.getValue().longValue());
         if (orders!=null){
             tblOrders.getItems().addAll(orders);
         }
@@ -103,4 +108,9 @@ public class RoutersController {
             tblOrders.getItems().remove(index);
         }
     }
+
+    public void removeAll(ActionEvent e){
+        tblOrders.getItems().clear();
+    }
+
 }
