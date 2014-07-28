@@ -1,13 +1,12 @@
 package ru.trader.controllers;
 
 import javafx.collections.FXCollections;
+import javafx.scene.control.ListView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import ru.trader.core.Vendor;
 import ru.trader.model.*;
 import ru.trader.model.support.ChangeMarketListener;
 
@@ -21,7 +20,7 @@ public class OffersController {
     private VendorModel vendor;
 
     @FXML
-    private ComboBox<VendorModel> vendors;
+    private ListView<VendorModel> vendors;
 
     @FXML
     private TableView<OfferDescModel> tblSell;
