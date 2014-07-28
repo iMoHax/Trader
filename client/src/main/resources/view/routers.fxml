@@ -9,25 +9,49 @@
 <?import ru.trader.view.support.cells.OfferCellValueImpl?>
 
 <?import javafx.geometry.Insets?>
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.RoutersController">
     <fx:define><Insets fx:id="fields_group_margin" left="2" right="10"/></fx:define>
-    <HBox styleClass="fields-group">
-        <Label text="Баланс:"/>
-        <NumberField fx:id="balance" prefWidth="100" HBox.margin="$fields_group_margin" value="1000" />
-        <Label text="Трюм:"/>
-        <NumberField fx:id="cargo" prefWidth="50" HBox.margin="$fields_group_margin" value="4" />
-        <Label text="Станция:"/>
-        <ComboBox fx:id="vendors" prefWidth="160" HBox.margin="$fields_group_margin"/>
-        <Button fx:id="add" text="Добавить" onAction="#addOrders"/>
-        <Button text="Удалить" onAction="#removeSelected"/>
-    </HBox>
-    <TableView fx:id="tblOrders" VBox.vgrow="ALWAYS">
+    <fx:define><Insets fx:id="separator_margin" top="20" bottom="20"/></fx:define>
+
+    <VBox>
+        <TitledPane text="Параметры" prefHeight="400" collapsible="false">
+            <GridPane vgap="4">
+                <columnConstraints>
+                    <ColumnConstraints prefWidth="70"/>
+                    <ColumnConstraints prefWidth="160"/>
+                </columnConstraints>
+                <Label text="Баланс:"/>
+                <NumberField fx:id="balance" prefWidth="100" value="1000" GridPane.columnIndex="1" />
+                <Label text="Трюм:" GridPane.rowIndex="1" />
+                <NumberField fx:id="cargo" prefWidth="50" value="4" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Label text="Станция:" GridPane.rowIndex="2"/>
+                <ComboBox fx:id="vendors" prefWidth="160" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Separator GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.margin="$separator_margin"/>
+                <HBox GridPane.columnSpan="2" GridPane.rowIndex="4" alignment="CENTER" spacing="5">
+                    <Button fx:id="add" text="Добавить" onAction="#addOrders"/>
+                    <Button text="Удалить" onAction="#removeSelected"/>
+                </HBox>
+            </GridPane>
+        </TitledPane>
+        <Pane VBox.vgrow="ALWAYS"/>
+        <TitledPane text="Итого" collapsible="false">
+            <GridPane vgap="4">
+                <columnConstraints>
+                    <ColumnConstraints prefWidth="70"/>
+                    <ColumnConstraints prefWidth="160"/>
+                </columnConstraints>
+                <Label text="Прибыль:"  GridPane.rowIndex="1"/>
+                <NumberField fx:id="totalProfit" prefWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="1" editable="false"/>
+            </GridPane>
+        </TitledPane>
+    </VBox>
+    <TableView fx:id="tblOrders" HBox.hgrow="ALWAYS">
         <columns>
-            <TableColumn minWidth="120.0" prefWidth="120.0" text="Продавец">
+            <TableColumn minWidth="235.0" prefWidth="235.0" text="Продавец">
                 <cellValueFactory><PropertyValueFactory property="vendor"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="200.0" prefWidth="200.0" text="Товар">
+            <TableColumn minWidth="240.0" prefWidth="240.0" text="Товар">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
             <TableColumn minWidth="80.0" prefWidth="80.0" text="Цена">
@@ -46,11 +70,7 @@
             </TableColumn>
         </columns>
         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
         </columnResizePolicy>
     </TableView>
-    <HBox styleClass="fields-group, center">
-        <Label text="Суммарная прибыль:"/>
-        <NumberField fx:id="totalProfit" prefWidth="100" HBox.margin="$fields_group_margin" editable="false"/>
-    </HBox>
-</VBox>
+</HBox>
