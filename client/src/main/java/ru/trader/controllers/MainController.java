@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import ru.trader.World;
+import ru.trader.model.ItemModel;
 import ru.trader.model.MarketModel;
 
 import javax.xml.stream.XMLStreamException;
@@ -80,12 +81,17 @@ public class MainController {
     }
 
 
-    public void addItem(ActionEvent actionEvent){
+    public Optional<ItemModel> addItem(){
         Optional<String> res = Dialogs.create()
                 .title("Добавление нового товара")
                 .message("Введите название товара")
                 .showTextInput();
-        if (res.isPresent()) market.add(market.newItem(res.get()));
+        ItemModel item = null;
+        if (res.isPresent()){
+            item = market.newItem(res.get());
+            market.add(item);
+        }
+        return Optional.ofNullable(item);
     }
 
 

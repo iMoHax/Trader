@@ -118,6 +118,10 @@ public class Screeners {
 
     }
 
+    public static Optional<ItemModel> showAddItem(){
+        return mainController.addItem();
+    }
+
     public static void closeAll() {
         itemDescController.close();
     }

@@ -3,6 +3,7 @@ package ru.trader.controllers;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -20,6 +21,8 @@ import ru.trader.core.OFFER_TYPE;
 import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.view.support.cells.TextFieldCell;
+
+import java.util.Optional;
 
 
 public class VendorEditorController {
@@ -55,6 +58,7 @@ public class VendorEditorController {
         items.getSelectionModel().setCellSelectionEnabled(true);
         buy.setCellFactory(TextFieldCell.forTableColumn(new DoubleStringConverter()));
         sell.setCellFactory(TextFieldCell.forTableColumn(new DoubleStringConverter()));
+        fillItems();
     }
 
     public Action showDialog(Parent parent, Parent content, VendorModel vendor){
@@ -75,14 +79,13 @@ public class VendorEditorController {
 
     private void fill(){
         name.setText(vendor.getName());
-        fillItems();
         vendor.getSells().forEach(this::fillOffer);
         vendor.getBuys().forEach(this::fillOffer);
     }
 
     private void reset(){
         name.setText("");
-        fillItems();
+        items.getItems().forEach(FakeOffer::reset);
     }
 
     private void fillItems() {
@@ -105,6 +108,32 @@ public class VendorEditorController {
             }
         }
     }
+
+    public void up(){
+        int index = items.getSelectionModel().getSelectedIndex();
+        if (index>0){
+            FakeOffer offer = items.getItems().remove(index);
+            items.getItems().add(index-1, offer);
+            items.getSelectionModel().select(index - 1, items.getColumns().get(0));
+        }
+    }
+
+    public void down(){
+        int index = items.getSelectionModel().getSelectedIndex();
+        if (index>=0 && index<items.getItems().size()-1){
+            FakeOffer offer = items.getItems().remove(index);
+            items.getItems().add(index+1, offer);
+            items.getSelectionModel().select(index + 1, items.getColumns().get(0));
+        }
+    }
+
+    public void add() {
+        Optional<ItemModel> item = Screeners.showAddItem();
+        if (item.isPresent()){
+            items.getItems().add(new FakeOffer(item.get()));
+        }
+    }
+
 
     public void saveChanges(){
         LOG.info("Save vendor changes");
@@ -240,6 +269,13 @@ public class VendorEditorController {
         public void setBuy(OfferModel buy) {
             this.buy = buy;
             bprice.set(buy.getPrice());
+        }
+
+        public void reset(){
+            sprice.setValue(0);
+            bprice.setValue(0);
+            this.sell = null;
+            this.buy = null;
         }
 
         @Override
