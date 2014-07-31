@@ -5,22 +5,27 @@
 
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
-      fx:controller="ru.trader.controllers.VendorEditorController" styleClass="dialog">
-    <HBox alignment="CENTER" GridPane.columnSpan="3">
-        <TextField fx:id="name" alignment="CENTER"/>
-    </HBox>
-    <TableView fx:id="items" editable="true" prefWidth="400.0">
+<?import org.controlsfx.control.ButtonBar?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+      fx:controller="ru.trader.controllers.VendorEditorController" styleClass="dialog"
+      vgap="10" hgap="4">
+    <TextField fx:id="name" alignment="CENTER" GridPane.columnSpan="2"/>
+    <VBox GridPane.rowIndex="1" alignment="CENTER" spacing="10">
+        <Button prefWidth="60" text="Вверх" onAction="#up"/>
+        <Button prefWidth="60" text="Вниз"  onAction="#down"/>
+        <Button prefWidth="60" text="Добавить" onAction="#add"/>
+    </VBox>
+    <TableView fx:id="items" minWidth="375.0" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
         <columns>
-            <TableColumn minWidth="200.0" prefWidth="200.0" text="Товар" editable="false">
+            <TableColumn minWidth="200.0" text="Товар" editable="false">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="buy" minWidth="80.0" prefWidth="80.0" maxWidth="80.0" text="Продажа">
+            <TableColumn fx:id="buy" minWidth="80.0" text="Продажа">
                 <cellValueFactory><PropertyValueFactory property="bprice"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="sell" minWidth="80.0" prefWidth="80.0" maxWidth="80.0" text="Покупка">
+            <TableColumn fx:id="sell" minWidth="80.0" text="Покупка">
                 <cellValueFactory><PropertyValueFactory property="sprice"/></cellValueFactory>
             </TableColumn>
         </columns>
     </TableView>
-</VBox>
+</GridPane>
