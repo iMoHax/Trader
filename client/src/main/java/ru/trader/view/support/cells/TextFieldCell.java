@@ -1,7 +1,6 @@
 package ru.trader.view.support.cells;
 
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
@@ -9,6 +8,7 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.view.support.ViewUtils;
 
 
 public class TextFieldCell<S,T> extends TableCell<S,T> {
@@ -94,7 +94,7 @@ public class TextFieldCell<S,T> extends TableCell<S,T> {
         textField.prefWidthProperty().bind(this.getTableColumn().widthProperty());
         textField.setOnKeyPressed(t -> {
             if (t.getCode() == KeyCode.ENTER) {
-                if (commit(true)) editNext();
+                if (commit(true)) ViewUtils.editNext(getTableView());
             } else if (t.getCode() == KeyCode.ESCAPE) {
                 textField = null;
                 cancelEdit();
@@ -132,17 +132,4 @@ public class TextFieldCell<S,T> extends TableCell<S,T> {
         return textField == null;
     }
 
-    protected void editNext(){
-        TableView.TableViewSelectionModel sm = getTableView().getSelectionModel();
-        sm.selectNext();
-        ObservableList<TablePosition<S,T>> pos = sm.getSelectedCells();
-        for (TablePosition<S,T> p : pos) {
-            if (p.getTableColumn().isEditable()) {
-                getTableView().scrollTo(p.getRow()>0? p.getRow()-1 : 0);
-                getTableView().edit(p.getRow(), p.getTableColumn());
-                return;
-            }
-        }
-        editNext();
-    }
 }

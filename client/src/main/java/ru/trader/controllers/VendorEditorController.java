@@ -3,7 +3,6 @@ package ru.trader.controllers;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -20,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import ru.trader.core.OFFER_TYPE;
 import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
+import ru.trader.view.support.ViewUtils;
 import ru.trader.view.support.cells.TextFieldCell;
 
 import java.util.Optional;
@@ -63,12 +63,10 @@ public class VendorEditorController {
 
     public Action showDialog(Parent parent, Parent content, VendorModel vendor){
         this.vendor = vendor;
+        reset();
         if (vendor != null) {
             fill();
-        } else {
-            reset();
         }
-
         Dialog dlg = new Dialog(parent, vendor == null ? "Добавление станции" : "Редактирование станции");
         dlg.setContent(content);
         dlg.getActions().addAll(actSave, Dialog.Actions.CANCEL);
@@ -114,7 +112,7 @@ public class VendorEditorController {
         if (index>0){
             FakeOffer offer = items.getItems().remove(index);
             items.getItems().add(index-1, offer);
-            items.getSelectionModel().select(index - 1, items.getColumns().get(0));
+            selectRow(index - 1);
         }
     }
 
@@ -123,16 +121,26 @@ public class VendorEditorController {
         if (index>=0 && index<items.getItems().size()-1){
             FakeOffer offer = items.getItems().remove(index);
             items.getItems().add(index+1, offer);
-            items.getSelectionModel().select(index + 1, items.getColumns().get(0));
+            selectRow(index + 1);
         }
     }
 
     public void add() {
         Optional<ItemModel> item = Screeners.showAddItem();
         if (item.isPresent()){
-            items.getItems().add(new FakeOffer(item.get()));
+            int index = items.getSelectionModel().getSelectedIndex();
+            if (index<0) index = items.getItems().size()-1;
+            items.getItems().add(index, new FakeOffer(item.get()));
+            selectRow(index);
         }
     }
+
+    private void selectRow(int index){
+        items.requestFocus();
+        items.getSelectionModel().select(index, items.getColumns().get(0));
+        ViewUtils.show(items, index);
+    }
+
 
 
     public void saveChanges(){
