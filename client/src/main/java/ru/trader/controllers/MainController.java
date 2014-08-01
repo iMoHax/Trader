@@ -23,7 +23,7 @@ public class MainController {
     private final static Logger LOG = LoggerFactory.getLogger(MainController.class);
 
     private static MarketModel world = new MarketModel(World.getMarket());
-    private static MarketModel market = new MarketModel(World.getMarket());
+    private static MarketModel market = world;
 
 
     @FXML
