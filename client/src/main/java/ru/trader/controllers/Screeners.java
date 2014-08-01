@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialogs;
 import ru.trader.model.*;
+import ru.trader.view.support.CustomBuilderFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,8 +29,14 @@ public class Screeners {
     private static OffersEditorController oEditorController;
     private static OrdersController ordersController;
 
+    private static FXMLLoader initLoader(URL url){
+        FXMLLoader loader = new FXMLLoader(url);
+        loader.setBuilderFactory(new CustomBuilderFactory());
+        return loader;
+    }
+
     public static Parent newScreeners(URL main, String stylesheet) throws IOException {
-        FXMLLoader loader = new FXMLLoader(main);
+        FXMLLoader loader = initLoader(main);
         mainScreen = loader.load();
         if (stylesheet!=null)
             mainScreen.getStylesheets().add(stylesheet);
@@ -42,14 +49,14 @@ public class Screeners {
     }
 
     public static void loadItemDescStage(URL fxml) throws IOException {
-        FXMLLoader loader = new FXMLLoader(fxml);
+        FXMLLoader loader = initLoader(fxml);
         itemDescScreen = loader.load();
         addStylesheet(itemDescScreen);
         itemDescController = loader.getController();
     }
 
     public static void loadVEditorStage(URL fxml) throws IOException {
-        FXMLLoader loader =  new FXMLLoader(fxml);
+        FXMLLoader loader =  initLoader(fxml);
         vEditorScreen = loader.load();
         addStylesheet(vEditorScreen);
         vEditorController = loader.getController();
@@ -58,7 +65,7 @@ public class Screeners {
     }
 
     public static void loadAddOfferStage(URL fxml) throws IOException {
-        FXMLLoader loader =  new FXMLLoader(fxml);
+        FXMLLoader loader =  initLoader(fxml);
         editOffersScreen = loader.load();
         addStylesheet(editOffersScreen);
         oEditorController = loader.getController();
@@ -67,7 +74,7 @@ public class Screeners {
     }
 
     public static void loadOrdersStage(URL fxml) throws IOException {
-        FXMLLoader loader =  new FXMLLoader(fxml);
+        FXMLLoader loader =  initLoader(fxml);
         ordersScreen = loader.load();
         addStylesheet(ordersScreen);
         ordersController = loader.getController();
