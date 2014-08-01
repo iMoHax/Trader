@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import ru.trader.core.OFFER_TYPE;
 import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
+import ru.trader.view.support.PriceStringConverter;
 import ru.trader.view.support.ViewUtils;
 import ru.trader.view.support.cells.TextFieldCell;
 
@@ -56,8 +57,8 @@ public class VendorEditorController {
     @FXML
     private void initialize() {
         items.getSelectionModel().setCellSelectionEnabled(true);
-        buy.setCellFactory(TextFieldCell.forTableColumn(new DoubleStringConverter()));
-        sell.setCellFactory(TextFieldCell.forTableColumn(new DoubleStringConverter()));
+        buy.setCellFactory(TextFieldCell.forTableColumn(new PriceStringConverter()));
+        sell.setCellFactory(TextFieldCell.forTableColumn(new PriceStringConverter()));
         fillItems();
     }
 

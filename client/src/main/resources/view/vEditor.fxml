@@ -5,15 +5,16 @@
 
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<?import org.controlsfx.control.ButtonBar?>
+
+<?import org.controlsfx.glyphfont.Glyph?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
       fx:controller="ru.trader.controllers.VendorEditorController" styleClass="dialog"
       vgap="10" hgap="4">
     <TextField fx:id="name" alignment="CENTER" GridPane.columnSpan="2"/>
     <VBox GridPane.rowIndex="1" alignment="CENTER" spacing="10">
-        <Button prefWidth="60" text="Вверх" onAction="#up"/>
-        <Button prefWidth="60" text="Вниз"  onAction="#down"/>
-        <Button prefWidth="60" text="Добавить" onAction="#add"/>
+        <Button prefWidth="30" onAction="#up"><graphic><Glyph text="FontAwesome|ARROW_UP"/></graphic></Button>
+        <Button prefWidth="30" onAction="#down"><graphic><Glyph text="FontAwesome|ARROW_DOWN"/></graphic></Button>
+        <Button prefWidth="30" onAction="#add"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
     </VBox>
     <TableView fx:id="items" minWidth="375.0" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
         <columns>
