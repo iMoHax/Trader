@@ -4,6 +4,7 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
@@ -157,5 +158,13 @@ public class MarketModel {
         return ModelFabrica.getModel(vendor, this);
     }
 
+    public ObservableList<OrderModel> getTop(int limit, double balance, long max){
+        return BindingsHelper.observableList(market.getTop(limit, balance, max), (o) -> {
+            OrderModel model = new OrderModel(asOfferDescModel(o.getSell()), balance, max);
+            model.setBuyer(asModel(o.getBuy()));
+            model.setCount(model.getMax());
+            return model;
+        });
+    }
 
 }

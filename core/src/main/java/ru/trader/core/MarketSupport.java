@@ -148,5 +148,40 @@ public abstract class MarketSupport implements Market {
     public void setChange(boolean change) {
         this.change = change;
     }
+
+    @Override
+    public Collection<Order> getTop(int limit, double balance, long max){
+        LOG.debug("Get top {}", limit);
+        TreeSet<Order> top = new TreeSet<>();
+        for (Vendor vendor : getVendors()) {
+            LOG.debug("Check vendor {}", vendor);
+            for (Offer sell : vendor.getAllSellOffers()) {
+                long count = Math.min(max, (long) Math.floor(balance / sell.getPrice()));
+                LOG.debug("Sell offer {}, count = {}", sell, count);
+                if (count == 0) continue;
+                Iterator<Offer> buyers = getStatBuy(sell.getItem()).getOffers().descendingIterator();
+                while (buyers.hasNext()){
+                    Offer buy = buyers.next();
+                    Order order = new Order(sell, buy, count);
+                    LOG.debug("Buy offer {} profit = {}", buy, order.getProfit());
+                    if (order.getProfit() <= 0 ) break;
+                    if (top.size() == limit){
+                        LOG.debug("Min order {}", top.first());
+                        if (top.first().getProfit() < order.getProfit()) {
+                            LOG.debug("Add to top");
+                            top.add(order);
+                            top.pollFirst();
+                        } else {
+                            LOG.debug("Is low profit, skip");
+                            break;
+                        }
+                    } else {
+                        top.add(order);
+                    }
+                }
+            }
+        }
+        return top;
+    }
 }
 

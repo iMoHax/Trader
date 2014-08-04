@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+
+<?import ru.trader.view.support.cells.DoubleCell?>
+
+<?import ru.trader.view.support.cells.OfferCellValueImpl?>
+<?import ru.trader.view.support.cells.OfferTableCell?>
+<HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ru.trader.controllers.TopOrdersController" styleClass="dialog"
+      prefWidth="555">
+    <TableView fx:id="tblOrders" editable="true">
+        <columns>
+            <TableColumn minWidth="160.0" text="Товар">
+                <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="120.0" text="Продавец">
+                <cellValueFactory><OfferCellValueImpl property="offer"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="count" minWidth="60.0" text="Кол-во">
+                <cellValueFactory><PropertyValueFactory property="count"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="120.0" text="Покупатель">
+                <cellValueFactory><OfferCellValueImpl property="buyer"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="profit" minWidth="80.0" text="Прибыль" sortType="DESCENDING">
+                <cellFactory><DoubleCell/></cellFactory>
+                <cellValueFactory><PropertyValueFactory property="profit"/></cellValueFactory>
+            </TableColumn>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+        <sortOrder>
+            <fx:reference source="profit"/>
+        </sortOrder>
+    </TableView>
+</HBox>

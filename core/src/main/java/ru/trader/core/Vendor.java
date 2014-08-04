@@ -33,6 +33,7 @@ public abstract class Vendor implements Comparable<Vendor> {
         List<Offer> offers = getOffers()
                 .stream()
                 .filter(offer -> offer.hasType(offerType))
+                .sorted()
                 .collect(Collectors.toList());
         return Collections.unmodifiableCollection(offers);
     }

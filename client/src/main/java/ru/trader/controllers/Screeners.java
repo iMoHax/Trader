@@ -1,5 +1,6 @@
 package ru.trader.controllers;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -22,12 +23,14 @@ public class Screeners {
     private static Parent vEditorScreen;
     private static Parent editOffersScreen;
     private static Parent ordersScreen;
+    private static Parent topOrdersScreen;
 
     private static MainController mainController;
     private static ItemDescController itemDescController;
     private static VendorEditorController vEditorController;
     private static OffersEditorController oEditorController;
     private static OrdersController ordersController;
+    private static TopOrdersController topOrdersController;
 
     private static FXMLLoader initLoader(URL url){
         FXMLLoader loader = new FXMLLoader(url);
@@ -82,6 +85,15 @@ public class Screeners {
         stage.setScene(new Scene(ordersScreen));
     }
 
+    public static void loadTopOrdersStage(URL fxml) throws IOException {
+        FXMLLoader loader =  initLoader(fxml);
+        topOrdersScreen = loader.load();
+        addStylesheet(topOrdersScreen);
+        topOrdersController = loader.getController();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(topOrdersScreen));
+    }
+
     public static void show(Node node){
         mainController.getMainPane().setCenter(node);
     }
@@ -131,5 +143,9 @@ public class Screeners {
 
     public static void closeAll() {
         itemDescController.close();
+    }
+
+    public static OrderModel showTopOrders(ObservableList<OrderModel> top) {
+        return topOrdersController.showDialog(mainScreen, topOrdersScreen, top);
     }
 }

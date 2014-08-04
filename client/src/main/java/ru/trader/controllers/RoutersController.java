@@ -94,14 +94,14 @@ public class RoutersController {
         vendors.getSelectionModel().select(order.getVendor());
     }
 
-    public void addOrders(ActionEvent e){
+    public void addOrders(){
         Collection<OrderModel> orders = Screeners.showOrders(getOffers(), totalBalance.getValue().doubleValue(), cargo.getValue().longValue());
         if (orders!=null){
             tblOrders.getItems().addAll(orders);
         }
     }
 
-    public void removeSelected(ActionEvent e){
+    public void removeSelected(){
         TableView.TableViewSelectionModel<OrderModel> select = tblOrders.getSelectionModel();
         if (!select.isEmpty()){
             int index = select.getSelectedIndex();
@@ -109,8 +109,17 @@ public class RoutersController {
         }
     }
 
-    public void removeAll(ActionEvent e){
+    public void removeAll(){
         tblOrders.getItems().clear();
+    }
+
+
+    public void showTopOrders(){
+        MarketModel market = MainController.getMarket();
+        OrderModel order = Screeners.showTopOrders(market.getTop(100, totalBalance.getValue().doubleValue(), cargo.getValue().longValue()));
+        if (order!=null){
+            tblOrders.getItems().add(order);
+        }
     }
 
 }

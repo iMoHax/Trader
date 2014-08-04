@@ -41,4 +41,6 @@ public interface Market {
     void updatePrice(Offer offer, double price);
 
     void setChange(boolean change);
+
+    Collection<Order> getTop(int limit, double balance, long max);
 }

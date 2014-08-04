@@ -3,10 +3,7 @@ package ru.trader.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.TreeSet;
+import java.util.*;
 
 public class ItemStat {
     private final static Logger LOG = LoggerFactory.getLogger(ItemStat.class);
@@ -85,8 +82,8 @@ public class ItemStat {
         return offers.size();
     }
 
-    public Collection<Offer> getOffers() {
-        return Collections.unmodifiableCollection(offers);
+    public NavigableSet<Offer> getOffers() {
+        return Collections.unmodifiableNavigableSet(offers);
     }
 
     public Offer getMin() {
