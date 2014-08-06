@@ -14,6 +14,9 @@ public abstract class Vendor implements Comparable<Vendor> {
     private final static Logger LOG = LoggerFactory.getLogger(Vendor.class);
 
     private String name;
+    private double x;
+    private double y;
+    private double z;
 
     protected abstract Collection<Offer> getOffers();
     protected abstract Collection<Item> getItems(OFFER_TYPE offerType);
@@ -106,5 +109,38 @@ public abstract class Vendor implements Comparable<Vendor> {
         Objects.requireNonNull(other, "Not compare with null");
         if (this == other) return 0;
         return name != null ? other.name != null ? name.compareTo(other.name) : -1 : 0;
+    }
+
+    public double getDistance(Vendor other){
+        return getDistance(other.x, other.y, other.z);
+    }
+
+    public double getDistance(double x, double y, double z){
+        return Math.sqrt(Math.pow(x - this.x, 2) + Math.pow(y-this.y, 2) + Math.pow(z - this.z, 2));
+    }
+
+
+    public double getX() {
+        return x;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public double getZ() {
+        return z;
+    }
+
+    public void setZ(double z) {
+        this.z = z;
     }
 }

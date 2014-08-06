@@ -56,10 +56,10 @@
     </VBox>
     <TableView fx:id="tblOrders" HBox.hgrow="ALWAYS">
         <columns>
-            <TableColumn minWidth="230.0" text="Продавец">
+            <TableColumn minWidth="200.0" text="Продавец">
                 <cellValueFactory><PropertyValueFactory property="vendor"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="230.0" text="Товар">
+            <TableColumn minWidth="180.0" text="Товар">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
             <TableColumn minWidth="80.0" text="Цена">
@@ -71,6 +71,10 @@
             </TableColumn>
             <TableColumn minWidth="120.0" text="Покупатель">
                 <cellValueFactory><OfferCellValueImpl property="buyer"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="80.0" text="Дистанция">
+                <cellFactory><DoubleCell format="\%.2f LY"/></cellFactory>
+                <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
             </TableColumn>
             <TableColumn minWidth="80.0" text="Прибыль">
                 <cellFactory><DoubleCell/></cellFactory>

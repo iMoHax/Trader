@@ -9,6 +9,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import ru.trader.core.*;
 
 import java.util.HashMap;
+import java.util.OptionalLong;
 
 public class MarketDocHandler extends DefaultHandler {
     private final static Logger LOG = LoggerFactory.getLogger(MarketDocHandler.class);
@@ -25,6 +26,9 @@ public class MarketDocHandler extends DefaultHandler {
     protected final static String TYPE_ATTR = "type";
     protected final static String PRICE_ATTR = "price";
     protected final static String ITEM_ATTR = "item";
+    protected final static String X_ATTR = "x";
+    protected final static String Y_ATTR = "y";
+    protected final static String Z_ATTR = "z";
 
     protected Market world;
     protected Vendor curVendor;
@@ -62,12 +66,17 @@ public class MarketDocHandler extends DefaultHandler {
 
     protected void parseVendor(Attributes attributes) throws SAXException {
         String name = attributes.getValue(NAME_ATTR);
-        onVendor(name);
+        String x = attributes.getValue(X_ATTR);
+        String y = attributes.getValue(Y_ATTR);
+        String z = attributes.getValue(Z_ATTR);
+        LOG.debug("parse vendor {} position ({};{};{})", name, x, y, z);
+        onVendor(name, x != null ? Double.valueOf(x) : 0, y != null ? Double.valueOf(y) : 0, z != null ? Double.valueOf(z) : 0);
     }
 
     protected void parseItem(Attributes attributes) throws SAXException {
         String name = attributes.getValue(NAME_ATTR);
         String id = attributes.getValue(ID_ATTR);
+        LOG.debug("parse item {} ({})", name, id);
         onItem(name, id);
     }
 
@@ -86,8 +95,11 @@ public class MarketDocHandler extends DefaultHandler {
         curVendor.add(offer);
     }
 
-    protected void onVendor(String name){
+    protected void onVendor(String name, double x, double y, double z){
         curVendor = new SimpleVendor(name);
+        curVendor.setX(x);
+        curVendor.setY(y);
+        curVendor.setZ(z);
     }
 
     protected void onItem(String name, String id) {

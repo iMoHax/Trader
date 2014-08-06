@@ -11,20 +11,24 @@
 <?import ru.trader.view.support.cells.OfferTableCell?>
 <HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.TopOrdersController" styleClass="dialog"
-      prefWidth="555">
+      prefWidth="715">
     <TableView fx:id="tblOrders" editable="true">
         <columns>
             <TableColumn minWidth="160.0" text="Товар">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="120.0" text="Продавец">
+            <TableColumn minWidth="160.0" text="Продавец">
                 <cellValueFactory><OfferCellValueImpl property="offer"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="count" minWidth="60.0" text="Кол-во">
                 <cellValueFactory><PropertyValueFactory property="count"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="120.0" text="Покупатель">
+            <TableColumn minWidth="160.0" text="Покупатель">
                 <cellValueFactory><OfferCellValueImpl property="buyer"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="80.0" text="Дистанция">
+                <cellFactory><DoubleCell format="\%.2f LY"/></cellFactory>
+                <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="profit" minWidth="80.0" text="Прибыль" sortType="DESCENDING">
                 <cellFactory><DoubleCell/></cellFactory>

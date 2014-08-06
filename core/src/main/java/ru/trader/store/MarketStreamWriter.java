@@ -75,6 +75,10 @@ public class MarketStreamWriter {
     protected void writeVendor(Vendor vendor) throws XMLStreamException {
         out.writeStartElement(MarketDocHandler.VENDOR);
         out.writeAttribute(MarketDocHandler.NAME_ATTR, vendor.getName());
+        out.writeAttribute(MarketDocHandler.X_ATTR, String.valueOf(vendor.getX()));
+        out.writeAttribute(MarketDocHandler.Y_ATTR, String.valueOf(vendor.getY()));
+        out.writeAttribute(MarketDocHandler.Z_ATTR, String.valueOf(vendor.getZ()));
+
         for (Offer offer : vendor.getAllOffers()) {
             writeOffer(offer);
         }

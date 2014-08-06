@@ -47,4 +47,6 @@ public interface Market {
     void updateName(Vendor vendor, String name);
 
     void updateName(Item item, String name);
+
+    void updatePosition(Vendor vendor, double x, double y, double z);
 }

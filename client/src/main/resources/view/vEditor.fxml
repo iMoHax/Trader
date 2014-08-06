@@ -7,16 +7,27 @@
 
 
 <?import org.controlsfx.glyphfont.Glyph?>
+<?import ru.trader.view.support.NumberField?>
+<?import javafx.geometry.Insets?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
       fx:controller="ru.trader.controllers.VendorEditorController" styleClass="dialog"
       vgap="10" hgap="4">
-    <TextField fx:id="name" alignment="CENTER" GridPane.columnSpan="2"/>
-    <VBox GridPane.rowIndex="1" alignment="CENTER" spacing="10">
+    <fx:define><Insets fx:id="hbox_margin" left="10" /></fx:define>
+    <TextField fx:id="name" GridPane.columnSpan="2" alignment="CENTER" />
+    <HBox GridPane.rowIndex="1" GridPane.columnIndex="1" spacing="4" alignment="BASELINE_CENTER">
+        <Label text="x:" HBox.margin="$hbox_margin" />
+        <NumberField fx:id="x" prefWidth="60" />
+        <Label text="y:" HBox.margin="$hbox_margin" />
+        <NumberField fx:id="y" prefWidth="60" />
+        <Label text="z:" HBox.margin="$hbox_margin" />
+        <NumberField fx:id="z" prefWidth="60" />
+    </HBox>
+    <VBox GridPane.rowIndex="2" alignment="CENTER" spacing="10">
         <Button prefWidth="30" onAction="#up"><graphic><Glyph text="FontAwesome|ARROW_UP"/></graphic></Button>
         <Button prefWidth="30" onAction="#down"><graphic><Glyph text="FontAwesome|ARROW_DOWN"/></graphic></Button>
         <Button prefWidth="30" onAction="#add"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
     </VBox>
-    <TableView fx:id="items" minWidth="375.0" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+    <TableView fx:id="items" prefWidth="375.0" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
         <columns>
             <TableColumn minWidth="200.0" text="Товар" editable="false">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>

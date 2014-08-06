@@ -11,7 +11,7 @@
 <?import ru.trader.view.support.cells.OfferTableCell?>
 <HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.OrdersController" styleClass="dialog"
-      prefWidth="850">
+      prefWidth="1010">
     <TableView fx:id="tblOrders" editable="true">
         <columns>
             <TableColumn minWidth="160.0" text="Товар">
@@ -24,7 +24,7 @@
             <TableColumn fx:id="count" minWidth="60.0" text="Кол-во">
                 <cellValueFactory><PropertyValueFactory property="count"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="120.0" text="Покупатель">
+            <TableColumn minWidth="160.0" text="Покупатель">
                 <cellValueFactory><OfferCellValueImpl property="buyer"/></cellValueFactory>
             </TableColumn>
             <TableColumn minWidth="80.0" text="Прибыль">
@@ -51,15 +51,17 @@
             <fx:reference source="bestProfit"/>
         </sortOrder>
     </TableView>
-    <TableView fx:id="tblBuyers" minWidth="215">
+    <TableView fx:id="tblBuyers" minWidth="335">
         <columns>
-            <TableColumn minWidth="120.0" text="Покупатель">
+            <TableColumn minWidth="160.0" text="Покупатель">
                 <cellFactory><OfferTableCell/></cellFactory>
                 <cellValueFactory><PropertyValueFactory property="price"/></cellValueFactory>
             </TableColumn>
+            <TableColumn fx:id="curDistance" minWidth="80.0" text="Дистанция">
+                <cellFactory><DoubleCell format="\%.2f LY"/></cellFactory>
+            </TableColumn>
             <TableColumn fx:id="curProfit" minWidth="80.0" text="Прибыль" sortType="DESCENDING">
                 <cellFactory><DoubleCell/></cellFactory>
-                <cellValueFactory><PropertyValueFactory property="profit"/></cellValueFactory>
             </TableColumn>
         </columns>
         <columnResizePolicy>

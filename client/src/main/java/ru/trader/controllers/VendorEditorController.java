@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import ru.trader.core.OFFER_TYPE;
 import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
+import ru.trader.view.support.NumberField;
 import ru.trader.view.support.PriceStringConverter;
 import ru.trader.view.support.ViewUtils;
 import ru.trader.view.support.cells.TextFieldCell;
@@ -55,6 +56,14 @@ public class VendorEditorController {
     private TableColumn<FakeOffer, Double> sell;
 
     @FXML
+    private NumberField x;
+    @FXML
+    private NumberField y;
+    @FXML
+    private NumberField z;
+
+
+    @FXML
     private void initialize() {
         items.getSelectionModel().setCellSelectionEnabled(true);
         buy.setCellFactory(TextFieldCell.forTableColumn(new PriceStringConverter()));
@@ -78,6 +87,9 @@ public class VendorEditorController {
 
     private void fill(){
         name.setText(vendor.getName());
+        x.setValue(vendor.getX());
+        y.setValue(vendor.getY());
+        z.setValue(vendor.getZ());
         vendor.getSells().forEach(this::fillOffer);
         vendor.getBuys().forEach(this::fillOffer);
     }
@@ -151,11 +163,13 @@ public class VendorEditorController {
         if (vendor == null) {
             market.setAlert(false);
             vendor = market.newVendor(name.getText());
+            vendor.setPosition(x.getValue().doubleValue(), y.getValue().doubleValue(), z.getValue().doubleValue());
             items.getItems().forEach((o) -> commit(market, vendor, o));
             market.setAlert(true);
             market.add(vendor);
         } else {
             vendor.setName(name.getText());
+            vendor.setPosition(x.getValue().doubleValue(), y.getValue().doubleValue(), z.getValue().doubleValue());
             items.getItems().forEach((o) -> commit(market, vendor, o));
         }
     }

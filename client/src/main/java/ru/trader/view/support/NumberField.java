@@ -12,7 +12,7 @@ public class NumberField extends TextField {
     private final static NumberStringConverter converter = new NumberStringConverter("#0.#");
     private final Tooltip tooltip = new Tooltip();
 
-    private final ObjectProperty<Number> number = new SimpleObjectProperty<>(0);
+    private final ObjectProperty<Number> number = new SimpleObjectProperty<Number>(0);
     private final BooleanProperty wrong = new SimpleBooleanProperty(false);
 
     public ObjectProperty<Number> numberProperty() {

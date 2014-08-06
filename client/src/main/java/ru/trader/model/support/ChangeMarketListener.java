@@ -31,4 +31,7 @@ public class ChangeMarketListener {
 
     public void remove(OfferModel offer) {
     }
+
+    public void positionChange(VendorModel vendor, double oldX, double oldY, double oldZ, double x, double y, double z) {
+    }
 }

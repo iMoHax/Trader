@@ -14,6 +14,7 @@ public class OrderModel {
     private final ObjectProperty<OfferModel> buyer =  new SimpleObjectProperty<>();
     private long max;
     private DoubleProperty profit;
+    private DoubleProperty distance;
     private DoubleProperty bestProfit;
 
     public OrderModel(OfferDescModel offer) {
@@ -87,12 +88,13 @@ public class OrderModel {
         return profitProperty().get();
     }
 
-    public ObjectProperty<OfferModel> buyerProperty() {
+    public ReadOnlyObjectProperty<OfferModel> buyerProperty() {
         return buyer;
     }
 
     public void setBuyer(OfferModel buyer) {
         this.buyer.set(buyer);
+        if (distance!=null) distance.set(getVendor().getDistance(buyer.getVendor()));
     }
 
     public OfferModel getBuyer() {
@@ -114,5 +116,14 @@ public class OrderModel {
     public List<OfferModel> getBuyers(){
         return offer.getBuyer();
     }
+
+    public ReadOnlyDoubleProperty distanceProperty() {
+        if (distance == null){
+            OfferModel buyOffer = getBuyer();
+            distance = new SimpleDoubleProperty(buyOffer!=null ? getVendor().getDistance(buyOffer.getVendor()) : Double.NaN);
+        }
+        return distance;
+    }
+
 
 }

@@ -67,6 +67,15 @@ public class MarketModel {
         return listener;
     }
 
+    void updatePosition(VendorModel model, double x, double y, double z) {
+        Vendor vendor = model.getVendor();
+        double oldX = vendor.getX();
+        double oldY = vendor.getY();
+        double oldZ = vendor.getZ();
+        market.updatePosition(vendor, x, y, z);
+        if (alert) listener.forEach((c) -> c.positionChange(model, oldX, oldY, oldZ, x, y, z));
+    }
+
     void updateName(ItemModel model, String value) {
         Item item = model.getItem();
         String old = item.getName();

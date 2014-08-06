@@ -50,6 +50,9 @@ public class OrdersController {
     @FXML
     private TableColumn<OfferModel, Double> curProfit;
 
+    @FXML
+    private TableColumn<OfferModel, Double> curDistance;
+
     private OrderModel order;
 
     @FXML
@@ -60,7 +63,11 @@ public class OrdersController {
         tblBuyers.getSelectionModel().selectedItemProperty().addListener((v, o, n) -> setBuyer(n));
         curProfit.setCellValueFactory(param -> {
             OfferModel offer = param.getValue();
-            return  order !=null ? order.getProfit(offer) : new SimpleDoubleProperty(Double.NaN).asObject();
+            return order !=null ? order.getProfit(offer) : new SimpleDoubleProperty(Double.NaN).asObject();
+        });
+        curDistance.setCellValueFactory(param -> {
+            OfferModel offer = param.getValue();
+            return new SimpleDoubleProperty(order !=null ? order.getVendor().getDistance(offer.getVendor()) :Double.NaN).asObject();
         });
     }
 

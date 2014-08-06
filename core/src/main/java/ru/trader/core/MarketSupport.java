@@ -145,6 +145,14 @@ public abstract class MarketSupport implements Market {
     }
 
     @Override
+    public void updatePosition(Vendor vendor, double x, double y, double z){
+        change = true;
+        vendor.setX(x);
+        vendor.setY(y);
+        vendor.setZ(z);
+    }
+
+    @Override
     public void updateName(Item item, String name){
         change = true;
         item.setName(name);

@@ -36,6 +36,40 @@ public class VendorModel {
         return name;
     }
 
+    public void setPosition(double x, double y, double z){
+        if (x == vendor.getX() && y == vendor.getY() && z == vendor.getZ()) return;
+        LOG.info("Change position of vendor {} to ({};{};{})", vendor, x, y, z);
+        market.updatePosition(this, x, y, z);
+    }
+
+    public double getX(){
+        return vendor.getX();
+    }
+
+    public double getY(){
+        return vendor.getY();
+    }
+
+    public double getZ(){
+        return vendor.getZ();
+    }
+
+    public ReadOnlyDoubleProperty xProperty(){
+        return new SimpleDoubleProperty(vendor.getX());
+    }
+
+    public ReadOnlyDoubleProperty yProperty(){
+        return new SimpleDoubleProperty(vendor.getY());
+    }
+
+    public ReadOnlyDoubleProperty zProperty(){
+        return new SimpleDoubleProperty(vendor.getZ());
+    }
+
+    public double getDistance(VendorModel other){
+        return vendor.getDistance(other.vendor);
+    }
+
     public List<OfferModel> getSells() {
         return vendor.getAllSellOffers().stream().map(market::asModel).collect(Collectors.toList());
     }
