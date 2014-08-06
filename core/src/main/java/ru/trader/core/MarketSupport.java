@@ -168,7 +168,7 @@ public abstract class MarketSupport implements Market {
                     if (top.size() == limit){
                         LOG.trace("Min order {}", top.first());
                         if (top.first().getProfit() < order.getProfit()) {
-                            LOG.debug("Add to top");
+                            LOG.trace("Add to top");
                             top.add(order);
                             top.pollFirst();
                         } else {
