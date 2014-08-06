@@ -2,6 +2,7 @@ package ru.trader.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javafx.fxml.FXML;
@@ -40,6 +41,23 @@ public class OffersController {
                 vendors.getSelectionModel().select(oldValue);
             }
         });
+        tblSell.getSelectionModel().selectedItemProperty().addListener((v, o, n) -> {
+            if (n!=null) Screeners.changeItemDesc(n);
+        });
+        tblBuy.getSelectionModel().selectedItemProperty().addListener((v, o, n) -> {
+            if (n!=null) Screeners.changeItemDesc(n);
+        });
+        tblSell.setOnMouseClicked((e) -> {
+            if (e.getButton() == MouseButton.SECONDARY){
+                Screeners.showItemDesc(tblSell);
+            }
+        });
+        tblBuy.setOnMouseClicked((e) -> {
+            if (e.getButton() == MouseButton.SECONDARY){
+                Screeners.showItemDesc(tblBuy);
+            }
+        });
+
         init();
     }
 

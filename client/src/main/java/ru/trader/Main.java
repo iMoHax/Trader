@@ -24,6 +24,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
             primaryStage.setTitle("Trader");
+            primaryStage.setMinHeight(590);
             primaryStage.setScene(new Scene(Screeners.newScreeners(Main.class.getResource("/view/main.fxml"),getUrl("style.css").toExternalForm())));
             primaryStage.setOnCloseRequest((we)->{
                 try {

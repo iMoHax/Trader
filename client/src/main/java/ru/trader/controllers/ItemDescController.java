@@ -25,6 +25,7 @@ public class ItemDescController {
 
     public void setItemDesc(ItemDescModel itemDesc){
         item = itemDesc;
+        if (popup!=null) popup.setDetachedTitle(item.nameProperty().get());
         fill();
     }
 
@@ -39,7 +40,7 @@ public class ItemDescController {
         if (popup != null && popup.isShowing()) return;
         if (popup == null) {
             popup = new PopOver(itemDescScreen);
-            popup.detach();
+            popup.setDetachedTitle(item.nameProperty().get());
             popup.setAutoHide(true);
 
         }

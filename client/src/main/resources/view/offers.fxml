@@ -20,7 +20,7 @@
           <TitledPane fx:id="sells" animated="false" text="Продаваемые товары">
               <TableView fx:id="tblSell" editable="true">
                   <columns>
-                      <TableColumn minWidth="235.0" text="Товар">
+                      <TableColumn minWidth="230.0" text="Товар">
                           <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
                       </TableColumn>
                       <TableColumn minWidth="110.0" resizable="false" text="Цена" onEditCommit="#editPrice">
@@ -57,7 +57,7 @@
           <TitledPane animated="false" text="Покупаемые товары">
               <TableView fx:id="tblBuy" editable="true">
                   <columns>
-                      <TableColumn minWidth="235.0" text="Товар">
+                      <TableColumn minWidth="230.0" text="Товар">
                           <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
                       </TableColumn>
                       <TableColumn minWidth="110.0" resizable="false" text="Цена" editable="true" onEditCommit="#editPrice">

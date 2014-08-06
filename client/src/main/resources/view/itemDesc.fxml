@@ -4,13 +4,17 @@
 <?import javafx.scene.layout.*?>
 
 <?import ru.trader.view.support.cells.OfferListCell?>
+<?import javafx.geometry.Insets?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="ru.trader.controllers.ItemDescController">
-    <Label text="Продавцы:"/>
+      fx:controller="ru.trader.controllers.ItemDescController"
+      spacing="4" >
+    <fx:define><Insets fx:id="vbox_margin" left="6" top="3" bottom="3"/></fx:define>
+
+    <Label text="Продавцы:" VBox.margin="$vbox_margin"/>
     <ListView fx:id="seller" maxHeight="200.0">
         <cellFactory><OfferListCell/></cellFactory>
     </ListView>
-    <Label text="Покупатели:"/>
+    <Label text="Покупатели:" VBox.margin="$vbox_margin"/>
     <ListView fx:id="buyer" maxHeight="200.0">
         <cellFactory><OfferListCell/></cellFactory>
     </ListView>
