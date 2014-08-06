@@ -139,6 +139,18 @@ public abstract class MarketSupport implements Market {
     }
 
     @Override
+    public void updateName(Vendor vendor, String name){
+        change = true;
+        vendor.setName(name);
+    }
+
+    @Override
+    public void updateName(Item item, String name){
+        change = true;
+        item.setName(name);
+    }
+
+    @Override
     public void updatePrice(Offer offer, double price){
         change = true;
         getStat(offer).update(offer, price);

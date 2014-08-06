@@ -70,14 +70,14 @@ public class MarketModel {
     void updateName(ItemModel model, String value) {
         Item item = model.getItem();
         String old = item.getName();
-        item.setName(value);
+        market.updateName(item, value);
         if (alert) listener.forEach((c) -> c.nameChange(model, old, value));
     }
 
     void updateName(VendorModel model, String value) {
         Vendor vendor = model.getVendor();
         String old = vendor.getName();
-        vendor.setName(value);
+        market.updateName(vendor, value);
         if (alert) listener.forEach((c) -> c.nameChange(model, old, value));
     }
 
