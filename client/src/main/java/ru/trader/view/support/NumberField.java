@@ -6,6 +6,7 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
 import javafx.util.converter.NumberStringConverter;
 
 import java.text.DecimalFormat;
@@ -73,10 +74,20 @@ public class NumberField extends TextField {
                 setTooltip(null);
             }
         });
-
+        setOnKeyPressed((e) -> {
+            if (e.getCode().equals(KeyCode.ESCAPE)) {
+                editCancel();
+                e.consume();
+            }
+        });
         setOnAction((e) -> parseNumber());
         focusedProperty().addListener((ob, o, n) -> {if (o) parseNumber();});
         setAlignment(Pos.BASELINE_RIGHT);
+    }
+
+    private void editCancel() {
+        setText(converter.toString(getValue()));
+       getParent().requestFocus();
     }
 
     private void parseNumber(){
