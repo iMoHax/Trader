@@ -1,5 +1,6 @@
 package ru.trader.view.support;
 
+import javafx.beans.NamedArg;
 import javafx.beans.property.*;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
@@ -7,9 +8,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.util.converter.NumberStringConverter;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 
 public class NumberField extends TextField {
-    private final static NumberStringConverter converter = new NumberStringConverter("#0.#");
+    private final NumberStringConverter converter;
     private final Tooltip tooltip = new Tooltip();
 
     private final ObjectProperty<Number> number = new SimpleObjectProperty<Number>(0);
@@ -45,7 +51,14 @@ public class NumberField extends TextField {
     }
 
     public NumberField() {
+        this("0.####");
+    }
+
+    public NumberField(@NamedArg("format") String format) {
         super();
+        NumberFormat f = new DecimalFormat(format, new DecimalFormatSymbols(Locale.ENGLISH));
+        f.setGroupingUsed(false);
+        converter = new NumberStringConverter(f);
         tooltip.setText("Wrong number");
         tooltip.setAutoHide(true);
         wrong.addListener((ob, o ,n) -> {
@@ -74,7 +87,9 @@ public class NumberField extends TextField {
         }
 
         if (text.matches("^-?\\d+([,\\.]\\d+)?([eE]-?\\d+)?$")){
+            text = text.replace(',','.');
             number.setValue(converter.fromString(text));
+
             wrong.setValue(false);
         } else {
                 wrong.setValue(true);
