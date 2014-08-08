@@ -17,10 +17,10 @@
     <HBox GridPane.rowIndex="1" GridPane.columnIndex="1" spacing="4" alignment="BASELINE_CENTER">
         <Label text="x:" HBox.margin="$hbox_margin" />
         <NumberField fx:id="x" prefWidth="60" />
-        <Label text="y:" HBox.margin="$hbox_margin" />
-        <NumberField fx:id="y" prefWidth="60" />
         <Label text="z:" HBox.margin="$hbox_margin" />
         <NumberField fx:id="z" prefWidth="60" />
+        <Label text="y:" HBox.margin="$hbox_margin" />
+        <NumberField fx:id="y" prefWidth="60" />
     </HBox>
     <VBox GridPane.rowIndex="2" alignment="CENTER" spacing="10">
         <Button prefWidth="30" onAction="#up"><graphic><Glyph text="FontAwesome|ARROW_UP"/></graphic></Button>

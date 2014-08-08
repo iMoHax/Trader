@@ -68,7 +68,15 @@ public class VendorEditorController {
         items.getSelectionModel().setCellSelectionEnabled(true);
         buy.setCellFactory(TextFieldCell.forTableColumn(new PriceStringConverter()));
         sell.setCellFactory(TextFieldCell.forTableColumn(new PriceStringConverter()));
+        actSave.disabledProperty().bind(x.wrongProperty().or(y.wrongProperty().or(z.wrongProperty())));
         fillItems();
+        name.setOnAction((v)->x.requestFocus());
+        x.setOnAction((v) -> z.requestFocus());
+        z.setOnAction((v) -> y.requestFocus());
+        y.setOnAction((v) -> {
+            items.requestFocus();
+            items.getSelectionModel().select(0, buy);
+        });
     }
 
     public Action showDialog(Parent parent, Parent content, VendorModel vendor){
@@ -96,6 +104,9 @@ public class VendorEditorController {
 
     private void reset(){
         name.setText("");
+        x.setValue(0);
+        y.setValue(0);
+        z.setValue(0);
         items.getItems().forEach(FakeOffer::reset);
     }
 
