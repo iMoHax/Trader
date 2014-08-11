@@ -111,6 +111,8 @@ public class RoutersController {
 
     public void removeAll(){
         tblOrders.getItems().clear();
+        totalBalance.setValue(balance.getValue());
+        totalProfit.setValue(0);
     }
 
 
