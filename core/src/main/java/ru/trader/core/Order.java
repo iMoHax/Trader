@@ -8,10 +8,18 @@ public class Order implements Comparable<Order> {
     private Offer sell;
     private Offer buy;
     private double profit;
+    private long count;
+
+    public Order(Offer sell, Offer buy) {
+        this.sell = sell;
+        this.buy = buy;
+        this.profit = Double.NaN;
+    }
 
     public Order(Offer sell, Offer buy, long count) {
         this.sell = sell;
         this.buy = buy;
+        this.count = count;
         this.profit = (buy.getPrice() - sell.getPrice()) * count;
     }
 
@@ -23,8 +31,29 @@ public class Order implements Comparable<Order> {
         return buy;
     }
 
+    public void setCount(long count){
+        this.count = count;
+        this.profit = (buy.getPrice() - sell.getPrice()) * count;
+    }
+
     public double getProfit(){
         return profit;
+    }
+
+    public Order getCopy(long count){
+        return new Order(sell, buy, count);
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public double getDistance() {
+        return sell.getVendor().getDistance(buy.getVendor());
+    }
+
+    public boolean isBuyer(Vendor buyer) {
+        return buy.getVendor().equals(buyer);
     }
 
     @Override
@@ -56,11 +85,8 @@ public class Order implements Comparable<Order> {
     @Override
     public int hashCode() {
         int result;
-        long temp;
         result = sell.hashCode();
         result = 31 * result + buy.hashCode();
-        temp = Double.doubleToLongBits(profit);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 
@@ -73,4 +99,5 @@ public class Order implements Comparable<Order> {
         sb.append('}');
         return sb.toString();
     }
+
 }

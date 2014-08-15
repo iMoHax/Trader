@@ -3,8 +3,12 @@ package ru.trader.core;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MarketTest1 extends Assert {
+    private final static Logger LOG = LoggerFactory.getLogger(MarketTest1.class);
+
     private final static Item ITEM1 = new Item("Item1");
     private final static Item ITEM2 = new Item("Item2");
     private final static Item ITEM3 = new Item("Item3");
@@ -64,6 +68,7 @@ public class MarketTest1 extends Assert {
 
     @Test
     public void testBestSell(){
+        LOG.info("Start best sell test");
         Offer test = market.getStatSell(ITEM1).getBest();
         assertEquals(test, bestSellOffer1);
         test = market.getStatSell(ITEM2).getBest();
@@ -74,6 +79,7 @@ public class MarketTest1 extends Assert {
 
     @Test
     public void testBestBuy(){
+        LOG.info("Start best buy test");
         Offer test = market.getStatBuy(ITEM1).getBest();
         assertEquals(test, bestBuyOffer1);
         test = market.getStatBuy(ITEM2).getBest();

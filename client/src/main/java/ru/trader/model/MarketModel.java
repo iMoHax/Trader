@@ -19,6 +19,7 @@ public class MarketModel {
     private final static Logger LOG = LoggerFactory.getLogger(MarketModel.class);
 
     private final Market market;
+    private final MarketAnalyzer analyzer;
 
     private final Collection<ChangeMarketListener> listener = new ArrayList<>();
 
@@ -41,6 +42,7 @@ public class MarketModel {
 
     public MarketModel(Market market) {
         this.market = market;
+        analyzer = new MarketAnalyzer(market);
         items = new SimpleListProperty<ItemDescModel>(BindingsHelper.observableList(market.getItems(), this::getItemDesc));
         vendors = new SimpleListProperty<VendorModel>(BindingsHelper.observableList(market.get(), this::asModel));
     }
@@ -168,7 +170,7 @@ public class MarketModel {
     }
 
     public ObservableList<OrderModel> getTop(int limit, double balance, long max){
-        return BindingsHelper.observableList(market.getTop(limit, balance, max), (o) -> {
+        return BindingsHelper.observableList(analyzer.getTop(limit, balance, max), (o) -> {
             OrderModel model = new OrderModel(asOfferDescModel(o.getSell()), balance, max);
             model.setBuyer(asModel(o.getBuy()));
             model.setCount(model.getMax());

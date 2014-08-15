@@ -42,8 +42,6 @@ public interface Market {
 
     void setChange(boolean change);
 
-    Collection<Order> getTop(int limit, double balance, long max);
-
     void updateName(Vendor vendor, String name);
 
     void updateName(Item item, String name);

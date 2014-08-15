@@ -3,9 +3,13 @@ package ru.trader.core;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class ItemStatTest extends Assert {
+    private final static Logger LOG = LoggerFactory.getLogger(ItemStatTest.class);
+
     private final static Item ITEM1 = new Item("Item1");
 
 
@@ -29,12 +33,14 @@ public class ItemStatTest extends Assert {
 
     @Test
     public void testSell(){
+        LOG.info("Start sell test");
         assertEquals(itemSellStat.getAvg(), (10+20+30+40)/4, 0);
         assertEquals(itemSellStat.getBest().getPrice(), 10d, 0);
     }
 
     @Test
     public void testBuy(){
+        LOG.info("Start buy test");
         assertEquals(itemBuyStat.getAvg(), (100+200+300+400)/4, 0);
         assertEquals(itemBuyStat.getBest().getPrice(), 400d, 0);
     }

@@ -3,11 +3,15 @@ package ru.trader.core;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.trader.TestUtil;
 
 import java.util.Collection;
 
 public class VendorTest2 extends Assert {
+    private final static Logger LOG = LoggerFactory.getLogger(VendorTest2.class);
+
     private final static Item ITEM1 = new Item("Item1");
     private final static Item ITEM2 = new Item("Item2");
     private final static Item ITEM3 = new Item("Item3");
@@ -42,24 +46,28 @@ public class VendorTest2 extends Assert {
 
     @Test
     public void testGetSellOffer(){
+        LOG.info("Start get sell offer test");
         final Offer test = sellVendor.getSell(ITEM1);
         assertEquals(test, DUBLE_SELL_OFFER1);
     }
 
     @Test
     public void testGetBuyOffer(){
+        LOG.info("Start get buy offer test");
         final Offer test = buyVendor.getBuy(ITEM1);
         assertEquals(test, DUBLE_BUY_OFFER1);
     }
 
     @Test
     public void testGetAllSellOffer(){
+        LOG.info("Start get all sell offer test");
         final Collection<Offer> test = sellVendor.getAllSellOffers();
         TestUtil.assertCollectionContainAll(test, DUBLE_SELL_OFFER1, SELL_OFFER2, SELL_OFFER3);
     }
 
     @Test
     public void testGetAllBuyOffer(){
+        LOG.info("Start get all buy offer test");
         final Collection<Offer> test = buyVendor.getAllBuyOffers();
         TestUtil.assertCollectionContainAll(test, DUBLE_BUY_OFFER1, BUY_OFFER3, BUY_OFFER2);
     }

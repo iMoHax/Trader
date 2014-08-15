@@ -3,6 +3,7 @@ package ru.trader.core;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.graph.Connectable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public abstract class Vendor implements Comparable<Vendor> {
+public abstract class Vendor implements Comparable<Vendor>, Connectable<Vendor> {
     private final static Logger LOG = LoggerFactory.getLogger(Vendor.class);
 
     private String name;
@@ -111,8 +112,14 @@ public abstract class Vendor implements Comparable<Vendor> {
         return name != null ? other.name != null ? name.compareTo(other.name) : -1 : 0;
     }
 
+    @Override
     public double getDistance(Vendor other){
         return getDistance(other.x, other.y, other.z);
+    }
+
+    @Override
+    public boolean canRefill() {
+        return !getAllSellOffers().isEmpty() || !getAllBuyOffers().isEmpty();
     }
 
     public double getDistance(double x, double y, double z){

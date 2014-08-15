@@ -3,12 +3,10 @@ package ru.trader.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableView;
-import ru.trader.core.Vendor;
 import ru.trader.model.MarketModel;
 import ru.trader.model.OfferDescModel;
 import ru.trader.model.OrderModel;
@@ -16,9 +14,7 @@ import ru.trader.model.VendorModel;
 import ru.trader.view.support.NumberField;
 
 
-import java.awt.*;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 
 public class RoutersController {
