@@ -12,5 +12,8 @@
         <vendor name="Vendor 1">
             <offer item="i1" type="SELL" price="140"/>
         </vendor>
+
+        <vendor name="Empty system" x="1" y="2" z="3"/>
+
     </vendors>
 </market>
