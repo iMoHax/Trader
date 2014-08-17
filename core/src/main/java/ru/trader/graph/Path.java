@@ -18,8 +18,8 @@ public class Path<T extends Connectable<T>> {
         this.refill = refill;
     }
 
-    public Path<T> connectTo(Edge<T> edge, boolean refill){
-        return new Path<>(this, edge.getTarget(), refill);
+    public Path<T> connectTo(Vertex<T> vertex, boolean refill){
+        return new Path<>(this, vertex, refill);
     }
 
     public void finish(){
@@ -35,6 +35,11 @@ public class Path<T extends Connectable<T>> {
 
     public boolean isRoot(){
         return head == null;
+    }
+
+    public Path<T> getRoot(){
+        if (isRoot()) return this;
+        return head.getRoot();
     }
 
     @Override
@@ -63,18 +68,21 @@ public class Path<T extends Connectable<T>> {
         return sb.toString();
     }
 
-    public boolean contains(Edge<T> edge) {
-        return target.equals(edge.getTarget()) || (!isRoot() && head.contains(edge));
+    public boolean isConnect(Vertex<T> vertex) {
+        return target.equals(vertex) || (!isRoot() && head.isConnect(vertex));
+    }
+
+    public boolean isPathFrom(T entry) {
+        return !isRoot() && head.target.getEntry().equals(entry);
     }
 
     @SafeVarargs
     public static <T extends Connectable<T>> Path<T> toPath(T... items){
-        T s = items[0];
-        Path<T> path = new Path<>(new Vertex<>(s));
+        T t = items[0];
+        Path<T> path = new Path<>(new Vertex<>(t));
         for (int i = 1; i < items.length; i++) {
-            T t = items[i];
+            t = items[i];
             path = new Path<>(path, new Vertex<>(t), false);
-            s = t;
         }
         return path;
     }

@@ -40,10 +40,6 @@ public class Order implements Comparable<Order> {
         return profit;
     }
 
-    public Order getCopy(long count){
-        return new Order(sell, buy, count);
-    }
-
     public long getCount() {
         return count;
     }
@@ -54,6 +50,10 @@ public class Order implements Comparable<Order> {
 
     public boolean isBuyer(Vendor buyer) {
         return buy.getVendor().equals(buyer);
+    }
+
+    public Vendor getBuyer(){
+        return buy.getVendor();
     }
 
     @Override
@@ -100,4 +100,7 @@ public class Order implements Comparable<Order> {
         return sb.toString();
     }
 
+    public void setMax(double balance, long limit) {
+        setCount((long) Math.min(balance/sell.getPrice(), limit));
+    }
 }

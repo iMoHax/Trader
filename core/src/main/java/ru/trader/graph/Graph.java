@@ -113,7 +113,7 @@ public class Graph<T extends Connectable<T>> {
         if (edge != null ){
             if (!(withRefill && Math.min(limit, maxDistance) < edge.getLength() && !source.getEntry().canRefill())){
                 found = true;
-                Path<T> path = head.connectTo(edge, limit < edge.getLength());
+                Path<T> path = head.connectTo(edge.getTarget(), limit < edge.getLength());
                 path.finish();
                 LOG.trace("Last edge find, add path {}", path);
                 paths.add(path);
@@ -124,10 +124,10 @@ public class Graph<T extends Connectable<T>> {
                 LOG.trace("Search around");
                 for (Edge<T> next : source.getEdges()) {
                     if (withRefill && Math.min(limit, maxDistance) < next.getLength() && !source.getEntry().canRefill()) continue;
-                    if (head.contains(next)) continue;
+                    if (head.isConnect(next.getTarget())) continue;
                     // target already added if source consist edge
                     if (next.isConnect(target)) continue;
-                    Path<T> path = head.connectTo(next, limit < next.getLength());
+                    Path<T> path = head.connectTo(next.getTarget(), limit < next.getLength());
                     double nextLimit = withRefill ? limit - next.getLength(): stock;
                     // refill
                     if (nextLimit < 0 ) nextLimit = maxDistance - next.getLength();
@@ -151,9 +151,9 @@ public class Graph<T extends Connectable<T>> {
         if (deep == source.getLevel()){
             for (Edge<T> next : source.getEdges()) {
                 if (withRefill && Math.min(limit, maxDistance) < next.getLength() && !source.getEntry().canRefill()) continue;
-                if (head.contains(next)) continue;
+                if (head.isConnect(next.getTarget())) continue;
                 if (next.isConnect(target)) {
-                    Path<T> path = head.connectTo(next, limit < next.getLength());
+                    Path<T> path = head.connectTo(next.getTarget(), limit < next.getLength());
                     path.finish();
                     LOG.trace("Last edge find, path {}", path);
                     return path;
@@ -165,7 +165,7 @@ public class Graph<T extends Connectable<T>> {
             for (Edge<T> next : source.getEdges()) {
                 if (next.getTarget().getLevel() >= source.getLevel()) continue;
                 if (withRefill && Math.min(limit, maxDistance) < next.getLength() && !source.getEntry().canRefill()) continue;
-                Path<T> path = head.connectTo(next, limit < next.getLength());
+                Path<T> path = head.connectTo(next.getTarget(), limit < next.getLength());
                 double nextLimit = withRefill ? limit - next.getLength(): stock;
                 // refill
                 if (nextLimit < 0 ) nextLimit = stock - next.getLength();
