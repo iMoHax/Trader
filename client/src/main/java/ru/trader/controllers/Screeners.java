@@ -24,6 +24,7 @@ public class Screeners {
     private static Parent editOffersScreen;
     private static Parent ordersScreen;
     private static Parent topOrdersScreen;
+    private static Parent pathsScreen;
 
     private static MainController mainController;
     private static ItemDescController itemDescController;
@@ -31,6 +32,7 @@ public class Screeners {
     private static OffersEditorController oEditorController;
     private static OrdersController ordersController;
     private static TopOrdersController topOrdersController;
+    private static PathsController pathsController;
 
     private static FXMLLoader initLoader(URL url){
         FXMLLoader loader = new FXMLLoader(url);
@@ -94,6 +96,15 @@ public class Screeners {
         stage.setScene(new Scene(topOrdersScreen));
     }
 
+    public static void loadPathsStage(URL fxml) throws IOException {
+        FXMLLoader loader =  initLoader(fxml);
+        pathsScreen = loader.load();
+        addStylesheet(pathsScreen);
+        pathsController = loader.getController();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(pathsScreen));
+    }
+
     public static void show(Node node){
         mainController.getMainPane().setCenter(node);
     }
@@ -147,5 +158,9 @@ public class Screeners {
 
     public static OrderModel showTopOrders(ObservableList<OrderModel> top) {
         return topOrdersController.showDialog(mainScreen, topOrdersScreen, top);
+    }
+
+    public static void showRouters(ObservableList<PathRouteModel> routers) {
+        pathsController.showDialog(mainScreen, pathsScreen, routers);
     }
 }

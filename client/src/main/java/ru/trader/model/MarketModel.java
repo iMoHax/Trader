@@ -169,13 +169,32 @@ public class MarketModel {
         return ModelFabrica.getModel(vendor, this);
     }
 
-    public ObservableList<OrderModel> getTop(int limit, double balance, long max){
-        return BindingsHelper.observableList(analyzer.getTop(limit, balance, max), (o) -> {
-            OrderModel model = new OrderModel(asOfferDescModel(o.getSell()), balance, max);
+    public ObservableList<OrderModel> getTop(int limit, double balance){
+        return BindingsHelper.observableList(analyzer.getTop(limit, balance), (o) -> {
+            OrderModel model = new OrderModel(asOfferDescModel(o.getSell()), balance, analyzer.getCargo());
             model.setBuyer(asModel(o.getBuy()));
             model.setCount(model.getMax());
             return model;
         });
     }
 
+    public void setCargo(long cargo){
+        analyzer.setCargo(cargo);
+    }
+
+    public void setTank(double tank){
+        analyzer.setTank(tank);
+    }
+
+    public void setJumps(int jumps){
+        analyzer.setJumps(jumps);
+    }
+
+    public void setDistance(double distance){
+        analyzer.setMaxDistance(distance);
+    }
+
+    public ObservableList<PathRouteModel> getRouters(VendorModel from, VendorModel to, double balance){
+        return BindingsHelper.observableList(analyzer.getPaths(from.getVendor(), to.getVendor(), balance), PathRouteModel::new);
+    }
 }

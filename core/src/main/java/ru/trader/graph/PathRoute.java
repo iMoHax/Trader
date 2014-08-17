@@ -237,7 +237,7 @@ public class PathRoute extends Path<Vendor> {
         if (o1 != TRANSIT && o2 !=  TRANSIT){
             return o2.compareTo(o1);
         }
-        return o1 == TRANSIT ? o2 ==  TRANSIT ? 0 : 1 : -1;
+        return o1 == TRANSIT ? o2 ==  TRANSIT ? 0 : Double.compare(o2.getProfit(), 0) : Double.compare(0, o1.getProfit());
     }
 
     private int compareOrders(Order o1, Order o2){
@@ -262,6 +262,19 @@ public class PathRoute extends Path<Vendor> {
     @Override
     public PathRoute getRoot() {
         return (PathRoute) super.getRoot();
+    }
+
+    public Order getBest(){
+        return orders.get(0);
+    }
+
+    public double getMaxProfit(){
+        Order o = orders.get(0);
+        return  o != TRANSIT ? o.getProfit() : 0;
+    }
+
+    public double getDistance(){
+        return isRoot() ? 0 : getPrevious().get().getDistance(get());
     }
 
     @Override

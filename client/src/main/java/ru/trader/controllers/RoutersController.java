@@ -21,15 +21,22 @@ public class RoutersController {
 
     @FXML
     private NumberField balance;
-
     @FXML
     private NumberField cargo;
+    @FXML
+    private NumberField distance;
+    @FXML
+    private NumberField tank;
+    @FXML
+    private NumberField jumps;
 
     @FXML
     private Button add;
 
     @FXML
-    private ComboBox<VendorModel> vendors;
+    private ComboBox<VendorModel> source;
+    @FXML
+    private ComboBox<VendorModel> target;
 
     @FXML
     private TableView<OrderModel> tblOrders;
@@ -40,10 +47,23 @@ public class RoutersController {
     @FXML
     private NumberField totalBalance;
 
+    private MarketModel market;
+
     @FXML
     private void initialize(){
         init();
         balance.numberProperty().addListener((ov, o, n) -> totalBalance.setValue(n));
+        cargo.numberProperty().addListener((ov, o, n) -> market.setCargo(n.longValue()));
+        tank.numberProperty().addListener((ov, o, n) -> market.setTank(n.doubleValue()));
+        distance.numberProperty().addListener((ov, o, n) -> market.setDistance(n.doubleValue()));
+        jumps.numberProperty().addListener((ov, o, n) -> market.setJumps(n.intValue()));
+
+        balance.setValue(1000);
+        cargo.setValue(4);
+        tank.setValue(30);
+        distance.setValue(7);
+        jumps.setValue(4);
+
         add.disableProperty().bind(this.balance.wrongProperty().or(this.cargo.wrongProperty()));
         tblOrders.setItems(FXCollections.observableArrayList());
         tblOrders.getItems().addListener((ListChangeListener<OrderModel>) c -> {
@@ -64,30 +84,30 @@ public class RoutersController {
 
 
     void init(){
-        MarketModel market = MainController.getMarket();
-        vendors.setItems(market.vendorsProperty());
-        vendors.getSelectionModel().selectFirst();
+        market = MainController.getMarket();
+        source.setItems(market.vendorsProperty());
+        source.getSelectionModel().selectFirst();
+        target.setItems(market.vendorsProperty());
         tblOrders.getItems().clear();
         totalBalance.setValue(balance.getValue());
         totalProfit.setValue(0);
     }
 
     private Collection<OfferDescModel> getOffers(){
-        MarketModel market = MainController.getMarket();
-        VendorModel vendor = vendors.getSelectionModel().getSelectedItem();
+        VendorModel vendor = source.getSelectionModel().getSelectedItem();
         return vendor.getSells(market::asOfferDescModel);
     }
 
     private void onAdd(OrderModel order){
         totalProfit.add(order.getProfit());
         totalBalance.add(order.getProfit());
-        vendors.getSelectionModel().select(order.getBuyer().getVendor());
+        source.getSelectionModel().select(order.getBuyer().getVendor());
     }
 
     private void onRemove(OrderModel order) {
         totalProfit.sub(order.getProfit());
         totalBalance.sub(order.getProfit());
-        vendors.getSelectionModel().select(order.getVendor());
+        source.getSelectionModel().select(order.getVendor());
     }
 
     public void addOrders(){
@@ -113,11 +133,20 @@ public class RoutersController {
 
 
     public void showTopOrders(){
-        MarketModel market = MainController.getMarket();
-        OrderModel order = Screeners.showTopOrders(market.getTop(100, totalBalance.getValue().doubleValue(), cargo.getValue().longValue()));
+        OrderModel order = Screeners.showTopOrders(market.getTop(100, totalBalance.getValue().doubleValue()));
         if (order!=null){
             tblOrders.getItems().add(order);
         }
     }
+
+    public void showRoutes(){
+        VendorModel s = source.getSelectionModel().getSelectedItem();
+        VendorModel t = target.getSelectionModel().getSelectedItem();
+        if (t==null) return;
+
+        MarketModel market = MainController.getMarket();
+        Screeners.showRouters(market.getRouters(s, t, totalBalance.getValue().doubleValue()));
+    }
+
 
 }

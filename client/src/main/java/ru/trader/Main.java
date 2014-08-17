@@ -67,6 +67,7 @@ public class Main extends Application {
         Screeners.loadAddOfferStage(getUrl(("oEditor.fxml")));
         Screeners.loadOrdersStage(getUrl(("orders.fxml")));
         Screeners.loadTopOrdersStage(getUrl(("topOrders.fxml")));
+        Screeners.loadPathsStage(getUrl(("paths.fxml")));
     }
 
     private static URL getUrl(String filename) throws MalformedURLException {

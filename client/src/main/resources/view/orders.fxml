@@ -21,7 +21,7 @@
                 <cellFactory><DoubleCell/></cellFactory>
                 <cellValueFactory><PropertyValueFactory property="price"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="count" minWidth="60.0" text="Кол-во">
+            <TableColumn fx:id="count" minWidth="60.0" prefWidth="60.0" text="Кол-во">
                 <cellValueFactory><PropertyValueFactory property="count"/></cellValueFactory>
             </TableColumn>
             <TableColumn minWidth="160.0" text="Покупатель">
@@ -34,7 +34,7 @@
 
             <TableColumn resizable="false" text="Максимум">
                 <columns>
-                    <TableColumn fx:id="maxCount" minWidth="60.0" text="Кол-во">
+                    <TableColumn fx:id="maxCount" minWidth="60.0" prefWidth="60.0" text="Кол-во">
                         <cellValueFactory><PropertyValueFactory property="max"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn fx:id="bestProfit" minWidth="80.0" text="Прибыль" sortType="DESCENDING">
