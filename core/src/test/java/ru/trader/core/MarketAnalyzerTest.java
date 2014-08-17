@@ -90,7 +90,7 @@ public class MarketAnalyzerTest extends Assert {
     public void testPaths() throws Exception {
         LOG.info("Start paths test");
         MarketAnalyzer analyzer = new MarketAnalyzer(market);
-        analyzer.setJumps(5);analyzer.setMaxDistance(1);analyzer.setStock(1);
+        analyzer.setJumps(5);analyzer.setMaxDistance(1);analyzer.setTank(1);
 
         Collection<Path<Vendor>> paths = analyzer.getPaths(v1, v2);
         TestUtil.assertCollectionEquals(paths, Path.toPath(v1, v2));
@@ -115,7 +115,7 @@ public class MarketAnalyzerTest extends Assert {
     public void testPathsWithStock() throws Exception {
         LOG.info("Start paths with stock test");
         MarketAnalyzer analyzer = new MarketAnalyzer(market);
-        analyzer.setJumps(5);analyzer.setMaxDistance(1);analyzer.setStock(2);
+        analyzer.setJumps(5);analyzer.setMaxDistance(1);analyzer.setTank(2);
 
         Collection<Path<Vendor>> paths = analyzer.getPaths(v1, v2);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(v1, v2));
@@ -141,7 +141,7 @@ public class MarketAnalyzerTest extends Assert {
     public void testPathsWithStockAndRefill() throws Exception {
         LOG.info("Start paths with stock and refill test");
         MarketAnalyzer analyzer = new MarketAnalyzer(market);
-        analyzer.setJumps(2);analyzer.setMaxDistance(10);analyzer.setStock(15);
+        analyzer.setJumps(2);analyzer.setMaxDistance(10);analyzer.setTank(15);
 
         Collection<Path<Vendor>> paths = analyzer.getPaths(v10, v6);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(v10, v6), Path.toPath(v10, v11, v6),
@@ -157,7 +157,7 @@ public class MarketAnalyzerTest extends Assert {
     public void testPathsWithStockAndRefill2() throws Exception {
         LOG.info("Start paths with stock and refill test 2");
         MarketAnalyzer analyzer = new MarketAnalyzer(market);
-        analyzer.setJumps(3);analyzer.setMaxDistance(10);analyzer.setStock(15);
+        analyzer.setJumps(3);analyzer.setMaxDistance(10);analyzer.setTank(15);
 
         Collection<Path<Vendor>> paths = analyzer.getPaths(v10, v6);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(v10, v6), Path.toPath(v10, v11, v6),

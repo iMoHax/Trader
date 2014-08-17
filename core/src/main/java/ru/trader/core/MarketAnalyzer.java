@@ -15,7 +15,7 @@ public class MarketAnalyzer {
 
     private Market market;
     private Graph<Vendor> graph;
-    private double stock;
+    private double tank;
     private double maxDistance;
     private int jumps;
 
@@ -59,7 +59,7 @@ public class MarketAnalyzer {
     }
 
     private void rebuild(Vendor source){
-        graph = new Graph<>(source, market.get(), stock, maxDistance, true, jumps, PathRoute::new);
+        graph = new Graph<>(source, market.get(), tank, maxDistance, true, jumps, PathRoute::new);
     }
 
     private void setSource(Vendor source){
@@ -73,8 +73,8 @@ public class MarketAnalyzer {
     }
 
 
-    public void setStock(double stock) {
-        this.stock = stock;
+    public void setTank(double tank) {
+        this.tank = tank;
     }
 
     public void setMaxDistance(double maxDistance) {
