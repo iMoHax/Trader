@@ -96,6 +96,7 @@ public class Order implements Comparable<Order> {
         sb.append("sell=").append(sell);
         sb.append(", buy=").append(buy);
         sb.append(", profit=").append(profit);
+        sb.append(", count=").append(count);
         sb.append('}');
         return sb.toString();
     }

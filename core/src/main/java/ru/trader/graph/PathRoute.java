@@ -13,7 +13,9 @@ public class PathRoute extends Path<Vendor> {
 
     private final ArrayList<Order> orders = new ArrayList<>();
     private final boolean expand;
+    private final int index;
     private double profit = 0;
+    private double balance = 0;
     private PathRoute tail;
     private int ordersCount = 0;
     public final static Order TRANSIT = null;
@@ -21,11 +23,13 @@ public class PathRoute extends Path<Vendor> {
     public PathRoute(Vertex<Vendor> source, boolean expand) {
         super(source);
         this.expand = expand;
+        index = 0;
     }
 
     public PathRoute(Vertex<Vendor> source) {
         super(source);
         expand = false;
+        index = 0;
     }
 
     private PathRoute(PathRoute head, Vertex<Vendor> vertex, boolean refill) {
@@ -35,6 +39,7 @@ public class PathRoute extends Path<Vendor> {
         expand = head.expand;
         //transit
         orders.add(ordersCount++, TRANSIT);
+        index = head.index+1;
     }
 
     @Override
@@ -56,7 +61,10 @@ public class PathRoute extends Path<Vendor> {
     private void addOrder(Order order){
         LOG.trace("Add order {} to path {}", order, this);
         orders.add(ordersCount++, order);
-        if (!expand) return;
+        if (expand) expand(order);
+    }
+
+    private void expand(Order order){
         LOG.trace("Expand orders");
         if (hasNext()){
             PathRoute next = getNext();
@@ -134,16 +142,77 @@ public class PathRoute extends Path<Vendor> {
         return tail != null;
     }
 
-    public void resort(double balance, long limit){
-        if (isRoot()) return;
+    public void sort(double balance, long limit){
+        // start on root only
+        if (isRoot()){
+            this.balance = balance;
+            if (hasNext())
+                getNext().forwardSort(limit);
+        } else {
+            getPrevious().sort(balance, limit);
+        }
+    }
+
+    private void forwardSort(long limit){
+        updateBalance();
+        boolean needSort = false;
         for (Order order : orders) {
             if (order == TRANSIT) continue;
-            order.setMax(balance, limit);
+            if (order.getCount() < limit){
+                needSort = true;
+                order.setMax(balance, limit);
+            }
         }
-        orders.sort(this::compareOrders);
+        if (needSort){
+            LOG.trace("Simple sort");
+            orders.sort(this::simpleCompareOrders);
+            LOG.trace("New order of orders {}", orders);
+        }
+        if (hasNext()){
+            getNext().forwardSort(limit);
+        } else {
+            LOG.trace("Start back sort");
+            Order best = orders.get(0);
+            profit = best == TRANSIT ? 0 : best.getProfit();
+            LOG.trace("Max profit from {} = {}",getPrevious().get(), profit);
+            getPrevious().backwardSort();
+        }
+    }
 
+    private void backwardSort(){
+        if (isRoot()) return;
+        orders.sort(this::compareOrders);
+        LOG.trace("New order of orders {}", orders);
         updateProfit();
-        getPrevious().resort(balance, limit);
+        getPrevious().backwardSort();
+    }
+
+    private void updateBalance() {
+        PathRoute p = getPrevious();
+        balance = p.balance;
+        if (!p.isRoot()) {
+            Vendor buyer = p.get();
+            while (!p.isRoot()){
+                for (Order order : p.orders) {
+                    if (order == TRANSIT) continue;
+                    if (order.isBuyer(buyer) && balance < p.balance + order.getProfit()){
+                        balance = p.balance + order.getProfit();
+                        LOG.trace("Order {} is best to {}, new balance {}", order, buyer, balance);
+                    }
+
+                }
+                p = p.getPrevious();
+            }
+        }
+        LOG.trace("Max balance on {} = {}", getPrevious().get(), balance);
+    }
+
+
+    private void updateProfit() {
+        Order best = orders.get(0);
+        if (best == TRANSIT) profit = getTransitProfit();
+        else profit = getProfit(best);
+        LOG.trace("Max profit from {} = {}", getPrevious().get(), profit);
     }
 
     private double getTransitProfit(){
@@ -154,17 +223,21 @@ public class PathRoute extends Path<Vendor> {
         return profit;
     }
 
+    public double getBalance() {
+        return balance;
+    }
+
     public double getProfit(Order order){
         if (order == TRANSIT) return getTransitProfit();
         if (isPathFrom(order.getBuyer())) return order.getProfit() + profit;
         return hasNext() ? getNext().getProfit(order) : order.getProfit();
     }
 
-    private void updateProfit() {
-        Order best = orders.get(0);
-        if (best == TRANSIT) profit = getTransitProfit();
-            else profit = getProfit(best);
-
+    private int simpleCompareOrders(Order o1, Order o2){
+        if (o1 != TRANSIT && o2 !=  TRANSIT){
+            return o2.compareTo(o1);
+        }
+        return o1 == TRANSIT ? o2 ==  TRANSIT ? 0 : 1 : -1;
     }
 
     private int compareOrders(Order o1, Order o2){
@@ -177,10 +250,22 @@ public class PathRoute extends Path<Vendor> {
         return Double.compare(profit2, profit1);
     }
 
-
+    public PathRoute getPath(int index){
+        if (this.index == index) return this;
+        if (this.index > index){
+            return isRoot() ? null : getPrevious().getPath(index);
+        } else {
+            return hasNext() ? getNext().getPath(index) : null;
+        }
+    }
 
     @Override
-         public String toString() {
+    public PathRoute getRoot() {
+        return (PathRoute) super.getRoot();
+    }
+
+    @Override
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         int step = !hasNext() || tail.ordersCount == 0 ? 1 : tail.ordersCount;
         for (int i = 0; i < ordersCount; i += step) {

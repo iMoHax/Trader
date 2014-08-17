@@ -36,7 +36,7 @@ public class PathRouteTest extends Assert {
         PathRoute res = new PathRoute(new Vertex<>(v1));
         res = (PathRoute) res.connectTo(new Vertex<>(v2), false);
         res.finish();
-        res.resort(10000, 5);
+        res.sort(10000, 5);
         return (PathRoute) res.getRoot();
     }
 
@@ -51,6 +51,7 @@ public class PathRouteTest extends Assert {
         Order order2 = new Order(v1.getSell(ITEM2), v2.getBuy(ITEM2), 5);
         Order order3 = new Order(v1.getSell(ITEM3), v2.getBuy(ITEM3), 5);
 
+        assertEquals(10000, path.getBalance(), 0.0001);
         assertEquals(1000, path.getProfit(), 0.0001);
         TestUtil.assertCollectionEquals(orders, order1, order2, order3, PathRoute.TRANSIT);
     }
@@ -72,7 +73,7 @@ public class PathRouteTest extends Assert {
         res = (PathRoute) res.connectTo(new Vertex<>(v2), false);
         res = (PathRoute) res.connectTo(new Vertex<>(v3), false);
         res.finish();
-        res.resort(10000, 5);
+        res.sort(10000, 5);
         return (PathRoute) res.getRoot();
     }
 
@@ -86,12 +87,14 @@ public class PathRouteTest extends Assert {
         Order order2 = new Order(v2.getSell(ITEM2), v3.getBuy(ITEM2), 5);
         Order order3 = new Order(v1.getSell(ITEM3), v3.getBuy(ITEM3), 5);
 
+        assertEquals(10000, path.getBalance(), 0.0001);
         assertEquals(1000, path.getProfit(), 0.0001);
         TestUtil.assertCollectionEquals(orders, order1,  PathRoute.TRANSIT, order3);
 
         path = path.getNext();
         orders = path.getOrders();
 
+        assertEquals(10000, path.getBalance(), 0.0001);
         assertEquals(750, path.getProfit(), 0.0001);
         TestUtil.assertCollectionEquals(orders, order2, PathRoute.TRANSIT);
     }
@@ -110,7 +113,7 @@ public class PathRouteTest extends Assert {
         v2.add(new Offer(OFFER_TYPE.SELL, ITEM3, 320));
         v3.add(new Offer(OFFER_TYPE.SELL, ITEM3, 390));
 
-        v2.add(new Offer(OFFER_TYPE.BUY, ITEM2, 230));
+        v2.add(new Offer(OFFER_TYPE.BUY, ITEM2, 225));
         v3.add(new Offer(OFFER_TYPE.BUY, ITEM1, 200));
         v4.add(new Offer(OFFER_TYPE.BUY, ITEM3, 450));
 
@@ -119,7 +122,7 @@ public class PathRouteTest extends Assert {
         res = (PathRoute) res.connectTo(new Vertex<>(v3), false);
         res = (PathRoute) res.connectTo(new Vertex<>(v4), false);
         res.finish();
-        res.resort(10000, 5);
+        res.sort(10000, 5);
         return (PathRoute) res.getRoot();
     }
 
@@ -136,18 +139,21 @@ public class PathRouteTest extends Assert {
         Order order5 = new Order(v2.getSell(ITEM3), v4.getBuy(ITEM3), 5);
         Order order7 = new Order(v3.getSell(ITEM3), v4.getBuy(ITEM3), 5);
 
+        assertEquals(10000, path.getBalance(), 0.0001);
         assertEquals(800, path.getProfit(), 0.0001);
-        TestUtil.assertCollectionEquals(orders, order2, order1, order3, PathRoute.TRANSIT);
+        TestUtil.assertCollectionEquals(orders, order1, order2, order3, PathRoute.TRANSIT);
 
         path = path.getNext();
         orders = path.getOrders();
 
+        assertEquals(10125, path.getBalance(), 0.0001);
         assertEquals(650, path.getProfit(), 0.0001);
         TestUtil.assertCollectionEquals(orders, order5, order4, PathRoute.TRANSIT);
 
         path = path.getNext();
         orders = path.getOrders();
 
+        assertEquals(10500, path.getBalance(), 0.0001);
         assertEquals(300, path.getProfit(), 0.0001);
         TestUtil.assertCollectionEquals(orders, order7, PathRoute.TRANSIT);
     }
@@ -177,7 +183,7 @@ public class PathRouteTest extends Assert {
         res = (PathRoute) res.connectTo(new Vertex<>(v4), false);
         res = (PathRoute) res.connectTo(new Vertex<>(v5), false);
         res.finish();
-        res.resort(10000, 5);
+        res.sort(10000, 5);
         return (PathRoute) res.getRoot();
     }
 
@@ -195,25 +201,91 @@ public class PathRouteTest extends Assert {
         Order order6 = new Order(v4.getSell(ITEM1), v5.getBuy(ITEM1), 5);
 
 
+        assertEquals(10000, path.getBalance(), 0.0001);
         assertEquals(1000, path.getProfit(), 0.0001);
         TestUtil.assertCollectionEquals(orders, order3, order1, order4, PathRoute.TRANSIT, order2);
 
         path = path.getNext();
         orders = path.getOrders();
 
+        assertEquals(10300, path.getBalance(), 0.0001);
         assertEquals(650, path.getProfit(), 0.0001);
         TestUtil.assertCollectionEquals(orders, order5, PathRoute.TRANSIT);
 
         path = path.getNext();
         orders = path.getOrders();
 
+        assertEquals(10500, path.getBalance(), 0.0001);
         assertEquals(500, path.getProfit(), 0.0001);
         TestUtil.assertCollectionEquals(orders, PathRoute.TRANSIT);
 
         path = path.getNext();
         orders = path.getOrders();
 
+        assertEquals(10500, path.getBalance(), 0.0001);
         assertEquals(500, path.getProfit(), 0.0001);
         TestUtil.assertCollectionEquals(orders, order6, PathRoute.TRANSIT);
     }
+
+    private PathRoute initTest5(){
+        LOG.info("Init test 5");
+        v1 = new SimpleVendor("v1");
+        v2 = new SimpleVendor("v2");
+        v3 = new SimpleVendor("v3");
+        v4 = new SimpleVendor("v4");
+
+        v1.add(new Offer(OFFER_TYPE.SELL, ITEM1, 100));
+        v1.add(new Offer(OFFER_TYPE.SELL, ITEM2, 200));
+        v1.add(new Offer(OFFER_TYPE.SELL, ITEM3, 300));
+        v2.add(new Offer(OFFER_TYPE.SELL, ITEM1, 150));
+        v2.add(new Offer(OFFER_TYPE.SELL, ITEM3, 320));
+        v3.add(new Offer(OFFER_TYPE.SELL, ITEM3, 390));
+
+        v2.add(new Offer(OFFER_TYPE.BUY, ITEM2, 225));
+        v3.add(new Offer(OFFER_TYPE.BUY, ITEM1, 200));
+        v4.add(new Offer(OFFER_TYPE.BUY, ITEM3, 450));
+
+        PathRoute res = new PathRoute(new Vertex<>(v1));
+        res = (PathRoute) res.connectTo(new Vertex<>(v2), false);
+        res = (PathRoute) res.connectTo(new Vertex<>(v3), false);
+        res = (PathRoute) res.connectTo(new Vertex<>(v4), false);
+        res.finish();
+        res.sort(500, 5);
+        return (PathRoute) res.getRoot();
+    }
+
+    @Test
+    public void testPathRoute5() throws Exception {
+        LOG.info("Start path route test 5");
+        PathRoute path = initTest5().getNext();
+        Collection<Order> orders = path.getOrders();
+
+        Order order1 = new Order(v1.getSell(ITEM1), v3.getBuy(ITEM1), 5);
+        Order order2 = new Order(v1.getSell(ITEM2), v2.getBuy(ITEM2), 2);
+        Order order3 = new Order(v1.getSell(ITEM3), v4.getBuy(ITEM3), 1);
+        Order order4 = new Order(v2.getSell(ITEM1), v3.getBuy(ITEM1), 3);
+        Order order5 = new Order(v2.getSell(ITEM3), v4.getBuy(ITEM3), 1);
+        Order order7 = new Order(v3.getSell(ITEM3), v4.getBuy(ITEM3), 2);
+
+        assertEquals(500, path.getBalance(), 0.0001);
+        assertEquals(620, path.getProfit(), 0.0001);
+        TestUtil.assertCollectionEquals(orders, order1, order2, PathRoute.TRANSIT, order3);
+
+        path = path.getNext();
+        orders = path.getOrders();
+
+        assertEquals(550, path.getBalance(), 0.0001);
+        assertEquals(270, path.getProfit(), 0.0001);
+        TestUtil.assertCollectionEquals(orders, order4, order5, PathRoute.TRANSIT);
+
+        path = path.getNext();
+        orders = path.getOrders();
+
+        assertEquals(1000, path.getBalance(), 0.0001);
+        assertEquals(120, path.getProfit(), 0.0001);
+        TestUtil.assertCollectionEquals(orders, order7, PathRoute.TRANSIT);
+
+    }
+
+
 }
