@@ -22,14 +22,9 @@ public class Path<T extends Connectable<T>> {
         return new Path<>(this, vertex, refill);
     }
 
-    public void finish(){
-        finish(target);
-    }
-
-    protected void finish(Vertex<T> target){
+    protected void finish(){
         if (!isRoot()){
-            head.finish(target);
-            if (target != head.target) head.finish();
+            head.finish();
         }
     }
 
@@ -91,11 +86,15 @@ public class Path<T extends Connectable<T>> {
         return target;
     }
 
+    public T get() {
+        return target.getEntry();
+    }
+
     public boolean isRefill(){
         return refill;
     }
 
-    protected Path<T> getHead(){
+    protected Path<T> getPrevious(){
         return head;
     }
 

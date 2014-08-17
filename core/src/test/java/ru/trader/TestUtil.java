@@ -13,7 +13,7 @@ public class TestUtil {
         assertSize(collection, items);
         int curIndx=0;
         for (T actual : collection) {
-            if (!actual.equals(items[curIndx])){
+            if ((actual == null && items[curIndx] != null) || (actual != null && !actual.equals(items[curIndx]))){
                 Assert.fail(String.format("Entry by index %d is different. Expected: %s Actual: %s", curIndx, items[curIndx], actual));
                 return;
             }

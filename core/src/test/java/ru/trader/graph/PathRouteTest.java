@@ -2,12 +2,15 @@ package ru.trader.graph;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.trader.TestUtil;
 import ru.trader.core.*;
 
 import java.util.Collection;
 
 public class PathRouteTest extends Assert {
+    private final static Logger LOG = LoggerFactory.getLogger(PathRouteTest.class);
 
     private final static Item ITEM1 = new Item("ITEM1");
     private final static Item ITEM2 = new Item("ITEM2");
@@ -19,6 +22,7 @@ public class PathRouteTest extends Assert {
     private static Vendor v5;
 
     private PathRoute initTest1(){
+        LOG.info("Init test 1");
         v1 = new SimpleVendor("v1");
         v2 = new SimpleVendor("v2");
 
@@ -39,7 +43,8 @@ public class PathRouteTest extends Assert {
 
     @Test
     public void testPathRoute1() throws Exception {
-        PathRoute path = initTest1().getTail();
+        LOG.info("Start path route test 1");
+        PathRoute path = initTest1().getNext();
         Collection<Order> orders = path.getOrders();
 
         Order order1 = new Order(v1.getSell(ITEM1), v2.getBuy(ITEM1), 5);
@@ -47,11 +52,11 @@ public class PathRouteTest extends Assert {
         Order order3 = new Order(v1.getSell(ITEM3), v2.getBuy(ITEM3), 5);
 
         assertEquals(1000, path.getProfit(), 0.0001);
-        assertEquals(3, path.getTransitIndex());
-        TestUtil.assertCollectionEquals(orders, order1, order2, order3);
+        TestUtil.assertCollectionEquals(orders, order1, order2, order3, PathRoute.TRANSIT);
     }
 
     private PathRoute initTest2(){
+        LOG.info("Init test 2");
         v1 = new SimpleVendor("v1");
         v2 = new SimpleVendor("v2");
         v3 = new SimpleVendor("v3");
@@ -73,7 +78,8 @@ public class PathRouteTest extends Assert {
 
     @Test
     public void testPathRoute2() throws Exception {
-        PathRoute path = initTest2().getTail();
+        LOG.info("Start path route test 2");
+        PathRoute path = initTest2().getNext();
         Collection<Order> orders = path.getOrders();
 
         Order order1 = new Order(v1.getSell(ITEM1), v3.getBuy(ITEM1), 5);
@@ -81,18 +87,17 @@ public class PathRouteTest extends Assert {
         Order order3 = new Order(v1.getSell(ITEM3), v3.getBuy(ITEM3), 5);
 
         assertEquals(1000, path.getProfit(), 0.0001);
-        assertEquals(1, path.getTransitIndex());
-        TestUtil.assertCollectionEquals(orders, order1, order3);
+        TestUtil.assertCollectionEquals(orders, order1,  PathRoute.TRANSIT, order3);
 
-        path = path.getTail();
+        path = path.getNext();
         orders = path.getOrders();
 
         assertEquals(750, path.getProfit(), 0.0001);
-        assertEquals(1, path.getTransitIndex());
-        TestUtil.assertCollectionEquals(orders, order2);
+        TestUtil.assertCollectionEquals(orders, order2, PathRoute.TRANSIT);
     }
 
     private PathRoute initTest3(){
+        LOG.info("Init test 3");
         v1 = new SimpleVendor("v1");
         v2 = new SimpleVendor("v2");
         v3 = new SimpleVendor("v3");
@@ -120,7 +125,8 @@ public class PathRouteTest extends Assert {
 
     @Test
     public void testPathRoute3() throws Exception {
-        PathRoute path = initTest3().getTail();
+        LOG.info("Start path route test 3");
+        PathRoute path = initTest3().getNext();
         Collection<Order> orders = path.getOrders();
 
         Order order1 = new Order(v1.getSell(ITEM1), v3.getBuy(ITEM1), 5);
@@ -131,25 +137,23 @@ public class PathRouteTest extends Assert {
         Order order7 = new Order(v3.getSell(ITEM3), v4.getBuy(ITEM3), 5);
 
         assertEquals(800, path.getProfit(), 0.0001);
-        assertEquals(3, path.getTransitIndex());
-        TestUtil.assertCollectionEquals(orders, order2, order1, order3);
+        TestUtil.assertCollectionEquals(orders, order2, order1, order3, PathRoute.TRANSIT);
 
-        path = path.getTail();
+        path = path.getNext();
         orders = path.getOrders();
 
         assertEquals(650, path.getProfit(), 0.0001);
-        assertEquals(2, path.getTransitIndex());
-        TestUtil.assertCollectionEquals(orders, order5, order4);
+        TestUtil.assertCollectionEquals(orders, order5, order4, PathRoute.TRANSIT);
 
-        path = path.getTail();
+        path = path.getNext();
         orders = path.getOrders();
 
         assertEquals(300, path.getProfit(), 0.0001);
-        assertEquals(1, path.getTransitIndex());
-        TestUtil.assertCollectionEquals(orders, order7);
+        TestUtil.assertCollectionEquals(orders, order7, PathRoute.TRANSIT);
     }
 
     private PathRoute initTest4(){
+        LOG.info("Init test 4");
         v1 = new SimpleVendor("v1");
         v2 = new SimpleVendor("v2");
         v3 = new SimpleVendor("v3");
@@ -179,7 +183,8 @@ public class PathRouteTest extends Assert {
 
     @Test
     public void testPathRoute4() throws Exception {
-        PathRoute path = initTest4().getTail();
+        LOG.info("Start path route test 4");
+        PathRoute path = initTest4().getNext();
         Collection<Order> orders = path.getOrders();
 
         Order order1 = new Order(v1.getSell(ITEM1), v2.getBuy(ITEM1), 5);
@@ -191,28 +196,24 @@ public class PathRouteTest extends Assert {
 
 
         assertEquals(1000, path.getProfit(), 0.0001);
-        assertEquals(3, path.getTransitIndex());
-        TestUtil.assertCollectionEquals(orders, order3, order1, order4, order2);
+        TestUtil.assertCollectionEquals(orders, order3, order1, order4, PathRoute.TRANSIT, order2);
 
-        path = path.getTail();
+        path = path.getNext();
         orders = path.getOrders();
 
         assertEquals(650, path.getProfit(), 0.0001);
-        assertEquals(1, path.getTransitIndex());
-        TestUtil.assertCollectionEquals(orders, order5);
+        TestUtil.assertCollectionEquals(orders, order5, PathRoute.TRANSIT);
 
-        path = path.getTail();
+        path = path.getNext();
         orders = path.getOrders();
 
         assertEquals(500, path.getProfit(), 0.0001);
-        assertEquals(0, path.getTransitIndex());
-        assertTrue(orders.isEmpty());
+        TestUtil.assertCollectionEquals(orders, PathRoute.TRANSIT);
 
-        path = path.getTail();
+        path = path.getNext();
         orders = path.getOrders();
 
         assertEquals(500, path.getProfit(), 0.0001);
-        assertEquals(1, path.getTransitIndex());
-        TestUtil.assertCollectionEquals(orders, order6);
+        TestUtil.assertCollectionEquals(orders, order6, PathRoute.TRANSIT);
     }
 }
