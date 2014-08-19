@@ -160,7 +160,7 @@ public class Screeners {
         return topOrdersController.showDialog(mainScreen, topOrdersScreen, top);
     }
 
-    public static void showRouters(ObservableList<PathRouteModel> routers) {
-        pathsController.showDialog(mainScreen, pathsScreen, routers);
+    public static PathRouteModel showRouters(ObservableList<PathRouteModel> routers) {
+        return pathsController.showDialog(mainScreen, pathsScreen, routers);
     }
 }

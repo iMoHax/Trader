@@ -11,7 +11,7 @@
 <?import ru.trader.view.support.cells.DoubleCell?>
 <HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="ru.trader.controllers.OffersController">
-    <TitledPane text="Станции" minWidth="260" prefHeight="500" collapsible="false">
+    <TitledPane text="Станции" minWidth="250" prefHeight="510" collapsible="false">
         <ListView fx:id="vendors" />
     </TitledPane>
 

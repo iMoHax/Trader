@@ -3,11 +3,11 @@ package ru.trader.model;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
+import ru.trader.graph.PathRoute;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.model.support.ChangeMarketListener;
 
@@ -169,14 +169,14 @@ public class MarketModel {
         return ModelFabrica.getModel(vendor, this);
     }
 
-    public ObservableList<OrderModel> getTop(int limit, double balance){
-        return BindingsHelper.observableList(analyzer.getTop(limit, balance), (o) -> {
-            OrderModel model = new OrderModel(asOfferDescModel(o.getSell()), balance, analyzer.getCargo());
-            model.setBuyer(asModel(o.getBuy()));
-            model.setCount(model.getMax());
-            return model;
-        });
+    public OrderModel asModel(Order order) {
+        return new OrderModel(asOfferDescModel(order.getSell()), asModel(order.getBuy()), order.getCount());
     }
+
+    public PathRouteModel asModel(PathRoute path) {
+        return new PathRouteModel(path, this);
+    }
+
 
     public void setCargo(long cargo){
         analyzer.setCargo(cargo);
@@ -194,7 +194,28 @@ public class MarketModel {
         analyzer.setMaxDistance(distance);
     }
 
-    public ObservableList<PathRouteModel> getRouters(VendorModel from, VendorModel to, double balance){
-        return BindingsHelper.observableList(analyzer.getPaths(from.getVendor(), to.getVendor(), balance), PathRouteModel::new);
+    public ObservableList<OrderModel> getOrders(VendorModel from, double balance) {
+        return BindingsHelper.observableList(analyzer.getOrders(from.getVendor(), balance), this::asModel);
     }
+
+    public ObservableList<OrderModel> getOrders(VendorModel from, VendorModel to, double balance) {
+        return BindingsHelper.observableList(analyzer.getOrders(from.getVendor(), to.getVendor(), balance), this::asModel);
+    }
+
+    public ObservableList<OrderModel> getTop(int limit, double balance){
+        return BindingsHelper.observableList(analyzer.getTop(limit, balance), this::asModel);
+    }
+
+    public ObservableList<PathRouteModel> getRoutes(VendorModel from, double balance){
+        return BindingsHelper.observableList(analyzer.getPaths(from.getVendor(), balance), this::asModel);
+    }
+
+    public ObservableList<PathRouteModel> getRoutes(VendorModel from, VendorModel to, double balance){
+        return BindingsHelper.observableList(analyzer.getPaths(from.getVendor(), to.getVendor(), balance), this::asModel);
+    }
+
+    public ObservableList<PathRouteModel> getTopRoutes(double balance){
+        return BindingsHelper.observableList(analyzer.getTopPaths(100, balance), this::asModel);
+    }
+
 }

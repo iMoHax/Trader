@@ -4,16 +4,11 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.converter.LongStringConverter;
 import org.controlsfx.control.ButtonBar;
 import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
-import ru.trader.graph.PathRoute;
-import ru.trader.model.OrderModel;
 import ru.trader.model.PathRouteModel;
 
 import java.util.Collection;
@@ -42,7 +37,7 @@ public class PathsController {
     }
 
 
-    public void showDialog(Parent parent, Parent content, Collection<PathRouteModel> paths) {
+    public PathRouteModel showDialog(Parent parent, Parent content, Collection<PathRouteModel> paths) {
 
         init(paths);
 
@@ -50,9 +45,12 @@ public class PathsController {
         dlg.setContent(content);
         dlg.getActions().addAll(OK, Dialog.Actions.CANCEL);
         dlg.setResizable(false);
-        dlg.show();
+        return dlg.show() == OK ? getPath() : null;
     }
 
+    public PathRouteModel getPath(){
+        return tblPaths.getSelectionModel().getSelectedItem();
+    }
 
     private void init(Collection<PathRouteModel> paths) {
         tblPaths.getSelectionModel().clearSelection();

@@ -142,6 +142,7 @@ public class Graph<T extends Connectable<T>> {
 
     public Path<T> getFastPathTo(T entry){
         Vertex<T> target = getVertex(entry);
+        if (target == null) return null;
         return findFastPath(pathFabric.build(root), target, target.getLevel()+1, stock);
     }
 

@@ -22,13 +22,13 @@
                     <ColumnConstraints minWidth="90"  maxWidth="90"/>
                 </columnConstraints>
                 <Label text="Баланс:"/>
-                <NumberField fx:id="balance" value="1000" GridPane.columnIndex="1" />
+                <NumberField fx:id="balance" GridPane.columnIndex="1" />
                 <Label text="Трюм:" GridPane.rowIndex="1" />
-                <NumberField fx:id="cargo" value="4" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <NumberField fx:id="cargo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 <Label text="Запас топлива(LY):" GridPane.rowIndex="2" />
-                <NumberField fx:id="tank" value="30" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <NumberField fx:id="tank" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <Label text="Дистанция прыжка(LY):" GridPane.rowIndex="3" />
-                <NumberField fx:id="distance" value="7" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <NumberField fx:id="distance" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             </GridPane>
         </TitledPane>
         <TitledPane text="Параметры маршрута" minHeight="250" collapsible="false">
@@ -42,18 +42,22 @@
                 <Label text="До:" GridPane.rowIndex="1"/>
                 <ComboBox fx:id="target" prefWidth="160" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                 <Label text="Прыжков:" GridPane.rowIndex="2" />
-                <NumberField fx:id="jumps" value="4" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <NumberField fx:id="jumps" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
                 <Separator GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.margin="$separator_margin"/>
-                <VBox GridPane.columnSpan="2" GridPane.rowIndex="4" spacing="20">
+                <VBox GridPane.columnSpan="2" GridPane.rowIndex="4" spacing="5">
                     <HBox alignment="CENTER" spacing="5">
                         <Button fx:id="add" text="Добавить" onAction="#addOrders"/>
                         <Button text="Удалить" onAction="#removeSelected"/>
                         <Button text="Очистить" onAction="#removeAll" />
                     </HBox>
                     <HBox alignment="CENTER" spacing="5">
+                        <Button prefWidth="80" text="Заказы" onAction="#showOrders" />
                         <Button text="TOP 100" onAction="#showTopOrders" />
-                        <Button text="Маршруты" onAction="#showRoutes" />
+                    </HBox>
+                    <HBox alignment="CENTER" spacing="5">
+                        <Button prefWidth="80" text="Маршруты" onAction="#showRoutes" />
+                        <Button text="TOP 100" onAction="#showTopRoutes" />
                     </HBox>
                 </VBox>
             </GridPane>
@@ -72,35 +76,38 @@
             </GridPane>
         </TitledPane>
     </VBox>
-    <TableView fx:id="tblOrders" HBox.hgrow="ALWAYS">
-        <columns>
-            <TableColumn minWidth="210.0" text="Продавец">
-                <cellValueFactory><PropertyValueFactory property="vendor"/></cellValueFactory>
-            </TableColumn>
-            <TableColumn minWidth="180.0" text="Товар">
-                <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
-            </TableColumn>
-            <TableColumn minWidth="80.0" text="Цена">
-                <cellFactory><DoubleCell/></cellFactory>
-                <cellValueFactory><PropertyValueFactory property="price"/></cellValueFactory>
-            </TableColumn>
-            <TableColumn minWidth="80.0" text="Кол-во">
-                <cellValueFactory><PropertyValueFactory property="count"/></cellValueFactory>
-            </TableColumn>
-            <TableColumn minWidth="120.0" text="Покупатель">
-                <cellValueFactory><OfferCellValueImpl property="buyer"/></cellValueFactory>
-            </TableColumn>
-            <TableColumn minWidth="80.0" text="Дистанция">
-                <cellFactory><DoubleCell format="\%.2f LY"/></cellFactory>
-                <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
-            </TableColumn>
-            <TableColumn minWidth="80.0" text="Прибыль">
-                <cellFactory><DoubleCell/></cellFactory>
-                <cellValueFactory><PropertyValueFactory property="profit"/></cellValueFactory>
-            </TableColumn>
-        </columns>
-        <columnResizePolicy>
-            <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
-        </columnResizePolicy>
-    </TableView>
+    <VBox HBox.hgrow="ALWAYS">
+        <TableView fx:id="tblOrders" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn minWidth="210.0" text="Продавец">
+                    <cellValueFactory><PropertyValueFactory property="vendor"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="180.0" text="Товар">
+                    <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="80.0" text="Цена">
+                    <cellFactory><DoubleCell/></cellFactory>
+                    <cellValueFactory><PropertyValueFactory property="price"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="80.0" text="Кол-во">
+                    <cellValueFactory><PropertyValueFactory property="count"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="120.0" text="Покупатель">
+                    <cellValueFactory><OfferCellValueImpl property="buyer"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="80.0" text="Дистанция">
+                    <cellFactory><DoubleCell format="\%.2f LY"/></cellFactory>
+                    <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="80.0" text="Прибыль">
+                    <cellFactory><DoubleCell/></cellFactory>
+                    <cellValueFactory><PropertyValueFactory property="profit"/></cellValueFactory>
+                </TableColumn>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+        <ScrollPane fx:id="path" styleClass="path-pane" minHeight="100" fitToHeight="true"/>
+    </VBox>
 </HBox>

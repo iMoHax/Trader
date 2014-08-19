@@ -1,28 +1,35 @@
 package ru.trader.model;
 
-import ru.trader.core.Vendor;
+import ru.trader.core.Order;
 import ru.trader.graph.PathRoute;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class PathRouteModel {
+    private final MarketModel market;
     private final double distance;
     private final double totalProfit;
     private final int jumps;
     private final int refuels;
+    private final int lands;
 
     private final PathRoute path;
 
-    public PathRouteModel(PathRoute path) {
+    PathRouteModel(PathRoute path, MarketModel market) {
+        this.market = market;
         this.path = path;
         PathRoute p = path.getRoot();
-        double pr =0, d = 0; int j = 0, r = 0;
+        totalProfit = p.getProfit();
+        double d = 0; int j = 0, r = 0, l = 0;
         while (p.hasNext()){
             p = p.getNext();
-            d += path.getDistance();
-            pr += p.getMaxProfit();
+            d += p.getDistance();
             j++;
             if (p.isRefill()) r++;
+            if (p.getBest() != null || p.isRefill()) l++;
         }
-        totalProfit = pr;
+        lands = l;
         distance = d;
         jumps = j;
         refuels = r;
@@ -46,5 +53,30 @@ public class PathRouteModel {
 
     public PathRoute getPath() {
         return path;
+    }
+
+    public int getLands() {
+        return lands;
+    }
+
+    public double getAvgProfit(){
+        return totalProfit/lands;
+    }
+
+    public Collection<OrderModel> getOrders(){
+        Collection<OrderModel> res = new ArrayList<>(lands);
+        PathRoute p = path.getRoot();
+        Order cargo = null;
+        while (p.hasNext()){
+            p = p.getNext();
+            if (cargo == null && p.getBest()!=null){
+                cargo = p.getBest();
+                res.add(market.asModel(cargo));
+            }
+            if (cargo!=null && cargo.isBuyer(p.get())){
+                cargo = null;
+            }
+        }
+        return res;
     }
 }

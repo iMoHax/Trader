@@ -12,34 +12,38 @@
 <?import ru.trader.view.support.cells.PathRouteCell?>
 <HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.PathsController" styleClass="dialog"
-      prefWidth="900">
+      prefWidth="1050">
     <TableView fx:id="tblPaths" editable="true">
         <columns>
-            <TableColumn minWidth="640.0" text="Путь">
+            <TableColumn minWidth="600.0" text="Путь">
                 <cellFactory><PathRouteCell /></cellFactory>
             </TableColumn>
-
-            <TableColumn minWidth="60.0" text="Заправок">
-                <cellValueFactory><PropertyValueFactory property="refuels"/></cellValueFactory>
-            </TableColumn>
-
-            <TableColumn minWidth="60.0" text="Прыжков">
+            <TableColumn minWidth="70.0" text="Прыжков">
                 <cellValueFactory><PropertyValueFactory property="jumps"/></cellValueFactory>
             </TableColumn>
-
-            <TableColumn minWidth="60.0" text="Дистанция">
+            <TableColumn minWidth="70.0" text="Заправок">
+                <cellValueFactory><PropertyValueFactory property="refuels"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="70.0" text="Посадок">
+                <cellValueFactory><PropertyValueFactory property="lands"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="80.0" text="Дистанция">
                 <cellFactory><DoubleCell format="\%.2f LY"/></cellFactory>
                 <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="profit" minWidth="80.0" text="Прибыль" sortType="DESCENDING">
+            <TableColumn minWidth="70.0" text="Прибыль">
                 <cellValueFactory><PropertyValueFactory property="totalProfit"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="avgProfit" minWidth="70.0" text="Ср." sortType="DESCENDING">
+                <cellFactory><DoubleCell format="\%.0f"/></cellFactory>
+                <cellValueFactory><PropertyValueFactory property="avgProfit"/></cellValueFactory>
             </TableColumn>
         </columns>
         <columnResizePolicy>
             <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
         </columnResizePolicy>
         <sortOrder>
-            <fx:reference source="profit"/>
+            <fx:reference source="avgProfit"/>
         </sortOrder>
     </TableView>
 </HBox>

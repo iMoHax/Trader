@@ -37,14 +37,17 @@ public class PathRouteTest extends Assert {
         res = (PathRoute) res.connectTo(new Vertex<>(v2), false);
         res.finish();
         res.sort(10000, 5);
-        return (PathRoute) res.getRoot();
+        return res.getRoot();
     }
 
 
     @Test
     public void testPathRoute1() throws Exception {
         LOG.info("Start path route test 1");
-        PathRoute path = initTest1().getNext();
+        PathRoute path = initTest1();
+        assertEquals(1000, path.getProfit(), 0.0001);
+
+        path = path.getNext();
         Collection<Order> orders = path.getOrders();
 
         Order order1 = new Order(v1.getSell(ITEM1), v2.getBuy(ITEM1), 5);
@@ -74,13 +77,16 @@ public class PathRouteTest extends Assert {
         res = (PathRoute) res.connectTo(new Vertex<>(v3), false);
         res.finish();
         res.sort(10000, 5);
-        return (PathRoute) res.getRoot();
+        return res.getRoot();
     }
 
     @Test
     public void testPathRoute2() throws Exception {
         LOG.info("Start path route test 2");
-        PathRoute path = initTest2().getNext();
+        PathRoute path = initTest2();
+        assertEquals(1000, path.getProfit(), 0.0001);
+
+        path = path.getNext();
         Collection<Order> orders = path.getOrders();
 
         Order order1 = new Order(v1.getSell(ITEM1), v3.getBuy(ITEM1), 5);
@@ -123,13 +129,16 @@ public class PathRouteTest extends Assert {
         res = (PathRoute) res.connectTo(new Vertex<>(v4), false);
         res.finish();
         res.sort(10000, 5);
-        return (PathRoute) res.getRoot();
+        return res.getRoot();
     }
 
     @Test
     public void testPathRoute3() throws Exception {
         LOG.info("Start path route test 3");
-        PathRoute path = initTest3().getNext();
+        PathRoute path = initTest3();
+        assertEquals(800, path.getProfit(), 0.0001);
+
+        path = path.getNext();
         Collection<Order> orders = path.getOrders();
 
         Order order1 = new Order(v1.getSell(ITEM1), v3.getBuy(ITEM1), 5);
@@ -184,13 +193,16 @@ public class PathRouteTest extends Assert {
         res = (PathRoute) res.connectTo(new Vertex<>(v5), false);
         res.finish();
         res.sort(10000, 5);
-        return (PathRoute) res.getRoot();
+        return res.getRoot();
     }
 
     @Test
     public void testPathRoute4() throws Exception {
         LOG.info("Start path route test 4");
-        PathRoute path = initTest4().getNext();
+        PathRoute path = initTest4();
+        assertEquals(1000, path.getProfit(), 0.0001);
+
+        path = path.getNext();
         Collection<Order> orders = path.getOrders();
 
         Order order1 = new Order(v1.getSell(ITEM1), v2.getBuy(ITEM1), 5);
@@ -251,13 +263,16 @@ public class PathRouteTest extends Assert {
         res = (PathRoute) res.connectTo(new Vertex<>(v4), false);
         res.finish();
         res.sort(500, 5);
-        return (PathRoute) res.getRoot();
+        return res.getRoot();
     }
 
     @Test
     public void testPathRoute5() throws Exception {
         LOG.info("Start path route test 5");
-        PathRoute path = initTest5().getNext();
+        PathRoute path = initTest5();
+        assertEquals(620, path.getProfit(), 0.0001);
+
+        path = path.getNext();
         Collection<Order> orders = path.getOrders();
 
         Order order1 = new Order(v1.getSell(ITEM1), v3.getBuy(ITEM1), 5);

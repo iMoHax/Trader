@@ -60,6 +60,42 @@ public class MarketAnalyzer {
         return top;
     }
 
+    public Collection<Order> getOrders(Vendor vendor, double balance) {
+        Collection<Order> res = new ArrayList<>();
+        for (Offer sell : vendor.getAllSellOffers()) {
+            long count = Math.min(cargo, (long) Math.floor(balance / sell.getPrice()));
+            LOG.trace("Sell offer {}, count = {}", sell, count);
+            if (count == 0) continue;
+            Iterator<Offer> buyers = market.getStatBuy(sell.getItem()).getOffers().descendingIterator();
+            while (buyers.hasNext()){
+                Offer buy = buyers.next();
+                Order order = new Order(sell, buy, count);
+                LOG.trace("Buy offer {} profit = {}", buy, order.getProfit());
+                res.add(order);
+            }
+        }
+        return res;
+    }
+
+    public Collection<Order> getOrders(Vendor from, Vendor to, double balance) {
+        Collection<Order> res = new ArrayList<>();
+        for (Offer sell : from.getAllSellOffers()) {
+            long count = Math.min(cargo, (long) Math.floor(balance / sell.getPrice()));
+            LOG.trace("Sell offer {}, count = {}", sell, count);
+            if (count == 0) continue;
+
+            Offer buy = to.getBuy(sell.getItem());
+            if (buy != null){
+                Order order = new Order(sell, buy, count);
+                LOG.trace("Buy offer {} profit = {}", buy, order.getProfit());
+                res.add(order);
+            }
+
+        }
+        return res;
+    }
+
+
     private void rebuild(Vendor source){
         graph = new Graph<>(source, market.get(), tank, maxDistance, true, jumps, PathRoute::new);
     }
@@ -74,6 +110,22 @@ public class MarketAnalyzer {
         return graph.getPathsTo(to, true);
     }
 
+    public Path<Vendor> getPath(Vendor from, Vendor to){
+        setSource(from);
+        return graph.getFastPathTo(to);
+    }
+
+    public Collection<PathRoute> getPaths(Vendor from, double balance){
+        Collection<PathRoute> res = new ArrayList<>();
+        for (Vendor vendor : market.get()) {
+            PathRoute path = (PathRoute) getPath(from, vendor);
+            if (path == null) continue;
+            path.sort(balance, cargo);
+            res.add(path);
+        }
+        return res;
+    }
+
     public Collection<PathRoute> getPaths(Vendor from, Vendor to, double balance){
         Collection<Path<Vendor>> paths = getPaths(from, to);
         Collection<PathRoute> res = new ArrayList<>(paths.size());
@@ -84,6 +136,21 @@ public class MarketAnalyzer {
         }
         return res;
     }
+
+    public Collection<PathRoute> getTopPaths(int limit, double balance){
+        TreeSet<PathRoute> top = new TreeSet<>((p1, p2) -> Double.compare(p2.getProfit(), p1.getProfit()));
+        for (Vendor vendor : market.get()) {
+            Collection<PathRoute> paths = getPaths(vendor, vendor, balance);
+            for (PathRoute path : paths) {
+                top.add(path);
+                if (top.size() > limit) {
+                    top.pollLast();
+                }
+            }
+        }
+        return top;
+    }
+
 
     public void setTank(double tank) {
         this.tank = tank;
@@ -107,4 +174,5 @@ public class MarketAnalyzer {
     public long getCargo() {
         return cargo;
     }
+
 }

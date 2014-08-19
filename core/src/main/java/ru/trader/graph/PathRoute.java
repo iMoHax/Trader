@@ -49,7 +49,7 @@ public class PathRoute extends Path<Vendor> {
     }
 
     public PathRoute getCopy(){
-        PathRoute path = (PathRoute) getRoot();
+        PathRoute path = getRoot();
         PathRoute res = new PathRoute(path.getTarget());
         while (path.hasNext()){
             path = path.getNext();
@@ -180,11 +180,11 @@ public class PathRoute extends Path<Vendor> {
     }
 
     private void backwardSort(){
-        if (isRoot()) return;
         orders.sort(this::compareOrders);
         LOG.trace("New order of orders {}", orders);
         updateProfit();
-        getPrevious().backwardSort();
+        if (!isRoot())
+            getPrevious().backwardSort();
     }
 
     private void updateBalance() {
@@ -209,10 +209,10 @@ public class PathRoute extends Path<Vendor> {
 
 
     private void updateProfit() {
-        Order best = orders.get(0);
+        Order best = orders.isEmpty()? TRANSIT : orders.get(0);
         if (best == TRANSIT) profit = getTransitProfit();
         else profit = getProfit(best);
-        LOG.trace("Max profit from {} = {}", getPrevious().get(), profit);
+        LOG.trace("Max profit from {} = {}", isRoot() ? get() : getPrevious().get(), profit);
     }
 
     private double getTransitProfit(){

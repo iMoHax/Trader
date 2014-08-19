@@ -48,3 +48,39 @@ HBox.fields-group hbox-margin{
 .center {
     -fx-alignment: center;
 }
+
+
+/*   Path      */
+.path {
+    -fx-alignment: center-left;
+    -fx-spacing: 5px;
+    -fx-fill-height: true;
+}
+
+.path-vendor {
+    -fx-alignment: center-left;
+    -fx-text-alignment: left;
+}
+
+.path-icons {
+    -fx-alignment: center;
+}
+
+.path-track {
+    -fx-padding: 0 8;
+    -fx-alignment: center;
+}
+
+.path-track .text {
+    -fx-font-size: 16pt;
+}
+
+
+.path-track-text {
+    -fx-font-size: 7pt;
+}
+
+.path-pane {
+    -fx-padding: 10;
+    -fx-alignment: center-left;
+}

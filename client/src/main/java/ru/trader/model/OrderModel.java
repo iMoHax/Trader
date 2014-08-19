@@ -31,6 +31,13 @@ public class OrderModel {
         };
     }
 
+    public OrderModel(OfferDescModel sellOffer, OfferModel buyOffer, long max) {
+        this(sellOffer);
+        this.max = max;
+        setBuyer(buyOffer);
+        setCount(max);
+    }
+
     public OrderModel(OfferDescModel offer, double balance, long limit) {
         this(offer);
         this.max = Math.min(limit, (long) Math.floor(balance / offer.getPrice()));

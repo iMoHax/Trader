@@ -6,12 +6,11 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
-import ru.trader.model.MarketModel;
-import ru.trader.model.OfferDescModel;
-import ru.trader.model.OrderModel;
-import ru.trader.model.VendorModel;
+import ru.trader.model.*;
 import ru.trader.view.support.NumberField;
+import ru.trader.view.support.RouteNode;
 
 
 import java.util.Collection;
@@ -29,6 +28,9 @@ public class RoutersController {
     private NumberField tank;
     @FXML
     private NumberField jumps;
+
+    @FXML
+    private ScrollPane path;
 
     @FXML
     private Button add;
@@ -60,9 +62,9 @@ public class RoutersController {
 
         balance.setValue(1000);
         cargo.setValue(4);
-        tank.setValue(30);
+        tank.setValue(20);
         distance.setValue(7);
-        jumps.setValue(4);
+        jumps.setValue(3);
 
         add.disableProperty().bind(this.balance.wrongProperty().or(this.cargo.wrongProperty()));
         tblOrders.setItems(FXCollections.observableArrayList());
@@ -87,7 +89,8 @@ public class RoutersController {
         market = MainController.getMarket();
         source.setItems(market.vendorsProperty());
         source.getSelectionModel().selectFirst();
-        target.setItems(market.vendorsProperty());
+        target.setItems(FXCollections.observableArrayList(market.vendorsProperty()));
+        target.getItems().add(0, null);
         tblOrders.getItems().clear();
         totalBalance.setValue(balance.getValue());
         totalProfit.setValue(0);
@@ -129,6 +132,7 @@ public class RoutersController {
         tblOrders.getItems().clear();
         totalBalance.setValue(balance.getValue());
         totalProfit.setValue(0);
+        path.setContent(null);
     }
 
 
@@ -139,14 +143,45 @@ public class RoutersController {
         }
     }
 
+    public void showOrders(){
+        VendorModel s = source.getSelectionModel().getSelectedItem();
+        VendorModel t = target.getSelectionModel().getSelectedItem();
+        OrderModel order;
+        if (t==null){
+            order = Screeners.showTopOrders(market.getOrders(s, totalBalance.getValue().doubleValue()));
+        } else {
+            order = Screeners.showTopOrders(market.getOrders(t, s, totalBalance.getValue().doubleValue()));
+        }
+        if (order!=null){
+            tblOrders.getItems().add(order);
+        }
+    }
+
     public void showRoutes(){
         VendorModel s = source.getSelectionModel().getSelectedItem();
         VendorModel t = target.getSelectionModel().getSelectedItem();
-        if (t==null) return;
-
-        MarketModel market = MainController.getMarket();
-        Screeners.showRouters(market.getRouters(s, t, totalBalance.getValue().doubleValue()));
+        PathRouteModel path;
+        if (t==null){
+            path = Screeners.showRouters(market.getRoutes(s, totalBalance.getValue().doubleValue()));
+        } else {
+            path = Screeners.showRouters(market.getRoutes(s, t, totalBalance.getValue().doubleValue()));
+        }
+        if (path!=null){
+            tblOrders.getItems().addAll(path.getOrders());
+            setPath(path);
+        }
     }
 
+    public void showTopRoutes(){
+        PathRouteModel path = Screeners.showRouters(market.getTopRoutes(totalBalance.getValue().doubleValue()));
+        if (path!=null){
+            tblOrders.getItems().addAll(path.getOrders());
+            setPath(path);
+        }
+    }
+
+    private void setPath(PathRouteModel route){
+        path.setContent(new RouteNode(route).getNode());
+    }
 
 }
