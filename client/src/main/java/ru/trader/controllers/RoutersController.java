@@ -179,7 +179,7 @@ public class RoutersController {
         if (t==null){
             order = Screeners.showOrders(market.getOrders(s, totalBalance.getValue().doubleValue()));
         } else {
-            order = Screeners.showOrders(market.getOrders(t, s, totalBalance.getValue().doubleValue()));
+            order = Screeners.showOrders(market.getOrders(s, t, totalBalance.getValue().doubleValue()));
         }
         if (order!=null){
             tblOrders.getItems().add(order);
