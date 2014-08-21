@@ -359,7 +359,7 @@ public class PathRouteTest extends Assert {
         path = path.getRoot();
 
         assertEquals(620, path.getProfit(), 0.0001);
-        assertEquals(2, path.getLandsCount());
+        assertEquals(3, path.getLandsCount());
 
         path = path.getNext();
         Collection<Order> orders = path.getOrders();
