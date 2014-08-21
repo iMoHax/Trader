@@ -21,15 +21,14 @@ public class PathRouteModel {
         this.path = path;
         PathRoute p = path.getRoot();
         totalProfit = p.getProfit();
-        double d = 0; int j = 0, r = 0, l = 0;
+        lands = p.getLandsCount();
+        double d = 0; int j = 0, r = 0;
         while (p.hasNext()){
             p = p.getNext();
             d += p.getDistance();
             j++;
             if (p.isRefill()) r++;
-            if (p.getBest() != null || p.isRefill()) l++;
         }
-        lands = l;
         distance = d;
         jumps = j;
         refuels = r;
@@ -71,12 +70,31 @@ public class PathRouteModel {
             p = p.getNext();
             if (cargo == null && p.getBest()!=null){
                 cargo = p.getBest();
-                res.add(market.asModel(cargo));
+                OrderModel order = market.asModel(cargo);
+                order.setPath(p);
+                res.add(order);
             }
             if (cargo!=null && cargo.isBuyer(p.get())){
                 cargo = null;
             }
         }
         return res;
+    }
+
+    public void add(OrderModel order){
+        PathRoute p = market.getPath(order.getVendor(), order.getBuyer());
+        if (p == null) return;
+        p.getRoot().getNext().setOrder(new Order(order.getOffer().getOffer(), order.getBuyOffer().getOffer(), order.getCount()));
+        PathRoute head = path.getEnd();
+        add(p);
+        order.setPath(head);
+    }
+
+    public void add(PathRoute route){
+        path.getEnd().add(route, true);
+    }
+
+    public PathRouteModel remove(OrderModel order) {
+        return new PathRouteModel(path.dropTo(order.getVendor().getVendor()), market);
     }
 }

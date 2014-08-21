@@ -97,29 +97,32 @@ public class Graph<T extends Connectable<T>> {
         return vertexes.get(entry);
     }
 
-    public Collection<Path<T>> getPathsTo(T entry, boolean all){
+    public Collection<Path<T>> getPathsTo(T entry){
+        return getPathsTo(entry, 200);
+    }
+
+    public Collection<Path<T>> getPathsTo(T entry, int max){
         Vertex<T> target = getVertex(entry);
-        return findPaths(pathFabric.build(root), target, root.getLevel()-1, stock, all);
+        ArrayList<Path<T>> paths = new ArrayList<>(max);
+        findPaths(paths, max, pathFabric.build(root), target, root.getLevel()-1, stock);
+        return paths;
     }
 
 
-    private Collection<Path<T>> findPaths(Path<T> head, Vertex<T> target, int deep, double limit, boolean all){
-        Collection<Path<T>> paths = new ArrayList<>();
-        if (target == null) return paths;
-        boolean found =false;
+    private boolean findPaths(ArrayList<Path<T>> paths, int max, Path<T> head, Vertex<T> target, int deep, double limit){
+        if (target == null) return true;
         Vertex<T> source = head.getTarget();
         LOG.trace("Find path to deep from {} to {}, deep {}, limit {}, head {}", source, target, deep, limit, head);
         Edge<T> edge = source.getEdge(target);
         if (edge != null ){
             if (!(withRefill && Math.min(limit, maxDistance) < edge.getLength() && !source.getEntry().canRefill())){
-                found = true;
                 Path<T> path = head.connectTo(edge.getTarget(), limit < edge.getLength());
                 path.finish();
                 LOG.trace("Last edge find, add path {}", path);
-                paths.add(path);
+                if (onFindPath(paths, max, path)) return true;
             }
         }
-        if ((all || !found) && deep > 0 ){
+        if (deep > 0 ){
             if (source.getEdgesCount() > 0){
                 LOG.trace("Search around");
                 for (Edge<T> next : source.getEdges()) {
@@ -131,12 +134,17 @@ public class Graph<T extends Connectable<T>> {
                     double nextLimit = withRefill ? limit - next.getLength(): stock;
                     // refill
                     if (nextLimit < 0 ) nextLimit = maxDistance - next.getLength();
-                    paths.addAll(findPaths(path, target, deep - 1, nextLimit, all));
-                    if (!all && !paths.isEmpty()) break;
+                    if (findPaths(paths, max, path, target, deep - 1, nextLimit)) return true;
                 }
             }
         }
-        return paths;
+        return false;
+    }
+
+    // if is true, then break search
+    protected boolean onFindPath(ArrayList<Path<T>> paths, int max, Path<T> path){
+        paths.add(path);
+        return paths.size() >= max;
     }
 
 

@@ -156,8 +156,8 @@ public class Screeners {
         itemDescController.close();
     }
 
-    public static OrderModel showTopOrders(ObservableList<OrderModel> top) {
-        return topOrdersController.showDialog(mainScreen, topOrdersScreen, top);
+    public static OrderModel showOrders(ObservableList<OrderModel> orders) {
+        return topOrdersController.showDialog(mainScreen, topOrdersScreen, orders);
     }
 
     public static PathRouteModel showRouters(ObservableList<PathRouteModel> routers) {

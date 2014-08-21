@@ -94,6 +94,10 @@ public class Path<T extends Connectable<T>> {
         return refill;
     }
 
+    public void setRefill(boolean refill) {
+        this.refill = refill;
+    }
+
     protected Path<T> getPrevious(){
         return head;
     }

@@ -208,13 +208,13 @@ public class GraphTest extends Assert {
         Graph<Point> graph = new Graph<>(x5, entrys, 5.1, 2);
         // x5 <-> x4, x5 <-> x6
 
-        Collection<Path<Point>> paths = graph.getPathsTo(x4, true);
+        Collection<Path<Point>> paths = graph.getPathsTo(x4);
         TestUtil.assertCollectionEquals(paths, Path.toPath(x5, x4));
 
-        paths = graph.getPathsTo(x6, true);
+        paths = graph.getPathsTo(x6);
         TestUtil.assertCollectionEquals(paths, Path.toPath(x5, x6));
 
-        paths = graph.getPathsTo(x7, true);
+        paths = graph.getPathsTo(x7);
         assertEquals(paths.size(), 0);
 
     }
@@ -226,21 +226,21 @@ public class GraphTest extends Assert {
         //  x5 <-> x4 <-> x3 <-> x2, x5 <-> x6 <-> x7 <-> x8
         //  x5 <-> x3,  x4 <-> x2,  x3 <-> x6, x4 <-> x6
 
-        Collection<Path<Point>> paths = graph.getPathsTo(x8, true);
+        Collection<Path<Point>> paths = graph.getPathsTo(x8);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x6, x7, x8));
 
-        paths = graph.getPathsTo(x7, true);
+        paths = graph.getPathsTo(x7);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x6, x7), Path.toPath(x5, x4, x6, x7), Path.toPath(x5, x3, x6, x7));
 
-        paths = graph.getPathsTo(x7, false);
+        paths = graph.getPathsTo(x7, 1);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x3, x6, x7));
 
-        paths = graph.getPathsTo(x4, true);
+        paths = graph.getPathsTo(x4);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x4), Path.toPath(x5, x6, x4), Path.toPath(x5, x3, x4),
             Path.toPath(x5, x6, x3, x4), Path.toPath(x5, x3, x2, x4), Path.toPath(x5, x3, x6, x4));
 
 
-        paths = graph.getPathsTo(x5, true);
+        paths = graph.getPathsTo(x5);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x4, x5), Path.toPath(x5, x4, x6, x5), Path.toPath(x5, x4, x3, x5),
             Path.toPath(x5, x6, x5), Path.toPath(x5, x6, x4, x5), Path.toPath(x5, x6, x3, x5), Path.toPath(x5, x3, x5),
             Path.toPath(x5, x3, x4, x5), Path.toPath(x5, x3, x6, x5));
@@ -264,13 +264,13 @@ public class GraphTest extends Assert {
         //  x5 <-> x4 <- refill -> x3 <- refill -> x2, x5 <-> x6
         //  x5 <-> x3 <- refill -> x2,  x5 <-> x4 <- refill -> x6
 
-        Collection<Path<Point>> paths = graph.getPathsTo(x1, true);
+        Collection<Path<Point>> paths = graph.getPathsTo(x1);
         assertTrue(paths.isEmpty());
 
-        paths = graph.getPathsTo(x2, true);
+        paths = graph.getPathsTo(x2);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x4, x3, x2), Path.toPath(x5, x3, x2));
 
-        paths = graph.getPathsTo(x6, true);
+        paths = graph.getPathsTo(x6);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x6), Path.toPath(x5, x4, x6), Path.toPath(x5, x3, x4, x6));
 
         Path<Point> fast = graph.getFastPathTo(x2);
@@ -287,19 +287,19 @@ public class GraphTest extends Assert {
         // x5 <-> x3 <- refill -> x2
         // x5 <-> x4 <- refill -> x6
 
-        Collection<Path<Point>> paths = graph.getPathsTo(x1, true);
+        Collection<Path<Point>> paths = graph.getPathsTo(x1);
         assertTrue(paths.isEmpty());
 
-        paths = graph.getPathsTo(x2, true);
+        paths = graph.getPathsTo(x2);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x3, x4, x2), Path.toPath(x5, x3, x2),
             Path.toPath(x5, x4, x3, x2), Path.toPath(x5, x4, x2),
             Path.toPath(x5, x6, x4, x2), Path.toPath(x5, x6, x4, x3, x2));
 
-        paths = graph.getPathsTo(x6, true);
+        paths = graph.getPathsTo(x6);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x6), Path.toPath(x5, x4, x6),
             Path.toPath(x5, x3, x4, x6), Path.toPath(x5, x3, x6), Path.toPath(x5, x4, x3, x6));
 
-        paths = graph.getPathsTo(x7, true);
+        paths = graph.getPathsTo(x7);
         assertTrue(paths.isEmpty());
 
         Path<Point> fast = graph.getFastPathTo(x2);

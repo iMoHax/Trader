@@ -1,6 +1,7 @@
 package ru.trader.controllers;
 
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -11,9 +12,6 @@ import javafx.scene.control.TableView;
 import ru.trader.model.*;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.RouteNode;
-
-
-import java.util.Collection;
 
 
 public class RoutersController {
@@ -33,7 +31,10 @@ public class RoutersController {
     private ScrollPane path;
 
     @FXML
-    private Button add;
+    private Button editBtn;
+
+    @FXML
+    private Button removeBtn;
 
     @FXML
     private ComboBox<VendorModel> source;
@@ -51,14 +52,22 @@ public class RoutersController {
 
     private MarketModel market;
 
+    private PathRouteModel route;
+
     @FXML
     private void initialize(){
         init();
         balance.numberProperty().addListener((ov, o, n) -> totalBalance.setValue(n));
-        cargo.numberProperty().addListener((ov, o, n) -> market.setCargo(n.longValue()));
+        cargo.numberProperty().addListener((ov, o, n) -> market.setCargo(n.intValue()));
         tank.numberProperty().addListener((ov, o, n) -> market.setTank(n.doubleValue()));
         distance.numberProperty().addListener((ov, o, n) -> market.setDistance(n.doubleValue()));
         jumps.numberProperty().addListener((ov, o, n) -> market.setJumps(n.intValue()));
+
+        balance.setOnAction((v)->cargo.requestFocus());
+        cargo.setOnAction((v) -> tank.requestFocus());
+        tank.setOnAction((v) -> distance.requestFocus());
+        distance.setOnAction((v)->jumps.requestFocus());
+        jumps.setOnAction((v)->balance.requestFocus());
 
         balance.setValue(1000);
         cargo.setValue(4);
@@ -66,7 +75,13 @@ public class RoutersController {
         distance.setValue(7);
         jumps.setValue(3);
 
-        add.disableProperty().bind(this.balance.wrongProperty().or(this.cargo.wrongProperty()));
+        editBtn.disableProperty().bind(tblOrders.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
+        removeBtn.disableProperty().bind(Bindings.createBooleanBinding(()-> {
+            int sel = tblOrders.getSelectionModel().getSelectedIndex();
+            return sel == -1 || sel != tblOrders.getItems().size()-1;
+        }, tblOrders.getSelectionModel().selectedIndexProperty()));
+
+
         tblOrders.setItems(FXCollections.observableArrayList());
         tblOrders.getItems().addListener((ListChangeListener<OrderModel>) c -> {
             while (c.next()) {
@@ -96,35 +111,47 @@ public class RoutersController {
         totalProfit.setValue(0);
     }
 
-    private Collection<OfferDescModel> getOffers(){
-        VendorModel vendor = source.getSelectionModel().getSelectedItem();
-        return vendor.getSells(market::asOfferDescModel);
-    }
 
     private void onAdd(OrderModel order){
         totalProfit.add(order.getProfit());
         totalBalance.add(order.getProfit());
-        source.getSelectionModel().select(order.getBuyer().getVendor());
+        source.getSelectionModel().select(order.getBuyOffer().getVendor());
+        balance.setDisable(true);
+        source.setDisable(true);
     }
 
     private void onRemove(OrderModel order) {
         totalProfit.sub(order.getProfit());
         totalBalance.sub(order.getProfit());
         source.getSelectionModel().select(order.getVendor());
+        if (tblOrders.getItems().isEmpty()) {
+            balance.setDisable(false);
+            source.setDisable(false);
+        }
     }
 
-    public void addOrders(){
-        Collection<OrderModel> orders = Screeners.showOrders(getOffers(), totalBalance.getValue().doubleValue(), cargo.getValue().longValue());
-        if (orders!=null){
-            tblOrders.getItems().addAll(orders);
+    public void editOrders(){
+        OrderModel sel = tblOrders.getSelectionModel().getSelectedItem();
+        int index = tblOrders.getSelectionModel().getSelectedIndex();
+
+        OrderModel order = Screeners.showOrders(market.getOrders(sel.getVendor(), sel.getBuyer(), sel.getBalance()));
+        if (order!=null){
+            tblOrders.getItems().set(index, order);
         }
+
     }
 
     public void removeSelected(){
         TableView.TableViewSelectionModel<OrderModel> select = tblOrders.getSelectionModel();
         if (!select.isEmpty()){
             int index = select.getSelectedIndex();
+            if (index > 0){
+                route = route.remove(select.getSelectedItem());
+            } else {
+                route = null;
+            }
             tblOrders.getItems().remove(index);
+            refreshPath();
         }
     }
 
@@ -132,14 +159,16 @@ public class RoutersController {
         tblOrders.getItems().clear();
         totalBalance.setValue(balance.getValue());
         totalProfit.setValue(0);
-        path.setContent(null);
+        route = null;
+        refreshPath();
     }
 
 
     public void showTopOrders(){
-        OrderModel order = Screeners.showTopOrders(market.getTop(100, totalBalance.getValue().doubleValue()));
+        OrderModel order = Screeners.showOrders(market.getTop(100, totalBalance.getValue().doubleValue()));
         if (order!=null){
             tblOrders.getItems().add(order);
+            addOrderToPath(order);
         }
     }
 
@@ -148,12 +177,13 @@ public class RoutersController {
         VendorModel t = target.getSelectionModel().getSelectedItem();
         OrderModel order;
         if (t==null){
-            order = Screeners.showTopOrders(market.getOrders(s, totalBalance.getValue().doubleValue()));
+            order = Screeners.showOrders(market.getOrders(s, totalBalance.getValue().doubleValue()));
         } else {
-            order = Screeners.showTopOrders(market.getOrders(t, s, totalBalance.getValue().doubleValue()));
+            order = Screeners.showOrders(market.getOrders(t, s, totalBalance.getValue().doubleValue()));
         }
         if (order!=null){
             tblOrders.getItems().add(order);
+            addOrderToPath(order);
         }
     }
 
@@ -168,7 +198,7 @@ public class RoutersController {
         }
         if (path!=null){
             tblOrders.getItems().addAll(path.getOrders());
-            setPath(path);
+            addRouteToPath(path);
         }
     }
 
@@ -176,12 +206,33 @@ public class RoutersController {
         PathRouteModel path = Screeners.showRouters(market.getTopRoutes(totalBalance.getValue().doubleValue()));
         if (path!=null){
             tblOrders.getItems().addAll(path.getOrders());
-            setPath(path);
+            addRouteToPath(path);
         }
     }
 
-    private void setPath(PathRouteModel route){
-        path.setContent(new RouteNode(route).getNode());
+    private void addRouteToPath(PathRouteModel route){
+        if (this.route == null){
+            this.route = route;
+        } else {
+            this.route.add(route.getPath());
+        }
+        refreshPath();
+    }
+
+    private void addOrderToPath(OrderModel order){
+        if (route != null){
+            route.add(order);
+        } else {
+            route = market.getPath(order);
+        }
+        refreshPath();
+    }
+
+    private void refreshPath(){
+        if (route != null)
+            path.setContent(new RouteNode(route).getNode());
+        else
+            path.setContent(null);
     }
 
 }

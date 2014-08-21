@@ -25,7 +25,7 @@
                 <cellValueFactory><PropertyValueFactory property="count"/></cellValueFactory>
             </TableColumn>
             <TableColumn minWidth="160.0" text="Покупатель">
-                <cellValueFactory><OfferCellValueImpl property="buyer"/></cellValueFactory>
+                <cellValueFactory><OfferCellValueImpl property="buyOffer"/></cellValueFactory>
             </TableColumn>
             <TableColumn minWidth="80.0" text="Прибыль">
                 <cellFactory><DoubleCell/></cellFactory>

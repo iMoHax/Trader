@@ -178,7 +178,7 @@ public class MarketModel {
     }
 
 
-    public void setCargo(long cargo){
+    public void setCargo(int cargo){
         analyzer.setCargo(cargo);
     }
 
@@ -216,6 +216,17 @@ public class MarketModel {
 
     public ObservableList<PathRouteModel> getTopRoutes(double balance){
         return BindingsHelper.observableList(analyzer.getTopPaths(100, balance), this::asModel);
+    }
+
+    PathRoute getPath(VendorModel from, VendorModel to) {
+        return analyzer.getPath(from.getVendor(), to.getVendor());
+    }
+
+    public PathRouteModel getPath(OrderModel order) {
+        PathRoute p = analyzer.getPath(order.getVendor().getVendor(), order.getBuyer().getVendor());
+        p.setOrder(new Order(order.getOffer().getOffer(), order.getBuyOffer().getOffer(), order.getCount()));
+        order.setPath(p);
+        return asModel(p);
     }
 
 }

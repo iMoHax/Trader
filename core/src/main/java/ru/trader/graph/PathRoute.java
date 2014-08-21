@@ -12,34 +12,21 @@ public class PathRoute extends Path<Vendor> {
     private final static Logger LOG = LoggerFactory.getLogger(PathRoute.class);
 
     private final ArrayList<Order> orders = new ArrayList<>();
-    private final boolean expand;
-    private final int index;
     private double profit = 0;
     private double balance = 0;
     private PathRoute tail;
-    private int ordersCount = 0;
     public final static Order TRANSIT = null;
-
-    public PathRoute(Vertex<Vendor> source, boolean expand) {
-        super(source);
-        this.expand = expand;
-        index = 0;
-    }
 
     public PathRoute(Vertex<Vendor> source) {
         super(source);
-        expand = false;
-        index = 0;
     }
 
     private PathRoute(PathRoute head, Vertex<Vendor> vertex, boolean refill) {
         super(head, vertex, refill);
         assert head.tail == null;
         head.tail = this;
-        expand = head.expand;
         //transit
-        orders.add(ordersCount++, TRANSIT);
-        index = head.index+1;
+        orders.add(TRANSIT);
     }
 
     @Override
@@ -48,56 +35,53 @@ public class PathRoute extends Path<Vendor> {
         return new PathRoute(this.getCopy(), vertex, refill);
     }
 
+    public void add(PathRoute path, boolean withOrders) {
+        LOG.trace("Add path {} to {}", path, this);
+        PathRoute res = this;
+        path = path.getRoot();
+        if (!path.getTarget().equals(getTarget())){
+            res = new PathRoute(res, path.getTarget(), true);
+        }
+        while (path.hasNext()){
+            path = path.getNext();
+            res = new PathRoute(res, path.getTarget(), res == this || path.isRefill());
+            if (withOrders){
+                res.orders.clear();
+                res.orders.addAll(path.getOrders());
+            }
+        }
+        if (withOrders){
+            update();
+        } else {
+            res.finish();
+        }
+    }
+
     public PathRoute getCopy(){
+        return getCopy(false);
+    }
+
+    public PathRoute getCopy(boolean withOrders){
         PathRoute path = getRoot();
         PathRoute res = new PathRoute(path.getTarget());
+        if (withOrders) {
+            res.orders.clear();
+            res.orders.addAll(path.getOrders());
+        }
         while (path.hasNext()){
             path = path.getNext();
             res = new PathRoute(res, path.getTarget(), path.isRefill());
+            if (withOrders) {
+                res.orders.clear();
+                res.orders.addAll(path.getOrders());
+            }
         }
         return res;
     }
 
     private void addOrder(Order order){
         LOG.trace("Add order {} to path {}", order, this);
-        orders.add(ordersCount++, order);
-        if (expand) expand(order);
-    }
-
-    private void expand(Order order){
-        LOG.trace("Expand orders");
-        if (hasNext()){
-            PathRoute next = getNext();
-            LOG.trace("Add {} clone of order", next.ordersCount - 1);
-            for (int i = 1; i < next.ordersCount; i++) {
-                orders.add(ordersCount++, new Order(order.getSell(), order.getBuy()));
-                addTransitsToHead();
-            }
-            cloneTailOrders(next.ordersCount);
-        }
-        addTransitsToHead();
-    }
-
-    private void addTransitsToHead(){
-        PathRoute p = getPrevious();
-        while (!p.isRoot()) {
-            LOG.trace("Add transit order to path {}", p);
-            p.orders.add(p.ordersCount++, TRANSIT);
-            p = p.getPrevious();
-        }
-    }
-
-    private void cloneTailOrders(int count){
-        if (hasNext()) {
-            PathRoute p = getNext();
-            LOG.trace("Duplicate {} orders of path {}", count, p);
-            for (int i = 0; i < count; i++) {
-                Order o = p.orders.get(i);
-                if (o == TRANSIT) p.orders.add(TRANSIT);
-                else p.orders.add(new Order(o.getSell(), o.getBuy()));
-            }
-            p.cloneTailOrders(count);
-        }
+        orders.add(order);
     }
 
     @Override
@@ -109,6 +93,8 @@ public class PathRoute extends Path<Vendor> {
     }
 
     private void fillOrders(){
+        orders.clear();
+        orders.add(TRANSIT);
         LOG.trace("Fill orders of path {}", this);
         Vendor seller = getPrevious().get();
         for (Offer sell : seller.getAllSellOffers()) {
@@ -126,7 +112,7 @@ public class PathRoute extends Path<Vendor> {
     }
 
     public boolean isEmpty(){
-        return ordersCount <= 1;
+        return orders.size() <= 1;
     }
 
     @Override
@@ -140,6 +126,19 @@ public class PathRoute extends Path<Vendor> {
 
     public boolean hasNext(){
         return tail != null;
+    }
+
+    public void update(){
+        PathRoute p = this;
+        p.updateBalance();
+        while (p.hasNext()){
+            p = p.getNext();
+            p.updateBalance();
+        }
+        while (p != this){
+            p.updateProfit();
+            p = p.getPrevious();
+        }
     }
 
     public void sort(double balance, long limit){
@@ -250,27 +249,17 @@ public class PathRoute extends Path<Vendor> {
         return Double.compare(profit2, profit1);
     }
 
-    public PathRoute getPath(int index){
-        if (this.index == index) return this;
-        if (this.index > index){
-            return isRoot() ? null : getPrevious().getPath(index);
-        } else {
-            return hasNext() ? getNext().getPath(index) : null;
-        }
-    }
-
     @Override
     public PathRoute getRoot() {
         return (PathRoute) super.getRoot();
     }
 
-    public Order getBest(){
-        return orders.get(0);
+    public PathRoute getEnd() {
+        return hasNext()? getNext().getEnd() : this;
     }
 
-    public double getMaxProfit(){
-        Order o = orders.get(0);
-        return  o != TRANSIT ? o.getProfit() : 0;
+    public Order getBest(){
+        return orders.get(0);
     }
 
     public double getDistance(){
@@ -280,9 +269,7 @@ public class PathRoute extends Path<Vendor> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        int step = !hasNext() || tail.ordersCount == 0 ? 1 : tail.ordersCount;
-        for (int i = 0; i < ordersCount; i += step) {
-            Order order = orders.get(i);
+        for (Order order : orders) {
             if (order == TRANSIT) continue;
             if (sb.length() > 0) sb.append(", ");
             sb.append(order.getBuy().getItem());
@@ -300,6 +287,51 @@ public class PathRoute extends Path<Vendor> {
             sb.append(" -> ").append(get());
         }
         return sb.toString();
+    }
+
+    public void setOrder(Order order) {
+        orders.set(0, order);
+    }
+
+    public int getLandsCount(){
+        int res = 0;
+        PathRoute p = this.isRoot() ? getNext() : this;
+        Order o = p.getBest();
+        while (p.hasNext()){
+            p = p.getNext();
+            // lands for sell
+            if (o != null && p.isPathFrom(o.getBuyer())){
+                LOG.trace("{} is lands for sell by order {}", p, o);
+                o = p.getBest();
+                res++;
+            } else {
+                if (o == null){
+                    o = p.getBest();
+                    if (o!= null){
+                        LOG.trace("{} is lands for by by order {}", p, o);
+                        res++;
+                    }
+                } else {
+                    if (p.isRefill()){
+                        LOG.trace("{} is lands for refill", p);
+                        res++;
+                    }
+                }
+            }
+
+        }
+        LOG.trace("{} is end, landing", p);
+        res++;
+        return res;
+    }
+
+    public PathRoute dropTo(Vendor vendor){
+        PathRoute p = getCopy(true).getEnd();
+        while (!p.isRoot() && !p.get().equals(vendor)){
+            p = p.getPrevious();
+        }
+        p.tail = null;
+        return p;
     }
 
 }

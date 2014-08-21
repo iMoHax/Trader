@@ -2,6 +2,8 @@ package ru.trader.model;
 
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
+import ru.trader.core.Order;
+import ru.trader.graph.PathRoute;
 import ru.trader.model.support.ModelBindings;
 
 import java.util.List;
@@ -16,6 +18,7 @@ public class OrderModel {
     private DoubleProperty profit;
     private DoubleProperty distance;
     private DoubleProperty bestProfit;
+    private PathRoute path;
 
     public OrderModel(OfferDescModel offer) {
         this.offer = offer;
@@ -34,7 +37,7 @@ public class OrderModel {
     public OrderModel(OfferDescModel sellOffer, OfferModel buyOffer, long max) {
         this(sellOffer);
         this.max = max;
-        setBuyer(buyOffer);
+        setBuyOffer(buyOffer);
         setCount(max);
     }
 
@@ -95,21 +98,26 @@ public class OrderModel {
         return profitProperty().get();
     }
 
-    public ReadOnlyObjectProperty<OfferModel> buyerProperty() {
+    public ReadOnlyObjectProperty<OfferModel> buyOfferProperty() {
         return buyer;
     }
 
-    public void setBuyer(OfferModel buyer) {
+    public void setBuyOffer(OfferModel buyer) {
         this.buyer.set(buyer);
         if (distance!=null) distance.set(getVendor().getDistance(buyer.getVendor()));
     }
 
-    public OfferModel getBuyer() {
+    public OfferModel getBuyOffer() {
         return buyer.get();
     }
 
     public VendorModel getVendor() {
         return offer.getOffer().getVendor();
+    }
+
+    public VendorModel getBuyer() {
+        OfferModel buyOffer = getBuyOffer();
+        return buyOffer != null ? buyer.get().getVendor() : null;
     }
 
     public long getMax() {
@@ -126,11 +134,22 @@ public class OrderModel {
 
     public ReadOnlyDoubleProperty distanceProperty() {
         if (distance == null){
-            OfferModel buyOffer = getBuyer();
-            distance = new SimpleDoubleProperty(buyOffer!=null ? getVendor().getDistance(buyOffer.getVendor()) : Double.NaN);
+            VendorModel buyer = getBuyer();
+            distance = new SimpleDoubleProperty(buyer!=null ? getVendor().getDistance(buyer) : Double.NaN);
         }
         return distance;
     }
 
+    void setPath(PathRoute path) {
+        this.path = path;
+    }
+
+    PathRoute getPath() {
+        return path;
+    }
+
+    public double getBalance(){
+        return path != null ? path.getBalance() : max * offer.getPrice();
+    }
 
 }

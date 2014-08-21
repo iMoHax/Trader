@@ -19,7 +19,6 @@ import ru.trader.model.OrderModel;
 import ru.trader.model.support.BindingsHelper;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public class OrdersController {
     private final Action OK = new AbstractAction("OK") {
@@ -84,7 +83,7 @@ public class OrdersController {
     }
 
     private Collection<OrderModel> getOrders() {
-        return tblOrders.getItems().filtered((o) -> o.getCount()>0 && o.getBuyer()!=null);
+        return tblOrders.getItems().filtered((o) -> o.getCount()>0 && o.getBuyOffer()!=null);
     }
 
     private void init(Collection<OfferDescModel> offers, double balance, long max) {
@@ -105,7 +104,7 @@ public class OrdersController {
 
     private void setBuyer(OfferModel offer) {
         if (order != null && offer!=null) {
-            order.setBuyer(offer);
+            order.setBuyOffer(offer);
             order.setCount(order.getMax());
         }
     }

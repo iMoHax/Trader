@@ -82,6 +82,10 @@ public class Order implements Comparable<Order> {
 
     }
 
+    public boolean equalsIgnoreCount(Order order) {
+        return buy.equals(order.buy) && sell.equals(order.sell);
+    }
+
     @Override
     public int hashCode() {
         int result;
