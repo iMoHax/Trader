@@ -237,7 +237,8 @@ public class GraphTest extends Assert {
 
         paths = graph.getPathsTo(x4);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x4), Path.toPath(x5, x6, x4), Path.toPath(x5, x3, x4),
-            Path.toPath(x5, x6, x3, x4), Path.toPath(x5, x3, x2, x4), Path.toPath(x5, x3, x6, x4));
+                Path.toPath(x5, x3, x5, x4), Path.toPath(x5, x6, x3, x4), Path.toPath(x5, x3, x2, x4), Path.toPath(x5, x3, x6, x4),
+                Path.toPath(x5, x6, x5, x4));
 
 
         paths = graph.getPathsTo(x5);
@@ -271,7 +272,8 @@ public class GraphTest extends Assert {
         TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x4, x3, x2), Path.toPath(x5, x3, x2));
 
         paths = graph.getPathsTo(x6);
-        TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x6), Path.toPath(x5, x4, x6), Path.toPath(x5, x3, x4, x6));
+        TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x6), Path.toPath(x5, x4, x6), Path.toPath(x5, x3, x5, x6),
+                Path.toPath(x5, x4, x5, x6), Path.toPath(x5, x3, x4, x6));
 
         Path<Point> fast = graph.getFastPathTo(x2);
         assertEquals(fast, Path.toPath(x5, x3, x2));
@@ -292,12 +294,16 @@ public class GraphTest extends Assert {
 
         paths = graph.getPathsTo(x2);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x3, x4, x2), Path.toPath(x5, x3, x2),
-            Path.toPath(x5, x4, x3, x2), Path.toPath(x5, x4, x2),
-            Path.toPath(x5, x6, x4, x2), Path.toPath(x5, x6, x4, x3, x2));
+            Path.toPath(x5, x4, x3, x2), Path.toPath(x5, x4, x2), Path.toPath(x5, x3, x5, x4, x2),
+            Path.toPath(x5, x6, x4, x2), Path.toPath(x5, x6, x4, x3, x2), Path.toPath(x5, x4, x3, x4, x2),
+            Path.toPath(x5, x4, x5, x4, x2), Path.toPath(x5, x6, x5, x4, x2), Path.toPath(x5, x3, x4, x3, x2));
 
         paths = graph.getPathsTo(x6);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x6), Path.toPath(x5, x4, x6),
-            Path.toPath(x5, x3, x4, x6), Path.toPath(x5, x3, x6), Path.toPath(x5, x4, x3, x6));
+            Path.toPath(x5, x3, x4, x6), Path.toPath(x5, x3, x6), Path.toPath(x5, x4, x3, x6),
+            Path.toPath(x5, x3, x4, x3, x6), Path.toPath(x5, x3, x4, x5, x6), Path.toPath(x5, x3, x5, x6),
+            Path.toPath(x5, x3, x5, x4, x6), Path.toPath(x5, x4, x3, x4, x6), Path.toPath(x5, x4, x3, x5, x6),
+            Path.toPath(x5, x4, x5, x6), Path.toPath(x5, x4, x5, x4, x6));
 
         paths = graph.getPathsTo(x7);
         assertTrue(paths.isEmpty());

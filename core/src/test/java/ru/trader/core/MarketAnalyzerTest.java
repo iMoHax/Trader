@@ -160,8 +160,8 @@ public class MarketAnalyzerTest extends Assert {
         analyzer.setJumps(3);analyzer.setMaxDistance(10);analyzer.setTank(15);
 
         Collection<Path<Vendor>> paths = analyzer.getPaths(v10, v6);
-        TestUtil.assertCollectionContainAll(paths, Path.toPath(v10, v6), Path.toPath(v10, v11, v6),
-                Path.toPath(v10, v8, v6), Path.toPath(v10, v8, v11, v6));
+        TestUtil.assertCollectionContainAll(paths, Path.toPath(v10, v6), Path.toPath(v10, v11, v6), Path.toPath(v10, v11, v10, v6),
+                Path.toPath(v10, v8, v6), Path.toPath(v10, v8, v10, v6), Path.toPath(v10, v8, v11, v6));
 
         paths = analyzer.getPaths(v10, v7);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(v10, v6, v7), Path.toPath(v10, v11, v6, v7),
@@ -170,7 +170,8 @@ public class MarketAnalyzerTest extends Assert {
 
         paths = analyzer.getPaths(v10, v8);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(v10, v8), Path.toPath(v10, v11, v8),
-                Path.toPath(v10, v11, v6, v8), Path.toPath(v10, v6, v8), Path.toPath(v10, v6, v11, v8));
+                Path.toPath(v10, v11, v6, v8), Path.toPath(v10, v6, v8), Path.toPath(v10, v6, v11, v8),
+                Path.toPath(v10, v11, v10, v8), Path.toPath(v10, v6, v10, v8));
 
         paths = analyzer.getPaths(v10, v9);
         assertTrue(paths.isEmpty());

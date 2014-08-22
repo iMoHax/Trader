@@ -127,7 +127,6 @@ public class Graph<T extends Connectable<T>> {
                 LOG.trace("Search around");
                 for (Edge<T> next : source.getEdges()) {
                     if (withRefill && Math.min(limit, maxDistance) < next.getLength() && !source.getEntry().canRefill()) continue;
-                    if (head.isConnect(next.getTarget())) continue;
                     // target already added if source consist edge
                     if (next.isConnect(target)) continue;
                     Path<T> path = head.connectTo(next.getTarget(), limit < next.getLength());
