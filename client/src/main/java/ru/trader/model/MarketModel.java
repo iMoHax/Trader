@@ -224,7 +224,8 @@ public class MarketModel {
 
     public PathRouteModel getPath(OrderModel order) {
         PathRoute p = analyzer.getPath(order.getVendor().getVendor(), order.getBuyer().getVendor());
-        p.setOrder(new Order(order.getOffer().getOffer(), order.getBuyOffer().getOffer(), order.getCount()));
+        if (p == null) return null;
+        p.getRoot().getNext().setOrder(new Order(order.getOffer().getOffer(), order.getBuyOffer().getOffer(), order.getCount()));
         order.setPath(p);
         return asModel(p);
     }
