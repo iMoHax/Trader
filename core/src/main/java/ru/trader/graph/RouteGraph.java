@@ -13,7 +13,13 @@ public class RouteGraph extends Graph<Vendor> {
 
         PathRoute r1 = (PathRoute) p1.getRoot();
         PathRoute r2 = (PathRoute) p2.getRoot();
-        return Double.compare(r2.getProfit()/r2.getLandsCount(), r1.getProfit()/r1.getLandsCount());
+        int cmp = Double.compare(r2.getProfit()/r2.getLandsCount(), r1.getProfit()/r1.getLandsCount());
+        if (cmp != 0 ) return cmp;
+        cmp = Double.compare(r1.getDistance(), r2.getDistance());
+        if (cmp != 0) return cmp;
+        cmp = Double.compare(r1.getLandsCount(), r2.getLandsCount());
+        if (cmp != 0) return cmp;
+        return cmp;
     };
 
 
