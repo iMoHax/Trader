@@ -35,8 +35,8 @@ public class RouteGraph extends Graph<Vendor> {
         route.sort(balance, limit);
         if (paths.size() == max){
             int index = Collections.binarySearch(paths, route, comparator);
-            if (index == -1) return false;
-            if (index < -1) index = -1 - index;
+            if (index < 0) index = -1 - index;
+            if (index == max) return false;
             paths.add(index, path);
             paths.remove(max);
 
