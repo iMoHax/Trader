@@ -263,7 +263,16 @@ public class PathRoute extends Path<Vendor> {
     }
 
     public double getDistance(){
-        return isRoot() ? 0 : getPrevious().get().getDistance(get());
+        if (isRoot()){
+            double res = 0;
+            PathRoute p = this;
+            while (p.hasNext()){
+                p = p.getNext();
+                res += p.getDistance();
+            }
+            return res;
+        }
+        else return getPrevious().get().getDistance(get());
     }
 
     @Override

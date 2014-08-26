@@ -7,10 +7,7 @@ import ru.trader.graph.Path;
 import ru.trader.graph.PathRoute;
 import ru.trader.graph.RouteGraph;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.TreeSet;
+import java.util.*;
 
 public class MarketAnalyzer {
     private final static Logger LOG = LoggerFactory.getLogger(MarketAnalyzer.class);
@@ -135,13 +132,15 @@ public class MarketAnalyzer {
     public Collection<PathRoute> getPaths(Vendor from, double balance){
         setSource(from);
         graph.setBalance(balance);
-        Collection<PathRoute> res = new ArrayList<>();
-        for (Vendor vendor : market.get()) {
+        Collection<Vendor> vendors = market.get();
+        List<PathRoute> res = new ArrayList<>(vendors.size()*10);
+        for (Vendor vendor : vendors) {
             Collection<Path<Vendor>> paths = graph.getPathsTo(vendor, 10);
             for (Path<Vendor> path : paths) {
                 res.add((PathRoute) path);
             }
         }
+        Collections.sort(res, RouteGraph.comparator);
         return res;
     }
 
@@ -157,16 +156,13 @@ public class MarketAnalyzer {
     }
 
     public Collection<PathRoute> getTopPaths(int limit, double balance){
-        TreeSet<PathRoute> top = new TreeSet<>((p1, p2) -> Double.compare(p2.getProfit()/p2.getLandsCount(), p1.getProfit()/p1.getLandsCount()));
+        List<PathRoute> top = new ArrayList<>(limit);
         for (Vendor vendor : market.get()) {
             setSource(vendor);
             graph.setBalance(balance);
             Collection<Path<Vendor>> paths = graph.getPathsTo(vendor, 10);
             for (Path<Vendor> path : paths) {
-                top.add((PathRoute) path);
-                if (top.size() > limit) {
-                    top.pollLast();
-                }
+                RouteGraph.addToTop(top, (PathRoute)path, limit, RouteGraph.comparator);
             }
         }
         return top;
