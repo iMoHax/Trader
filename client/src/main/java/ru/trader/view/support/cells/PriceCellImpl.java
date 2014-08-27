@@ -2,6 +2,7 @@ package ru.trader.view.support.cells;
 
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Callback;
@@ -29,7 +30,7 @@ public class PriceCellImpl implements Callback<TableColumn<OfferDescModel, Doubl
             OfferDescModel offerDesc = (OfferDescModel) getTableRow().getItem();
             if (offerDesc!=null){
                 double d = offerDesc.getDiff();
-                TextFlow txt = new TextFlow();
+                HBox txt = new HBox();
                 Text price = new Text(String.format("%.0f", offerDesc.getPrice()));
                 Text diff = new Text(String.format(" (%+.0f)", d));
                 diff.getStyleClass().add(CSS_DIFF);

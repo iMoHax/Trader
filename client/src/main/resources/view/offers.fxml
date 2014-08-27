@@ -23,19 +23,19 @@
                       <TableColumn minWidth="230.0" text="Товар">
                           <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
                       </TableColumn>
-                      <TableColumn minWidth="110.0" resizable="false" text="Цена" onEditCommit="#editPrice">
+                      <TableColumn minWidth="110.0" text="Цена" onEditCommit="#editPrice">
                           <cellFactory><PriceCellImpl/></cellFactory>
                           <cellValueFactory><PropertyValueFactory property="price"/></cellValueFactory>
                       </TableColumn>
-                      <TableColumn fx:id="sortSell" minWidth="80.0" resizable="false" text="Прибыль" sortType="DESCENDING">
+                      <TableColumn fx:id="sortSell" minWidth="80.0" text="Прибыль" sortType="DESCENDING">
                           <cellFactory><DoubleCell/></cellFactory>
                           <cellValueFactory><PropertyValueFactory property="profit"/></cellValueFactory>
                       </TableColumn>
-                      <TableColumn minWidth="80.0" resizable="false" text="AVG SELL">
+                      <TableColumn minWidth="80.0" text="AVG SELL">
                           <cellFactory><DoubleCell/></cellFactory>
                           <cellValueFactory><PropertyValueFactory property="avgSell"/></cellValueFactory>
                       </TableColumn>
-                      <TableColumn minWidth="80.0" resizable="false" text="AVG BUY">
+                      <TableColumn minWidth="80.0" text="AVG BUY">
                           <cellFactory><DoubleCell/></cellFactory>
                           <cellValueFactory><PropertyValueFactory property="avgBuy"/></cellValueFactory>
                       </TableColumn>
@@ -60,19 +60,19 @@
                       <TableColumn minWidth="230.0" text="Товар">
                           <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
                       </TableColumn>
-                      <TableColumn minWidth="110.0" resizable="false" text="Цена" editable="true" onEditCommit="#editPrice">
+                      <TableColumn minWidth="110.0" text="Цена" editable="true" onEditCommit="#editPrice">
                           <cellFactory><PriceCellImpl/></cellFactory>
                           <cellValueFactory><PropertyValueFactory property="price"/></cellValueFactory>
                       </TableColumn>
-                      <TableColumn fx:id="sortBuy" minWidth="80.0" resizable="false" text="Прибыль" sortType="DESCENDING">
+                      <TableColumn fx:id="sortBuy" minWidth="80.0" text="Прибыль" sortType="DESCENDING">
                           <cellFactory><DoubleCell/></cellFactory>
                           <cellValueFactory><PropertyValueFactory property="profit"/></cellValueFactory>
                       </TableColumn>
-                      <TableColumn minWidth="80.0" resizable="false" text="AVG SELL">
+                      <TableColumn minWidth="80.0" text="AVG SELL">
                           <cellFactory><DoubleCell/></cellFactory>
                           <cellValueFactory><PropertyValueFactory property="avgSell"/></cellValueFactory>
                       </TableColumn>
-                      <TableColumn minWidth="80.0" resizable="false" text="AVG BUY">
+                      <TableColumn minWidth="80.0" text="AVG BUY">
                           <cellFactory><DoubleCell/></cellFactory>
                           <cellValueFactory><PropertyValueFactory property="avgBuy"/></cellValueFactory>
                       </TableColumn>
