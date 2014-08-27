@@ -33,7 +33,8 @@ public class EMDN {
                     byte[] receivedData = socket.recv(0);
                     LOG.trace("Recived data: {}", receivedData);
                     if (receivedData == null) continue;
-                    String market_json = new String(decompress(receivedData), "UTF-8");
+                    //receivedData = decompress(receivedData);
+                    String market_json = new String(receivedData, "UTF-8");
                     LOG.trace("JSON: {}", market_json);
                 } catch (ZMQException | UnsupportedEncodingException ex) {
                     LOG.error("Error on get data from EMDN", ex);
