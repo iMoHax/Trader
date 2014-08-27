@@ -15,26 +15,26 @@
       prefWidth="1050">
     <TableView fx:id="tblPaths" editable="true">
         <columns>
-            <TableColumn minWidth="600.0" text="Путь">
+            <TableColumn minWidth="600.0" text="%routes.path">
                 <cellFactory><PathRouteCell /></cellFactory>
             </TableColumn>
-            <TableColumn minWidth="70.0" text="Прыжков">
+            <TableColumn minWidth="70.0" text="%routes.jumps">
                 <cellValueFactory><PropertyValueFactory property="jumps"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="70.0" text="Заправок">
+            <TableColumn minWidth="70.0" text="%routes.refills">
                 <cellValueFactory><PropertyValueFactory property="refuels"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="70.0" text="Посадок">
+            <TableColumn minWidth="70.0" text="%routes.lands">
                 <cellValueFactory><PropertyValueFactory property="lands"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="80.0" text="Дистанция">
+            <TableColumn minWidth="80.0" text="%market.order.distance">
                 <cellFactory><DoubleCell format="\%.2f LY"/></cellFactory>
                 <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="70.0" text="Прибыль">
+            <TableColumn minWidth="70.0" text="%market.order.profit">
                 <cellValueFactory><PropertyValueFactory property="totalProfit"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="avgProfit" minWidth="70.0" text="Ср." sortType="DESCENDING">
+            <TableColumn fx:id="avgProfit" minWidth="70.0" text="%market.offer.avg" sortType="DESCENDING">
                 <cellFactory><DoubleCell format="\%.0f"/></cellFactory>
                 <cellValueFactory><PropertyValueFactory property="avgProfit"/></cellValueFactory>
             </TableColumn>

@@ -10,6 +10,7 @@ import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import ru.trader.model.PathRouteModel;
+import ru.trader.view.support.Localization;
 
 import java.util.Collection;
 
@@ -41,7 +42,7 @@ public class PathsController {
 
         init(paths);
 
-        Dialog dlg = new Dialog(parent, String.format("Доступные маршруты"));
+        Dialog dlg = new Dialog(parent, Localization.getString("paths.title"));
         dlg.setContent(content);
         dlg.getActions().addAll(OK, Dialog.Actions.CANCEL);
         dlg.setResizable(false);

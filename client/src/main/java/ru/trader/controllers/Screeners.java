@@ -10,6 +10,7 @@ import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialogs;
 import ru.trader.model.*;
 import ru.trader.view.support.CustomBuilderFactory;
+import ru.trader.view.support.Localization;
 
 import java.io.IOException;
 import java.net.URL;
@@ -35,7 +36,7 @@ public class Screeners {
     private static PathsController pathsController;
 
     private static FXMLLoader initLoader(URL url){
-        FXMLLoader loader = new FXMLLoader(url);
+        FXMLLoader loader = new FXMLLoader(url, Localization.getResources());
         loader.setBuilderFactory(new CustomBuilderFactory());
         return loader;
     }

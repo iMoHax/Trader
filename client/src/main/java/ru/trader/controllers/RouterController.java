@@ -14,7 +14,7 @@ import ru.trader.view.support.NumberField;
 import ru.trader.view.support.RouteNode;
 
 
-public class RoutersController {
+public class RouterController {
 
     @FXML
     private NumberField balance;

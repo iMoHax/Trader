@@ -11,39 +11,47 @@
 <?import ru.trader.view.support.cells.DoubleCell?>
 <HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="ru.trader.controllers.OffersController">
-    <TitledPane text="Станции" minWidth="250" prefHeight="510" collapsible="false">
+    <TitledPane text="%market.vendors" minWidth="250" prefHeight="510" collapsible="false">
         <ListView fx:id="vendors" />
     </TitledPane>
 
     <Accordion HBox.hgrow="ALWAYS">
       <panes>
-          <TitledPane fx:id="sells" animated="false" text="Продаваемые товары">
+          <TitledPane fx:id="sells" animated="false" text="%offers.pane.sell">
               <TableView fx:id="tblSell" editable="true">
                   <columns>
-                      <TableColumn minWidth="230.0" text="Товар">
+                      <TableColumn minWidth="230.0" text="%market.item.name">
                           <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
                       </TableColumn>
-                      <TableColumn minWidth="110.0" text="Цена" onEditCommit="#editPrice">
+                      <TableColumn minWidth="110.0" text="%market.offer.price" onEditCommit="#editPrice">
                           <cellFactory><PriceCellImpl/></cellFactory>
                           <cellValueFactory><PropertyValueFactory property="price"/></cellValueFactory>
                       </TableColumn>
-                      <TableColumn fx:id="sortSell" minWidth="80.0" text="Прибыль" sortType="DESCENDING">
+                      <TableColumn fx:id="sortSell" minWidth="90.0" text="%market.order.profit" sortType="DESCENDING">
                           <cellFactory><DoubleCell/></cellFactory>
                           <cellValueFactory><PropertyValueFactory property="profit"/></cellValueFactory>
                       </TableColumn>
-                      <TableColumn minWidth="80.0" text="AVG SELL">
-                          <cellFactory><DoubleCell/></cellFactory>
-                          <cellValueFactory><PropertyValueFactory property="avgSell"/></cellValueFactory>
+                      <TableColumn text="%market.offer.avg">
+                        <columns>
+                            <TableColumn minWidth="80.0" text="%market.offer.sell">
+                                <cellFactory><DoubleCell/></cellFactory>
+                                <cellValueFactory><PropertyValueFactory property="avgSell"/></cellValueFactory>
+                            </TableColumn>
+                            <TableColumn minWidth="80.0" text="%market.offer.buy">
+                                <cellFactory><DoubleCell/></cellFactory>
+                                <cellValueFactory><PropertyValueFactory property="avgBuy"/></cellValueFactory>
+                            </TableColumn>
+                        </columns>
                       </TableColumn>
-                      <TableColumn minWidth="80.0" text="AVG BUY">
-                          <cellFactory><DoubleCell/></cellFactory>
-                          <cellValueFactory><PropertyValueFactory property="avgBuy"/></cellValueFactory>
-                      </TableColumn>
-                      <TableColumn minWidth="120.0" text="BEST SELL">
-                          <cellValueFactory><OfferCellValueImpl property="bestSell"/></cellValueFactory>
-                      </TableColumn>
-                      <TableColumn minWidth="120.0" text="BEST BUY">
-                          <cellValueFactory><OfferCellValueImpl property="bestBuy"/></cellValueFactory>
+                      <TableColumn text="%market.offer.best">
+                        <columns>
+                            <TableColumn minWidth="120.0" text="%market.offer.sell">
+                                <cellValueFactory><OfferCellValueImpl property="bestSell"/></cellValueFactory>
+                            </TableColumn>
+                            <TableColumn minWidth="120.0" text="%market.offer.buy">
+                                <cellValueFactory><OfferCellValueImpl property="bestBuy"/></cellValueFactory>
+                            </TableColumn>
+                        </columns>
                       </TableColumn>
                   </columns>
                   <columnResizePolicy>
@@ -54,33 +62,41 @@
                   </sortOrder>
               </TableView>
           </TitledPane>
-          <TitledPane animated="false" text="Покупаемые товары">
+          <TitledPane animated="false" text="%offers.pane.buy">
               <TableView fx:id="tblBuy" editable="true">
                   <columns>
-                      <TableColumn minWidth="230.0" text="Товар">
+                      <TableColumn minWidth="230.0" text="%market.item.name">
                           <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
                       </TableColumn>
-                      <TableColumn minWidth="110.0" text="Цена" editable="true" onEditCommit="#editPrice">
+                      <TableColumn minWidth="110.0" text="%market.offer.price" editable="true" onEditCommit="#editPrice">
                           <cellFactory><PriceCellImpl/></cellFactory>
                           <cellValueFactory><PropertyValueFactory property="price"/></cellValueFactory>
                       </TableColumn>
-                      <TableColumn fx:id="sortBuy" minWidth="80.0" text="Прибыль" sortType="DESCENDING">
+                      <TableColumn fx:id="sortBuy" minWidth="90.0" text="%market.order.profit" sortType="DESCENDING">
                           <cellFactory><DoubleCell/></cellFactory>
                           <cellValueFactory><PropertyValueFactory property="profit"/></cellValueFactory>
                       </TableColumn>
-                      <TableColumn minWidth="80.0" text="AVG SELL">
-                          <cellFactory><DoubleCell/></cellFactory>
-                          <cellValueFactory><PropertyValueFactory property="avgSell"/></cellValueFactory>
+                      <TableColumn text="%market.offer.avg">
+                          <columns>
+                              <TableColumn minWidth="80.0" text="%market.offer.sell">
+                                  <cellFactory><DoubleCell/></cellFactory>
+                                  <cellValueFactory><PropertyValueFactory property="avgSell"/></cellValueFactory>
+                              </TableColumn>
+                              <TableColumn minWidth="80.0" text="%market.offer.buy">
+                                  <cellFactory><DoubleCell/></cellFactory>
+                                  <cellValueFactory><PropertyValueFactory property="avgBuy"/></cellValueFactory>
+                              </TableColumn>
+                          </columns>
                       </TableColumn>
-                      <TableColumn minWidth="80.0" text="AVG BUY">
-                          <cellFactory><DoubleCell/></cellFactory>
-                          <cellValueFactory><PropertyValueFactory property="avgBuy"/></cellValueFactory>
-                      </TableColumn>
-                      <TableColumn minWidth="120.0" text="BEST SELL">
-                          <cellValueFactory><OfferCellValueImpl property="bestSell"/></cellValueFactory>
-                      </TableColumn>
-                      <TableColumn minWidth="120.0" text="BEST BUY">
-                          <cellValueFactory><OfferCellValueImpl property="bestBuy"/></cellValueFactory>
+                      <TableColumn text="%market.offer.best">
+                          <columns>
+                              <TableColumn minWidth="120.0" text="%market.offer.sell">
+                                  <cellValueFactory><OfferCellValueImpl property="bestSell"/></cellValueFactory>
+                              </TableColumn>
+                              <TableColumn minWidth="120.0" text="%market.offer.buy">
+                                  <cellValueFactory><OfferCellValueImpl property="bestBuy"/></cellValueFactory>
+                              </TableColumn>
+                          </columns>
                       </TableColumn>
                   </columns>
                   <columnResizePolicy>

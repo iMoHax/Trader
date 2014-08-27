@@ -17,6 +17,7 @@ import ru.trader.model.OfferDescModel;
 import ru.trader.model.OfferModel;
 import ru.trader.model.OrderModel;
 import ru.trader.model.support.BindingsHelper;
+import ru.trader.view.support.Localization;
 
 import java.util.Collection;
 
@@ -75,7 +76,7 @@ public class OrdersController {
 
         init(offers, balance, max);
 
-        Dialog dlg = new Dialog(parent, "Создание заказов");
+        Dialog dlg = new Dialog(parent, Localization.getString("orders.title"));
         dlg.setContent(content);
         dlg.getActions().addAll(OK, Dialog.Actions.CANCEL);
         dlg.setResizable(false);

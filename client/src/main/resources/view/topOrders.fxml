@@ -11,26 +11,26 @@
 <?import ru.trader.view.support.cells.OfferTableCell?>
 <HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.TopOrdersController" styleClass="dialog"
-      prefWidth="715">
+      prefWidth="725">
     <TableView fx:id="tblOrders" editable="true">
         <columns>
-            <TableColumn minWidth="160.0" text="Товар">
+            <TableColumn minWidth="160.0" text="%market.item.name">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="160.0" text="Продавец">
+            <TableColumn minWidth="160.0" text="%market.order.seller">
                 <cellValueFactory><OfferCellValueImpl property="offer"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="count" minWidth="60.0" text="Кол-во">
+            <TableColumn fx:id="count" minWidth="60.0" text="%market.order.count">
                 <cellValueFactory><PropertyValueFactory property="count"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="160.0" text="Покупатель">
+            <TableColumn minWidth="160.0" text="%market.order.buyer">
                 <cellValueFactory><OfferCellValueImpl property="buyOffer"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="80.0" text="Дистанция">
+            <TableColumn minWidth="80.0" text="%market.order.distance">
                 <cellFactory><DoubleCell format="\%.2f LY"/></cellFactory>
                 <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="profit" minWidth="80.0" text="Прибыль" sortType="DESCENDING">
+            <TableColumn fx:id="profit" minWidth="80.0" text="%market.order.profit" sortType="DESCENDING">
                 <cellFactory><DoubleCell/></cellFactory>
                 <cellValueFactory><PropertyValueFactory property="profit"/></cellValueFactory>
             </TableColumn>

@@ -13,6 +13,7 @@ import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import ru.trader.model.OrderModel;
+import ru.trader.view.support.Localization;
 
 import java.util.Collection;
 
@@ -49,7 +50,7 @@ public class TopOrdersController {
 
         init(orders);
 
-        Dialog dlg = new Dialog(parent, "TOP заказов");
+        Dialog dlg = new Dialog(parent, Localization.getString("topOrders.title"));
         dlg.setContent(content);
         dlg.getActions().addAll(OK, Dialog.Actions.CANCEL);
         dlg.setResizable(false);

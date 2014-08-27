@@ -8,9 +8,9 @@
       fx:controller="ru.trader.controllers.OffersEditorController">
     <Label fx:id="name"/>
     <HBox>
-        <Label text="Продажа:"/>
+        <Label text="%oEditor.sell"/>
         <NumberField fx:id="sell"/>
-        <Label text="Покупка:"/>
+        <Label text="%oEditor.buy"/>
         <NumberField fx:id="buy"/>
     </HBox>
 </VBox>

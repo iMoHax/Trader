@@ -10,11 +10,11 @@
       spacing="4" >
     <fx:define><Insets fx:id="vbox_margin" left="6" top="3" bottom="3"/></fx:define>
 
-    <Label text="Продавцы:" VBox.margin="$vbox_margin"/>
+    <Label text="%itemDesc.sellers" VBox.margin="$vbox_margin"/>
     <ListView fx:id="seller" maxHeight="200.0">
         <cellFactory><OfferListCell/></cellFactory>
     </ListView>
-    <Label text="Покупатели:" VBox.margin="$vbox_margin"/>
+    <Label text="%itemDesc.buyers" VBox.margin="$vbox_margin"/>
     <ListView fx:id="buyer" maxHeight="200.0">
         <cellFactory><OfferListCell/></cellFactory>
     </ListView>

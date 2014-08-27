@@ -9,7 +9,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.util.converter.DoubleStringConverter;
 import org.controlsfx.control.ButtonBar;
 import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
@@ -19,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import ru.trader.core.OFFER_TYPE;
 import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
+import ru.trader.view.support.Localization;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.PriceStringConverter;
 import ru.trader.view.support.ViewUtils;
@@ -32,7 +32,7 @@ public class VendorEditorController {
 
     private VendorModel vendor;
 
-    private final Action actSave = new AbstractAction("Сохранить") {
+    private final Action actSave = new AbstractAction(Localization.getString("vEditor.save")) {
         {
             ButtonBar.setType(this, ButtonBar.ButtonType.OK_DONE);
         }
@@ -85,7 +85,7 @@ public class VendorEditorController {
         if (vendor != null) {
             fill();
         }
-        Dialog dlg = new Dialog(parent, vendor == null ? "Добавление станции" : "Редактирование станции");
+        Dialog dlg = new Dialog(parent, Localization.getString(vendor == null ? "vEditor.title.add" : "vEditor.title.edit"));
         dlg.setContent(content);
         dlg.getActions().addAll(actSave, Dialog.Actions.CANCEL);
         dlg.setResizable(false);

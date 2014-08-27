@@ -14,30 +14,30 @@
       prefWidth="1010">
     <TableView fx:id="tblOrders" editable="true">
         <columns>
-            <TableColumn minWidth="160.0" text="Товар">
+            <TableColumn minWidth="160.0" text="%market.item.name">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="60.0" text="Цена">
+            <TableColumn minWidth="60.0" text="%market.offer.price">
                 <cellFactory><DoubleCell/></cellFactory>
                 <cellValueFactory><PropertyValueFactory property="price"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="count" minWidth="60.0" prefWidth="60.0" text="Кол-во">
+            <TableColumn fx:id="count" minWidth="60.0" prefWidth="60.0" text="%market.order.count">
                 <cellValueFactory><PropertyValueFactory property="count"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="160.0" text="Покупатель">
+            <TableColumn minWidth="160.0" text="%market.order.buyer">
                 <cellValueFactory><OfferCellValueImpl property="buyOffer"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="80.0" text="Прибыль">
+            <TableColumn minWidth="80.0" text="%market.order.profit">
                 <cellFactory><DoubleCell/></cellFactory>
                 <cellValueFactory><PropertyValueFactory property="profit"/></cellValueFactory>
             </TableColumn>
 
-            <TableColumn resizable="false" text="Максимум">
+            <TableColumn resizable="false" text="%market.offer.max.full">
                 <columns>
-                    <TableColumn fx:id="maxCount" minWidth="60.0" prefWidth="60.0" text="Кол-во">
+                    <TableColumn fx:id="maxCount" minWidth="60.0" prefWidth="60.0" text="%market.order.count">
                         <cellValueFactory><PropertyValueFactory property="max"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn fx:id="bestProfit" minWidth="80.0" text="Прибыль" sortType="DESCENDING">
+                    <TableColumn fx:id="bestProfit" minWidth="80.0" text="%market.order.profit" sortType="DESCENDING">
                         <cellFactory><DoubleCell/></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="bestProfit"/></cellValueFactory>
                     </TableColumn>
@@ -53,14 +53,14 @@
     </TableView>
     <TableView fx:id="tblBuyers" minWidth="335">
         <columns>
-            <TableColumn minWidth="160.0" text="Покупатель">
+            <TableColumn minWidth="160.0" text="%market.order.buyer">
                 <cellFactory><OfferTableCell/></cellFactory>
                 <cellValueFactory><PropertyValueFactory property="price"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="curDistance" minWidth="80.0" text="Дистанция">
+            <TableColumn fx:id="curDistance" minWidth="80.0" text="%market.order.distance">
                 <cellFactory><DoubleCell format="\%.2f LY"/></cellFactory>
             </TableColumn>
-            <TableColumn fx:id="curProfit" minWidth="80.0" text="Прибыль" sortType="DESCENDING">
+            <TableColumn fx:id="curProfit" minWidth="80.0" text="%market.order.profit" sortType="DESCENDING">
                 <cellFactory><DoubleCell/></cellFactory>
             </TableColumn>
         </columns>

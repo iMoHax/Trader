@@ -9,27 +9,28 @@
         >
    <top>
        <MenuBar>
-           <Menu text="Файл">
-               <MenuItem text="Сохранить" onAction="#save"/>
-               <MenuItem text="Импорт..." onAction="#importWorld"/>
+           <Menu text="%main.menu.file">
+               <MenuItem text="%main.menu.file.save" onAction="#save"/>
+               <MenuItem text="%main.menu.file.import" onAction="#importWorld"/>
+               <Menu fx:id="langs" text="%main.menu.file.language"/>
            </Menu>
-           <Menu text="Правка">
-               <MenuItem text="Добавить станцию" onAction="#addVendor"/>
-               <MenuItem text="Добавить товар" onAction="#addItem"/>
-               <MenuItem text="Редактировать станцию" onAction="#editVendor"/>
+           <Menu text="%main.menu.edit">
+               <MenuItem text="%main.menu.edit.addStation" onAction="#addVendor"/>
+               <MenuItem text="%main.menu.edit.addItem" onAction="#addItem"/>
+               <MenuItem text="%main.menu.edit.editStation" onAction="#editVendor"/>
            </Menu>
        </MenuBar>
    </top>
    <center>
        <TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-           <Tab text="Товары">
+           <Tab text="%market.items">
                <fx:include fx:id="items" source="items.fxml"/>
            </Tab>
-           <Tab text="Станции">
+           <Tab text="%market.vendors">
                <fx:include fx:id="offers" source="offers.fxml"/>
            </Tab>
-           <Tab text="Маршруты">
-               <fx:include source="routers.fxml"/>
+           <Tab text="%routes">
+               <fx:include source="router.fxml"/>
            </Tab>
        </TabPane>
    </center>
