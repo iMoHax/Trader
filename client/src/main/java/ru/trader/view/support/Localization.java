@@ -6,10 +6,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class Localization {
     private static final Locale DEFAULT = new Locale("ru", "RU");
@@ -67,6 +64,14 @@ public class Localization {
 
     public static String getString(String key){
         return rb.getString(key);
+    }
+
+    public static String getString(String key, String def){
+        try {
+            return rb.getString(key);
+        } catch (MissingResourceException e){
+            return def;
+        }
     }
 
     public static Locale getCurrentLocale() {

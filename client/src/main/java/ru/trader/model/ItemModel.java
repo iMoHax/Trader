@@ -6,6 +6,7 @@ import javafx.beans.property.StringProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.Item;
+import ru.trader.view.support.Localization;
 
 public class ItemModel{
     private final static Logger LOG = LoggerFactory.getLogger(ItemModel.class);
@@ -30,7 +31,8 @@ public class ItemModel{
 
     public ReadOnlyStringProperty nameProperty() {
         if (name == null) {
-            name = new SimpleStringProperty(item.getName());
+            String lName = Localization.getString("item."+item.getName(), item.getName());
+            name = new SimpleStringProperty(lName);
         }
         return name;
     }

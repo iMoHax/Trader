@@ -232,8 +232,8 @@ public class VendorEditorController {
             ItemData data = emdnData.getData(offer.item.getId());
             LOG.debug("Update item {} to {}", offer.item.getName(), data);
             if (data != null){
-                offer.setBprice(data.getBuy());
-                offer.setSprice(data.getSell());
+                offer.setSprice(data.getBuy());
+                offer.setBprice(data.getSell());
             }
         }
     }
