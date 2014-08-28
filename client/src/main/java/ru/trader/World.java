@@ -3,6 +3,8 @@ package ru.trader;
 import org.xml.sax.SAXException;
 import ru.trader.core.Market;
 import ru.trader.core.SimpleMarket;
+import ru.trader.emdn.EMDN;
+import ru.trader.emdn.Station;
 import ru.trader.model.ModelFabrica;
 import ru.trader.store.Store;
 import ru.trader.store.XSSFImporter;
@@ -17,12 +19,14 @@ import java.io.UnsupportedEncodingException;
 public class World {
     private static Market world;
     private static final String STORE_FILE="world.xml";
+    private final static EMDN emdn = new EMDN("tcp://firehose.elite-market-data.net:9050", true);
 
     static {
         try {
             File file = new File(STORE_FILE);
             if (file.exists()) world = Store.loadFromFile(file);
                 else world = new SimpleMarket();
+            emdn.start();
         } catch (ParserConfigurationException | SAXException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -44,4 +48,11 @@ public class World {
         return world;
     }
 
+    public static Station getEMDN(String name){
+        return emdn.getVendor(name);
+    }
+
+    public static void shutdown(){
+        emdn.shutdown();
+    }
 }

@@ -26,6 +26,7 @@
         <Button prefWidth="30" onAction="#up"><graphic><Glyph text="FontAwesome|ARROW_UP"/></graphic></Button>
         <Button prefWidth="30" onAction="#down"><graphic><Glyph text="FontAwesome|ARROW_DOWN"/></graphic></Button>
         <Button prefWidth="30" onAction="#add"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
+        <Button prefWidth="30" onAction="#updateFromEMDN"><graphic><Glyph text="FontAwesome|REFRESH"/></graphic></Button>
     </VBox>
     <TableView fx:id="items" prefWidth="375.0" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
         <columns>

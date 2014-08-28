@@ -15,7 +15,10 @@ import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.World;
 import ru.trader.core.OFFER_TYPE;
+import ru.trader.emdn.ItemData;
+import ru.trader.emdn.Station;
 import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.view.support.Localization;
@@ -220,6 +223,21 @@ public class VendorEditorController {
             LOG.trace("No change sell offer");
         }
     }
+
+    public void updateFromEMDN(){
+        Station emdnData = World.getEMDN(vendor.getName());
+        LOG.debug("Update from EMDN");
+        if (emdnData == null) return;
+        for (FakeOffer offer : items.getItems()) {
+            ItemData data = emdnData.getData(offer.item.getId());
+            LOG.debug("Update item {} to {}", offer.item.getName(), data);
+            if (data != null){
+                offer.setBprice(data.getBuy());
+                offer.setSprice(data.getSell());
+            }
+        }
+    }
+
 
     public class FakeOffer {
         private final ItemModel item;

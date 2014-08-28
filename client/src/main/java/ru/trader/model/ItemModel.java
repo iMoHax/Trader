@@ -20,6 +20,8 @@ public class ItemModel{
 
     public String getName() {return name != null ? name.get() : item.getName();}
 
+    public String getId() {return item.getName();}
+
     public void setName(String value) {
         LOG.info("Change name of item {} to {}", item, name);
         market.updateName(this, value);

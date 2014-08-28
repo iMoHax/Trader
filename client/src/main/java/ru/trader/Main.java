@@ -69,6 +69,7 @@ public class Main extends Application {
                     if (res == Dialog.Actions.YES) World.save();
                     else if (res == Dialog.Actions.CANCEL) we.consume();
                 }
+                World.shutdown();
                 Screeners.closeAll();
             } catch (FileNotFoundException | UnsupportedEncodingException | XMLStreamException e) {
                 LOG.error("Ошибка при сохранении",e);
