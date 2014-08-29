@@ -6,6 +6,7 @@ import java.util.Objects;
 
 public class Item implements Comparable<Item>{
     private String name;
+    private Group group;
 
     public Item(String name) {
         setName(name);
@@ -29,5 +30,13 @@ public class Item implements Comparable<Item>{
         Objects.requireNonNull(other, "Not compare with null");
         if (this == other) return 0;
         return name != null ? other.name != null ? name.compareTo(other.name) : -1 : 0;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 }

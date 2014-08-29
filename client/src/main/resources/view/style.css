@@ -84,3 +84,20 @@ HBox.fields-group hbox-margin{
     -fx-padding: 10;
     -fx-alignment: center-left;
 }
+
+/* EditOfferCell */
+#items .change {
+    -fx-background-color: lightgreen;
+}
+
+#items .remove {
+    -fx-background-color: lightsalmon;
+}
+
+#items .remove .text{
+    -fx-strikethrough: true;
+}
+
+#items .add {
+    -fx-background-color: lightblue;
+}

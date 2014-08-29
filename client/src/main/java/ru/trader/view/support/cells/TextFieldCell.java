@@ -1,6 +1,7 @@
 package ru.trader.view.support.cells;
 
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
@@ -56,7 +57,7 @@ public class TextFieldCell<S,T> extends TableCell<S,T> {
     public void updateItem(T item, boolean empty) {
         LOG.trace("Update edit");
         super.updateItem(item, empty);
-        if (empty) {
+        if (empty || getTableRow() == null) {
             setText(null);
             setGraphic(null);
 
@@ -89,9 +90,9 @@ public class TextFieldCell<S,T> extends TableCell<S,T> {
     }
 
     private void createTextField(){
-        this.textField = new TextField(getItemText());
-        this.setGraphic(textField);
-        textField.prefWidthProperty().bind(this.getTableColumn().widthProperty());
+        textField = new TextField(getItemText());
+        textField.prefWidthProperty().bind(getTableColumn().widthProperty());
+        textField.setPadding(Insets.EMPTY);
         textField.setOnKeyPressed(t -> {
             if (t.getCode() == KeyCode.ENTER) {
                 if (commit(true)) ViewUtils.editNext(getTableView());
@@ -104,7 +105,7 @@ public class TextFieldCell<S,T> extends TableCell<S,T> {
     }
 
 
-    private String getItemText(){
+    protected String getItemText(){
         return converter.toString(getItem());
     }
 
@@ -132,4 +133,7 @@ public class TextFieldCell<S,T> extends TableCell<S,T> {
         return textField == null;
     }
 
+    public StringConverter<T> getConverter() {
+        return converter;
+    }
 }

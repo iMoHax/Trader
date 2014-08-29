@@ -20,6 +20,7 @@ public class MarketDocHandler extends DefaultHandler {
     protected final static String VENDOR_LIST = "vendors";
     protected final static String VENDOR = "vendor";
     protected final static String OFFER = "offer";
+    protected final static String GROUP = "group";
 
     protected final static String ID_ATTR = "id";
     protected final static String NAME_ATTR = "name";
@@ -32,6 +33,7 @@ public class MarketDocHandler extends DefaultHandler {
 
     protected Market world;
     protected Vendor curVendor;
+    protected Group curGroup;
     protected final HashMap<String,Item> items = new HashMap<>();
 
     @Override
@@ -48,6 +50,8 @@ public class MarketDocHandler extends DefaultHandler {
                 break;
             case OFFER: parseOffer(attributes);
                 break;
+            case GROUP: parseGroup(attributes);
+                break;
         }
     }
 
@@ -55,6 +59,8 @@ public class MarketDocHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName){
             case VENDOR: world.add(curVendor);
+                break;
+            case GROUP: curGroup = null;
                 break;
         }
     }
@@ -90,6 +96,13 @@ public class MarketDocHandler extends DefaultHandler {
         onOffer(offerType, item, price);
     }
 
+    protected void parseGroup(Attributes attributes) throws SAXException {
+        String name = attributes.getValue(NAME_ATTR);
+        GROUP_TYPE type = GROUP_TYPE.valueOf(attributes.getValue(TYPE_ATTR));
+        LOG.debug("parse group {} ({})", name, type);
+        onGroup(name, type);
+    }
+
     protected void onOffer(OFFER_TYPE offerType, Item item, double price){
         Offer offer = new Offer(offerType, item, price);
         curVendor.add(offer);
@@ -104,8 +117,13 @@ public class MarketDocHandler extends DefaultHandler {
 
     protected void onItem(String name, String id) {
         Item item = new Item(name);
+        item.setGroup(curGroup);
         world.add(item);
         items.put(id, item);
+    }
+
+    protected void onGroup(String name, GROUP_TYPE type) {
+        curGroup = new Group(name, type);
     }
 
     public Market getWorld(){

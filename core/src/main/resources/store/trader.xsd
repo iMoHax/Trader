@@ -18,9 +18,26 @@
 
     <xs:complexType name="itemsType">
         <xs:sequence>
-            <xs:element name="item" type="itemType" maxOccurs="unbounded"/>
+            <xs:element name="group" type="groupType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="item" type="itemType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="groupType">
+        <xs:sequence>
+            <xs:element name="item" type="itemType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="type" type="GROUP_TYPE" use="required"/>
+    </xs:complexType>
+
+    <xs:simpleType name="GROUP_TYPE">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="MARKET"/>
+            <xs:enumeration value="SHIP"/>
+            <xs:enumeration value="OUTFIT"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:complexType name="itemType">
         <xs:attribute name="id" type="xs:ID" use="required"/>

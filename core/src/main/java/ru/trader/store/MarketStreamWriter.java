@@ -2,10 +2,7 @@ package ru.trader.store;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.trader.core.Item;
-import ru.trader.core.Market;
-import ru.trader.core.Offer;
-import ru.trader.core.Vendor;
+import ru.trader.core.*;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -51,9 +48,16 @@ public class MarketStreamWriter {
 
     protected void writeItems() throws XMLStreamException {
         out.writeStartElement(MarketDocHandler.ITEM_LIST);
+        Group group = null;
         for (Item entry : market.getItems()) {
+            if (group!=entry.getGroup()){
+                if (group != null) out.writeEndElement();
+                group = entry.getGroup();
+                if (group != null) writeGroup(group);
+            }
             writeItem(entry, items.get(entry));
         }
+        if (group != null) out.writeEndElement();
 
         out.writeEndElement();
     }
@@ -90,6 +94,12 @@ public class MarketStreamWriter {
         out.writeAttribute(MarketDocHandler.TYPE_ATTR, offer.getType().toString());
         out.writeAttribute(MarketDocHandler.ITEM_ATTR, items.get(offer.getItem()));
         out.writeAttribute(MarketDocHandler.PRICE_ATTR, String.valueOf(offer.getPrice()));
+    }
+
+    protected void writeGroup(Group group) throws XMLStreamException {
+        out.writeStartElement(MarketDocHandler.GROUP);
+        out.writeAttribute(MarketDocHandler.NAME_ATTR, group.getName());
+        out.writeAttribute(MarketDocHandler.TYPE_ATTR, group.getType().toString());
     }
 
     private static Map<Item, String> generateId(Collection<Item> items){

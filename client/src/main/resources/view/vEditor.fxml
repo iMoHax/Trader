@@ -28,15 +28,15 @@
         <Button prefWidth="30" onAction="#add"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
         <Button prefWidth="30" onAction="#updateFromEMDN"><graphic><Glyph text="FontAwesome|REFRESH"/></graphic></Button>
     </VBox>
-    <TableView fx:id="items" prefWidth="375.0" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+    <TableView fx:id="items" prefWidth="395.0" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
         <columns>
             <TableColumn minWidth="200.0" text="%market.item.name" editable="false">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="buy" minWidth="80.0" text="%market.offer.sell">
+            <TableColumn fx:id="buy" minWidth="90.0" text="%market.offer.sell">
                 <cellValueFactory><PropertyValueFactory property="bprice"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="sell" minWidth="80.0" text="%market.offer.buy">
+            <TableColumn fx:id="sell" minWidth="90.0" text="%market.offer.buy">
                 <cellValueFactory><PropertyValueFactory property="sprice"/></cellValueFactory>
             </TableColumn>
         </columns>

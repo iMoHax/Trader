@@ -1,5 +1,6 @@
 package ru.trader.controllers;
 
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -12,6 +13,7 @@ import javafx.scene.control.TextField;
 import org.controlsfx.control.ButtonBar;
 import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.DefaultDialogAction;
 import org.controlsfx.dialog.Dialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +27,7 @@ import ru.trader.view.support.Localization;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.PriceStringConverter;
 import ru.trader.view.support.ViewUtils;
-import ru.trader.view.support.cells.TextFieldCell;
+import ru.trader.view.support.cells.EditOfferCell;
 
 import java.util.Optional;
 
@@ -45,6 +47,18 @@ public class VendorEditorController {
             Dialog dlg = (Dialog) event.getSource();
             saveChanges();
             dlg.hide();
+        }
+    };
+
+    private final Action actCancel = new DefaultDialogAction(impl.org.controlsfx.i18n.Localization.asKey("dlg.cancel.button")) {
+        {
+            ButtonBar.setType(this, ButtonBar.ButtonType.CANCEL_CLOSE);
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
+            items.getSelectionModel().selectFirst();
+            super.handle(event);
         }
     };
 
@@ -69,8 +83,8 @@ public class VendorEditorController {
     @FXML
     private void initialize() {
         items.getSelectionModel().setCellSelectionEnabled(true);
-        buy.setCellFactory(TextFieldCell.forTableColumn(new PriceStringConverter()));
-        sell.setCellFactory(TextFieldCell.forTableColumn(new PriceStringConverter()));
+        buy.setCellFactory(EditOfferCell.forTable(new PriceStringConverter(), false));
+        sell.setCellFactory(EditOfferCell.forTable(new PriceStringConverter(), true));
         actSave.disabledProperty().bind(x.wrongProperty().or(y.wrongProperty().or(z.wrongProperty())));
         fillItems();
         name.setOnAction((v)->x.requestFocus());
@@ -90,7 +104,7 @@ public class VendorEditorController {
         }
         Dialog dlg = new Dialog(parent, Localization.getString(vendor == null ? "vEditor.title.add" : "vEditor.title.edit"));
         dlg.setContent(content);
-        dlg.getActions().addAll(actSave, Dialog.Actions.CANCEL);
+        dlg.getActions().addAll(actSave, actCancel);
         dlg.setResizable(false);
         return dlg.show();
     }
@@ -111,6 +125,7 @@ public class VendorEditorController {
         y.setValue(0);
         z.setValue(0);
         items.getItems().forEach(FakeOffer::reset);
+        items.getSelectionModel().clearSelection();
     }
 
     private void fillItems() {
@@ -226,14 +241,21 @@ public class VendorEditorController {
 
     public void updateFromEMDN(){
         Station emdnData = World.getEMDN(vendor.getName());
-        LOG.debug("Update from EMDN");
-        if (emdnData == null) return;
+        LOG.debug("Update {} from EMDN", vendor.getName());
+        if (emdnData == null){
+            LOG.trace("Not found in EMDN");
+            return;
+        }
         for (FakeOffer offer : items.getItems()) {
-            ItemData data = emdnData.getData(offer.item.getId());
-            LOG.debug("Update item {} to {}", offer.item.getName(), data);
-            if (data != null){
-                offer.setSprice(data.getBuy());
-                offer.setBprice(data.getSell());
+            if (offer.item.isMarketItem()){
+                ItemData data = emdnData.getData(offer.item.getId());
+                LOG.debug("Update item {} to {}", offer.item.getName(), data);
+                if (data != null){
+                    offer.setSprice(data.getBuy());
+                    offer.setBprice(data.getSell());
+                }
+            } else {
+                LOG.trace("Is not market item, skip");
             }
         }
     }
@@ -313,6 +335,14 @@ public class VendorEditorController {
             return this.item.equals(item);
         }
 
+        public double getOldSprice() {
+            return sell != null ? sell.getPrice() : 0;
+        }
+
+        public double getOldBprice() {
+            return buy != null ? buy.getPrice() : 0;
+        }
+
         public void setSell(OfferModel sell) {
             this.sell = sell;
             sprice.set(sell.getPrice());
@@ -324,10 +354,10 @@ public class VendorEditorController {
         }
 
         public void reset(){
-            sprice.setValue(0);
-            bprice.setValue(0);
             this.sell = null;
             this.buy = null;
+            sprice.setValue(0);
+            bprice.setValue(0);
         }
 
         @Override

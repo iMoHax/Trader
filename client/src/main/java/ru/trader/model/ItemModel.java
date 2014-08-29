@@ -23,6 +23,10 @@ public class ItemModel{
 
     public String getId() {return item.getName();}
 
+    public boolean isMarketItem(){
+        return item.getGroup() != null && item.getGroup().isMarket();
+    }
+
     public void setName(String value) {
         LOG.info("Change name of item {} to {}", item, name);
         market.updateName(this, value);

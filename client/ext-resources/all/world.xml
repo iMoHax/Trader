@@ -1,128 +1,174 @@
 <?xml version="1.0" ?>
 <market>
     <items>
-        <item name="explosives" id="i0"/>
-        <item name="hydrogenfuel" id="i1"/>
-        <item name="mineraloil" id="i2"/>
-        <item name="pesticides" id="i3"/>
-        <item name="clothing" id="i4"/>
-        <item name="consumertechnology" id="i5"/>
-        <item name="domesticappliances" id="i6"/>
-        <item name="beer" id="i7"/>
-        <item name="liquor" id="i8"/>
-        <item name="narcotics" id="i9"/>
-        <item name="tobacco" id="i10"/>
-        <item name="wine" id="i11"/>
-        <item name="algae" id="i12"/>
-        <item name="animalmeat" id="i13"/>
-        <item name="coffee" id="i14"/>
-        <item name="fish" id="i16"/>
-        <item name="foodcartridges" id="i17"/>
-        <item name="fruitandvegetables" id="i18"/>
-        <item name="grain" id="i19"/>
-        <item name="syntheticmeat" id="i20"/>
-        <item name="tea" id="i21"/>
-        <item name="plastics" id="i23"/>
-        <item name="polymers" id="i24"/>
-        <item name="semiconductors" id="i25"/>
-        <item name="superconductors" id="i26"/>
-        <item name="cropharvesters" id="i27"/>
-        <item name="heliostaticfurnaces" id="i28"/>
-        <item name="marinesupplies" id="i29"/>
-        <item name="mineralextractors" id="i30"/>
-        <item name="agriculturalmedicines" id="i31"/>
-        <item name="basicmedicines" id="i32"/>
-        <item name="combatstabilisers" id="i33"/>
-        <item name="performanceenhancers" id="i34"/>
-        <item name="progenitorcells" id="i35"/>
-        <item name="aluminium" id="i36"/>
-        <item name="copper" id="i37"/>
-        <item name="cobalt" id="i38"/>
-        <item name="gold" id="i39"/>
-        <item name="indium" id="i40"/>
-        <item name="lithium" id="i41"/>
-        <item name="palladium" id="i42"/>
-        <item name="tantalum" id="i43"/>
-        <item name="titanium" id="i44"/>
-        <item name="silver" id="i45"/>
-        <item name="uranium" id="i46"/>
-        <item name="bauxite" id="i47"/>
-        <item name="bertrandite" id="i48"/>
-        <item name="beryllium" id="i49"/>
-        <item name="coltan" id="i50"/>
-        <item name="gallium" id="i51"/>
-        <item name="gallite" id="i52"/>
-        <item name="indite" id="i53"/>
-        <item name="lepidolite" id="i54"/>
-        <item name="rutile" id="i55"/>
-        <item name="uraninite" id="i56"/>
-        <item name="advancedcatalysers" id="i57"/>
-        <item name="animalmonitors" id="i58"/>
-        <item name="aquaponicsystems" id="i59"/>
-        <item name="autofabricators" id="i60"/>
-        <item name="bioreducinglichen" id="i61"/>
-        <item name="computercomponents" id="i62"/>
-        <item name="hazardousenvironmentsuits" id="i63"/>
-        <item name="resonatingseparators" id="i64"/>
-        <item name="robotics" id="i65"/>
-        <item name="terrainenrichmentsystems" id="i66"/>
-        <item name="leather" id="i68"/>
-        <item name="naturalfabrics" id="i69"/>
-        <item name="syntheticfabrics" id="i70"/>
-        <item name="biowaste" id="i71"/>
-        <item name="scrap" id="i72"/>
-        <item name="nonlethalweapons" id="i73"/>
-        <item name="personalweapons" id="i74"/>
-        <item name="reactivearmour" id="i75"/>
-        <item name="Sidewinder" id="i76"/>
-        <item name="Hauler" id="i77"/>
-        <item name="Eagle" id="i78"/>
-        <item name="Viper" id="i79"/>
-        <item name="Cobra MK3" id="i80"/>
-        <item name="TYPE-6" id="i81"/>
-        <item name="TYPE-9" id="i82"/>
-        <item name="Anaconda" id="i83"/>
-        <item name="Pulse Laser C1 (G)" id="i84"/>
-        <item name="Pulse Laser C1 (T)" id="i85"/>
-        <item name="Pulse Laser C2" id="i86"/>
-        <item name="Pulse Laser C3 (G)" id="i87"/>
-        <item name="Pulse Laser C4" id="i88"/>
-        <item name="Pulse Laser C4 (T)" id="i89"/>
-        <item name="Pulse Laser C5 (G)" id="i90"/>
-        <item name="Pulse Laser C6" id="i91"/>
-        <item name="Burst Laser C1 (G)" id="i92"/>
-        <item name="Burst Laser C2" id="i93"/>
-        <item name="Burst Laser C6" id="i94"/>
-        <item name="Beam Laser C1 (G)" id="i95"/>
-        <item name="Beam Laser C1 (T)" id="i96"/>
-        <item name="Beam Laser C2" id="i97"/>
-        <item name="Beam Laser C2 (T)" id="i98"/>
-        <item name="Beam Laser C3 (G)" id="i124"/>
-        <item name="Beam Laser C4" id="i99"/>
-        <item name="Beam Laser C4 (T)" id="i100"/>
-        <item name="Beam Laser C6" id="i101"/>
-        <item name="Multicannon C1 (G)" id="i102"/>
-        <item name="Multicannon C2" id="i103"/>
-        <item name="Multicannon C2 (T)" id="i104"/>
-        <item name="Multicannon C3 (G)" id="i105"/>
-        <item name="Multicannon C4" id="i106"/>
-        <item name="Cannon C2" id="i107"/>
-        <item name="Cannon C4" id="i108"/>
-        <item name="Cannon C6" id="i109"/>
-        <item name="Rail Gun C2" id="i110"/>
-        <item name="Rail Gun C4" id="i111"/>
-        <item name="Missile Rack C2" id="i112"/>
-        <item name="Missile Rack C4" id="i113"/>
-        <item name="Reinforced Alloy T6" id="i114"/>
-        <item name="Mirrored Surface Composite T6" id="i115"/>
-        <item name="Military Grade Composite T6" id="i116"/>
-        <item name="Reactive Surface Composite T6" id="i117"/>
-        <item name="Chaff Launcher" id="i118"/>
-        <item name="Point Defence Unit" id="i119"/>
-        <item name="Cargo Scanner" id="i120"/>
-        <item name="Heat Sink Launcher" id="i121"/>
-        <item name="Standart Docking Comp" id="i122"/>
-        <item name="Kill Warrant Scanner" id="i123"/>
+        <group name="chemicals" type="MARKET">
+            <item name="explosives" id="i0"/>
+            <item name="hydrogenfuel" id="i1"/>
+            <item name="mineraloil" id="i2"/>
+            <item name="pesticides" id="i3"/>
+        </group>
+        <group name="consumer_items" type="MARKET">
+            <item name="clothing" id="i4"/>
+            <item name="consumertechnology" id="i5"/>
+            <item name="domesticappliances" id="i6"/>
+        </group>
+        <group name="drugs" type="MARKET">
+            <item name="beer" id="i7"/>
+            <item name="liquor" id="i8"/>
+            <item name="narcotics" id="i9"/>
+            <item name="tobacco" id="i10"/>
+            <item name="wine" id="i11"/>
+        </group>
+        <group name="foods" type="MARKET">
+            <item name="algae" id="i12"/>
+            <item name="animalmeat" id="i13"/>
+            <item name="coffee" id="i14"/>
+            <item name="fish" id="i16"/>
+            <item name="foodcartridges" id="i17"/>
+            <item name="fruitandvegetables" id="i18"/>
+            <item name="grain" id="i19"/>
+            <item name="syntheticmeat" id="i20"/>
+            <item name="tea" id="i21"/>
+        </group>
+        <group name="industrial_materials" type="MARKET">
+            <item name="plastics" id="i23"/>
+            <item name="polymers" id="i24"/>
+            <item name="semiconductors" id="i25"/>
+            <item name="superconductors" id="i26"/>
+        </group>
+        <group name="machinery" type="MARKET">
+            <item name="cropharvesters" id="i27"/>
+            <item name="heliostaticfurnaces" id="i28"/>
+            <item name="marinesupplies" id="i29"/>
+            <item name="mineralextractors" id="i30"/>
+        </group>
+        <group name="medicines" type="MARKET">
+            <item name="agriculturalmedicines" id="i31"/>
+            <item name="basicmedicines" id="i32"/>
+            <item name="combatstabilisers" id="i33"/>
+            <item name="performanceenhancers" id="i34"/>
+            <item name="progenitorcells" id="i35"/>
+        </group>
+        <group name="metals" type="MARKET">
+            <item name="aluminium" id="i36"/>
+            <item name="copper" id="i37"/>
+            <item name="cobalt" id="i38"/>
+            <item name="gold" id="i39"/>
+            <item name="indium" id="i40"/>
+            <item name="lithium" id="i41"/>
+            <item name="palladium" id="i42"/>
+            <item name="tantalum" id="i43"/>
+            <item name="titanium" id="i44"/>
+            <item name="silver" id="i45"/>
+            <item name="uranium" id="i46"/>
+        </group>
+        <group name="minerals" type="MARKET">
+            <item name="bauxite" id="i47"/>
+            <item name="bertrandite" id="i48"/>
+            <item name="beryllium" id="i49"/>
+            <item name="coltan" id="i50"/>
+            <item name="gallium" id="i51"/>
+            <item name="gallite" id="i52"/>
+            <item name="indite" id="i53"/>
+            <item name="lepidolite" id="i54"/>
+            <item name="rutile" id="i55"/>
+            <item name="uraninite" id="i56"/>
+        </group>
+        <group name="technology" type="MARKET">
+            <item name="advancedcatalysers" id="i57"/>
+            <item name="animalmonitors" id="i58"/>
+            <item name="aquaponicsystems" id="i59"/>
+            <item name="autofabricators" id="i60"/>
+            <item name="bioreducinglichen" id="i61"/>
+            <item name="computercomponents" id="i62"/>
+            <item name="hazardousenvironmentsuits" id="i63"/>
+            <item name="resonatingseparators" id="i64"/>
+            <item name="robotics" id="i65"/>
+            <item name="terrainenrichmentsystems" id="i66"/>
+        </group>
+        <group name="textiles" type="MARKET">
+            <item name="leather" id="i68"/>
+            <item name="naturalfabrics" id="i69"/>
+            <item name="syntheticfabrics" id="i70"/>
+        </group>
+        <group name="waste" type="MARKET">
+            <item name="biowaste" id="i71"/>
+            <item name="scrap" id="i72"/>
+        </group>
+        <group name="weapons" type="MARKET">
+            <item name="nonlethalweapons" id="i73"/>
+            <item name="personalweapons" id="i74"/>
+            <item name="reactivearmour" id="i75"/>
+        </group>
+        <group name="ships" type="SHIP">
+            <item name="Sidewinder" id="i76"/>
+            <item name="Hauler" id="i77"/>
+            <item name="Eagle" id="i78"/>
+            <item name="Viper" id="i79"/>
+            <item name="Cobra MK3" id="i80"/>
+            <item name="TYPE-6" id="i81"/>
+            <item name="TYPE-9" id="i82"/>
+            <item name="Anaconda" id="i83"/>
+        </group>
+        <group name="pulselaser" type="OUTFIT">
+            <item name="Pulse Laser C1 (G)" id="i84"/>
+            <item name="Pulse Laser C1 (T)" id="i85"/>
+            <item name="Pulse Laser C2" id="i86"/>
+            <item name="Pulse Laser C3 (G)" id="i87"/>
+            <item name="Pulse Laser C4" id="i88"/>
+            <item name="Pulse Laser C4 (T)" id="i89"/>
+            <item name="Pulse Laser C5 (G)" id="i90"/>
+            <item name="Pulse Laser C6" id="i91"/>
+        </group>
+        <group name="burstlaser" type="OUTFIT">
+            <item name="Burst Laser C1 (G)" id="i92"/>
+            <item name="Burst Laser C2" id="i93"/>
+            <item name="Burst Laser C6" id="i94"/>
+        </group>
+        <group name="beamlaser" type="OUTFIT">
+            <item name="Beam Laser C1 (G)" id="i95"/>
+            <item name="Beam Laser C1 (T)" id="i96"/>
+            <item name="Beam Laser C2" id="i97"/>
+            <item name="Beam Laser C2 (T)" id="i98"/>
+            <item name="Beam Laser C3 (G)" id="i124"/>
+            <item name="Beam Laser C4" id="i99"/>
+            <item name="Beam Laser C4 (T)" id="i100"/>
+            <item name="Beam Laser C6" id="i101"/>
+        </group>
+        <group name="multicannon" type="OUTFIT">
+            <item name="Multicannon C1 (G)" id="i102"/>
+            <item name="Multicannon C2" id="i103"/>
+            <item name="Multicannon C2 (T)" id="i104"/>
+            <item name="Multicannon C3 (G)" id="i105"/>
+            <item name="Multicannon C4" id="i106"/>
+        </group>
+        <group name="cannon" type="OUTFIT">
+            <item name="Cannon C2" id="i107"/>
+            <item name="Cannon C4" id="i108"/>
+            <item name="Cannon C6" id="i109"/>
+        </group>
+        <group name="railgun" type="OUTFIT">
+            <item name="Rail Gun C2" id="i110"/>
+            <item name="Rail Gun C4" id="i111"/>
+        </group>
+        <group name="missile" type="OUTFIT">
+            <item name="Missile Rack C2" id="i112"/>
+            <item name="Missile Rack C4" id="i113"/>
+        </group>
+        <group name="alloy" type="OUTFIT">
+            <item name="Reinforced Alloy T6" id="i114"/>
+            <item name="Mirrored Surface Composite T6" id="i115"/>
+            <item name="Military Grade Composite T6" id="i116"/>
+            <item name="Reactive Surface Composite T6" id="i117"/>
+        </group>
+        <group name="module" type="OUTFIT">
+            <item name="Chaff Launcher" id="i118"/>
+            <item name="Point Defence Unit" id="i119"/>
+            <item name="Cargo Scanner" id="i120"/>
+            <item name="Heat Sink Launcher" id="i121"/>
+            <item name="Standart Docking Comp" id="i122"/>
+            <item name="Kill Warrant Scanner" id="i123"/>
+        </group>
     </items>
     <vendors>
         <vendor name="26 Draconis" x="-39.0" y="-0.65625" z="24.90625"></vendor>
