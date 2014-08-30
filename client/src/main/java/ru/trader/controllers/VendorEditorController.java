@@ -45,6 +45,7 @@ public class VendorEditorController {
         @Override
         public void handle(ActionEvent event) {
             Dialog dlg = (Dialog) event.getSource();
+            items.getSelectionModel().selectFirst();
             saveChanges();
             dlg.hide();
         }
@@ -253,6 +254,9 @@ public class VendorEditorController {
                 if (data != null){
                     offer.setSprice(data.getBuy());
                     offer.setBprice(data.getSell());
+                } else {
+                    offer.setSprice(0);
+                    offer.setBprice(0);
                 }
             } else {
                 LOG.trace("Is not market item, skip");
