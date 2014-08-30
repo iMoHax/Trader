@@ -132,7 +132,7 @@ public class Graph<T extends Connectable<T>> {
                     Path<T> path = head.connectTo(next.getTarget(), limit < next.getLength());
                     double nextLimit = withRefill ? limit - next.getLength(): stock;
                     // refill
-                    if (nextLimit < 0 ) nextLimit = maxDistance - next.getLength();
+                    if (nextLimit < 0 ) nextLimit = stock - next.getLength();
                     if (findPaths(paths, max, path, target, deep - 1, nextLimit)) return true;
                 }
             }

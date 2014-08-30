@@ -180,7 +180,7 @@ public class MarketAnalyzerTest extends Assert {
         TestUtil.assertCollectionContainAll(paths, Path.toPath(v10, v11, v10), Path.toPath(v10, v6, v10),
                 Path.toPath(v10, v11, v6, v10), Path.toPath(v10, v6, v11, v10),
                 Path.toPath(v10, v8, v10), Path.toPath(v10, v8, v11, v10),
-                Path.toPath(v10, v8, v6, v10));
+                Path.toPath(v10, v8, v6, v10), Path.toPath(v10, v8, v6, v10));
     }
 
 

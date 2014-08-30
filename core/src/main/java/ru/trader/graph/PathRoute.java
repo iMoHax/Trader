@@ -317,7 +317,7 @@ public class PathRoute extends Path<Vendor> {
                 if (o == null){
                     o = p.getBest();
                     if (o!= null){
-                        LOG.trace("{} is lands for by by order {}", p, o);
+                        LOG.trace("{} is lands for buy by order {}", p, o);
                         res++;
                     }
                 } else {
@@ -343,4 +343,13 @@ public class PathRoute extends Path<Vendor> {
         return p;
     }
 
+    public static PathRoute toPathRoute(Vendor... items){
+        Vendor t = items[0];
+        PathRoute path = new PathRoute(new Vertex<>(t));
+        for (int i = 1; i < items.length; i++) {
+            t = items[i];
+            path = new PathRoute(path, new Vertex<>(t), false);
+        }
+        return path;
+    }
 }
