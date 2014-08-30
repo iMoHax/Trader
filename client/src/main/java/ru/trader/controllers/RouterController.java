@@ -86,14 +86,10 @@ public class RouterController {
         tblOrders.getItems().addListener((ListChangeListener<OrderModel>) c -> {
             while (c.next()) {
                 if (c.wasRemoved()){
-                    for (OrderModel o : c.getRemoved()) {
-                        onRemove(o);
-                    }
+                    c.getRemoved().forEach(this::onRemove);
                 }
                 if (c.wasAdded()){
-                    for (OrderModel o : c.getAddedSubList()) {
-                       onAdd(o);
-                    }
+                    c.getAddedSubList().forEach(this::onAdd);
                 }
             }
         });
@@ -117,7 +113,6 @@ public class RouterController {
         totalBalance.add(order.getProfit());
         source.getSelectionModel().select(order.getBuyOffer().getVendor());
         balance.setDisable(true);
-        source.setDisable(true);
     }
 
     private void onRemove(OrderModel order) {
