@@ -101,3 +101,16 @@ HBox.fields-group hbox-margin{
 #items .add {
     -fx-background-color: lightblue;
 }
+
+#items HBox.reset {
+    -fx-padding: 0 4;
+    -fx-alignment: top-right;
+}
+
+#items HBox.reset Glyph {
+    -fx-opacity: 0.3;
+}
+
+#items HBox.reset Glyph:hover {
+    -fx-opacity: 1;
+}
