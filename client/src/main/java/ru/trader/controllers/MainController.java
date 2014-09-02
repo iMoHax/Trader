@@ -122,8 +122,8 @@ public class MainController {
 
     public Optional<ItemModel> addItem(){
         Optional<String> res = Dialogs.create()
-                .title(Localization.getString("dialogs.addItem.title"))
-                .message(Localization.getString("dialogs.addItem.message"))
+                .title(Localization.getString("dialog.addItem.title"))
+                .message(Localization.getString("dialog.addItem.message"))
                 .showTextInput();
         ItemModel item = null;
         if (res.isPresent()){
@@ -140,6 +140,10 @@ public class MainController {
 
     public void editVendor(ActionEvent actionEvent) {
         Screeners.showEditVendor(offersController.getVendor());
+    }
+
+    public void editSettings(){
+        Screeners.showSettings();
     }
 
     private void reload(){

@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
+import ru.trader.Main;
 import ru.trader.model.*;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.RouteNode;
@@ -57,11 +58,26 @@ public class RouterController {
     @FXML
     private void initialize(){
         init();
-        balance.numberProperty().addListener((ov, o, n) -> totalBalance.setValue(n));
-        cargo.numberProperty().addListener((ov, o, n) -> market.setCargo(n.intValue()));
-        tank.numberProperty().addListener((ov, o, n) -> market.setTank(n.doubleValue()));
-        distance.numberProperty().addListener((ov, o, n) -> market.setDistance(n.doubleValue()));
-        jumps.numberProperty().addListener((ov, o, n) -> market.setJumps(n.intValue()));
+        balance.numberProperty().addListener((ov, o, n) -> {
+            totalBalance.setValue(n);
+            Main.SETTINGS.setBalance(n.doubleValue());
+        });
+        cargo.numberProperty().addListener((ov, o, n) -> {
+            market.setCargo(n.intValue());
+            Main.SETTINGS.setCargo(n.intValue());
+        });
+        tank.numberProperty().addListener((ov, o, n) -> {
+            market.setTank(n.doubleValue());
+            Main.SETTINGS.setTank(n.doubleValue());
+        });
+        distance.numberProperty().addListener((ov, o, n) -> {
+            market.setDistance(n.doubleValue());
+            Main.SETTINGS.setDistance(n.doubleValue());
+        });
+        jumps.numberProperty().addListener((ov, o, n) -> {
+            market.setJumps(n.intValue());
+            Main.SETTINGS.setJumps(n.intValue());
+        });
 
         balance.setOnAction((v)->cargo.requestFocus());
         cargo.setOnAction((v) -> tank.requestFocus());
@@ -69,11 +85,11 @@ public class RouterController {
         distance.setOnAction((v)->jumps.requestFocus());
         jumps.setOnAction((v)->balance.requestFocus());
 
-        balance.setValue(1000);
-        cargo.setValue(4);
-        tank.setValue(20);
-        distance.setValue(7);
-        jumps.setValue(3);
+        balance.setValue(Main.SETTINGS.getBalance());
+        cargo.setValue(Main.SETTINGS.getCargo());
+        tank.setValue(Main.SETTINGS.getTank());
+        distance.setValue(Main.SETTINGS.getDistance());
+        jumps.setValue(Main.SETTINGS.getJumps());
 
         editBtn.disableProperty().bind(tblOrders.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
         removeBtn.disableProperty().bind(Bindings.createBooleanBinding(()-> {

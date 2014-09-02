@@ -1,6 +1,5 @@
 package ru.trader.controllers;
 
-import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -37,7 +36,7 @@ public class VendorEditorController {
 
     private VendorModel vendor;
 
-    private final Action actSave = new AbstractAction(Localization.getString("vEditor.save")) {
+    private final Action actSave = new AbstractAction(Localization.getString("dialog.button.save")) {
         {
             ButtonBar.setType(this, ButtonBar.ButtonType.OK_DONE);
         }

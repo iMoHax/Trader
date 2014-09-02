@@ -22,14 +22,18 @@ import java.util.Locale;
 
 public class Main extends Application {
     private final static Logger LOG = LoggerFactory.getLogger(Main.class);
+    public static Settings SETTINGS;
     private static Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-            Main.primaryStage = primaryStage;
-            loadMainScene();
-            loadResources();
-            primaryStage.show();
+        SETTINGS = new Settings(new File("profile.properties"));
+        SETTINGS.load();
+        World.start();
+        Main.primaryStage = primaryStage;
+        loadMainScene();
+        loadResources();
+        primaryStage.show();
     }
 
 
@@ -65,14 +69,15 @@ public class Main extends Application {
         primaryStage.setOnCloseRequest((we)->{
             try {
                 if (World.getMarket().isChange()){
-                    Action res = Screeners.showConfirm(Localization.getString("dialogs.save"));
+                    Action res = Screeners.showConfirm(Localization.getString("dialog.confirm.save"));
                     if (res == Dialog.Actions.YES) World.save();
                     else if (res == Dialog.Actions.CANCEL) we.consume();
                 }
                 World.shutdown();
+                SETTINGS.save();
                 Screeners.closeAll();
             } catch (FileNotFoundException | UnsupportedEncodingException | XMLStreamException e) {
-                LOG.error("Ошибка при сохранении",e);
+                LOG.error("Error on save world",e);
                 Screeners.showException(e);
             }
         });
@@ -86,6 +91,7 @@ public class Main extends Application {
         Screeners.loadOrdersStage(getUrl(("orders.fxml")));
         Screeners.loadTopOrdersStage(getUrl(("topOrders.fxml")));
         Screeners.loadPathsStage(getUrl(("paths.fxml")));
+        Screeners.loadSettingsStage(getUrl(("settings.fxml")));
     }
 
     private static URL getUrl(String filename) throws MalformedURLException {

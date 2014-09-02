@@ -15,12 +15,15 @@ import java.util.zip.Inflater;
 public class EMDN {
     private final static Logger LOG = LoggerFactory.getLogger(EMDN.class);
 
-    private final String subServer;
     private final Market cache = new Market();
+    private String subServer;
     private ZMQ.Context context = null;
     private ZMQ.Socket subscriber = null;
     private ScheduledExecutorService executor;
     private boolean clear;
+
+    public EMDN() {
+    }
 
     public EMDN(String subServer, boolean clearOnShutdown) {
         this.subServer = subServer;
@@ -33,7 +36,7 @@ public class EMDN {
     }
 
     public void start(){
-        if (subscriber!=null) shutdown();
+        if (isActive()) return;
         init();
         LOG.info("Connect to server {}", subServer);
         subscriber.connect(subServer);
@@ -56,7 +59,7 @@ public class EMDN {
     }
 
     public void shutdown() {
-        if (subscriber!=null){
+        if (isActive()){
             LOG.info("Shutdown EMDN client");
             executor.shutdown();
             subscriber.close();
@@ -114,4 +117,15 @@ public class EMDN {
         return cache.getVendor(name);
     }
 
+    public boolean isActive(){
+        return subscriber!=null;
+    }
+
+    public void connectTo(String subServer){
+        if (subServer.equals(this.subServer)) return;
+        boolean active = isActive();
+        if (active) shutdown();
+        this.subServer = subServer;
+        if (active) start();
+    }
 }

@@ -49,6 +49,10 @@ HBox.fields-group hbox-margin{
     -fx-alignment: center;
 }
 
+.settings-group {
+    -fx-font-weight: bold;
+}
+
 
 /*   Path      */
 .path {
