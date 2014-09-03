@@ -44,8 +44,8 @@ public class MainController {
     private OffersController offersController;
     @FXML
     private ItemsController itemsController;
-
-
+    @FXML
+    private RouterController routerController;
 
     @FXML
     private void initialize() {
@@ -56,7 +56,7 @@ public class MainController {
         ToggleGroup toggleGroup = new ToggleGroup();
         for (Locale locale : Localization.getLocales()) {
             ResourceBundle rb = Localization.getResources(locale);
-            RadioMenuItem mi = new RadioMenuItem(rb.getString("main.menu.file.language.item"));
+            RadioMenuItem mi = new RadioMenuItem(rb.getString("main.menu.settings.language.item"));
             mi.setToggleGroup(toggleGroup);
             mi.setUserData(locale);
             if (locale.equals(Localization.getCurrentLocale())) mi.setSelected(true);
@@ -93,6 +93,13 @@ public class MainController {
         MarketModel old = MainController.market;
         MainController.market = market;
         MainController.market.addAllListener(old.getListeners());
+        Screeners.reinitAll();
+    }
+
+    void init(){
+        itemsController.init();
+        offersController.init();
+        routerController.init();
     }
 
     public void save(ActionEvent actionEvent) {
@@ -149,7 +156,6 @@ public class MainController {
     private void reload(){
         world = new MarketModel(World.getMarket());
         market = world;
-        itemsController.init();
-        offersController.init();
+        Screeners.reinitAll();
     }
 }

@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialogs;
+import ru.trader.EMDNUpdater;
 import ru.trader.model.*;
 import ru.trader.view.support.CustomBuilderFactory;
 import ru.trader.view.support.Localization;
@@ -178,5 +179,10 @@ public class Screeners {
 
     public static void showSettings() {
         settingsController.showDialog(mainScreen, settingsScreen);
+    }
+
+    public static void reinitAll() {
+        mainController.init();
+        EMDNUpdater.setMarket(MainController.getMarket());
     }
 }
