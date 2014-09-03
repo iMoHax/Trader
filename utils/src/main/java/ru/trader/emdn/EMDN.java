@@ -8,6 +8,7 @@ import org.zeromq.ZMQException;
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
@@ -20,6 +21,7 @@ public class EMDN {
     private ZMQ.Context context = null;
     private ZMQ.Socket subscriber = null;
     private ScheduledExecutorService executor;
+    private ScheduledFuture<?> receive;
     private boolean clear;
 
     public EMDN() {
@@ -43,7 +45,7 @@ public class EMDN {
         LOG.trace("Subscribe");
         subscriber.subscribe(new byte[0]);
         executor = Executors.newSingleThreadScheduledExecutor();
-        executor.scheduleWithFixedDelay(() -> {
+        receive = executor.scheduleWithFixedDelay(() -> {
             try {
                 byte[] receivedData = subscriber.recv(0);
                 LOG.trace("Received data: {}", receivedData);
@@ -61,6 +63,7 @@ public class EMDN {
     public void shutdown() {
         if (isActive()){
             LOG.info("Shutdown EMDN client");
+            receive.cancel(false);
             executor.shutdown();
             subscriber.close();
             context.term();
