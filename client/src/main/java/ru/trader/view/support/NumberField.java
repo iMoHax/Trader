@@ -32,7 +32,6 @@ public class NumberField extends TextField {
 
     public void setValue(Number value){
         number.setValue(value);
-        setText(converter.toString(value));
     }
 
     public void add(Number value){
@@ -81,6 +80,7 @@ public class NumberField extends TextField {
             }
         });
         setOnAction((e) -> parseNumber());
+        numberProperty().addListener((ob, o, n) -> setText(converter.toString(n)));
         focusedProperty().addListener((ob, o, n) -> {if (o) parseNumber();});
         setAlignment(Pos.BASELINE_RIGHT);
     }
