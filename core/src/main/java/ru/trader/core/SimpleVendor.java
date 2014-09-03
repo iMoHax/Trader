@@ -1,6 +1,7 @@
 package ru.trader.core;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SimpleVendor extends Vendor {
 
@@ -18,8 +19,8 @@ public class SimpleVendor extends Vendor {
     }
 
     protected void initOffers(){
-        sell = new HashMap<>();
-        buy = new HashMap<>();
+        sell = new ConcurrentHashMap<>(20, 0.9f, 2);
+        buy = new ConcurrentHashMap<>(20, 0.9f, 2);
     }
 
     @Override

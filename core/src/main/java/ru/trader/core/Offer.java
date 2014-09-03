@@ -12,7 +12,7 @@ public class Offer implements Comparable<Offer>{
     private Vendor vendor;
     private final Item item;
     private final OFFER_TYPE type;
-    private double price;
+    private volatile double price;
 
     Offer(){
         item = null;

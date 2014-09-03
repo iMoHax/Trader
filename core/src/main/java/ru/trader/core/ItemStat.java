@@ -4,26 +4,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class ItemStat {
     private final static Logger LOG = LoggerFactory.getLogger(ItemStat.class);
 
     private final Item item;
     private final OFFER_TYPE type;
-    private final TreeSet<Offer> offers;
-    private double sum;
-    private double avg;
+    private final NavigableSet<Offer> offers;
+    private volatile double sum;
+    private volatile double avg;
 
 
     public ItemStat(Item item, OFFER_TYPE offerType) {
-        this.offers = new TreeSet<>();
+        this.offers = new ConcurrentSkipListSet<>();
         this.item = item;
         this.type = offerType;
         this.sum = 0;
         this.avg = Double.NaN;
     }
 
-    void put(Offer offer){
+    synchronized void put(Offer offer){
         LOG.trace("Put offer {} to item stat {}", offer, this);
         assert offer.hasType(type) && offer.hasItem(item);
         if (offers.add(offer)){
@@ -34,7 +35,7 @@ public class ItemStat {
         }
     }
 
-    void remove(Offer offer){
+    synchronized void remove(Offer offer){
         LOG.trace("Remove offer {} from item stat {}", offer, this);
         assert offer.hasType(type) && offer.hasItem(item);
         if (offers.remove(offer)){
@@ -49,7 +50,7 @@ public class ItemStat {
         }
     }
 
-    void update(Offer offer, double price){
+    synchronized void update(Offer offer, double price){
         LOG.trace("Update offer {} from item stat {}", offer, this);
         assert offer.hasType(type) && offer.hasItem(item) && offers.contains(offer);
         double oldPrice = offer.getPrice();
@@ -69,34 +70,34 @@ public class ItemStat {
         return item;
     }
 
-    public double getAvg(){
+    public synchronized double getAvg(){
         return avg;
     }
 
-    public Offer getBest() {
+    public synchronized Offer getBest() {
         if (offers.isEmpty()) return getFake();
         return type.getOrder() > 0 ? offers.first() : offers.last();
     }
 
-    public int getOffersCount(){
+    public synchronized int getOffersCount(){
         return offers.size();
     }
 
-    public NavigableSet<Offer> getOffers() {
+    public synchronized NavigableSet<Offer> getOffers() {
         return Collections.unmodifiableNavigableSet(offers);
     }
 
-    public Offer getMin() {
+    public synchronized Offer getMin() {
         if (offers.isEmpty()) return getFake();
         return offers.first();
     }
 
-    public Offer getMax() {
+    public synchronized Offer getMax() {
         if (offers.isEmpty()) return getFake();
         return offers.last();
     }
 
-    public boolean isEmpty(){
+    public synchronized boolean isEmpty(){
         return offers.isEmpty();
     }
 

@@ -29,10 +29,10 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         SETTINGS = new Settings(new File("profile.properties"));
         SETTINGS.load();
-        World.start();
         Main.primaryStage = primaryStage;
         loadMainScene();
         loadResources();
+        EMDNUpdater.init();
         primaryStage.show();
     }
 
@@ -73,7 +73,7 @@ public class Main extends Application {
                     if (res == Dialog.Actions.YES) World.save();
                     else if (res == Dialog.Actions.CANCEL) we.consume();
                 }
-                World.shutdown();
+                EMDNUpdater.shutdown();
                 SETTINGS.save();
                 Screeners.closeAll();
             } catch (FileNotFoundException | UnsupportedEncodingException | XMLStreamException e) {

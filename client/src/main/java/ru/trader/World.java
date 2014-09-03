@@ -19,7 +19,6 @@ import java.io.UnsupportedEncodingException;
 public class World {
     private static Market world;
     private static final String STORE_FILE="world.xml";
-    private final static EMDN emdn = new EMDN();
 
     static {
         try {
@@ -46,28 +45,4 @@ public class World {
     public static Market getMarket() {
         return world;
     }
-
-    public static Station getEMDN(String name){
-        return emdn.getVendor(name);
-    }
-
-    private static void initEmdn(){
-        emdn.connectTo(Main.SETTINGS.getEMDNSub());
-        if (Main.SETTINGS.getEMDNActive()){
-            emdn.start();
-        }
-    }
-
-    public static EMDN getEmdn(){
-        return emdn;
-    }
-
-    public static void start(){
-        initEmdn();
-    }
-
-    public static void shutdown(){
-        emdn.shutdown();
-    }
-
 }

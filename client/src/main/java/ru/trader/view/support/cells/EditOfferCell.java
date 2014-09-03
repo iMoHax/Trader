@@ -1,14 +1,9 @@
 package ru.trader.view.support.cells;
 
 import javafx.application.Platform;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
@@ -16,9 +11,9 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.controlsfx.glyphfont.Glyph;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
-import ru.trader.controllers.VendorEditorController;
+import ru.trader.model.support.VendorUpdater;
 
-public class EditOfferCell extends TextFieldCell<VendorEditorController.FakeOffer, Double> {
+public class EditOfferCell extends TextFieldCell<VendorUpdater.FakeOffer, Double> {
     private final static String CSS_CHANGE = "change";
     private final static String CSS_ADD = "add";
     private final static String CSS_REMOVE = "remove";
@@ -30,16 +25,16 @@ public class EditOfferCell extends TextFieldCell<VendorEditorController.FakeOffe
         this.isSell = isSell;
     }
 
-    public static Callback<TableColumn<VendorEditorController.FakeOffer,Double>, TableCell<VendorEditorController.FakeOffer,Double>> forTable(final StringConverter<Double> converter, boolean isSell) {
+    public static Callback<TableColumn<VendorUpdater.FakeOffer,Double>, TableCell<VendorUpdater.FakeOffer,Double>> forTable(final StringConverter<Double> converter, boolean isSell) {
         return list -> new EditOfferCell(converter, isSell);
     }
 
     @Override
     protected void outItem() {
-        VendorEditorController.FakeOffer offer = (VendorEditorController.FakeOffer) getTableRow().getItem();
+        VendorUpdater.FakeOffer offer = (VendorUpdater.FakeOffer) getTableRow().getItem();
         double d = isSell? offer.getSprice() - offer.getOldSprice() : offer.getBprice() - offer.getOldBprice();
         getStyleClass().removeAll(CSS_ADD, CSS_CHANGE, CSS_REMOVE);
-        if (d!=0){
+        if (d !=0 ){
             HBox hBox = new HBox();
             hBox.prefWidthProperty().bind(getTableColumn().widthProperty());
             Text nTxt = new Text(getConverter().toString(isSell ? offer.getSprice() : offer.getBprice()));

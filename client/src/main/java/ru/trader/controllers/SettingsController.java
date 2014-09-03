@@ -11,6 +11,7 @@ import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.EMDNUpdater;
 import ru.trader.Main;
 import ru.trader.World;
 import ru.trader.emdn.EMDN;
@@ -30,14 +31,6 @@ public class SettingsController {
     @FXML
     private NumberField emdnUpdateTime;
 
-    @FXML
-    private void initialize(){
-        emdnOn.setSelected(Main.SETTINGS.getEMDNActive());
-        emdnSubServ.setText(Main.SETTINGS.getEMDNSub());
-        emdnUpdateOnly.setSelected(Main.SETTINGS.getEMDNUpdateOnly());
-        emdnUpdateTime.setValue(Main.SETTINGS.getEMDNAutoUpdate());
-    }
-
     private final Action actSave = new AbstractAction(Localization.getString("dialog.button.save")) {
         {
             ButtonBar.setType(this, ButtonBar.ButtonType.OK_DONE);
@@ -51,21 +44,31 @@ public class SettingsController {
         }
     };
 
+    @FXML
+    private void initialize(){
+        init();
+    }
+
+    private void init(){
+        emdnSubServ.setText(Main.SETTINGS.getEMDNSub());
+        emdnOn.setSelected(Main.SETTINGS.getEMDNActive());
+        emdnUpdateOnly.setSelected(Main.SETTINGS.getEMDNUpdateOnly());
+        emdnUpdateTime.setValue(Main.SETTINGS.getEMDNAutoUpdate());
+    }
+
     private void save() {
-        Main.SETTINGS.setEMDNActive(emdnOn.isSelected());
         Main.SETTINGS.setEMDNSub(emdnSubServ.getText());
+        EMDNUpdater.setSub(emdnSubServ.getText());
+        Main.SETTINGS.setEMDNActive(emdnOn.isSelected());
+        EMDNUpdater.setActivate(emdnOn.isSelected());
         Main.SETTINGS.setEMDNUpdateOnly(emdnUpdateOnly.isSelected());
+        EMDNUpdater.setUpdateOnly(emdnUpdateOnly.isSelected());
         Main.SETTINGS.setEMDNAutoUpdate(emdnUpdateTime.getValue().longValue());
-        EMDN emdn = World.getEmdn();
-        emdn.connectTo(emdnSubServ.getText());
-        if (emdnOn.isSelected()){
-            emdn.start();
-        } else {
-            emdn.shutdown();
-        }
+        EMDNUpdater.setInterval(emdnUpdateTime.getValue().longValue());
     }
 
     public Action showDialog(Parent parent, Parent content){
+        init();
         Dialog dlg = new Dialog(parent, Localization.getString("settings.title"));
         dlg.setContent(content);
         dlg.getActions().addAll(actSave, Dialog.Actions.CANCEL);
