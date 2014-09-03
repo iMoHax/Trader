@@ -15,7 +15,6 @@
            </Menu>
            <Menu text="%main.menu.edit">
                <MenuItem text="%main.menu.edit.addStation" onAction="#addVendor"/>
-               <MenuItem text="%main.menu.edit.addItem" onAction="#addItem"/>
                <MenuItem text="%main.menu.edit.editStation" onAction="#editVendor"/>
            </Menu>
            <Menu text="%main.menu.settings">
@@ -33,7 +32,7 @@
                <fx:include fx:id="offers" source="offers.fxml"/>
            </Tab>
            <Tab text="%routes">
-               <fx:include source="router.fxml"/>
+               <fx:include fx:id="router" source="router.fxml"/>
            </Tab>
        </TabPane>
    </center>

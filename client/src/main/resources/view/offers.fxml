@@ -12,7 +12,16 @@
 <HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="ru.trader.controllers.OffersController">
     <TitledPane text="%market.vendors" minWidth="250" prefHeight="510" collapsible="false">
-        <ListView fx:id="vendors" />
+        <ListView fx:id="vendors">
+            <contextMenu>
+                <ContextMenu>
+                    <items>
+                        <MenuItem text="%main.menu.edit.addStation" onAction="#addVendor" />
+                        <MenuItem text="%main.menu.edit.editStation" onAction="#editVendor" />
+                    </items>
+                </ContextMenu>
+            </contextMenu>
+        </ListView>
     </TitledPane>
 
     <Accordion HBox.hgrow="ALWAYS">

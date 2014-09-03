@@ -1,6 +1,7 @@
 package ru.trader.controllers;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
 import org.slf4j.Logger;
@@ -93,6 +94,14 @@ public class OffersController {
 
     public VendorModel getVendor() {
         return vendor;
+    }
+
+    public void addVendor(ActionEvent actionEvent) {
+        Screeners.showAddVendor();
+    }
+
+    public void editVendor(ActionEvent actionEvent) {
+        Screeners.showEditVendor(vendor);
     }
 
 
