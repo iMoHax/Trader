@@ -12,13 +12,15 @@
            <Menu text="%main.menu.file">
                <MenuItem text="%main.menu.file.save" onAction="#save"/>
                <MenuItem text="%main.menu.file.import" onAction="#importWorld"/>
-               <MenuItem text="%main.menu.file.settings" onAction="#editSettings"/>
-               <Menu fx:id="langs" text="%main.menu.file.language"/>
            </Menu>
            <Menu text="%main.menu.edit">
                <MenuItem text="%main.menu.edit.addStation" onAction="#addVendor"/>
                <MenuItem text="%main.menu.edit.addItem" onAction="#addItem"/>
                <MenuItem text="%main.menu.edit.editStation" onAction="#editVendor"/>
+           </Menu>
+           <Menu text="%main.menu.settings">
+               <MenuItem text="%main.menu.settings.parameters" onAction="#editSettings"/>
+               <Menu fx:id="langs" text="%main.menu.settings.language"/>
            </Menu>
        </MenuBar>
    </top>
