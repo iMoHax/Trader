@@ -56,6 +56,10 @@ public class ItemsController {
         MarketModel market = MainController.getMarket();
         market.addListener(new ItemsStatChangeListener());
         tblItems.setItems(FXCollections.observableArrayList(market.itemsProperty()));
+        sort();
+    }
+
+    private void sort(){
         if (tblItems.getSortOrder().size()>0)
             tblItems.sort();
     }
@@ -65,6 +69,7 @@ public class ItemsController {
         for (ItemDescModel descModel : tblItems.getItems()) {
             if (descModel.hasItem(offer)){
                 descModel.refresh(offer.getType());
+                sort();
                 return;
             }
         }
@@ -73,10 +78,12 @@ public class ItemsController {
     private void refresh(){
         LOG.info("Refresh all stats");
         tblItems.getItems().forEach(ItemDescModel::refresh);
+        sort();
     }
 
     private void addItem(ItemDescModel item){
         tblItems.getItems().add(item);
+        sort();
     }
 
     private class ItemsStatChangeListener extends ChangeMarketListener {

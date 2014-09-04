@@ -1,5 +1,6 @@
 package ru.trader.controllers;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ListView;
@@ -72,17 +73,23 @@ public class OffersController {
     private void fillTables(VendorModel vendor){
         if (vendor != null){
             tblSell.setItems(FXCollections.observableList(vendor.getSells(this::asOfferDescModel)));
-            if (tblSell.getSortOrder().size()>0)
-                tblSell.sort();
-
             tblBuy.setItems(FXCollections.observableList(vendor.getBuys(this::asOfferDescModel)));
-            if (tblBuy.getSortOrder().size()>0)
-                tblBuy.sort();
-
+            sort();
         } else {
             tblSell.getItems().clear();
             tblBuy.getItems().clear();
         }
+    }
+
+    private void sort(){
+        Platform.runLater(()->{
+            if (tblBuy.getSortOrder().size()>0){
+                tblBuy.sort();
+            }
+            if (tblSell.getSortOrder().size()>0){
+                tblSell.sort();
+            }
+        });
     }
 
 
@@ -142,12 +149,14 @@ public class OffersController {
         for (OfferDescModel descModel : tblSell.getItems()) {
             if (descModel.hasItem(offer)){
                 descModel.refresh(offer.getType());
+                sort();
                 return;
             }
         }
         for (OfferDescModel descModel : tblBuy.getItems()) {
             if (descModel.hasItem(offer)){
                 descModel.refresh(offer.getType());
+                sort();
                 return;
             }
         }
@@ -157,9 +166,17 @@ public class OffersController {
         LOG.info("Refresh lists");
         tblSell.getItems().forEach(OfferDescModel::refresh);
         tblBuy.getItems().forEach(OfferDescModel::refresh);
+        sort();
     }
 
     private class OffersChangeListener extends ChangeMarketListener {
+
+        @Override
+        public void priceChange(OfferModel offer, double oldPrice, double newPrice) {
+            if (vendor.hasBuy(offer.getItem()) || vendor.hasSell(offer.getItem())){
+                sort();
+            }
+        }
 
         @Override
         public void add(OfferModel offer) {
