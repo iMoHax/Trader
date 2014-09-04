@@ -103,14 +103,14 @@ public class VendorEditorController {
         items.setItems(updater.getOffers());
     }
 
-    public Action showDialog(Parent parent, Parent content, VendorModel vendor){
-        updater.reset();
+    public void showDialog(Parent parent, Parent content, VendorModel vendor){
         updater.init(vendor);
         Dialog dlg = new Dialog(parent, Localization.getString(vendor == null ? "vEditor.title.add" : "vEditor.title.edit"));
         dlg.setContent(content);
         dlg.getActions().addAll(actSave, actCancel);
         dlg.setResizable(false);
-        return dlg.show();
+        dlg.show();
+        updater.reset();
     }
 
     public void up(){

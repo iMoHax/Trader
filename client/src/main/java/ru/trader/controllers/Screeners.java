@@ -131,12 +131,12 @@ public class Screeners {
         return Dialogs.create().owner(mainScreen).message(text).showConfirm();
     }
 
-    public static Action showAddVendor(){
-        return vEditorController.showDialog(mainScreen, vEditorScreen, null);
+    public static void showAddVendor(){
+        vEditorController.showDialog(mainScreen, vEditorScreen, null);
     }
 
-    public static Action showEditVendor(VendorModel vendor){
-        return vEditorController.showDialog(mainScreen, vEditorScreen, vendor);
+    public static void showEditVendor(VendorModel vendor){
+        vEditorController.showDialog(mainScreen, vEditorScreen, vendor);
     }
 
     public static Parent getMainScreen(){

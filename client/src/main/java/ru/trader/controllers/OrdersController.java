@@ -80,7 +80,9 @@ public class OrdersController {
         dlg.setContent(content);
         dlg.getActions().addAll(OK, Dialog.Actions.CANCEL);
         dlg.setResizable(false);
-        return dlg.show() == OK ? getOrders() : null;
+        Collection<OrderModel> res = dlg.show() == OK ? getOrders() : null;
+        tblOrders.getItems().clear();
+        return res;
     }
 
     private Collection<OrderModel> getOrders() {

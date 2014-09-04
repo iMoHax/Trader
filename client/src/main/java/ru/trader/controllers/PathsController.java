@@ -46,7 +46,9 @@ public class PathsController {
         dlg.setContent(content);
         dlg.getActions().addAll(OK, Dialog.Actions.CANCEL);
         dlg.setResizable(false);
-        return dlg.show() == OK ? getPath() : null;
+        PathRouteModel res = dlg.show() == OK ? getPath() : null;
+        tblPaths.getItems().clear();
+        return res;
     }
 
     public PathRouteModel getPath(){

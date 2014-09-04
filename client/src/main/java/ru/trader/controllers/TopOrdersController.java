@@ -54,7 +54,9 @@ public class TopOrdersController {
         dlg.setContent(content);
         dlg.getActions().addAll(OK, Dialog.Actions.CANCEL);
         dlg.setResizable(false);
-        return dlg.show() == OK ? order : null;
+        OrderModel res = dlg.show() == OK ? order : null;
+        tblOrders.getItems().clear();
+        return res;
     }
 
 
