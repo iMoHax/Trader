@@ -55,7 +55,7 @@ public class Settings {
     }
 
     public boolean getEMDNUpdateOnly(){
-        return !"0".equals(values.getProperty("emdn.updateOnly","0"));
+        return !"0".equals(values.getProperty("emdn.updateOnly","1"));
     }
 
     public void setEMDNAutoUpdate(long autoUpdate){
