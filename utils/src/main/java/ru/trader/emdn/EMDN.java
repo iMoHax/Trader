@@ -6,74 +6,60 @@ import org.zeromq.ZMQ;
 import org.zeromq.ZMQException;
 
 import java.io.UnsupportedEncodingException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
 public class EMDN {
     private final static Logger LOG = LoggerFactory.getLogger(EMDN.class);
 
-    private final Market cache = new Market();
+    private final ConcurrentHashMap<String, Station> cache = new ConcurrentHashMap<>(40, 0.9f, 1);
+    private final ZMQ.Context context;
+    private ExecutorService executor;
     private String subServer;
-    private ZMQ.Context context = null;
-    private ZMQ.Socket subscriber = null;
-    private ScheduledExecutorService executor;
-    private ScheduledFuture<?> receive;
+    private Future<?> receive;
     private boolean clear;
 
     public EMDN() {
+        context = ZMQ.context(1);
     }
 
     public EMDN(String subServer, boolean clearOnShutdown) {
+        this();
         this.subServer = subServer;
         clear = clearOnShutdown;
     }
 
-    private void init(){
-        context = ZMQ.context(1);
-        subscriber = context.socket(ZMQ.SUB);
-    }
 
     public void start(){
         if (isActive()) return;
-        init();
-        LOG.info("Connect to server {}", subServer);
-        subscriber.connect(subServer);
-        LOG.trace("Subscribe");
-        subscriber.subscribe(new byte[0]);
-        executor = Executors.newSingleThreadScheduledExecutor();
-        receive = executor.scheduleWithFixedDelay(() -> {
-            try {
-                byte[] receivedData = subscriber.recv(0);
-                LOG.trace("Received data: {}", receivedData);
-                if (receivedData == null) return;
-                //receivedData = decompress(receivedData);
-                String market_csv = new String(receivedData, "UTF-8");
-                parseCSV(market_csv);
-            } catch (ZMQException | UnsupportedEncodingException ex) {
-                if (!executor.isShutdown())
-                    LOG.error("Error on get data from EMDN", ex);
-            }
-        }, 0, 1, TimeUnit.MILLISECONDS);
+        if (executor == null) executor = Executors.newSingleThreadExecutor();
+        receive = executor.submit(new Receiver());
+    }
+
+
+    public void stop() {
+        if (isActive()){
+            LOG.info("Stop EMDN client");
+            receive.cancel(false);
+            receive = null;
+            if (clear)
+                cache.clear();
+        }
     }
 
     public void shutdown() {
-        if (isActive()){
-            LOG.info("Shutdown EMDN client");
-            receive.cancel(false);
+        LOG.info("Shutdown EMDN client");
+        stop();
+        if (executor != null) {
             executor.shutdown();
-            subscriber.close();
-            context.term();
+            try {
+                executor.awaitTermination(5, TimeUnit.SECONDS);
+            } catch (InterruptedException ignore) {
+            }
         }
-        subscriber = null;
-        context = null;
-        if (clear)
-            cache.clear();
+        context.term();
     }
-
 
     private void parseCSV(String csv) {
         LOG.debug("Parse csv: {}", csv);
@@ -86,7 +72,7 @@ public class EMDN {
         LOG.trace("Item: {}", item);
         String stName = flds[8].split("\\(")[0].trim();
         LOG.trace("Station: {}", stName);
-        Station station = cache.getVendor(stName);
+        Station station = cache.get(stName);
         if (station != null){
             LOG.trace("Is old, update");
             station.update(item);
@@ -94,7 +80,7 @@ public class EMDN {
             LOG.trace("Is new, create");
             station = new Station(stName);
             station.update(item);
-            cache.addVendor(station);
+            cache.put(stName, station);
         }
     }
 
@@ -116,19 +102,51 @@ public class EMDN {
         return res;
     }
 
-    public Station getVendor(String name){
-        return cache.getVendor(name);
+    public Station get(String name){
+        return cache.get(name);
+    }
+
+    public Station pop(String name) {
+        return cache.remove(name);
     }
 
     public boolean isActive(){
-        return subscriber!=null;
+        return receive!=null;
     }
 
     public void connectTo(String subServer){
         if (subServer.equals(this.subServer)) return;
         boolean active = isActive();
-        if (active) shutdown();
+        if (active) stop();
         this.subServer = subServer;
         if (active) start();
+    }
+
+    private class Receiver implements Runnable {
+
+        @Override
+        public void run() {
+            try (ZMQ.Socket subscriber = context.socket(ZMQ.SUB)){
+                subscriber.setReceiveTimeOut(10000);
+                LOG.info("Connect to server {}", subServer);
+                subscriber.connect(subServer);
+                LOG.trace("Subscribe");
+                subscriber.subscribe(new byte[0]);
+                while (!executor.isShutdown() && !receive.isCancelled()){
+                    try {
+                        byte[] receivedData = subscriber.recv(0);
+                        LOG.trace("Received data: {}", receivedData);
+                        if (receivedData == null) return;
+                        //receivedData = decompress(receivedData);
+                        String market_csv = new String(receivedData, "UTF-8");
+                        parseCSV(market_csv);
+                    } catch (ZMQException | UnsupportedEncodingException ex) {
+                        LOG.error("Error on get data from EMDN", ex);
+                    }
+                }
+            } catch (Exception ex){
+                LOG.error("Error on connect to EMDN", ex);
+            }
+        }
     }
 }

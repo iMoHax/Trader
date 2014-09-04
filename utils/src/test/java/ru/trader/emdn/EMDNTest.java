@@ -20,7 +20,7 @@ public class EMDNTest extends Assert {
     public void testGetData() throws Exception {
         // wait submit
         Thread.sleep(4000);
-        Station station = markettool.getVendor("Eranin");
+        Station station = markettool.get("Eranin");
         assertNotNull(station);
         ItemData itemData = station.getData("cropharvesters");
         assertNotNull(itemData);

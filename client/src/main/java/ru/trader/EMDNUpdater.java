@@ -21,16 +21,20 @@ public class EMDNUpdater {
     private static long interval;
 
     public static void updateFromEMDN(VendorUpdater updater){
-        Station emdnData = emdn.getVendor(updater.getName());
-        LOG.debug("Update {} from EMDN", updater.getName());
-        if (emdnData == null){
+        Station emdnData = emdn.get(updater.getName());
+        if (emdnData != null){
+            update(updater, emdnData);
+        } else {
             LOG.trace("Not found in EMDN");
-            return;
         }
+    }
+
+    private static void update(VendorUpdater updater, Station emdnData){
+        LOG.trace("Update {} from EMDN", updater.getName());
         for (VendorUpdater.FakeOffer offer : updater.getOffers()) {
             if (offer.getItem().isMarketItem()){
                 ItemData data = emdnData.getData(offer.getItem().getId());
-                LOG.debug("Update item {} to {}", offer.getItem().getName(), data);
+                LOG.trace("Update item {} to {}", offer.getItem().getName(), data);
                 if (data != null){
                     offer.setSprice(data.getBuy());
                     offer.setBprice(data.getSell());
@@ -56,8 +60,8 @@ public class EMDNUpdater {
     public static void shutdown(){
         if (executor != null) {
             LOG.debug("Shutdown auto update");
-            autoupdate.cancel(true);
-            executor.shutdown();
+            if (autoupdate != null) autoupdate.cancel(true);
+            executor.shutdownNow();
         }
         emdn.shutdown();
     }
@@ -83,8 +87,8 @@ public class EMDNUpdater {
             emdn.start();
         }
         else {
-            emdn.shutdown();
             setInterval(0);
+            emdn.stop();
         }
     }
 
@@ -94,21 +98,15 @@ public class EMDNUpdater {
 
     public static void setInterval(long interval) {
         if (emdn.isActive()){
+            if (autoupdate != null){
+                LOG.debug("Stop auto update");
+                autoupdate.cancel(true);
+                autoupdate = null;
+            }
             if (interval > 0) {
-                if (executor != null){
-                    LOG.debug("Cancel previous auto update");
-                    autoupdate.cancel(true);
-                }
                 if (executor == null) executor = Executors.newSingleThreadScheduledExecutor();
                 LOG.debug("Start auto update each {} sec", interval);
                 autoupdate = executor.scheduleAtFixedRate(emdnUpdater, interval, interval, TimeUnit.SECONDS);
-            } else {
-                if (executor != null){
-                    LOG.debug("Stop auto update");
-                    autoupdate.cancel(true);
-                    executor.shutdown();
-                    executor = null;
-                }
             }
         }
         EMDNUpdater.interval = interval;
@@ -125,10 +123,15 @@ public class EMDNUpdater {
         public void run() {
             market.vendorsProperty().get().forEach((vendor) -> {
                 LOG.trace("Auto update {}", vendor);
-                updater.reset();
-                updater.init(vendor);
-                updateFromEMDN(updater);
-                updater.commit();
+                Station emdnData = emdn.pop(vendor.getName());
+                if (emdnData != null){
+                    updater.init(vendor);
+                    update(updater, emdnData);
+                    updater.commit();
+                    updater.reset();
+                } else {
+                    LOG.trace("Not found in EMDN");
+                }
             });
         }
     }
