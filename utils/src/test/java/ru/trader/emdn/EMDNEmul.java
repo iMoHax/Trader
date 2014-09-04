@@ -116,8 +116,9 @@ public class EMDNEmul {
         executor.scheduleAtFixedRate(()->{
                 for (byte[] message : messages) {
                     LOG.trace("Publish message: {}", message);
-                    publisher.send(message);
+                    publisher.sendMore(message);
                 }
+                publisher.send(new byte[0]);
                 LOG.trace("Sleep... ");
         }, 1, 5, TimeUnit.SECONDS);
     }
