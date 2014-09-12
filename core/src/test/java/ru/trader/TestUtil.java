@@ -85,6 +85,20 @@ public class TestUtil {
     }
 
     @SafeVarargs
+    public static <T> void assertCollectionContainAny(Collection<T> collection, T... items){
+        boolean contain = false;
+        for (T item : items) {
+            if (collection.contains(item)){
+                contain = true;
+                break;
+            }
+        }
+        if (!contain){
+            Assert.fail(String.format("Collection should include any item from %s", items));
+        }
+    }
+
+    @SafeVarargs
     public static <T> void assertCollectionContainAll(Collection<T> collection,  T... items){
         checkContains(collection, true, items);
     }

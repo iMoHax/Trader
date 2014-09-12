@@ -67,6 +67,10 @@ public class Path<T extends Connectable<T>> {
         return target.equals(vertex) || (!isRoot() && head.isConnect(vertex));
     }
 
+    public boolean isConnect(T entry) {
+        return target.getEntry().equals(entry) || (!isRoot() && head.isConnect(entry));
+    }
+
     public boolean isPathFrom(T entry) {
         return !isRoot() && head.target.getEntry().equals(entry);
     }

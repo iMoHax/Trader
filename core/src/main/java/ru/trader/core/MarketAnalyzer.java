@@ -2,10 +2,7 @@ package ru.trader.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.trader.graph.Graph;
-import ru.trader.graph.Path;
-import ru.trader.graph.PathRoute;
-import ru.trader.graph.RouteGraph;
+import ru.trader.graph.*;
 
 import java.util.*;
 
@@ -13,59 +10,39 @@ public class MarketAnalyzer {
     private final static Logger LOG = LoggerFactory.getLogger(MarketAnalyzer.class);
 
     private Market market;
-    private RouteGraph graph;
     private double tank;
     private double maxDistance;
+    private double segment = 50;
+    private int count = 100;
     private int jumps;
     private int cargo;
 
+    private final static Comparator<Order> orderComparator = (o1, o2) -> o2.compareTo(o1);
 
     public MarketAnalyzer(Market market) {
         this.market = market;
     }
 
-    public Collection<Order> getTop(int limit, double balance){
-        LOG.debug("Get top {}", limit);
-        TreeSet<Order> top = new TreeSet<>();
-        for (Vendor vendor : market.get()) {
+    public Collection<Order> getTop(double balance){
+        LOG.debug("Get top {}", count);
+        Collection<Vendor> vendors = market.get();
+        List<Order> top = new ArrayList<>(count);
+        for (Vendor vendor : vendors) {
             LOG.trace("Check vendor {}", vendor);
-            setSource(vendor);
-            for (Offer sell : vendor.getAllSellOffers()) {
-                long count = Math.min(cargo, (long) Math.floor(balance / sell.getPrice()));
-                LOG.trace("Sell offer {}, count = {}", sell, count);
-                if (count == 0) continue;
-                Iterator<Offer> buyers = market.getStatBuy(sell.getItem()).getOffers().descendingIterator();
-                while (buyers.hasNext()){
-                    Offer buy = buyers.next();
-                    if (!graph.isAccessible(buy.getVendor())){
-                        LOG.trace("Is inaccessible buyer, skip");
-                        continue;
-                    }
-                    Order order = new Order(sell, buy, count);
-                    LOG.trace("Buy offer {} profit = {}", buy, order.getProfit());
-                    if (order.getProfit() <= 0 ) break;
-                    if (top.size() == limit){
-                        LOG.trace("Min order {}", top.first());
-                        if (top.first().getProfit() < order.getProfit()) {
-                            LOG.trace("Add to top");
-                            top.add(order);
-                            top.pollFirst();
-                        } else {
-                            LOG.trace("Is low profit, skip");
-                            break;
-                        }
-                    } else {
-                        top.add(order);
-                    }
-                }
-            }
+            Collection<Order> orders = getOrders(vendor, balance, top.isEmpty() ? 0 : top.get(top.size()-1).getProfit());
+            RouteGraph.addAllToTop(top, orders, count, orderComparator);
         }
         return top;
     }
 
     public Collection<Order> getOrders(Vendor vendor, double balance) {
-        Collection<Order> res = new ArrayList<>();
-        setSource(vendor);
+        return getOrders(vendor, balance, 0);
+    }
+
+    private Collection<Order> getOrders(Vendor vendor, double balance, double lowProfit) {
+        List<Order> res = new ArrayList<>(20);
+        Collection<Vendor> vendors = market.get();
+        RouteGraph graph = new RouteGraph(vendor, vendors, tank, maxDistance, true, jumps);
         for (Offer sell : vendor.getAllSellOffers()) {
             long count = Math.min(cargo, (long) Math.floor(balance / sell.getPrice()));
             LOG.trace("Sell offer {}, count = {}", sell, count);
@@ -79,15 +56,21 @@ public class MarketAnalyzer {
                 }
                 Order order = new Order(sell, buy, count);
                 LOG.trace("Buy offer {} profit = {}", buy, order.getProfit());
+                if (order.getProfit() <= 0 ) break;
+                if (order.getProfit() < lowProfit) {
+                    LOG.trace("Is low profit, skip");
+                    break;
+                }
                 res.add(order);
             }
         }
+        res.sort(orderComparator);
         return res;
     }
 
     public Collection<Order> getOrders(Vendor from, Vendor to, double balance) {
         Collection<Order> res = new ArrayList<>();
-        setSource(from);
+        RouteGraph graph = new RouteGraph(from, market.get(), tank, maxDistance, true, jumps);
         if (!graph.isAccessible(to)){
             LOG.trace("Is inaccessible buyer");
             return res;
@@ -103,67 +86,37 @@ public class MarketAnalyzer {
                 LOG.trace("Buy offer {} profit = {}", buy, order.getProfit());
                 res.add(order);
             }
-
         }
         return res;
     }
 
-
-    private void rebuild(Vendor source){
-        graph = new RouteGraph(source, market.get(), tank, maxDistance, true, jumps);
-        graph.setLimit(cargo);
-    }
-
-    private void setSource(Vendor source){
-        if (graph == null || !graph.getRoot().equals(source))
-            rebuild(source);
-    }
-
     public Collection<Path<Vendor>> getPaths(Vendor from, Vendor to){
-        setSource(from);
+        RouteGraph graph = new RouteGraph(from, market.get(), tank, maxDistance, true, jumps);
         return graph.getPathsTo(to);
     }
 
     public PathRoute getPath(Vendor from, Vendor to){
-        setSource(from);
+        RouteGraph graph = new RouteGraph(from, market.get(), tank, maxDistance, true, jumps);
         return (PathRoute) graph.getFastPathTo(to);
     }
 
     public Collection<PathRoute> getPaths(Vendor from, double balance){
-        setSource(from);
-        graph.setBalance(balance);
-        Collection<Vendor> vendors = market.get();
-        List<PathRoute> res = new ArrayList<>(vendors.size()*10);
-        for (Vendor vendor : vendors) {
-            Collection<Path<Vendor>> paths = graph.getPathsTo(vendor, 10);
-            for (Path<Vendor> path : paths) {
-                res.add((PathRoute) path);
-            }
-        }
-        Collections.sort(res, RouteGraph.comparator);
-        return res;
+        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segment);
+        return searcher.getPaths(from, market.get(), jumps, balance, cargo, count);
     }
 
     public Collection<PathRoute> getPaths(Vendor from, Vendor to, double balance){
-        setSource(from);
-        graph.setBalance(balance);
-        Collection<Path<Vendor>> paths = graph.getPathsTo(to);
-        Collection<PathRoute> res = new ArrayList<>(paths.size());
-        for (Path<Vendor> path : paths) {
-            res.add((PathRoute) path);
-        }
-        return res;
+        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segment);
+        return searcher.getPaths(from, to, market.get(), jumps, balance, cargo, count);
     }
 
-    public Collection<PathRoute> getTopPaths(int limit, double balance){
-        List<PathRoute> top = new ArrayList<>(limit);
-        for (Vendor vendor : market.get()) {
-            setSource(vendor);
-            graph.setBalance(balance);
-            Collection<Path<Vendor>> paths = graph.getPathsTo(vendor, 10);
-            for (Path<Vendor> path : paths) {
-                RouteGraph.addToTop(top, (PathRoute)path, limit, RouteGraph.comparator);
-            }
+    public Collection<PathRoute> getTopPaths(double balance){
+        List<PathRoute> top = new ArrayList<>(count);
+        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segment);
+        Collection<Vendor> vendors = market.get();
+        for (Vendor vendor : vendors) {
+            Collection<PathRoute> paths = searcher.getPaths(vendor, vendor, vendors, jumps, balance, cargo, 3);
+            RouteGraph.addAllToTop(top, paths, count, RouteGraph.comparator);
         }
         return top;
     }
@@ -171,21 +124,17 @@ public class MarketAnalyzer {
 
     public void setTank(double tank) {
         this.tank = tank;
-        this.graph = null;
     }
 
     public void setMaxDistance(double maxDistance) {
         this.maxDistance = maxDistance;
-        this.graph = null;
     }
 
     public void setJumps(int jumps) {
         this.jumps = jumps;
-        this.graph = null;
     }
 
     public void setCargo(int cargo) {
-        if (graph != null) graph.setLimit(cargo);
         this.cargo = cargo;
     }
 

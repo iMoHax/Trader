@@ -202,8 +202,8 @@ public class MarketModel {
         return BindingsHelper.observableList(analyzer.getOrders(from.getVendor(), to.getVendor(), balance), this::asModel);
     }
 
-    public ObservableList<OrderModel> getTop(int limit, double balance){
-        return BindingsHelper.observableList(analyzer.getTop(limit, balance), this::asModel);
+    public ObservableList<OrderModel> getTop(double balance){
+        return BindingsHelper.observableList(analyzer.getTop(balance), this::asModel);
     }
 
     public ObservableList<PathRouteModel> getRoutes(VendorModel from, double balance){
@@ -215,7 +215,7 @@ public class MarketModel {
     }
 
     public ObservableList<PathRouteModel> getTopRoutes(double balance){
-        return BindingsHelper.observableList(analyzer.getTopPaths(100, balance), this::asModel);
+        return BindingsHelper.observableList(analyzer.getTopPaths(balance), this::asModel);
     }
 
     PathRoute getPath(VendorModel from, VendorModel to) {

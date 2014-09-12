@@ -233,7 +233,8 @@ public class GraphTest extends Assert {
         TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x6, x7), Path.toPath(x5, x4, x6, x7), Path.toPath(x5, x3, x6, x7));
 
         paths = graph.getPathsTo(x7, 1);
-        TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x3, x6, x7));
+        assertEquals(1, paths.size());
+        TestUtil.assertCollectionContainAny(paths, Path.toPath(x5, x6, x7), Path.toPath(x5, x4, x6, x7), Path.toPath(x5, x3, x6, x7));
 
         paths = graph.getPathsTo(x4);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(x5, x4), Path.toPath(x5, x6, x4), Path.toPath(x5, x3, x4),

@@ -176,7 +176,7 @@ public class RouterController {
 
 
     public void showTopOrders(){
-        OrderModel order = Screeners.showOrders(market.getTop(100, totalBalance.getValue().doubleValue()));
+        OrderModel order = Screeners.showOrders(market.getTop(totalBalance.getValue().doubleValue()));
         if (order!=null){
             tblOrders.getItems().add(order);
             addOrderToPath(order);

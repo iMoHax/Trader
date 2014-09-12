@@ -35,7 +35,7 @@ public class RouteGraph extends Graph<Vendor> {
     }
 
     @Override
-    protected boolean onFindPath(ArrayList<Path<Vendor>> paths, int max, Path<Vendor> path) {
+    protected boolean onFindPath(List<Path<Vendor>> paths, int max, Path<Vendor> path) {
         PathRoute route = (PathRoute) path;
         route.sort(balance, limit);
         addToTop(paths, route, max, (r1, r2) -> comparator.compare((PathRoute)r1, (PathRoute)r2));
@@ -59,4 +59,24 @@ public class RouteGraph extends Graph<Vendor> {
             }
         }
     }
+
+    public static <T> void addAllToTop(List<T> list, Collection<T> sortEntries, int limit, Comparator<T> comparator){
+        for (T entry : sortEntries) {
+            if (list.size() == limit){
+                int index = Collections.binarySearch(list, entry, comparator);
+                if (index < 0) index = -1 - index;
+                if (index == limit) return;
+                list.add(index, entry);
+                list.remove(limit);
+            } else {
+                if (list.size() < limit-1){
+                    list.add(entry);
+                } else {
+                    list.add(entry);
+                    list.sort(comparator);
+                }
+            }
+        }
+    }
+
 }

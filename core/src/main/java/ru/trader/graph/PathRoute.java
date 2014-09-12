@@ -128,7 +128,7 @@ public class PathRoute extends Path<Vendor> {
         return tail != null;
     }
 
-    public void update(){
+    private void update(){
         PathRoute p = this;
         p.updateBalance();
         while (p.hasNext()){
@@ -259,6 +259,7 @@ public class PathRoute extends Path<Vendor> {
     }
 
     public Order getBest(){
+        if (orders.isEmpty()) return null;
         return orders.get(0);
     }
 
@@ -278,9 +279,8 @@ public class PathRoute extends Path<Vendor> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (Order order : orders) {
-            if (order == TRANSIT) continue;
-            if (sb.length() > 0) sb.append(", ");
+        Order order = getBest();
+        if (order != TRANSIT){
             sb.append(order.getBuy().getItem());
             sb.append(" (").append(order.getBuyer()).append(") ");
         }
@@ -291,6 +291,7 @@ public class PathRoute extends Path<Vendor> {
             if (o.length()>0) sb.append(" (").append(o).append(") ");
         } else {
             sb.append(getPrevious().toString());
+            sb.append(" ").append(balance).append(" ");
             if (isRefill()) sb.append("(R)");
             if (o.length()>0) sb.append(" (").append(o).append(") ");
             sb.append(" -> ").append(get());
@@ -351,5 +352,14 @@ public class PathRoute extends Path<Vendor> {
             path = new PathRoute(path, new Vertex<>(t), false);
         }
         return path;
+    }
+
+    public boolean isRoute(PathRoute path){
+        return this == path || (isRoot() ? path.isRoot() : !path.isRoot() && getPrevious().isRoute(path.getPrevious()))
+                && this.getTarget().equals(path.getTarget())
+                && this.profit == path.profit
+                && this.balance == path.balance
+                && (this.getBest() == null && path.getBest() == null || this.getBest().equals(path.getBest()));
+
     }
 }

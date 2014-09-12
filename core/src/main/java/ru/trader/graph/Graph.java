@@ -3,11 +3,15 @@ package ru.trader.graph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveAction;
+import java.util.function.Predicate;
 
 public class Graph<T extends Connectable<T>> {
+    private final static ForkJoinPool POOL = new ForkJoinPool();
+    private final static int THRESHOLD = 4;
 
     @FunctionalInterface
     public interface PathConstructor<E extends Connectable<E>> {
@@ -17,12 +21,13 @@ public class Graph<T extends Connectable<T>> {
     private final static Logger LOG = LoggerFactory.getLogger(Graph.class);
 
     private final Vertex<T> root;
-    private final HashMap<T,Vertex<T>> vertexes;
+    private final Map<T,Vertex<T>> vertexes;
 
     private final double stock;
     private final double maxDistance;
     private final boolean withRefill;
     private final PathConstructor<T> pathFabric;
+    private int minJumps;
 
 
     public Graph(T start, Collection<T> set, double stock, int maxDeep) {
@@ -48,45 +53,22 @@ public class Graph<T extends Connectable<T>> {
         this.pathFabric = pathFabric;
         root = new Vertex<>(start);
         root.setLevel(maxDeep);
-        vertexes = new HashMap<>();
+        vertexes = new ConcurrentHashMap<>(50, 0.9f, THRESHOLD);
         vertexes.put(root.getEntry(), root);
-        buildGraph(root, set, maxDeep-1, stock);
+        build(root, set, maxDeep, stock);
     }
 
-    private void buildGraph(Vertex<T> vertex, Collection<T> set, int deep, double limit) {
-        LOG.trace("Build graph from {}, limit {}, deep {}", vertex, limit, deep);
-        for (T entry : set) {
-            if (entry == vertex.getEntry()) continue;
-            double distance = vertex.getEntry().getDistance(entry);
-            if (distance <= this.maxDistance){
-                if (withRefill && distance > limit && !vertex.getEntry().canRefill()){
-                    LOG.trace("Vertex {} is far away, {}", entry, distance);
-                    continue;
-                }
-                Vertex<T> next = vertexes.get(entry);
-                if (next == null){
-                    LOG.trace("Is new vertex");
-                    next = new Vertex<>(entry);
-                    vertexes.put(entry, next);
-                }
-                LOG.trace("Add edge from {} to {}", vertex, next);
-                Edge<T> edge = new Edge<>(vertex, next);
-                double nextLimit = withRefill ? limit - edge.getLength(): stock;
-                if (nextLimit < 0) {
-                    LOG.trace("Refill");
-                    nextLimit = stock - edge.getLength();
-                }
-                vertex.addEdge(edge);
-                // If level >= deep when vertex already added on upper deep
-                if (next.getLevel() < deep){
-                    next.setLevel(vertex.getLevel()-1);
-                    if (deep > 0){
-                        buildGraph(next, set, deep-1, nextLimit);
-                    }
-                }
+    private void build(Vertex<T> root, Collection<T> set, int maxDeep, double stock) {
+        POOL.invoke(new GraphBuilder(root, set, maxDeep - 1, stock));
+        if (set.size() > vertexes.size()){
+            minJumps = maxDeep;
+        } else {
+            minJumps = 1;
+            for (Vertex<T> vertex : vertexes.values()) {
+                int jumps = maxDeep - vertex.getLevel();
+                if (jumps > minJumps) minJumps = jumps;
             }
         }
-        LOG.trace("End build graph from {} on deep {}", vertex, deep);
     }
 
     public boolean isAccessible(T entry){
@@ -97,51 +79,37 @@ public class Graph<T extends Connectable<T>> {
         return vertexes.get(entry);
     }
 
-    public Collection<Path<T>> getPathsTo(T entry){
+    private void findPathsTo(Vertex<T> target, int max, List<Path<T>> res){
+        POOL.invoke(new PathFinder(res, max, pathFabric.build(root), target, root.getLevel() - 1, stock));
+    }
+
+    public List<Path<T>> getPathsTo(T entry){
         return getPathsTo(entry, 200);
     }
 
-    public Collection<Path<T>> getPathsTo(T entry, int max){
+    public List<Path<T>> getPathsTo(T entry, int max){
         Vertex<T> target = getVertex(entry);
         ArrayList<Path<T>> paths = new ArrayList<>(max);
-        findPaths(paths, max, pathFabric.build(root), target, root.getLevel()-1, stock);
+        findPathsTo(target, max, paths);
+        return paths;
+    }
+
+    public List<Path<T>> getPaths(int count){
+        ArrayList<Path<T>> paths = new ArrayList<>(vertexes.size()*count);
+        for (Vertex<T> target : vertexes.values()) {
+            ArrayList<Path<T>> p = new ArrayList<>(count);
+            findPathsTo(target, count, p);
+            for (Path<T> path : p) {
+                paths.add(path);
+            }
+        }
         return paths;
     }
 
 
-    private boolean findPaths(ArrayList<Path<T>> paths, int max, Path<T> head, Vertex<T> target, int deep, double limit){
-        if (target == null) return true;
-        Vertex<T> source = head.getTarget();
-        LOG.trace("Find path to deep from {} to {}, deep {}, limit {}, head {}", source, target, deep, limit, head);
-        Edge<T> edge = source.getEdge(target);
-        if (edge != null ){
-            if (!(withRefill && Math.min(limit, maxDistance) < edge.getLength() && !source.getEntry().canRefill())){
-                Path<T> path = head.connectTo(edge.getTarget(), limit < edge.getLength());
-                path.finish();
-                LOG.trace("Last edge find, add path {}", path);
-                if (onFindPath(paths, max, path)) return true;
-            }
-        }
-        if (deep > 0 ){
-            if (source.getEdgesCount() > 0){
-                LOG.trace("Search around");
-                for (Edge<T> next : source.getEdges()) {
-                    if (withRefill && Math.min(limit, maxDistance) < next.getLength() && !source.getEntry().canRefill()) continue;
-                    // target already added if source consist edge
-                    if (next.isConnect(target)) continue;
-                    Path<T> path = head.connectTo(next.getTarget(), limit < next.getLength());
-                    double nextLimit = withRefill ? limit - next.getLength(): stock;
-                    // refill
-                    if (nextLimit < 0 ) nextLimit = stock - next.getLength();
-                    if (findPaths(paths, max, path, target, deep - 1, nextLimit)) return true;
-                }
-            }
-        }
-        return false;
-    }
-
     // if is true, then break search
-    protected boolean onFindPath(ArrayList<Path<T>> paths, int max, Path<T> path){
+    protected boolean onFindPath(List<Path<T>> paths, int max, Path<T> path){
+        if (paths.size() >= max) return true;
         paths.add(path);
         return paths.size() >= max;
     }
@@ -156,30 +124,32 @@ public class Graph<T extends Connectable<T>> {
     private Path<T> findFastPath(Path<T> head, Vertex<T> target, int deep, double limit) {
         Vertex<T> source = head.getTarget();
         LOG.trace("Find fast path from {} to {}, deep {}, limit {}, head {}", source, target, deep, limit, head);
+        DistanceFilter distanceFilter = new DistanceFilter(limit, source.getEntry());
         if (deep == source.getLevel()){
-            for (Edge<T> next : source.getEdges()) {
-                if (withRefill && Math.min(limit, maxDistance) < next.getLength() && !source.getEntry().canRefill()) continue;
-                if (head.isConnect(next.getTarget())) continue;
-                if (next.isConnect(target)) {
-                    Path<T> path = head.connectTo(next.getTarget(), limit < next.getLength());
-                    path.finish();
-                    LOG.trace("Last edge find, path {}", path);
-                    return path;
-                }
+            Optional<Edge<T>> last = source.getEdges().parallelStream()
+                           .filter(next -> next.isConnect(target) && distanceFilter.test(next.getLength()) && !head.isConnect(next.getTarget()))
+                           .findFirst();
+            if (last.isPresent()){
+                Path<T> path = head.connectTo(last.get().getTarget(), limit < last.get().getLength());
+                path.finish();
+                LOG.trace("Last edge find, path {}", path);
+                return path;
             }
         }
         if (deep < source.getLevel()){
             LOG.trace("Search around");
-            for (Edge<T> next : source.getEdges()) {
-                if (next.getTarget().getLevel() >= source.getLevel()) continue;
-                if (withRefill && Math.min(limit, maxDistance) < next.getLength() && !source.getEntry().canRefill()) continue;
-                Path<T> path = head.connectTo(next.getTarget(), limit < next.getLength());
-                double nextLimit = withRefill ? limit - next.getLength(): stock;
-                // refill
-                if (nextLimit < 0 ) nextLimit = stock - next.getLength();
-                Path<T> res = findFastPath(path, target, deep, nextLimit);
-                if (res != null) return res;
-            }
+            Optional<Path<T>> res = source.getEdges().parallelStream()
+                    .filter(next -> next.getTarget().getLevel() < source.getLevel() && distanceFilter.test(next.getLength()))
+                    .map((next) -> {
+                        Path<T> path = head.connectTo(next.getTarget(), limit < next.getLength());
+                        double nextLimit = withRefill ? limit - next.getLength(): stock;
+                        // refill
+                        if (nextLimit < 0 ) nextLimit = stock - next.getLength();
+                        return findFastPath(path, target, deep, nextLimit);
+                    })
+                    .filter(path -> path != null)
+                    .findFirst();
+            if (res.isPresent()) return res.get();
         }
         return null;
     }
@@ -187,4 +157,173 @@ public class Graph<T extends Connectable<T>> {
     public T getRoot() {
         return root.getEntry();
     }
+
+    public int getMinJumps() {
+        return minJumps;
+    }
+
+    private class DistanceFilter implements Predicate<Double> {
+        private final double limit;
+        private final T source;
+
+        private DistanceFilter(double limit, T source) {
+            this.limit = limit;
+            this.source = source;
+        }
+
+        @Override
+        public boolean test(Double distance) {
+            return distance <= Math.min(limit, maxDistance) || (withRefill && distance <= maxDistance  &&  source.canRefill());
+        }
+    }
+
+    private class GraphBuilder extends RecursiveAction {
+        private final Vertex<T> vertex;
+        private final Collection<T> set;
+        private final int deep;
+        private final double limit;
+        private final DistanceFilter distanceFilter;
+
+        private GraphBuilder(Vertex<T> vertex, Collection<T> set, int deep, double limit) {
+            this.vertex = vertex;
+            this.set = set;
+            this.deep = deep;
+            this.limit = limit;
+            distanceFilter = new DistanceFilter(limit, vertex.getEntry());
+        }
+
+        @Override
+        protected void compute() {
+            LOG.trace("Build graph from {}, limit {}, deep {}", vertex, limit, deep);
+            ArrayList<GraphBuilder> subTasks = new ArrayList<>(set.size());
+            Iterator<T> iterator = set.iterator();
+            while (iterator.hasNext()) {
+                T entry = iterator.next();
+                if (entry == vertex.getEntry()) continue;
+                double distance = vertex.getEntry().getDistance(entry);
+                if (distanceFilter.test(distance)) {
+                    Vertex<T> next = vertexes.get(entry);
+                    if (next == null) {
+                        LOG.trace("Is new vertex");
+                        next = new Vertex<>(entry);
+                        vertexes.put(entry, next);
+                    }
+                    LOG.trace("Add edge from {} to {}", vertex, next);
+                    vertex.addEdge(new Edge<>(vertex, next));
+                    // If level >= deep when vertex already added on upper deep
+                    if (next.getLevel() < deep) {
+                        next.setLevel(vertex.getLevel() - 1);
+                        if (deep > 0) {
+                            double nextLimit = withRefill ? limit - distance : stock;
+                            if (nextLimit < 0) {
+                                LOG.trace("Refill");
+                                nextLimit = stock - distance;
+                            }
+                            //Recursive build
+                            GraphBuilder task = new GraphBuilder(next, set, deep - 1, nextLimit);
+                            task.fork();
+                            subTasks.add(task);
+                        }
+                    }
+                } else {
+                    LOG.trace("Vertex {} is far away, {}", entry, distance);
+                }
+                if (subTasks.size() == THRESHOLD || !iterator.hasNext()){
+                    for (GraphBuilder subTask : subTasks) {
+                        subTask.join();
+                    }
+                    subTasks.clear();
+                }
+            }
+            if (!subTasks.isEmpty()){
+                for (GraphBuilder subTask : subTasks) {
+                    subTask.join();
+                }
+                subTasks.clear();
+            }
+            LOG.trace("End build graph from {} on deep {}", vertex, deep);
+        }
+    }
+
+    private class PathFinder extends RecursiveAction {
+        private final List<Path<T>> paths;
+        private final int max;
+        private final Path<T> head;
+        private final Vertex<T> target;
+        private final int deep;
+        private final double limit;
+        private final DistanceFilter distanceFilter;
+
+        private PathFinder(List<Path<T>> paths, int max, Path<T> head, Vertex<T> target, int deep, double limit) {
+            this.paths = paths;
+            this.max = max;
+            this.head = head;
+            this.target = target;
+            this.deep = deep;
+            this.limit = limit;
+            distanceFilter = new DistanceFilter(limit, head.getTarget().getEntry());
+        }
+
+        @Override
+        protected void compute() {
+            if (target == null || isCancelled()) return;
+            Vertex<T> source = head.getTarget();
+            LOG.trace("Find path to deep from {} to {}, deep {}, limit {}, head {}", source, target, deep, limit, head);
+            Edge<T> edge = source.getEdge(target);
+            if (edge != null){
+                if (distanceFilter.test(edge.getLength())){
+                    Path<T> path = head.connectTo(edge.getTarget(), limit < edge.getLength());
+                    path.finish();
+                    LOG.trace("Last edge find, add path {}", path);
+                    synchronized (paths){
+                        if (onFindPath(paths, max, path)) complete(null);
+                    }
+                }
+            }
+            if (deep > 0 ){
+                if (source.getEdgesCount() > 0){
+                    LOG.trace("Search around");
+                    ArrayList<PathFinder> subTasks = new ArrayList<>(source.getEdges().size());
+                    Iterator<Edge<T>> iterator = source.getEdges().iterator();
+                    while (iterator.hasNext()) {
+                        Edge<T> next = iterator.next();
+                        if (isDone()) break;
+                        // target already added if source consist edge
+                        if (next.isConnect(target)) continue;
+                        if (!distanceFilter.test(next.getLength())) continue;
+                        Path<T> path = head.connectTo(next.getTarget(), limit < next.getLength());
+                        double nextLimit = withRefill ? limit - next.getLength() : stock;
+                        // refill
+                        if (nextLimit < 0) nextLimit = stock - next.getLength();
+                        //Recursive search
+                        PathFinder task = new PathFinder(paths, max, path, target, deep - 1, nextLimit);
+                        task.fork();
+                        subTasks.add(task);
+                        if (subTasks.size() == THRESHOLD || !iterator.hasNext()){
+                            for (PathFinder subTask : subTasks) {
+                                if (isDone()) {
+                                    subTask.cancel(false);
+                                } else {
+                                    subTask.join();
+                                }
+                            }
+                            subTasks.clear();
+                        }
+                    }
+                    if (!subTasks.isEmpty()){
+                        for (PathFinder subTask : subTasks) {
+                            if (isDone()) {
+                                subTask.cancel(false);
+                            } else {
+                                subTask.join();
+                            }
+                        }
+                        subTasks.clear();
+                    }
+                }
+            }
+        }
+    }
+
+
 }

@@ -3,12 +3,11 @@ package ru.trader.graph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashSet;
 
 public class Vertex<T extends Connectable<T>> {
     private final ArrayList<Edge<T>> edges = new ArrayList<>();
     private final T entry;
-    private int level = -1;
+    private volatile int level = -1;
 
     public Vertex(T entry) {
         this.entry = entry;
@@ -27,8 +26,10 @@ public class Vertex<T extends Connectable<T>> {
     }
 
     public void addEdge(Edge<T> edge){
-        if (edges.contains(edge)) return;
-        edges.add(edge);
+        synchronized (edges){
+            if (edges.contains(edge)) return;
+            edges.add(edge);
+        }
     }
 
     public Collection<Edge<T>> getEdges() {
