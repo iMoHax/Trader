@@ -106,4 +106,19 @@ public class Settings {
         return Integer.valueOf(values.getProperty("ship.jumps","3"));
     }
 
+    public void setSegmentSize(int segmentSize){
+        values.setProperty("performance.segment", String.valueOf(segmentSize));
+    }
+
+    public int getSegmentSize(){
+        return Integer.valueOf(values.getProperty("performance.segment","0"));
+    }
+
+    public void setPathsCount(int pathsCount){
+        values.setProperty("performance.limit", String.valueOf(pathsCount));
+    }
+
+    public int getPathsCount(){
+        return Integer.valueOf(values.getProperty("performance.limit","100"));
+    }
 }

@@ -14,7 +14,9 @@ import org.slf4j.LoggerFactory;
 import ru.trader.EMDNUpdater;
 import ru.trader.Main;
 import ru.trader.World;
+import ru.trader.core.MarketAnalyzer;
 import ru.trader.emdn.EMDN;
+import ru.trader.model.MarketModel;
 import ru.trader.view.support.Localization;
 import ru.trader.view.support.NumberField;
 
@@ -30,6 +32,10 @@ public class SettingsController {
     private CheckBox emdnUpdateOnly;
     @FXML
     private NumberField emdnUpdateTime;
+    @FXML
+    private NumberField segmentSize;
+    @FXML
+    private NumberField pathsCount;
 
     private final Action actSave = new AbstractAction(Localization.getString("dialog.button.save")) {
         {
@@ -54,6 +60,8 @@ public class SettingsController {
         emdnOn.setSelected(Main.SETTINGS.getEMDNActive());
         emdnUpdateOnly.setSelected(Main.SETTINGS.getEMDNUpdateOnly());
         emdnUpdateTime.setValue(Main.SETTINGS.getEMDNAutoUpdate());
+        segmentSize.setValue(Main.SETTINGS.getSegmentSize());
+        pathsCount.setValue(Main.SETTINGS.getPathsCount());
     }
 
     private void save() {
@@ -65,6 +73,12 @@ public class SettingsController {
         EMDNUpdater.setUpdateOnly(emdnUpdateOnly.isSelected());
         Main.SETTINGS.setEMDNAutoUpdate(emdnUpdateTime.getValue().longValue());
         EMDNUpdater.setInterval(emdnUpdateTime.getValue().longValue());
+        MarketModel market = MainController.getMarket();
+        Main.SETTINGS.setSegmentSize(segmentSize.getValue().intValue());
+        market.setSegmetnSize(segmentSize.getValue().intValue());
+        Main.SETTINGS.setPathsCount(pathsCount.getValue().intValue());
+        market.setLimit(pathsCount.getValue().intValue());
+
     }
 
     public Action showDialog(Parent parent, Parent content){

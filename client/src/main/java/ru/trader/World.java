@@ -2,9 +2,8 @@ package ru.trader;
 
 import org.xml.sax.SAXException;
 import ru.trader.core.Market;
+import ru.trader.core.MarketAnalyzer;
 import ru.trader.core.SimpleMarket;
-import ru.trader.emdn.EMDN;
-import ru.trader.emdn.Station;
 import ru.trader.model.ModelFabrica;
 import ru.trader.store.Store;
 import ru.trader.store.XSSFImporter;
@@ -44,5 +43,12 @@ public class World {
 
     public static Market getMarket() {
         return world;
+    }
+
+    public static MarketAnalyzer buildAnalyzer(Market market){
+        MarketAnalyzer analyzer = new MarketAnalyzer(market);
+        analyzer.setSegmentSize(Main.SETTINGS.getSegmentSize());
+        analyzer.setPathsCount(Main.SETTINGS.getPathsCount());
+        return analyzer;
     }
 }

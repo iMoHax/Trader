@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.World;
 import ru.trader.core.*;
 import ru.trader.graph.PathRoute;
 import ru.trader.model.support.BindingsHelper;
@@ -42,7 +43,7 @@ public class MarketModel {
 
     public MarketModel(Market market) {
         this.market = market;
-        analyzer = new MarketAnalyzer(market);
+        analyzer = World.buildAnalyzer(market);
         items = new SimpleListProperty<ItemDescModel>(BindingsHelper.observableList(market.getItems(), this::getItemDesc));
         vendors = new SimpleListProperty<VendorModel>(BindingsHelper.observableList(market.get(), this::asModel));
     }
@@ -177,6 +178,14 @@ public class MarketModel {
         return new PathRouteModel(path, this);
     }
 
+
+    public void setLimit(int limit){
+        analyzer.setPathsCount(limit);
+    }
+
+    public void setSegmetnSize(int segmetnSize){
+        analyzer.setSegmentSize(segmetnSize);
+    }
 
     public void setCargo(int cargo){
         analyzer.setCargo(cargo);
