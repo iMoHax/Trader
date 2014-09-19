@@ -12,19 +12,33 @@ public class PathRoute extends Path<Vendor> {
     private final static Logger LOG = LoggerFactory.getLogger(PathRoute.class);
 
     private final ArrayList<Order> orders = new ArrayList<>();
+    private final boolean byAvg;
     private double profit = 0;
     private double balance = 0;
+    private double distance = 0;
+    private int landsCount = 0;
     private PathRoute tail;
     public final static Order TRANSIT = null;
 
     public PathRoute(Vertex<Vendor> source) {
-        super(source);
+        this(source, false);
     }
+
+    public static PathRoute buildAvg(Vertex<Vendor> source){
+        return new PathRoute(source, true);
+    }
+
+    private PathRoute(Vertex<Vendor> source, boolean byAvg) {
+        super(source);
+        this.byAvg = byAvg;
+    }
+
 
     private PathRoute(PathRoute head, Vertex<Vendor> vertex, boolean refill) {
         super(head, vertex, refill);
         assert head.tail == null;
         head.tail = this;
+        byAvg = head.byAvg;
         //transit
         orders.add(TRANSIT);
     }
@@ -90,6 +104,22 @@ public class PathRoute extends Path<Vendor> {
             fillOrders();
             getPrevious().finish();
         }
+        updateDistance();
+    }
+
+    private void update(){
+        PathRoute p = this;
+        p.updateBalance();
+        while (p.hasNext()){
+            p = p.getNext();
+            p.updateBalance();
+        }
+        while (p != this){
+            p.updateProfit();
+            p.updateLandsCount();
+            p = p.getPrevious();
+        }
+        getRoot().updateDistance();
     }
 
     private void fillOrders(){
@@ -128,38 +158,26 @@ public class PathRoute extends Path<Vendor> {
         return tail != null;
     }
 
-    private void update(){
-        PathRoute p = this;
-        p.updateBalance();
-        while (p.hasNext()){
-            p = p.getNext();
-            p.updateBalance();
-        }
-        while (p != this){
-            p.updateProfit();
-            p = p.getPrevious();
-        }
-    }
-
-    public void sort(double balance, long limit){
+    public void sort(double balance, long cargo){
         // start on root only
         if (isRoot()){
             this.balance = balance;
-            if (hasNext())
-                getNext().forwardSort(limit);
+            if (hasNext()){
+                getNext().forwardSort(cargo);
+            }
         } else {
-            getPrevious().sort(balance, limit);
+            getPrevious().sort(balance, cargo);
         }
     }
 
-    private void forwardSort(long limit){
+    private void forwardSort(long cargo){
         updateBalance();
         boolean needSort = false;
         for (Order order : orders) {
             if (order == TRANSIT) continue;
-            if (order.getCount() < limit){
+            if (order.getCount() < cargo){
                 needSort = true;
-                order.setMax(balance, limit);
+                order.setMax(balance, cargo);
             }
         }
         if (needSort){
@@ -168,20 +186,22 @@ public class PathRoute extends Path<Vendor> {
             LOG.trace("New order of orders {}", orders);
         }
         if (hasNext()){
-            getNext().forwardSort(limit);
+            getNext().forwardSort(cargo);
         } else {
             LOG.trace("Start back sort");
             Order best = orders.get(0);
             profit = best == TRANSIT ? 0 : best.getProfit();
-            LOG.trace("Max profit from {} = {}",getPrevious().get(), profit);
+            LOG.trace("Max profit from {} = {}", getPrevious().get(), profit);
+            updateLandsCount();
             getPrevious().backwardSort();
         }
     }
 
     private void backwardSort(){
-        orders.sort(this::compareOrders);
+        orders.sort(byAvg ? this::compareByAvgProfit : this::compareOrders);
         LOG.trace("New order of orders {}", orders);
         updateProfit();
+        updateLandsCount();
         if (!isRoot())
             getPrevious().backwardSort();
     }
@@ -222,6 +242,10 @@ public class PathRoute extends Path<Vendor> {
         return profit;
     }
 
+    public double getAvgProfit(){
+        return isRoot()? profit/landsCount : getPrevious().getAvgProfit();
+    }
+
     public double getBalance() {
         return balance;
     }
@@ -249,6 +273,17 @@ public class PathRoute extends Path<Vendor> {
         return Double.compare(profit2, profit1);
     }
 
+    private int compareByAvgProfit(Order o1, Order o2){
+        if (o1 != TRANSIT && o2 !=  TRANSIT){
+            if (!hasNext() || o1.isBuyer(o2.getBuyer()))
+                return o2.compareTo(o1);
+        }
+        double profit1 = getProfit(o1)/computeLandsCount(o1);
+        double profit2 = getProfit(o2)/computeLandsCount(o2);
+        return Double.compare(profit2, profit1);
+    }
+
+
     @Override
     public PathRoute getRoot() {
         return (PathRoute) super.getRoot();
@@ -263,17 +298,65 @@ public class PathRoute extends Path<Vendor> {
         return orders.get(0);
     }
 
-    public double getDistance(){
+    private double computeDistance(){
         if (isRoot()){
             double res = 0;
             PathRoute p = this;
             while (p.hasNext()){
                 p = p.getNext();
-                res += p.getDistance();
+                res += p.computeDistance();
             }
             return res;
         }
         else return getPrevious().get().getDistance(get());
+    }
+
+    private void updateDistance(){
+        this.distance = computeDistance();
+    }
+
+    public double getDistance(){
+        return distance;
+    }
+
+    private int computeLandsCount(Order order){
+        int res = 0;
+        PathRoute p = isRoot()? getNext() : this;
+        while (p.hasNext()){
+            p = p.getNext();
+            // lands for sell
+            if (order != null && p.isPathFrom(order.getBuyer())){
+                LOG.trace("{} is lands for sell by order {}", p, order);
+                return res + p.getLandsCount() + 1;
+            } else {
+                if (order == null){
+                    order = p.getBest();
+                    if (order != null){
+                        LOG.trace("{} is lands for buy by order {}", p, order);
+                        return res + p.getLandsCount() + 1;
+                    }
+                } else {
+                    if (p.isRefill()){
+                        LOG.trace("{} is lands for refill", p);
+                        res++;
+                    }
+                }
+            }
+
+        }
+        LOG.trace("{} is end, landing", p);
+        res++;
+        return res;
+    }
+
+    private void updateLandsCount(){
+        Order best = isRoot() ? getNext().getBest() : getBest();
+        landsCount = computeLandsCount(best);
+        LOG.trace("Lands count from {} = {}", isRoot() ? get() : getPrevious().get(), landsCount);
+    }
+
+    public int getLandsCount() {
+        return landsCount;
     }
 
     @Override
@@ -301,38 +384,6 @@ public class PathRoute extends Path<Vendor> {
 
     public void setOrder(Order order) {
         orders.set(0, order);
-    }
-
-    public int getLandsCount(){
-        int res = 0;
-        PathRoute p = this.isRoot() ? getNext() : this;
-        Order o = p.getBest();
-        while (p.hasNext()){
-            p = p.getNext();
-            // lands for sell
-            if (o != null && p.isPathFrom(o.getBuyer())){
-                LOG.trace("{} is lands for sell by order {}", p, o);
-                o = p.getBest();
-                res++;
-            } else {
-                if (o == null){
-                    o = p.getBest();
-                    if (o!= null){
-                        LOG.trace("{} is lands for buy by order {}", p, o);
-                        res++;
-                    }
-                } else {
-                    if (p.isRefill()){
-                        LOG.trace("{} is lands for refill", p);
-                        res++;
-                    }
-                }
-            }
-
-        }
-        LOG.trace("{} is end, landing", p);
-        res++;
-        return res;
     }
 
     public PathRoute dropTo(Vendor vendor){

@@ -12,8 +12,8 @@ public class MarketAnalyzer {
     private Market market;
     private double tank;
     private double maxDistance;
-    private double segment = 50;
-    private int count = 100;
+    private int segmentSize;
+    private int limit;
     private int jumps;
     private int cargo;
 
@@ -21,16 +21,18 @@ public class MarketAnalyzer {
 
     public MarketAnalyzer(Market market) {
         this.market = market;
+        this.limit = 100;
+        this.segmentSize = 0;
     }
 
     public Collection<Order> getTop(double balance){
-        LOG.debug("Get top {}", count);
+        LOG.debug("Get top {}", limit);
         Collection<Vendor> vendors = market.get();
-        List<Order> top = new ArrayList<>(count);
+        List<Order> top = new ArrayList<>(limit);
         for (Vendor vendor : vendors) {
             LOG.trace("Check vendor {}", vendor);
             Collection<Order> orders = getOrders(vendor, balance, top.isEmpty() ? 0 : top.get(top.size()-1).getProfit());
-            RouteGraph.addAllToTop(top, orders, count, orderComparator);
+            TopList.addAllToTop(top, orders, limit, orderComparator);
         }
         return top;
     }
@@ -101,22 +103,22 @@ public class MarketAnalyzer {
     }
 
     public Collection<PathRoute> getPaths(Vendor from, double balance){
-        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segment);
-        return searcher.getPaths(from, market.get(), jumps, balance, cargo, count);
+        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
+        return searcher.getPaths(from, market.get(), jumps, balance, cargo, limit);
     }
 
     public Collection<PathRoute> getPaths(Vendor from, Vendor to, double balance){
-        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segment);
-        return searcher.getPaths(from, to, market.get(), jumps, balance, cargo, count);
+        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
+        return searcher.getPaths(from, to, market.get(), jumps, balance, cargo, limit);
     }
 
     public Collection<PathRoute> getTopPaths(double balance){
-        List<PathRoute> top = new ArrayList<>(count);
-        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segment);
+        List<PathRoute> top = new ArrayList<>(limit);
+        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
         Collection<Vendor> vendors = market.get();
         for (Vendor vendor : vendors) {
             Collection<PathRoute> paths = searcher.getPaths(vendor, vendor, vendors, jumps, balance, cargo, 3);
-            RouteGraph.addAllToTop(top, paths, count, RouteGraph.comparator);
+            TopList.addAllToTop(top, paths, limit, RouteGraph.byProfitComparator);
         }
         return top;
     }
@@ -138,5 +140,11 @@ public class MarketAnalyzer {
         this.cargo = cargo;
     }
 
+    public void setSegmentSize(int segmentSize) {
+        this.segmentSize = segmentSize;
+    }
 
+    public void setPathsCount(int count) {
+        this.limit = count;
+    }
 }

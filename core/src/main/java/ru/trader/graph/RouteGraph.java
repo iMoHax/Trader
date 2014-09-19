@@ -7,12 +7,13 @@ import java.util.*;
 public class RouteGraph extends Graph<Vendor> {
 
     private double balance;
-    private int limit;
+    private int cargo;
+    private boolean groupRes;
 
-     public static Comparator<PathRoute> comparator = (p1, p2) -> {
+    public static Comparator<PathRoute> byProfitComparator = (p1, p2) -> {
         PathRoute r1 = p1.getRoot();
         PathRoute r2 = p2.getRoot();
-        int cmp = Double.compare(r2.getProfit()/r2.getLandsCount(), r1.getProfit()/r1.getLandsCount());
+        int cmp = Double.compare(r2.getAvgProfit(), r1.getAvgProfit());
         if (cmp != 0 ) return cmp;
         cmp = Double.compare(r1.getDistance(), r2.getDistance());
         if (cmp != 0) return cmp;
@@ -21,61 +22,65 @@ public class RouteGraph extends Graph<Vendor> {
         return cmp;
     };
 
+    public static Comparator<PathRoute> groupByLengthComparator = (p1, p2) -> {
+        int cmp = Integer.compare(p1.getLength(), p2.getLength());
+        if (cmp != 0 ) return cmp;
+        return byProfitComparator.compare(p1, p2);
+    };
 
     public RouteGraph(Vendor start, Collection<Vendor> set, double stock, double maxDistance, boolean withRefill, int maxDeep) {
-        super(start, set, stock, maxDistance, withRefill, maxDeep, PathRoute::new);
+        this(start, set, stock, maxDistance, withRefill, maxDeep, false);
+    }
+
+    public RouteGraph(Vendor start, Collection<Vendor> set, double stock, double maxDistance, boolean withRefill, int maxDeep, boolean groupRes) {
+        super(start, set, stock, maxDistance, withRefill, maxDeep, groupRes ? PathRoute::buildAvg : PathRoute::new);
+        if (groupRes){
+            this.groupRes = maxDeep > minJumps;
+        }
     }
 
     public void setBalance(double balance) {
         this.balance = balance;
     }
 
-    public void setLimit(int limit) {
-        this.limit = limit;
+    public void setCargo(int cargo) {
+        this.cargo = cargo;
     }
 
     @Override
-    protected boolean onFindPath(List<Path<Vendor>> paths, int max, Path<Vendor> path) {
-        PathRoute route = (PathRoute) path;
-        route.sort(balance, limit);
-        addToTop(paths, route, max, (r1, r2) -> comparator.compare((PathRoute)r1, (PathRoute)r2));
-        return false;
-    }
-
-    public static <T> void addToTop(List<T> list, T entry, int limit, Comparator<T> comparator){
-        if (list.size() == limit){
-            int index = Collections.binarySearch(list, entry, comparator);
-            if (index < 0) index = -1 - index;
-            if (index == limit) return;
-            list.add(index, entry);
-            list.remove(limit);
-
-        } else {
-            if (list.size() < limit-1){
-                list.add(entry);
-            } else {
-                list.add(entry);
-                list.sort(comparator);
-            }
+    protected TopList<Path<Vendor>> newTopList(int count) {
+        int groupSize = 0;
+        if (groupRes && getMinJumps() > 1){
+            groupSize = Math.floorDiv(count, root.getLevel());
         }
+        return new TopRoutes(count, groupSize);
     }
 
-    public static <T> void addAllToTop(List<T> list, Collection<T> sortEntries, int limit, Comparator<T> comparator){
-        for (T entry : sortEntries) {
-            if (list.size() == limit){
-                int index = Collections.binarySearch(list, entry, comparator);
-                if (index < 0) index = -1 - index;
-                if (index == limit) return;
-                list.add(index, entry);
-                list.remove(limit);
+    private class TopRoutes extends TopList<Path<Vendor>> {
+        private final int groupSize;
+
+        public TopRoutes(int limit, int groupSize) {
+            super(limit, (p1, p2) -> groupSize > 0 ? groupByLengthComparator.compare((PathRoute)p1, (PathRoute)p2) : RouteGraph.byProfitComparator.compare((PathRoute)p1, (PathRoute)p2));
+            this.groupSize = groupSize;
+        }
+
+        @Override
+        public boolean add(Path<Vendor> entry) {
+            if (comparator != null){
+                ((PathRoute)entry).sort(balance, cargo);
+            }
+            if (groupSize>0){
+                addToGroupTop(list, entry, limit, comparator, (e) -> e.getLength()-1, groupSize);
             } else {
-                if (list.size() < limit-1){
-                    list.add(entry);
+                if (comparator != null){
+                    addToTop(list, entry, limit, comparator);
                 } else {
+                    if (list.size() >= limit) return false;
                     list.add(entry);
-                    list.sort(comparator);
+                    if (list.size() >= limit) return false;
                 }
             }
+            return true;
         }
     }
 

@@ -106,5 +106,9 @@ public class Path<T extends Connectable<T>> {
         return head;
     }
 
+    public int getLength(){
+        return isRoot() ? 0 : 1 + getPrevious().getLength();
+    }
+
 
 }

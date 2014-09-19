@@ -43,7 +43,7 @@ public class RouteGraphTest extends Assert {
     public void testRoutes() throws Exception {
         RouteGraph graph = new RouteGraph(v1, market.get(), 1, 1, true, 4);
         graph.setBalance(500);
-        graph.setLimit(5);
+        graph.setCargo(5);
         //Profit: 150 180 200   230  670   620  950    890   620   950 1015   1180   890   950   930
         //Landings: 1  2   3     4    4     2    3      3     2     3    4      4     3     3     4
         //Prof:   150  90 66.66 57.5 167.5 310 316.66 296.66 310 316.66 253.75 295 296.66 316.66 232.5

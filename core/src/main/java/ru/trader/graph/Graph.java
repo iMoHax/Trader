@@ -12,6 +12,7 @@ import java.util.function.Predicate;
 public class Graph<T extends Connectable<T>> {
     private final static ForkJoinPool POOL = new ForkJoinPool();
     private final static int THRESHOLD = 4;
+    private final static int DEFAULT_COUNT = 200;
 
     @FunctionalInterface
     public interface PathConstructor<E extends Connectable<E>> {
@@ -20,14 +21,14 @@ public class Graph<T extends Connectable<T>> {
 
     private final static Logger LOG = LoggerFactory.getLogger(Graph.class);
 
-    private final Vertex<T> root;
-    private final Map<T,Vertex<T>> vertexes;
+    protected final Vertex<T> root;
+    protected final Map<T,Vertex<T>> vertexes;
 
-    private final double stock;
-    private final double maxDistance;
-    private final boolean withRefill;
+    protected final double stock;
+    protected final double maxDistance;
+    protected final boolean withRefill;
     private final PathConstructor<T> pathFabric;
-    private int minJumps;
+    protected int minJumps;
 
 
     public Graph(T start, Collection<T> set, double stock, int maxDeep) {
@@ -79,41 +80,44 @@ public class Graph<T extends Connectable<T>> {
         return vertexes.get(entry);
     }
 
-    private void findPathsTo(Vertex<T> target, int max, List<Path<T>> res){
-        POOL.invoke(new PathFinder(res, max, pathFabric.build(root), target, root.getLevel() - 1, stock));
+    private void findPathsTo(Vertex<T> target, TopList<Path<T>> res, int deep){
+        POOL.invoke(new PathFinder(res, pathFabric.build(root), target, deep-1, stock));
     }
 
     public List<Path<T>> getPathsTo(T entry){
-        return getPathsTo(entry, 200);
+        return getPathsTo(entry, DEFAULT_COUNT);
     }
 
     public List<Path<T>> getPathsTo(T entry, int max){
+        return getPathsTo(entry, max, root.getLevel()).getList();
+    }
+
+    public TopList<Path<T>> getPathsTo(T entry, int max, int deep){
         Vertex<T> target = getVertex(entry);
-        ArrayList<Path<T>> paths = new ArrayList<>(max);
-        findPathsTo(target, max, paths);
+        TopList<Path<T>> paths = newTopList(max);
+        findPathsTo(target, paths, deep);
         return paths;
     }
 
     public List<Path<T>> getPaths(int count){
-        ArrayList<Path<T>> paths = new ArrayList<>(vertexes.size()*count);
+        return getPaths(count, root.getLevel()).getList();
+    }
+
+    public TopList<Path<T>> getPaths(int count, int deep){
+        TopList<Path<T>> paths = newTopList(count);
         for (Vertex<T> target : vertexes.values()) {
-            ArrayList<Path<T>> p = new ArrayList<>(count);
-            findPathsTo(target, count, p);
-            for (Path<T> path : p) {
+            TopList<Path<T>> p = newTopList(minJumps);
+            findPathsTo(target, p, deep);
+            for (Path<T> path : p.getList()) {
                 paths.add(path);
             }
         }
         return paths;
     }
 
-
-    // if is true, then break search
-    protected boolean onFindPath(List<Path<T>> paths, int max, Path<T> path){
-        if (paths.size() >= max) return true;
-        paths.add(path);
-        return paths.size() >= max;
+    protected TopList<Path<T>> newTopList(int count){
+        return new TopList<>(count);
     }
-
 
     public Path<T> getFastPathTo(T entry){
         Vertex<T> target = getVertex(entry);
@@ -246,17 +250,15 @@ public class Graph<T extends Connectable<T>> {
     }
 
     private class PathFinder extends RecursiveAction {
-        private final List<Path<T>> paths;
-        private final int max;
+        private final TopList<Path<T>> paths;
         private final Path<T> head;
         private final Vertex<T> target;
         private final int deep;
         private final double limit;
         private final DistanceFilter distanceFilter;
 
-        private PathFinder(List<Path<T>> paths, int max, Path<T> head, Vertex<T> target, int deep, double limit) {
+        private PathFinder(TopList<Path<T>> paths, Path<T> head, Vertex<T> target, int deep, double limit) {
             this.paths = paths;
-            this.max = max;
             this.head = head;
             this.target = target;
             this.deep = deep;
@@ -276,7 +278,7 @@ public class Graph<T extends Connectable<T>> {
                     path.finish();
                     LOG.trace("Last edge find, add path {}", path);
                     synchronized (paths){
-                        if (onFindPath(paths, max, path)) complete(null);
+                        if (!paths.add(path)) complete(null);
                     }
                 }
             }
@@ -296,7 +298,7 @@ public class Graph<T extends Connectable<T>> {
                         // refill
                         if (nextLimit < 0) nextLimit = stock - next.getLength();
                         //Recursive search
-                        PathFinder task = new PathFinder(paths, max, path, target, deep - 1, nextLimit);
+                        PathFinder task = new PathFinder(paths, path, target, deep - 1, nextLimit);
                         task.fork();
                         subTasks.add(task);
                         if (subTasks.size() == THRESHOLD || !iterator.hasNext()){

@@ -16,40 +16,35 @@ public class RouteSearcher {
     private final static ForkJoinPool POOL = new ForkJoinPool();
     private final static int THRESHOLD = (int) Math.ceil(Runtime.getRuntime().availableProcessors()/2.0);
 
-    private double maxDistance;
-    private double stock;
-    private int segmentJump;
+    private final double maxDistance;
+    private final double stock;
+    private final int segmentSize;
 
-    public RouteSearcher(double maxDistance, double stock, double segment) {
+    public RouteSearcher(double maxDistance, double stock) {
+        this(maxDistance, stock, 0);
+    }
+    public RouteSearcher(double maxDistance, double stock, int segmentSize) {
         this.maxDistance = maxDistance;
         this.stock = stock;
-        this.segmentJump = (int) Math.floor(segment/maxDistance);
+        this.segmentSize = segmentSize;
     }
 
     public List<PathRoute> getPaths(Vendor from, Vendor to, Collection<Vendor> vendors, int jumps, double balance, int cargo, int limit){
-        if (segmentJump == 0){
-            RouteGraph sGraph = new RouteGraph(from, vendors, stock, maxDistance, true, jumps);
-            segmentJump = sGraph.getMinJumps() > 1 ? sGraph.getMinJumps()-1 : sGraph.getMinJumps();
-        }
         return POOL.invoke(new SegmentSearcher(from, to, vendors, jumps, balance, cargo, limit));
     }
 
     public List<PathRoute> getPaths(Vendor from, Collection<Vendor> vendors, int jumps, double balance, int cargo, int limit){
-        if (segmentJump == 0){
-            RouteGraph sGraph = new RouteGraph(from, vendors, stock, maxDistance, true, jumps);
-            segmentJump = sGraph.getMinJumps() > 1 ? sGraph.getMinJumps()-1 : sGraph.getMinJumps();
-        }
         return POOL.invoke(new SegmentSearcher(from, null, vendors, jumps, balance, cargo, limit));
     }
 
     public class SegmentSearcher extends RecursiveTask<List<PathRoute>> {
-        private final Vendor source;
-        private final Vendor target;
-        private final Collection<Vendor> vendors;
-        private final int jumps;
-        private final double balance;
-        private final int cargo;
-        private int limit;
+        protected final Vendor source;
+        protected final Vendor target;
+        protected final Collection<Vendor> vendors;
+        protected final int jumps;
+        protected final double balance;
+        protected final int cargo;
+        protected int limit;
 
         public SegmentSearcher(Vendor source, Vendor target, Collection<Vendor> vendors, int jumps, double balance, int cargo, int limit) {
             this.source = source;
@@ -64,15 +59,17 @@ public class RouteSearcher {
         @Override
         protected List<PathRoute> compute() {
             LOG.trace("Start search route to {} from {}, jumps {}", source, target, jumps);
-            RouteGraph sGraph = new RouteGraph(source, vendors, stock, maxDistance, true, Math.min(jumps, segmentJump));
-            sGraph.setLimit(cargo);
+            RouteGraph sGraph = new RouteGraph(source, vendors, stock, maxDistance, true, jumps, true);
+            int jumpsToAll = sGraph.getMinJumps();
+            LOG.trace("Segment jumps {}", jumpsToAll);
+            sGraph.setCargo(cargo);
             sGraph.setBalance(balance);
             List<PathRoute> res = new ArrayList<>(limit);
-            if (jumps <= segmentJump){
+            if (jumps <= jumpsToAll){
                 LOG.trace("Is last segment");
                 List<Path<Vendor>> paths;
                 if (target == null){
-                    paths = sGraph.getPaths(10);
+                    paths = sGraph.getPaths(limit);
                 } else {
                     paths = sGraph.getPathsTo(target, limit);
                 }
@@ -81,7 +78,7 @@ public class RouteSearcher {
                 }
             } else {
                 LOG.trace("Split to segments");
-                List<Path<Vendor>> paths = sGraph.getPaths(1);
+                List<Path<Vendor>> paths = sGraph.getPaths(getPathsOnSegmentCount(sGraph), jumpsToAll-1).getList();
                 int i = 0;
                 ArrayList<SegmentSearcher> subTasks = new ArrayList<>(THRESHOLD);
                 while (i < paths.size()) {
@@ -89,7 +86,7 @@ public class RouteSearcher {
                     for (int taskIndex = 0; taskIndex < THRESHOLD && i+taskIndex < paths.size(); taskIndex++) {
                         PathRoute path = (PathRoute) paths.get(i+taskIndex);
                         double newBalance = balance + path.getRoot().getProfit();
-                        SegmentSearcher task = new SegmentSearcher(path.get(), target, vendors, jumps - segmentJump, newBalance, cargo, (int) Math.ceil(limit / 2.0));
+                        SegmentSearcher task = new SegmentSearcher(path.get(), target, vendors, jumps - path.getLength(), newBalance, cargo, 1);
                         task.fork();
                         subTasks.add(task);
                     }
@@ -100,7 +97,16 @@ public class RouteSearcher {
                     i+=subTasks.size();
                 }
             }
+            finish(res);
             return res;
+        }
+
+        private int getPathsOnSegmentCount(RouteGraph graph){
+            if (segmentSize ==0){
+                return graph.vertexes.size()*graph.minJumps;
+            } else {
+                return segmentSize;
+            }
         }
 
 
@@ -111,8 +117,13 @@ public class RouteSearcher {
             } else {
                 path.add(tail.get(0), false);
                 path.sort(balance, cargo);
-                RouteGraph.addToTop(res, path.getEnd(), limit, RouteGraph.comparator);
+                TopList.addToTop(res, path.getEnd(), limit, RouteGraph.byProfitComparator);
             }
+        }
+
+        private void finish(List<PathRoute> res){
+            if (res.size() < limit)
+                res.sort(RouteGraph.byProfitComparator);
         }
 
     }
