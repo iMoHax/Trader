@@ -3,9 +3,9 @@ package ru.trader;
 import org.xml.sax.SAXException;
 import ru.trader.core.Market;
 import ru.trader.core.MarketAnalyzer;
-import ru.trader.core.SimpleMarket;
+import ru.trader.store.simple.SimpleMarket;
 import ru.trader.model.ModelFabrica;
-import ru.trader.store.Store;
+import ru.trader.store.simple.Store;
 import ru.trader.store.XSSFImporter;
 
 import javax.xml.parsers.ParserConfigurationException;

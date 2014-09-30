@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import ru.trader.core.Market;
+import ru.trader.store.simple.Store;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;

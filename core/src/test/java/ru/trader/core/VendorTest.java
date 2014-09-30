@@ -5,15 +5,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.store.simple.SimpleItem;
+import ru.trader.store.simple.SimpleOffer;
+import ru.trader.store.simple.SimpleVendor;
 
 
 public class VendorTest extends Assert {
     private final static Logger LOG = LoggerFactory.getLogger(VendorTest.class);
 
-    private final static Item ITEM1 = new Item("Item1");
-    private final static Item ITEM2 = new Item("Item2");
-    private final static Offer SELL_OFFER = new Offer(OFFER_TYPE.SELL, ITEM1, 10);
-    private final static Offer BUY_OFFER = new Offer(OFFER_TYPE.BUY, ITEM1, 10);
+    private final static Item ITEM1 = new SimpleItem("Item1");
+    private final static Item ITEM2 = new SimpleItem("Item2");
+    private final static Offer SELL_OFFER = new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 10);
+    private final static Offer BUY_OFFER = new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 10);
 
     private Vendor sellVendor;
     private Vendor buyVendor;

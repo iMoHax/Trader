@@ -8,6 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.TestUtil;
 import ru.trader.graph.Path;
+import ru.trader.store.simple.SimpleItem;
+import ru.trader.store.simple.SimpleMarket;
+import ru.trader.store.simple.SimpleOffer;
+import ru.trader.store.simple.SimpleVendor;
 
 import java.util.Collection;
 
@@ -26,9 +30,9 @@ public class MarketAnalyzerTest extends Assert {
     private static Vendor v9;
     private static Vendor v10;
     private static Vendor v11;
-    private static Item ITEM1 = new Item("ITEM1");
-    private static Item ITEM2 = new Item("ITEM2");
-    private static Item ITEM3 = new Item("ITEM3");
+    private static Item ITEM1 = new SimpleItem("ITEM1");
+    private static Item ITEM2 = new SimpleItem("ITEM2");
+    private static Item ITEM3 = new SimpleItem("ITEM3");
 
     @Before
     public void setUp() throws Exception {
@@ -69,19 +73,19 @@ public class MarketAnalyzerTest extends Assert {
         market.add(v10);
         market.add(v11);
 
-        market.add(v6, new Offer(OFFER_TYPE.SELL, ITEM1, 100));
-        market.add(v7, new Offer(OFFER_TYPE.SELL, ITEM1, 100));
-        market.add(v9, new Offer(OFFER_TYPE.SELL, ITEM1, 100));
-        market.add(v10, new Offer(OFFER_TYPE.SELL, ITEM1, 100));
-        market.add(v6, new Offer(OFFER_TYPE.BUY, ITEM1, 50));
-        market.add(v7, new Offer(OFFER_TYPE.BUY, ITEM1, 120));
-        market.add(v9, new Offer(OFFER_TYPE.BUY, ITEM1, 200));
-        market.add(v10, new Offer(OFFER_TYPE.BUY, ITEM1, 150));
-        market.add(v9, new Offer(OFFER_TYPE.SELL, ITEM2, 100));
-        market.add(v6, new Offer(OFFER_TYPE.BUY, ITEM2, 140));
-        market.add(v7, new Offer(OFFER_TYPE.SELL, ITEM3, 154));
-        market.add(v10, new Offer(OFFER_TYPE.BUY, ITEM3, 140));
-        market.add(v11, new Offer(OFFER_TYPE.BUY, ITEM3, 500));
+        market.add(v6, new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100));
+        market.add(v7, new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100));
+        market.add(v9, new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100));
+        market.add(v10, new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100));
+        market.add(v6, new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 50));
+        market.add(v7, new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 120));
+        market.add(v9, new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 200));
+        market.add(v10, new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 150));
+        market.add(v9, new SimpleOffer(OFFER_TYPE.SELL, ITEM2, 100));
+        market.add(v6, new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 140));
+        market.add(v7, new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 154));
+        market.add(v10, new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 140));
+        market.add(v11, new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 500));
 
     }
 

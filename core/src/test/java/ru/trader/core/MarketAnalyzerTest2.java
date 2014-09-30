@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.trader.TestUtil;
 import ru.trader.graph.PathRoute;
-import ru.trader.store.Store;
+import ru.trader.store.simple.Store;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package ru.trader.store;
+package ru.trader.store.simple;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import ru.trader.core.*;
 
 import java.util.HashMap;
-import java.util.OptionalLong;
 
 public class MarketDocHandler extends DefaultHandler {
     private final static Logger LOG = LoggerFactory.getLogger(MarketDocHandler.class);
@@ -104,7 +103,7 @@ public class MarketDocHandler extends DefaultHandler {
     }
 
     protected void onOffer(OFFER_TYPE offerType, Item item, double price){
-        Offer offer = new Offer(offerType, item, price);
+        Offer offer = new SimpleOffer(offerType, item, price);
         curVendor.add(offer);
     }
 
@@ -116,14 +115,14 @@ public class MarketDocHandler extends DefaultHandler {
     }
 
     protected void onItem(String name, String id) {
-        Item item = new Item(name);
+        Item item = new SimpleItem(name);
         item.setGroup(curGroup);
         world.add(item);
         items.put(id, item);
     }
 
     protected void onGroup(String name, GROUP_TYPE type) {
-        curGroup = new Group(name, type);
+        curGroup = new SimpleGroup(name, type);
     }
 
     public Market getWorld(){

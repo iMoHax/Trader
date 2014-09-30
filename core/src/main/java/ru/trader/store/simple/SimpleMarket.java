@@ -1,4 +1,6 @@
-package ru.trader.core;
+package ru.trader.store.simple;
+
+import ru.trader.core.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -8,8 +10,8 @@ public class SimpleMarket extends MarketSupport {
     protected List<Item> items;
 
     //caching
-    private final Map<Item,ItemStat> sellItems = new HashMap<>();
-    private final Map<Item,ItemStat> buyItems = new HashMap<>();
+    private final Map<Item,SimpleItemStat> sellItems = new HashMap<>();
+    private final Map<Item,SimpleItemStat> buyItems = new HashMap<>();
 
     public SimpleMarket() {
         init();
@@ -20,7 +22,7 @@ public class SimpleMarket extends MarketSupport {
         items = new  ArrayList<>();
     }
 
-    private Map<Item,ItemStat> getItemCache(OFFER_TYPE offerType){
+    private Map<Item,SimpleItemStat> getItemCache(OFFER_TYPE offerType){
         switch (offerType) {
             case SELL: return sellItems;
             case BUY: return buyItems;
@@ -29,23 +31,19 @@ public class SimpleMarket extends MarketSupport {
         }
     }
 
-    private void put(Map<Item, ItemStat> cache, Offer offer){
+    private void put(Map<Item, SimpleItemStat> cache, Offer offer){
         Item item = offer.getItem();
-        ItemStat entry = cache.get(item);
+        SimpleItemStat entry = cache.get(item);
         if (entry==null){
-            entry = newItemStat(item, offer.getType());
+            entry = new SimpleItemStat(item, offer.getType());
             cache.put(item, entry);
         }
         entry.put(offer);
     }
 
-    protected ItemStat newItemStat(Item item, OFFER_TYPE offerType){
-        return new ItemStat(item, offerType);
-    }
-
-    private void remove(Map<Item, ItemStat> cache, Offer offer){
+    private void remove(Map<Item, SimpleItemStat> cache, Offer offer){
         Item item = offer.getItem();
-        ItemStat entry = cache.get(item);
+        SimpleItemStat entry = cache.get(item);
         if (entry!=null){
             entry.remove(offer);
             if (entry.getOffersCount()==0)
@@ -114,7 +112,7 @@ public class SimpleMarket extends MarketSupport {
     @Override
     public ItemStat getStat(OFFER_TYPE offerType, Item item) {
         ItemStat entry = getItemCache(offerType).get(item);
-        return entry!=null ? entry : newItemStat(item, offerType);
+        return entry != null ? entry : new SimpleItemStat(item, offerType);
     }
 
     @Override

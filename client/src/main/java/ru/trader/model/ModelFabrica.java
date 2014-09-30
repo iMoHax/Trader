@@ -1,6 +1,9 @@
 package ru.trader.model;
 
 import ru.trader.core.*;
+import ru.trader.store.simple.SimpleItem;
+import ru.trader.store.simple.SimpleOffer;
+import ru.trader.store.simple.SimpleVendor;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -14,7 +17,7 @@ public class ModelFabrica {
     private static final HashMap<ItemStat, WeakReference<ItemStatModel>> stats = new HashMap<>();
 
     public static ItemModel buildItemModel(String name, MarketModel market){
-        return getModel(new Item(name), market);
+        return getModel(new SimpleItem(name), market);
     }
 
     public static VendorModel buildModel(String name, MarketModel market){
@@ -22,7 +25,7 @@ public class ModelFabrica {
     }
 
     public static OfferModel buildModel(OFFER_TYPE type, ItemModel item, double price, MarketModel market) {
-        return getModel(new Offer(type, item.getItem(), price), market);
+        return getModel(new SimpleOffer(type, item.getItem(), price), market);
     }
 
     public static ItemDescModel buildModel(ItemModel item, ItemStat sell, ItemStat buy, MarketModel market) {

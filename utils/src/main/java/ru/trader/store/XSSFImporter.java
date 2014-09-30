@@ -15,6 +15,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 import ru.trader.core.*;
+import ru.trader.store.simple.SimpleItem;
+import ru.trader.store.simple.SimpleMarket;
+import ru.trader.store.simple.SimpleOffer;
+import ru.trader.store.simple.SimpleVendor;
 
 import java.io.File;
 import java.io.IOException;
@@ -105,11 +109,11 @@ public class XSSFImporter {
             } else if (cell.row>2){
                 if (cell.column == 1){
                     LOG.trace("create item");
-                    item = new Item(formattedValue);
+                    item = new SimpleItem(formattedValue);
                     market.add(item);
                 } else {
                     LOG.trace("add offer");
-                    Offer offer = new Offer(cell.column % 2 == 0? OFFER_TYPE.BUY : OFFER_TYPE.SELL, item, Double.valueOf(formattedValue));
+                    Offer offer = new SimpleOffer(cell.column % 2 == 0? OFFER_TYPE.BUY : OFFER_TYPE.SELL, item, Double.valueOf(formattedValue));
                     vendors.get(cell.column/2 -1).add(offer);
                 }
             }

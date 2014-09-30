@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.trader.core.Market;
 import ru.trader.core.Vendor;
-import ru.trader.store.Store;
+import ru.trader.store.simple.Store;
 
 import java.io.InputStream;
 import java.util.List;

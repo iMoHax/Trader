@@ -1,26 +1,74 @@
-package ru.trader.core;
+package ru.trader.store.simple;
+
+import ru.trader.core.Item;
+import ru.trader.core.OFFER_TYPE;
+import ru.trader.core.Offer;
+import ru.trader.core.Vendor;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SimpleVendor extends Vendor {
+    private String name;
+    private double x;
+    private double y;
+    private double z;
 
     protected Map<Item, Offer> sell;
     protected Map<Item, Offer> buy;
 
     public SimpleVendor() {
-        super();
         initOffers();
     }
 
     public SimpleVendor(String name) {
-        super(name);
+        this.name = name;
         initOffers();
     }
 
     protected void initOffers(){
         sell = new ConcurrentHashMap<>(20, 0.9f, 2);
         buy = new ConcurrentHashMap<>(20, 0.9f, 2);
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public double getX() {
+        return x;
+    }
+
+    @Override
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    @Override
+    public double getY() {
+        return y;
+    }
+
+    @Override
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    @Override
+    public double getZ() {
+        return z;
+    }
+
+    @Override
+    public void setZ(double z) {
+        this.z = z;
     }
 
     @Override

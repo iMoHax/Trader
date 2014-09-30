@@ -6,24 +6,27 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.TestUtil;
+import ru.trader.store.simple.SimpleItem;
+import ru.trader.store.simple.SimpleOffer;
+import ru.trader.store.simple.SimpleVendor;
 
 import java.util.Collection;
 
 public class VendorTest2 extends Assert {
     private final static Logger LOG = LoggerFactory.getLogger(VendorTest2.class);
 
-    private final static Item ITEM1 = new Item("Item1");
-    private final static Item ITEM2 = new Item("Item2");
-    private final static Item ITEM3 = new Item("Item3");
-    private final static Offer SELL_OFFER1 = new Offer(OFFER_TYPE.SELL, ITEM1, 10);
-    private final static Offer SELL_OFFER2 = new Offer(OFFER_TYPE.SELL, ITEM2, 10);
-    private final static Offer SELL_OFFER3 = new Offer(OFFER_TYPE.SELL, ITEM3, 10);
-    private final static Offer DUBLE_SELL_OFFER1 = new Offer(OFFER_TYPE.SELL, ITEM1, 100);
+    private final static Item ITEM1 = new SimpleItem("Item1");
+    private final static Item ITEM2 = new SimpleItem("Item2");
+    private final static Item ITEM3 = new SimpleItem("Item3");
+    private final static Offer SELL_OFFER1 = new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 10);
+    private final static Offer SELL_OFFER2 = new SimpleOffer(OFFER_TYPE.SELL, ITEM2, 10);
+    private final static Offer SELL_OFFER3 = new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 10);
+    private final static Offer DUBLE_SELL_OFFER1 = new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100);
 
-    private final static Offer BUY_OFFER1 = new Offer(OFFER_TYPE.BUY, ITEM1, 100);
-    private final static Offer BUY_OFFER2 = new Offer(OFFER_TYPE.BUY, ITEM2, 10);
-    private final static Offer BUY_OFFER3 = new Offer(OFFER_TYPE.BUY, ITEM3, 10);
-    private final static Offer DUBLE_BUY_OFFER1 = new Offer(OFFER_TYPE.BUY, ITEM1, 10);
+    private final static Offer BUY_OFFER1 = new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 100);
+    private final static Offer BUY_OFFER2 = new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 10);
+    private final static Offer BUY_OFFER3 = new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 10);
+    private final static Offer DUBLE_BUY_OFFER1 = new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 10);
 
 
     private Vendor sellVendor;

@@ -1,116 +1,53 @@
 package ru.trader.core;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.NavigableSet;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentSkipListSet;
+public abstract class ItemStat {
 
-public class ItemStat {
-    private final static Logger LOG = LoggerFactory.getLogger(ItemStat.class);
+    protected abstract void update(Offer offer, double price);
 
-    private final Item item;
-    private final OFFER_TYPE type;
-    private final NavigableSet<Offer> offers;
-    private volatile double sum;
-    private volatile double avg;
+    public abstract OFFER_TYPE getType();
 
+    public abstract Item getItem();
 
-    public ItemStat(Item item, OFFER_TYPE offerType) {
-        this.offers = new ConcurrentSkipListSet<>();
-        this.item = item;
-        this.type = offerType;
-        this.sum = 0;
-        this.avg = Double.NaN;
+    public abstract double getAvg();
+
+    public abstract Offer getBest();
+
+    public abstract int getOffersCount();
+
+    public abstract NavigableSet<Offer> getOffers();
+
+    public abstract Offer getMin();
+
+    public abstract Offer getMax();
+
+    public abstract boolean isEmpty();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ItemStat)) return false;
+
+        ItemStat itemStat = (ItemStat) o;
+        return getType() == itemStat.getType() && getItem().equals(itemStat.getItem());
     }
 
-    synchronized void put(Offer offer){
-        LOG.trace("Put offer {} to item stat {}", offer, this);
-        assert offer.hasType(type) && offer.hasItem(item);
-        if (offers.add(offer)){
-            double price = offer.getPrice();
-            sum += price;
-            avg = sum / offers.size();
-            LOG.trace("After this = {}", this);
-        }
-    }
-
-    synchronized void remove(Offer offer){
-        LOG.trace("Remove offer {} from item stat {}", offer, this);
-        assert offer.hasType(type) && offer.hasItem(item);
-        if (offers.remove(offer)){
-            if (offers.size()>0){
-                double price = offer.getPrice();
-                sum -= price;
-                avg = sum / offers.size();
-            } else {
-                sum = 0; avg = Double.NaN;
-            }
-            LOG.trace("After this = {}", this);
-        }
-    }
-
-    synchronized void update(Offer offer, double price){
-        LOG.trace("Update offer {} from item stat {}", offer, this);
-        assert offer.hasType(type) && offer.hasItem(item) && offers.contains(offer);
-        double oldPrice = offer.getPrice();
-        offers.remove(offer);
-        offer.setPrice(price);
-        offers.add(offer);
-        sum += price - oldPrice;
-        avg = sum / offers.size();
-        LOG.trace("After update this = {}", this);
-    }
-
-    public OFFER_TYPE getType(){
-        return type;
-    }
-
-    public Item getItem() {
-        return item;
-    }
-
-    public synchronized double getAvg(){
-        return avg;
-    }
-
-    public synchronized Offer getBest() {
-        if (offers.isEmpty()) return getFake();
-        return type.getOrder() > 0 ? offers.first() : offers.last();
-    }
-
-    public synchronized int getOffersCount(){
-        return offers.size();
-    }
-
-    public synchronized NavigableSet<Offer> getOffers() {
-        return Collections.unmodifiableNavigableSet(offers);
-    }
-
-    public synchronized Offer getMin() {
-        if (offers.isEmpty()) return getFake();
-        return offers.first();
-    }
-
-    public synchronized Offer getMax() {
-        if (offers.isEmpty()) return getFake();
-        return offers.last();
-    }
-
-    public synchronized boolean isEmpty(){
-        return offers.isEmpty();
+    @Override
+    public int hashCode() {
+        int result = getItem().hashCode();
+        result = 31 * result + getType().hashCode();
+        return result;
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
-        sb.append(item);
-        sb.append(", ").append(type);
-        if (LOG.isTraceEnabled()){
-            sb.append(", count=").append(offers.size());
-            sb.append(", sum=").append(sum);
-        }
-        sb.append(", avg=").append(avg);
+        sb.append(getItem());
+        sb.append(", ").append(getType());
+        sb.append(", avg=").append(getAvg());
         sb.append(", best=").append(getBest());
         sb.append(", min=").append(getMin());
         sb.append(", max=").append(getMax());
@@ -119,18 +56,17 @@ public class ItemStat {
         return sb.toString();
     }
 
-
-    private Offer getFake() {
+    protected Offer getFake() {
         return new Offer() {
 
             @Override
             public Item getItem() {
-                return item;
+                return getItem();
             }
 
             @Override
             public OFFER_TYPE getType() {
-                return type;
+                return getType();
             }
 
             @Override
@@ -154,12 +90,12 @@ public class ItemStat {
             }
 
             @Override
-            void setPrice(double price) {
+            protected void setPrice(double price) {
                 throw new UnsupportedOperationException("Is fake offer, change unsupported");
             }
 
             @Override
-            void setVendor(Vendor vendor) {
+            protected void setVendor(Vendor vendor) {
                 throw new UnsupportedOperationException("Is fake offer, change unsupported");
             }
         };
@@ -206,23 +142,35 @@ public class ItemStat {
         public void setName(String name) {
             throw new UnsupportedOperationException("Is fake vendor, change unsupported");
         }
+
+        @Override
+        public double getX() {
+            return 0;
+        }
+
+        @Override
+        public void setX(double x) {
+            throw new UnsupportedOperationException("Is fake vendor, change unsupported");
+        }
+
+        @Override
+        public double getY() {
+            return 0;
+        }
+
+        @Override
+        public void setY(double y) {
+            throw new UnsupportedOperationException("Is fake vendor, change unsupported");
+        }
+
+        @Override
+        public double getZ() {
+            return 0;
+        }
+
+        @Override
+        public void setZ(double z) {
+            throw new UnsupportedOperationException("Is fake vendor, change unsupported");
+        }
     };
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ItemStat)) return false;
-
-        ItemStat itemStat = (ItemStat) o;
-
-        return type == itemStat.type && item.equals(itemStat.item);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = item.hashCode();
-        result = 31 * result + type.hashCode();
-        return result;
-    }
 }

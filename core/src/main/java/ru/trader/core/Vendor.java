@@ -14,10 +14,18 @@ import java.util.stream.Collectors;
 public abstract class Vendor implements Comparable<Vendor>, Connectable<Vendor> {
     private final static Logger LOG = LoggerFactory.getLogger(Vendor.class);
 
-    private String name;
-    private double x;
-    private double y;
-    private double z;
+    public abstract String getName();
+    public abstract void setName(String name);
+
+    public abstract double getX();
+    public abstract void setX(double x);
+
+    public abstract double getY();
+    public abstract void setY(double y);
+
+    public abstract double getZ();
+    public abstract void setZ(double z);
+
 
     protected abstract Collection<Offer> getOffers();
     protected abstract Collection<Item> getItems(OFFER_TYPE offerType);
@@ -25,13 +33,6 @@ public abstract class Vendor implements Comparable<Vendor>, Connectable<Vendor> 
     protected abstract boolean hasOffer(OFFER_TYPE offerType, Item item);
     protected abstract void  addOffer(Offer offer);
     protected abstract void  removeOffer(Offer offer);
-
-    protected Vendor() {
-    }
-
-    protected Vendor(String name) {
-        this.name = name;
-    }
 
     protected Collection<Offer> getOffers(OFFER_TYPE offerType){
         List<Offer> offers = getOffers()
@@ -74,7 +75,6 @@ public abstract class Vendor implements Comparable<Vendor>, Connectable<Vendor> 
         LOG.trace("Add offer {} to vendor {}", offer, this);
         offer.setVendor(this);
         addOffer(offer);
-
     }
 
     public final void remove(Offer offer){
@@ -83,21 +83,12 @@ public abstract class Vendor implements Comparable<Vendor>, Connectable<Vendor> 
         removeOffer(offer);
     }
 
-
     public final Collection<Item> getSellItems() {
         return getItems(OFFER_TYPE.SELL);
     }
 
     public final Collection<Item> getBuyItems() {
         return getItems(OFFER_TYPE.BUY);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override
@@ -109,12 +100,14 @@ public abstract class Vendor implements Comparable<Vendor>, Connectable<Vendor> 
     public int compareTo(@NotNull Vendor other) {
         Objects.requireNonNull(other, "Not compare with null");
         if (this == other) return 0;
-        return name != null ? other.name != null ? name.compareTo(other.name) : -1 : 0;
+        String name = getName();
+        String otherName = other.getName();
+        return name != null ? otherName != null ? name.compareTo(otherName) : -1 : 0;
     }
 
     @Override
     public double getDistance(Vendor other){
-        return getDistance(other.x, other.y, other.z);
+        return getDistance(other.getX(), other.getY(), other.getZ());
     }
 
     @Override
@@ -123,31 +116,8 @@ public abstract class Vendor implements Comparable<Vendor>, Connectable<Vendor> 
     }
 
     public double getDistance(double x, double y, double z){
-        return Math.sqrt(Math.pow(x - this.x, 2) + Math.pow(y-this.y, 2) + Math.pow(z - this.z, 2));
+        return Math.sqrt(Math.pow(x - getX(), 2) + Math.pow(y - getY(), 2) + Math.pow(z - getZ(), 2));
     }
 
 
-    public double getX() {
-        return x;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public double getZ() {
-        return z;
-    }
-
-    public void setZ(double z) {
-        this.z = z;
-    }
 }

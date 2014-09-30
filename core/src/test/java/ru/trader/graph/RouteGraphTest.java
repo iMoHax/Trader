@@ -5,15 +5,19 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
+import ru.trader.store.simple.SimpleItem;
+import ru.trader.store.simple.SimpleMarket;
+import ru.trader.store.simple.SimpleOffer;
+import ru.trader.store.simple.SimpleVendor;
 
 import java.util.ArrayList;
 
 public class RouteGraphTest extends Assert {
     private final static Logger LOG = LoggerFactory.getLogger(RouteGraphTest.class);
     private final static Market market = new SimpleMarket();
-    private final static Item ITEM1 = new Item("ITEM1");
-    private final static Item ITEM2 = new Item("ITEM2");
-    private final static Item ITEM3 = new Item("ITEM3");
+    private final static Item ITEM1 = new SimpleItem("ITEM1");
+    private final static Item ITEM2 = new SimpleItem("ITEM2");
+    private final static Item ITEM3 = new SimpleItem("ITEM3");
     private static Vendor v1;
     private static Vendor v2;
     private static Vendor v3;
@@ -25,16 +29,16 @@ public class RouteGraphTest extends Assert {
         v3 = new SimpleVendor("v3");
         v4 = new SimpleVendor("v4");
 
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM1, 100));
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM2, 200));
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM3, 300));
-        v2.add(new Offer(OFFER_TYPE.SELL, ITEM1, 150));
-        v2.add(new Offer(OFFER_TYPE.SELL, ITEM3, 320));
-        v3.add(new Offer(OFFER_TYPE.SELL, ITEM3, 390));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM2, 200));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 300));
+        v2.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 150));
+        v2.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 320));
+        v3.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 390));
 
-        v2.add(new Offer(OFFER_TYPE.BUY, ITEM2, 225));
-        v3.add(new Offer(OFFER_TYPE.BUY, ITEM1, 200));
-        v4.add(new Offer(OFFER_TYPE.BUY, ITEM3, 450));
+        v2.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 225));
+        v3.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 200));
+        v4.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 450));
 
         market.add(v1);market.add(v2);market.add(v3);market.add(v4);
     }

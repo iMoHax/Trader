@@ -6,15 +6,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.TestUtil;
 import ru.trader.core.*;
+import ru.trader.store.simple.SimpleItem;
+import ru.trader.store.simple.SimpleOffer;
+import ru.trader.store.simple.SimpleVendor;
 
 import java.util.Collection;
 
 public class PathRouteTest extends Assert {
     private final static Logger LOG = LoggerFactory.getLogger(PathRouteTest.class);
 
-    private final static Item ITEM1 = new Item("ITEM1");
-    private final static Item ITEM2 = new Item("ITEM2");
-    private final static Item ITEM3 = new Item("ITEM3");
+    private final static Item ITEM1 = new SimpleItem("ITEM1");
+    private final static Item ITEM2 = new SimpleItem("ITEM2");
+    private final static Item ITEM3 = new SimpleItem("ITEM3");
     private static Vendor v1;
     private static Vendor v2;
     private static Vendor v3;
@@ -26,12 +29,12 @@ public class PathRouteTest extends Assert {
         v1 = new SimpleVendor("v1");
         v2 = new SimpleVendor("v2");
 
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM1, 100));
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM2, 200));
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM3, 300));
-        v2.add(new Offer(OFFER_TYPE.BUY, ITEM1, 300));
-        v2.add(new Offer(OFFER_TYPE.BUY, ITEM2, 350));
-        v2.add(new Offer(OFFER_TYPE.BUY, ITEM3, 400));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM2, 200));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 300));
+        v2.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 300));
+        v2.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 350));
+        v2.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 400));
 
         PathRoute res = new PathRoute(new Vertex<>(v1));
         res = (PathRoute) res.connectTo(new Vertex<>(v2), false);
@@ -67,12 +70,12 @@ public class PathRouteTest extends Assert {
         v2 = new SimpleVendor("v2");
         v3 = new SimpleVendor("v3");
 
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM1, 100));
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM3, 300));
-        v2.add(new Offer(OFFER_TYPE.SELL, ITEM2, 200));
-        v3.add(new Offer(OFFER_TYPE.BUY, ITEM1, 300));
-        v3.add(new Offer(OFFER_TYPE.BUY, ITEM2, 350));
-        v3.add(new Offer(OFFER_TYPE.BUY, ITEM3, 400));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 300));
+        v2.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM2, 200));
+        v3.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 300));
+        v3.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 350));
+        v3.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 400));
 
         PathRoute res = new PathRoute(new Vertex<>(v1));
         res = (PathRoute) res.connectTo(new Vertex<>(v2), false);
@@ -115,16 +118,16 @@ public class PathRouteTest extends Assert {
         v3 = new SimpleVendor("v3");
         v4 = new SimpleVendor("v4");
 
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM1, 100));
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM2, 200));
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM3, 300));
-        v2.add(new Offer(OFFER_TYPE.SELL, ITEM1, 150));
-        v2.add(new Offer(OFFER_TYPE.SELL, ITEM3, 320));
-        v3.add(new Offer(OFFER_TYPE.SELL, ITEM3, 390));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM2, 200));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 300));
+        v2.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 150));
+        v2.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 320));
+        v3.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 390));
 
-        v2.add(new Offer(OFFER_TYPE.BUY, ITEM2, 225));
-        v3.add(new Offer(OFFER_TYPE.BUY, ITEM1, 200));
-        v4.add(new Offer(OFFER_TYPE.BUY, ITEM3, 450));
+        v2.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 225));
+        v3.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 200));
+        v4.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 450));
 
         PathRoute res = new PathRoute(new Vertex<>(v1));
         res = (PathRoute) res.connectTo(new Vertex<>(v2), false);
@@ -179,16 +182,16 @@ public class PathRouteTest extends Assert {
         v4 = new SimpleVendor("v4");
         v5 = new SimpleVendor("v5");
 
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM1, 410));
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM2, 200));
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM3, 300));
-        v2.add(new Offer(OFFER_TYPE.SELL, ITEM2, 270));
-        v4.add(new Offer(OFFER_TYPE.SELL, ITEM1, 300));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 410));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM2, 200));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 300));
+        v2.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM2, 270));
+        v4.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 300));
 
-        v2.add(new Offer(OFFER_TYPE.BUY, ITEM1, 470));
-        v3.add(new Offer(OFFER_TYPE.BUY, ITEM2, 300));
-        v4.add(new Offer(OFFER_TYPE.BUY, ITEM3, 370));
-        v5.add(new Offer(OFFER_TYPE.BUY, ITEM1, 400));
+        v2.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 470));
+        v3.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 300));
+        v4.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 370));
+        v5.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 400));
 
         PathRoute res = new PathRoute(new Vertex<>(v1));
         res = (PathRoute) res.connectTo(new Vertex<>(v2), false);
@@ -251,16 +254,16 @@ public class PathRouteTest extends Assert {
         v3 = new SimpleVendor("v3");
         v4 = new SimpleVendor("v4");
 
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM1, 100));
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM2, 200));
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM3, 300));
-        v2.add(new Offer(OFFER_TYPE.SELL, ITEM1, 150));
-        v2.add(new Offer(OFFER_TYPE.SELL, ITEM3, 320));
-        v3.add(new Offer(OFFER_TYPE.SELL, ITEM3, 390));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM2, 200));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 300));
+        v2.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 150));
+        v2.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 320));
+        v3.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 390));
 
-        v2.add(new Offer(OFFER_TYPE.BUY, ITEM2, 225));
-        v3.add(new Offer(OFFER_TYPE.BUY, ITEM1, 200));
-        v4.add(new Offer(OFFER_TYPE.BUY, ITEM3, 450));
+        v2.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 225));
+        v3.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 200));
+        v4.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 450));
 
         PathRoute res = new PathRoute(new Vertex<>(v1));
         res = (PathRoute) res.connectTo(new Vertex<>(v2), false);
@@ -314,13 +317,13 @@ public class PathRouteTest extends Assert {
         v1 = new SimpleVendor("v1");
         v2 = new SimpleVendor("v2");
 
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM1, 100));
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM2, 200));
-        v1.add(new Offer(OFFER_TYPE.SELL, ITEM3, 300));
-        v2.add(new Offer(OFFER_TYPE.SELL, ITEM1, 150));
-        v2.add(new Offer(OFFER_TYPE.SELL, ITEM3, 320));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM2, 200));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 300));
+        v2.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 150));
+        v2.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 320));
 
-        v2.add(new Offer(OFFER_TYPE.BUY, ITEM2, 225));
+        v2.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 225));
 
         PathRoute res = new PathRoute(new Vertex<>(v1));
         res = (PathRoute) res.connectTo(new Vertex<>(v2), false);
@@ -334,10 +337,10 @@ public class PathRouteTest extends Assert {
         v3 = new SimpleVendor("v3");
         v4 = new SimpleVendor("v4");
 
-        v3.add(new Offer(OFFER_TYPE.SELL, ITEM3, 390));
+        v3.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 390));
 
-        v3.add(new Offer(OFFER_TYPE.BUY, ITEM1, 200));
-        v4.add(new Offer(OFFER_TYPE.BUY, ITEM3, 450));
+        v3.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 200));
+        v4.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 450));
 
         PathRoute res = new PathRoute(new Vertex<>(v2));
         res = (PathRoute) res.connectTo(new Vertex<>(v3), false);
