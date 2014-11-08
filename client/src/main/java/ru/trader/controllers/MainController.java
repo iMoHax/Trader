@@ -16,6 +16,7 @@ import ru.trader.Main;
 import ru.trader.World;
 import ru.trader.model.ItemModel;
 import ru.trader.model.MarketModel;
+import ru.trader.model.StationModel;
 import ru.trader.view.support.Localization;
 
 import javax.xml.stream.XMLStreamException;
@@ -156,7 +157,11 @@ public class MainController {
     }
 
     public void editStation(ActionEvent actionEvent) {
-        Screeners.showEditStation(offersController.getStation());
+        //TODO: disable edit station, if station is null
+        StationModel station = offersController.getStation();
+        if (station!=null) {
+            Screeners.showEditStation(offersController.getStation());
+        }
     }
 
     public void removeStation(ActionEvent actionEvent){
