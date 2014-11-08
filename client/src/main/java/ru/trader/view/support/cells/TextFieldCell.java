@@ -57,17 +57,13 @@ public class TextFieldCell<S,T> extends TableCell<S,T> {
     public void updateItem(T item, boolean empty) {
         LOG.trace("Update edit");
         super.updateItem(item, empty);
-        if (empty || getTableRow() == null) {
+        if (empty || item == null) {
             setText(null);
             setGraphic(null);
 
         } else {
             if (isEditing()) {
-                if (textField != null) {
-                    textField.setText(getItemText());
-                }
-                setText(null);
-                setGraphic(textField);
+                cancelEdit();
             } else {
                 outItem();
             }
@@ -77,6 +73,7 @@ public class TextFieldCell<S,T> extends TableCell<S,T> {
     @Override
     public void cancelEdit() {
         LOG.trace("Cancel edit");
+        //lost focus
         if (!isCommit()) commit(false);
         if (isCommit()) {
             super.cancelEdit();
@@ -93,12 +90,15 @@ public class TextFieldCell<S,T> extends TableCell<S,T> {
         textField = new TextField(getItemText());
         textField.prefWidthProperty().bind(getTableColumn().widthProperty());
         textField.setPadding(Insets.EMPTY);
+        textField.setOnAction(event -> {
+            if (commit(true)) ViewUtils.editNext(getTableView());
+            event.consume();
+        });
         textField.setOnKeyPressed(t -> {
-            if (t.getCode() == KeyCode.ENTER) {
-                if (commit(true)) ViewUtils.editNext(getTableView());
-            } else if (t.getCode() == KeyCode.ESCAPE) {
+            if (t.getCode() == KeyCode.ESCAPE) {
                 textField = null;
                 cancelEdit();
+                t.consume();
             }
 
         });

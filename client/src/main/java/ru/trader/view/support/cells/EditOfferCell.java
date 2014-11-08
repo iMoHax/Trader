@@ -30,8 +30,11 @@ public class EditOfferCell extends TextFieldCell<StationUpdater.FakeOffer, Doubl
 
     @Override
     protected void outItem() {
+        double d = 0;
         StationUpdater.FakeOffer offer = (StationUpdater.FakeOffer) getTableRow().getItem();
-        double d = isSell? offer.getSprice() - offer.getOldSprice() : offer.getBprice() - offer.getOldBprice();
+        if (offer != null) {
+            d = isSell ? offer.getSprice() - offer.getOldSprice() : offer.getBprice() - offer.getOldBprice();
+        }
         getStyleClass().removeAll(CSS_ADD, CSS_CHANGE, CSS_REMOVE);
         if (d !=0 ){
             HBox hBox = new HBox();
