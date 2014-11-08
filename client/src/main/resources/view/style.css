@@ -75,7 +75,8 @@ HBox.fields-group hbox-margin{
     -fx-alignment: center;
 }
 
-.path-track .text {
+.path-track .glyph-font {
+    -fx-font-family: FontAwesome;
     -fx-font-size: 16pt;
 }
 
