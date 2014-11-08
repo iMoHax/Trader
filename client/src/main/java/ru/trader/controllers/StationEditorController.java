@@ -45,7 +45,7 @@ public class StationEditorController {
 
     private StationUpdater updater;
 
-    private final Action actSave = new DialogAction("dialog.button.save", ButtonBar.ButtonType.OK_DONE, false, true, false, (e) -> {
+    private final Action actSave = new DialogAction(Localization.getString("dialog.button.save"), ButtonBar.ButtonType.OK_DONE, false, true, false, (e) -> {
         items.getSelectionModel().selectFirst();
         updater.commit();
         items.getSelectionModel().clearSelection();
