@@ -1,31 +1,19 @@
 package ru.trader.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import org.controlsfx.control.ButtonBar;
-import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
+import org.controlsfx.dialog.DialogAction;
 import ru.trader.model.ItemModel;
 import ru.trader.view.support.NumberField;
 
 import java.util.Optional;
 
 public class OffersEditorController {
-    private final Action OK = new AbstractAction("OK") {
-        {
-            ButtonBar.setType(this, ButtonBar.ButtonType.OK_DONE);
-        }
-
-
-        @Override
-        public void handle(ActionEvent event) {
-            Dialog dlg = (Dialog) event.getSource();
-            dlg.hide();
-        }
-    };
+    private final Action OK = new DialogAction("OK", ButtonBar.ButtonType.OK_DONE, false, true, false);
 
 
     @FXML
@@ -48,7 +36,7 @@ public class OffersEditorController {
 
         Dialog dlg = new Dialog(parent, "Создание заказов");
         dlg.setContent(content);
-        dlg.getActions().addAll(OK, Dialog.Actions.CANCEL);
+        dlg.getActions().addAll(OK, Dialog.ACTION_CANCEL);
         dlg.setResizable(false);
         return Optional.ofNullable(dlg.show() == OK ? new DialogResult() : null);
     }

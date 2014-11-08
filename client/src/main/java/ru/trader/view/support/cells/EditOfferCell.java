@@ -10,10 +10,9 @@ import javafx.scene.text.Text;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.controlsfx.glyphfont.Glyph;
-import org.controlsfx.glyphfont.GlyphFontRegistry;
-import ru.trader.model.support.VendorUpdater;
+import ru.trader.model.support.StationUpdater;
 
-public class EditOfferCell extends TextFieldCell<VendorUpdater.FakeOffer, Double> {
+public class EditOfferCell extends TextFieldCell<StationUpdater.FakeOffer, Double> {
     private final static String CSS_CHANGE = "change";
     private final static String CSS_ADD = "add";
     private final static String CSS_REMOVE = "remove";
@@ -25,13 +24,13 @@ public class EditOfferCell extends TextFieldCell<VendorUpdater.FakeOffer, Double
         this.isSell = isSell;
     }
 
-    public static Callback<TableColumn<VendorUpdater.FakeOffer,Double>, TableCell<VendorUpdater.FakeOffer,Double>> forTable(final StringConverter<Double> converter, boolean isSell) {
+    public static Callback<TableColumn<StationUpdater.FakeOffer,Double>, TableCell<StationUpdater.FakeOffer,Double>> forTable(final StringConverter<Double> converter, boolean isSell) {
         return list -> new EditOfferCell(converter, isSell);
     }
 
     @Override
     protected void outItem() {
-        VendorUpdater.FakeOffer offer = (VendorUpdater.FakeOffer) getTableRow().getItem();
+        StationUpdater.FakeOffer offer = (StationUpdater.FakeOffer) getTableRow().getItem();
         double d = isSell? offer.getSprice() - offer.getOldSprice() : offer.getBprice() - offer.getOldBprice();
         getStyleClass().removeAll(CSS_ADD, CSS_CHANGE, CSS_REMOVE);
         if (d !=0 ){
@@ -48,7 +47,7 @@ public class EditOfferCell extends TextFieldCell<VendorUpdater.FakeOffer, Double
                 Text diff = new Text(String.format(" (%+.0f)", d));
                 hBox.getChildren().add(diff);
             }
-            Glyph glyph = (Glyph) GlyphFontRegistry.glyph("FontAwesome|REMOVE");
+            Glyph glyph = Glyph.create("FontAwesome|REMOVE");
             glyph.addEventFilter(MouseEvent.MOUSE_CLICKED, (e) -> {
                 Platform.runLater(() -> {
                     if (isSell) {

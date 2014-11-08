@@ -7,7 +7,7 @@ import ru.trader.emdn.EMDN;
 import ru.trader.emdn.ItemData;
 import ru.trader.emdn.Station;
 import ru.trader.model.MarketModel;
-import ru.trader.model.support.VendorUpdater;
+import ru.trader.model.support.StationUpdater;
 
 import java.util.concurrent.*;
 
@@ -20,7 +20,7 @@ public class EMDNUpdater {
     private static EMDNUpdate emdnUpdater;
     private static long interval;
 
-    public static void updateFromEMDN(VendorUpdater updater){
+    public static void updateFromEMDN(StationUpdater updater){
         Station emdnData = emdn.get(updater.getName());
         if (emdnData != null){
             update(updater, emdnData);
@@ -29,9 +29,9 @@ public class EMDNUpdater {
         }
     }
 
-    private static void update(VendorUpdater updater, Station emdnData){
+    private static void update(StationUpdater updater, Station emdnData){
         LOG.trace("Update {} from EMDN", updater.getName());
-        for (VendorUpdater.FakeOffer offer : updater.getOffers()) {
+        for (StationUpdater.FakeOffer offer : updater.getOffers()) {
             if (offer.getItem().isMarketItem()){
                 ItemData data = emdnData.getData(offer.getItem().getId());
                 LOG.trace("Update item {} to {}", offer.getItem().getName(), data);
@@ -113,19 +113,20 @@ public class EMDNUpdater {
     }
 
     private static class EMDNUpdate implements Runnable {
-        private final VendorUpdater updater;
+        private final StationUpdater updater;
 
         private EMDNUpdate() {
-            updater = new VendorUpdater(market);
+            updater = new StationUpdater(market);
         }
 
         @Override
         public void run() {
-            market.vendorsProperty().get().forEach((vendor) -> {
-                LOG.trace("Auto update {}", vendor);
-                Station emdnData = emdn.pop(vendor.getName());
+            market.systemsProperty().get().forEach(system -> {
+                LOG.trace("Auto update {}", system);
+                Station emdnData = emdn.pop(system.getName());
                 if (emdnData != null){
-                    updater.init(vendor);
+                    //TODO: implement new model
+                    //updater.init(system);
                     update(updater, emdnData);
                     updater.commit();
                     updater.reset();

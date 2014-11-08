@@ -1,23 +1,19 @@
 package ru.trader.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import org.controlsfx.control.ButtonBar;
-import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.DefaultDialogAction;
 import org.controlsfx.dialog.Dialog;
+import org.controlsfx.dialog.DialogAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.EMDNUpdater;
-import ru.trader.emdn.ItemData;
-import ru.trader.emdn.Station;
 import ru.trader.model.*;
-import ru.trader.model.support.VendorUpdater;
+import ru.trader.model.support.StationUpdater;
 import ru.trader.view.support.Localization;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.PriceStringConverter;
@@ -27,46 +23,18 @@ import ru.trader.view.support.cells.EditOfferCell;
 import java.util.Optional;
 
 
-public class VendorEditorController {
-    private final static Logger LOG = LoggerFactory.getLogger(VendorEditorController.class);
-
-    private final Action actSave = new AbstractAction(Localization.getString("dialog.button.save")) {
-        {
-            ButtonBar.setType(this, ButtonBar.ButtonType.OK_DONE);
-        }
-
-        @Override
-        public void handle(ActionEvent event) {
-            Dialog dlg = (Dialog) event.getSource();
-            items.getSelectionModel().selectFirst();
-            updater.commit();
-            items.getSelectionModel().clearSelection();
-            dlg.hide();
-        }
-    };
-
-    private final Action actCancel = new DefaultDialogAction(impl.org.controlsfx.i18n.Localization.asKey("dlg.cancel.button")) {
-        {
-            ButtonBar.setType(this, ButtonBar.ButtonType.CANCEL_CLOSE);
-        }
-
-        @Override
-        public void handle(ActionEvent event) {
-            items.getSelectionModel().selectFirst();
-            items.getSelectionModel().clearSelection();
-            super.handle(event);
-        }
-    };
+public class StationEditorController {
+    private final static Logger LOG = LoggerFactory.getLogger(StationEditorController.class);
 
     @FXML
     private TextField name;
 
     @FXML
-    private TableView<VendorUpdater.FakeOffer> items;
+    private TableView<StationUpdater.FakeOffer> items;
     @FXML
-    private TableColumn<VendorUpdater.FakeOffer, Double> buy;
+    private TableColumn<StationUpdater.FakeOffer, Double> buy;
     @FXML
-    private TableColumn<VendorUpdater.FakeOffer, Double> sell;
+    private TableColumn<StationUpdater.FakeOffer, Double> sell;
 
     @FXML
     private NumberField x;
@@ -75,8 +43,18 @@ public class VendorEditorController {
     @FXML
     private NumberField z;
 
-    private VendorUpdater updater;
+    private StationUpdater updater;
 
+    private final Action actSave = new DialogAction("dialog.button.save", ButtonBar.ButtonType.OK_DONE, false, true, false, (e) -> {
+        items.getSelectionModel().selectFirst();
+        updater.commit();
+        items.getSelectionModel().clearSelection();
+    });
+
+    private final Action actCancel = new DialogAction(impl.org.controlsfx.i18n.Localization.asKey("dlg.cancel.button"), ButtonBar.ButtonType.CANCEL_CLOSE, true, true, true, (e) -> {
+        items.getSelectionModel().selectFirst();
+        items.getSelectionModel().clearSelection();
+    });
 
     @FXML
     private void initialize() {
@@ -95,7 +73,7 @@ public class VendorEditorController {
     }
 
     private void init(){
-        updater = new VendorUpdater(MainController.getMarket());
+        updater = new StationUpdater(MainController.getMarket());
         name.textProperty().bindBidirectional(updater.nameProperty());
         x.numberProperty().bindBidirectional(updater.xProperty());
         y.numberProperty().bindBidirectional(updater.yProperty());
@@ -103,9 +81,13 @@ public class VendorEditorController {
         items.setItems(updater.getOffers());
     }
 
-    public void showDialog(Parent parent, Parent content, VendorModel vendor){
-        updater.init(vendor);
-        Dialog dlg = new Dialog(parent, Localization.getString(vendor == null ? "vEditor.title.add" : "vEditor.title.edit"));
+    public void showDialog(Parent parent, Parent content, StationModel station){
+        showDialog(parent, content, station.getSystem(), station);
+    }
+
+    public void showDialog(Parent parent, Parent content, SystemModel system, StationModel station){
+        updater.init(system, station);
+        Dialog dlg = new Dialog(parent, Localization.getString(station == null ? "vEditor.title.add" : "vEditor.title.edit"));
         dlg.setContent(content);
         dlg.getActions().addAll(actSave, actCancel);
         dlg.setResizable(false);
@@ -116,7 +98,7 @@ public class VendorEditorController {
     public void up(){
         int index = items.getSelectionModel().getSelectedIndex();
         if (index>0){
-            VendorUpdater.FakeOffer offer = items.getItems().remove(index);
+            StationUpdater.FakeOffer offer = items.getItems().remove(index);
             items.getItems().add(index-1, offer);
             selectRow(index - 1);
         }
@@ -125,7 +107,7 @@ public class VendorEditorController {
     public void down(){
         int index = items.getSelectionModel().getSelectedIndex();
         if (index>=0 && index<items.getItems().size()-1){
-            VendorUpdater.FakeOffer offer = items.getItems().remove(index);
+            StationUpdater.FakeOffer offer = items.getItems().remove(index);
             items.getItems().add(index+1, offer);
             selectRow(index + 1);
         }

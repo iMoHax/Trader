@@ -1,8 +1,8 @@
 package ru.trader.model;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
-import ru.trader.core.Order;
 import ru.trader.graph.PathRoute;
 import ru.trader.model.support.ModelBindings;
 
@@ -10,23 +10,25 @@ import java.util.List;
 
 public class OrderModel {
 
-    private final OfferDescModel offer;
+    private final OfferModel offer;
 
     private final LongProperty count;
     private final ObjectProperty<OfferModel> buyer =  new SimpleObjectProperty<>();
-    private long max;
+    private LongProperty max;
     private DoubleProperty profit;
     private DoubleProperty distance;
     private DoubleProperty bestProfit;
     private PathRoute path;
 
-    public OrderModel(OfferDescModel offer) {
+    public OrderModel(OfferModel offer) {
         this.offer = offer;
+        this.max = new SimpleLongProperty(0);
         this.count = new SimpleLongProperty(0){
             @Override
             public void setValue(Number v) {
-                if (max > 0 && v.longValue() > max){
-                    super.setValue(max);
+                long limit = max.get();
+                if (limit > 0 && v.longValue() > limit){
+                    super.setValue(limit);
                 } else {
                     super.setValue(v);
                 }
@@ -34,20 +36,67 @@ public class OrderModel {
         };
     }
 
-    public OrderModel(OfferDescModel sellOffer, OfferModel buyOffer, long max) {
+    public OrderModel(OfferModel sellOffer, OfferModel buyOffer, long max) {
         this(sellOffer);
-        this.max = max;
+        this.max.setValue(max);
         setBuyOffer(buyOffer);
         setCount(max);
     }
 
-    public OrderModel(OfferDescModel offer, double balance, long limit) {
+    public OrderModel(OfferModel offer, double balance, long limit) {
         this(offer);
-        this.max = Math.min(limit, (long) Math.floor(balance / offer.getPrice()));
+        this.max.setValue(Math.min(offer.getCount(), Math.min(limit, (long) Math.floor(balance / offer.getPrice()))));
     }
 
+    PathRoute getPath() {
+        return path;
+    }
+
+    void setPath(PathRoute path) {
+        this.path = path;
+    }
+
+
     public OfferModel getOffer() {
-        return offer.getOffer();
+        return offer;
+    }
+
+    public long getCount() {
+        return count.get();
+    }
+
+    public void setCount(long count) {
+        this.count.set(count);
+    }
+
+    public LongProperty countProperty() {
+        return count;
+    }
+
+    public OfferModel getBuyOffer() {
+        return buyer.get();
+    }
+
+    public void setBuyOffer(OfferModel buyer) {
+        this.buyer.set(buyer);
+        if (distance!=null) distance.set(getStation().getDistance(buyer.getStation()));
+    }
+
+    public ReadOnlyObjectProperty<OfferModel> buyOfferProperty() {
+        return buyer;
+    }
+
+    public long getMax() {
+        return max.get();
+    }
+
+    public void setMax(long max) {
+        this.max.setValue(max);
+    }
+
+
+    public StationModel getStation() {
+        return offer.getStation();
     }
 
     public ReadOnlyStringProperty nameProperty() {
@@ -58,26 +107,35 @@ public class OrderModel {
         return offer.priceProperty();
     }
 
+    public ReadOnlyLongProperty supplyProperty() {
+        return offer.countProperty();
+    }
+
     public ReadOnlyObjectProperty<OfferModel> bestProperty(){
         return offer.bestBuyProperty();
     }
 
-    public long getCount() {
-        return count.get();
+    public List<OfferModel> getBuyers(){
+        return offer.getBuyer();
     }
 
-    public LongProperty countProperty() {
-        return count;
+    public StationModel getBuyer() {
+        OfferModel buyOffer = getBuyOffer();
+        return buyOffer != null ? buyer.get().getStation() : null;
     }
 
-    public void setCount(long count) {
-        this.count.set(count);
+    public double getProfit() {
+        return profitProperty().get();
+    }
+
+    public ObservableValue<Double> getProfit(OfferModel buyer) {
+        return buyer.priceProperty().subtract(offer.priceProperty()).multiply(Bindings.min(max, buyer.countProperty())).asObject();
     }
 
     public ReadOnlyDoubleProperty profitProperty() {
         if (profit == null){
             profit = new SimpleDoubleProperty(0);
-            profit.bind(ModelBindings.diff(buyer, offer.getOffer().priceProperty()).multiply(count));
+            profit.bind(ModelBindings.diff(buyer, offer.priceProperty()).multiply(count));
         }
         return profit;
     }
@@ -90,66 +148,16 @@ public class OrderModel {
         return bestProfit;
     }
 
-    public ObservableValue<Double> getProfit(OfferModel buyer) {
-        return buyer.priceProperty().subtract(offer.getOffer().priceProperty()).multiply(max).asObject();
-    }
-
-    public double getProfit() {
-        return profitProperty().get();
-    }
-
-    public ReadOnlyObjectProperty<OfferModel> buyOfferProperty() {
-        return buyer;
-    }
-
-    public void setBuyOffer(OfferModel buyer) {
-        this.buyer.set(buyer);
-        if (distance!=null) distance.set(getVendor().getDistance(buyer.getVendor()));
-    }
-
-    public OfferModel getBuyOffer() {
-        return buyer.get();
-    }
-
-    public VendorModel getVendor() {
-        return offer.getOffer().getVendor();
-    }
-
-    public VendorModel getBuyer() {
-        OfferModel buyOffer = getBuyOffer();
-        return buyOffer != null ? buyer.get().getVendor() : null;
-    }
-
-    public long getMax() {
-        return max;
-    }
-
-    public void setMax(long max) {
-        this.max = max;
-    }
-
-    public List<OfferModel> getBuyers(){
-        return offer.getBuyer();
-    }
-
     public ReadOnlyDoubleProperty distanceProperty() {
         if (distance == null){
-            VendorModel buyer = getBuyer();
-            distance = new SimpleDoubleProperty(buyer!=null ? getVendor().getDistance(buyer) : Double.NaN);
+            StationModel buyer = getBuyer();
+            distance = new SimpleDoubleProperty(buyer!=null ? getStation().getDistance(buyer) : Double.NaN);
         }
         return distance;
     }
 
-    void setPath(PathRoute path) {
-        this.path = path;
-    }
-
-    PathRoute getPath() {
-        return path;
-    }
-
     public double getBalance(){
-        return path != null ? path.getBalance() : max * offer.getPrice();
+        return path != null ? path.getRoot().getBalance() : getMax() * offer.getPrice();
     }
 
 }

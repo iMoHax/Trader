@@ -10,7 +10,7 @@
 <?import ru.trader.view.support.NumberField?>
 <?import javafx.geometry.Insets?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
-      fx:controller="ru.trader.controllers.VendorEditorController" styleClass="dialog"
+      fx:controller="ru.trader.controllers.StationEditorController" styleClass="dialog"
       vgap="10" hgap="4">
     <fx:define><Insets fx:id="hbox_margin" left="10" /></fx:define>
     <TextField fx:id="name" GridPane.columnSpan="2" alignment="CENTER" />

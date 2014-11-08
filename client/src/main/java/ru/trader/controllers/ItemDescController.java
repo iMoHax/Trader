@@ -15,7 +15,7 @@ import ru.trader.model.*;
 public class ItemDescController {
 
 
-    private ItemDescModel item;
+    private ItemModel item;
 
     @FXML
     private ListView<OfferModel> seller;
@@ -23,7 +23,7 @@ public class ItemDescController {
     @FXML
     private ListView<OfferModel> buyer;
 
-    public void setItemDesc(ItemDescModel itemDesc){
+    public void setItemDesc(ItemModel itemDesc){
         item = itemDesc;
         if (popup!=null) popup.setDetachedTitle(item.nameProperty().get());
         fill();

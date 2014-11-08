@@ -11,8 +11,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 import ru.trader.Main;
 import ru.trader.model.*;
+import ru.trader.model.support.BindingsHelper;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.RouteNode;
+
+import java.util.List;
 
 
 public class RouterController {
@@ -38,9 +41,9 @@ public class RouterController {
     private Button removeBtn;
 
     @FXML
-    private ComboBox<VendorModel> source;
+    private ComboBox<SystemModel> source;
     @FXML
-    private ComboBox<VendorModel> target;
+    private ComboBox<SystemModel> target;
 
     @FXML
     private TableView<OrderModel> tblOrders;
@@ -52,8 +55,8 @@ public class RouterController {
     private NumberField totalBalance;
 
     private MarketModel market;
-
     private PathRouteModel route;
+    private final List<OrderModel> orders = FXCollections.observableArrayList();
 
     @FXML
     private void initialize(){
@@ -63,19 +66,19 @@ public class RouterController {
             Main.SETTINGS.setBalance(n.doubleValue());
         });
         cargo.numberProperty().addListener((ov, o, n) -> {
-            market.setCargo(n.intValue());
+            market.getAnalyzer().setCargo(n.intValue());
             Main.SETTINGS.setCargo(n.intValue());
         });
         tank.numberProperty().addListener((ov, o, n) -> {
-            market.setTank(n.doubleValue());
+            market.getAnalyzer().setTank(n.doubleValue());
             Main.SETTINGS.setTank(n.doubleValue());
         });
         distance.numberProperty().addListener((ov, o, n) -> {
-            market.setDistance(n.doubleValue());
+            market.getAnalyzer().setMaxDistance(n.doubleValue());
             Main.SETTINGS.setDistance(n.doubleValue());
         });
         jumps.numberProperty().addListener((ov, o, n) -> {
-            market.setJumps(n.intValue());
+            market.getAnalyzer().setJumps(n.intValue());
             Main.SETTINGS.setJumps(n.intValue());
         });
 
@@ -97,8 +100,7 @@ public class RouterController {
             return sel == -1 || sel != tblOrders.getItems().size()-1;
         }, tblOrders.getSelectionModel().selectedIndexProperty()));
 
-
-        tblOrders.setItems(FXCollections.observableArrayList());
+        BindingsHelper.setTableViewItems(tblOrders, orders);
         tblOrders.getItems().addListener((ListChangeListener<OrderModel>) c -> {
             while (c.next()) {
                 if (c.wasRemoved()){
@@ -114,11 +116,12 @@ public class RouterController {
 
     void init(){
         market = MainController.getMarket();
-        source.setItems(market.vendorsProperty());
+        source.setItems(market.systemsProperty());
         source.getSelectionModel().selectFirst();
-        target.setItems(FXCollections.observableArrayList(market.vendorsProperty()));
-        target.getItems().add(0, null);
-        tblOrders.getItems().clear();
+        target.setItems(FXCollections.observableArrayList(market.systemsProperty()));
+        target.getItems().add(0, ModelFabric.NONE_SYSTEM);
+        target.getSelectionModel().selectFirst();
+        orders.clear();
         totalBalance.setValue(balance.getValue());
         totalProfit.setValue(0);
     }
@@ -127,15 +130,15 @@ public class RouterController {
     private void onAdd(OrderModel order){
         totalProfit.add(order.getProfit());
         totalBalance.add(order.getProfit());
-        source.getSelectionModel().select(order.getBuyOffer().getVendor());
+        source.getSelectionModel().select(order.getBuyOffer().getSystem());
         balance.setDisable(true);
     }
 
     private void onRemove(OrderModel order) {
         totalProfit.sub(order.getProfit());
         totalBalance.sub(order.getProfit());
-        source.getSelectionModel().select(order.getVendor());
-        if (tblOrders.getItems().isEmpty()) {
+        source.getSelectionModel().select(order.getStation().getSystem());
+        if (orders.isEmpty()) {
             balance.setDisable(false);
             source.setDisable(false);
         }
@@ -145,7 +148,7 @@ public class RouterController {
         OrderModel sel = tblOrders.getSelectionModel().getSelectedItem();
         int index = tblOrders.getSelectionModel().getSelectedIndex();
 
-        OrderModel order = Screeners.showOrders(market.getOrders(sel.getVendor(), sel.getBuyer(), sel.getBalance()));
+        OrderModel order = Screeners.showOrders(market.getOrders(sel.getStation(), sel.getBuyer(), sel.getBalance()));
         if (order!=null){
             tblOrders.getItems().set(index, order);
         }
@@ -178,37 +181,38 @@ public class RouterController {
     public void showTopOrders(){
         OrderModel order = Screeners.showOrders(market.getTop(totalBalance.getValue().doubleValue()));
         if (order!=null){
-            tblOrders.getItems().add(order);
+            orders.add(order);
             addOrderToPath(order);
         }
     }
 
     public void showOrders(){
-        VendorModel s = source.getSelectionModel().getSelectedItem();
-        VendorModel t = target.getSelectionModel().getSelectedItem();
+        //TODO: fix set balanace
+        SystemModel s = source.getSelectionModel().getSelectedItem();
+        SystemModel t = target.getSelectionModel().getSelectedItem();
         OrderModel order;
-        if (t==null){
+        if (t == ModelFabric.NONE_SYSTEM){
             order = Screeners.showOrders(market.getOrders(s, totalBalance.getValue().doubleValue()));
         } else {
             order = Screeners.showOrders(market.getOrders(s, t, totalBalance.getValue().doubleValue()));
         }
         if (order!=null){
-            tblOrders.getItems().add(order);
+            orders.add(order);
             addOrderToPath(order);
         }
     }
 
     public void showRoutes(){
-        VendorModel s = source.getSelectionModel().getSelectedItem();
-        VendorModel t = target.getSelectionModel().getSelectedItem();
+        SystemModel s = source.getSelectionModel().getSelectedItem();
+        SystemModel t = target.getSelectionModel().getSelectedItem();
         PathRouteModel path;
-        if (t==null){
+        if (t == ModelFabric.NONE_SYSTEM){
             path = Screeners.showRouters(market.getRoutes(s, totalBalance.getValue().doubleValue()));
         } else {
             path = Screeners.showRouters(market.getRoutes(s, t, totalBalance.getValue().doubleValue()));
         }
         if (path!=null){
-            tblOrders.getItems().addAll(path.getOrders());
+            orders.addAll(path.getOrders());
             addRouteToPath(path);
         }
     }
@@ -216,7 +220,7 @@ public class RouterController {
     public void showTopRoutes(){
         PathRouteModel path = Screeners.showRouters(market.getTopRoutes(totalBalance.getValue().doubleValue()));
         if (path!=null){
-            tblOrders.getItems().addAll(path.getOrders());
+            orders.addAll(path.getOrders());
             addRouteToPath(path);
         }
     }

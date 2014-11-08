@@ -1,21 +1,18 @@
 package ru.trader.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import org.controlsfx.control.ButtonBar;
-import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
+import org.controlsfx.dialog.DialogAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.EMDNUpdater;
 import ru.trader.Main;
-import ru.trader.World;
 import ru.trader.core.MarketAnalyzer;
-import ru.trader.emdn.EMDN;
 import ru.trader.model.MarketModel;
 import ru.trader.view.support.Localization;
 import ru.trader.view.support.NumberField;
@@ -37,18 +34,8 @@ public class SettingsController {
     @FXML
     private NumberField pathsCount;
 
-    private final Action actSave = new AbstractAction(Localization.getString("dialog.button.save")) {
-        {
-            ButtonBar.setType(this, ButtonBar.ButtonType.OK_DONE);
-        }
+    private final Action actSave = new DialogAction(Localization.getString("dialog.button.save"), ButtonBar.ButtonType.OK_DONE, false, true, false, (e) -> save());
 
-        @Override
-        public void handle(ActionEvent event) {
-            Dialog dlg = (Dialog) event.getSource();
-            save();
-            dlg.hide();
-        }
-    };
 
     @FXML
     private void initialize(){
@@ -73,11 +60,11 @@ public class SettingsController {
         EMDNUpdater.setUpdateOnly(emdnUpdateOnly.isSelected());
         Main.SETTINGS.setEMDNAutoUpdate(emdnUpdateTime.getValue().longValue());
         EMDNUpdater.setInterval(emdnUpdateTime.getValue().longValue());
-        MarketModel market = MainController.getMarket();
+        MarketAnalyzer analyzer = MainController.getMarket().getAnalyzer();
         Main.SETTINGS.setSegmentSize(segmentSize.getValue().intValue());
-        market.setSegmetnSize(segmentSize.getValue().intValue());
+        analyzer.setSegmentSize(segmentSize.getValue().intValue());
         Main.SETTINGS.setPathsCount(pathsCount.getValue().intValue());
-        market.setLimit(pathsCount.getValue().intValue());
+        analyzer.setPathsCount(pathsCount.getValue().intValue());
 
     }
 
@@ -85,7 +72,7 @@ public class SettingsController {
         init();
         Dialog dlg = new Dialog(parent, Localization.getString("settings.title"));
         dlg.setContent(content);
-        dlg.getActions().addAll(actSave, Dialog.Actions.CANCEL);
+        dlg.getActions().addAll(actSave, Dialog.ACTION_CANCEL);
         dlg.setResizable(false);
         return dlg.show();
     }

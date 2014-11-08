@@ -9,24 +9,38 @@
 <?import ru.trader.view.support.cells.OfferCellValueImpl?>
 
 <?import ru.trader.view.support.cells.DoubleCell?>
-<HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<?import org.controlsfx.glyphfont.Glyph?>
+<?import org.controlsfx.control.SegmentedButton?>
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="ru.trader.controllers.OffersController">
-    <TitledPane text="%market.vendors" minWidth="250" prefHeight="510" collapsible="false">
-        <ListView fx:id="vendors">
+
+    <fx:define><Insets fx:id="stationsMargin" left="5" right="5" /></fx:define>
+    <fx:define><Insets fx:id="stationsPadding" left="12" right="10" /></fx:define>
+
+    <columnConstraints>
+        <ColumnConstraints minWidth="250" maxWidth="250"/>
+        <ColumnConstraints fillWidth="true"/>
+    </columnConstraints>
+
+    <TitledPane GridPane.rowSpan="2" text="%market.systems" minWidth="250" prefHeight="510" collapsible="false">
+        <ListView fx:id="systems">
             <contextMenu>
                 <ContextMenu>
                     <items>
-                        <MenuItem text="%main.menu.edit.addStation" onAction="#addVendor" />
-                        <MenuItem text="%main.menu.edit.editStation" onAction="#editVendor" />
+                        <MenuItem text="%main.menu.edit.addStation" onAction="#addStation" />
+                        <MenuItem text="%main.menu.edit.editStation" onAction="#editStation" />
                     </items>
                 </ContextMenu>
             </contextMenu>
         </ListView>
     </TitledPane>
 
-    <Accordion HBox.hgrow="ALWAYS">
-      <panes>
-          <TitledPane fx:id="sells" animated="false" text="%offers.pane.sell">
+    <TitledPane GridPane.columnIndex="1" text="%market.stations" maxHeight="60" collapsible="false">
+        <SegmentedButton fx:id="stationsBar" />
+    </TitledPane>
+    <Accordion GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+        <panes>
+            <TitledPane fx:id="paneSells" animated="false" text="%offers.pane.sell">
               <TableView fx:id="tblSell" editable="true">
                   <columns>
                       <TableColumn minWidth="230.0" text="%market.item.name">
@@ -35,6 +49,9 @@
                       <TableColumn minWidth="110.0" text="%market.offer.price" onEditCommit="#editPrice">
                           <cellFactory><PriceCellImpl/></cellFactory>
                           <cellValueFactory><PropertyValueFactory property="price"/></cellValueFactory>
+                      </TableColumn>
+                      <TableColumn minWidth="80.0" text="%market.offer.supply">
+                          <cellValueFactory><PropertyValueFactory property="count"/></cellValueFactory>
                       </TableColumn>
                       <TableColumn fx:id="sortSell" minWidth="90.0" text="%market.order.profit" sortType="DESCENDING">
                           <cellFactory><DoubleCell/></cellFactory>
@@ -70,8 +87,8 @@
                       <fx:reference source="sortSell"/>
                   </sortOrder>
               </TableView>
-          </TitledPane>
-          <TitledPane animated="false" text="%offers.pane.buy">
+            </TitledPane>
+            <TitledPane animated="false" text="%offers.pane.buy">
               <TableView fx:id="tblBuy" editable="true">
                   <columns>
                       <TableColumn minWidth="230.0" text="%market.item.name">
@@ -80,6 +97,9 @@
                       <TableColumn minWidth="110.0" text="%market.offer.price" editable="true" onEditCommit="#editPrice">
                           <cellFactory><PriceCellImpl/></cellFactory>
                           <cellValueFactory><PropertyValueFactory property="price"/></cellValueFactory>
+                      </TableColumn>
+                      <TableColumn minWidth="80.0" text="%market.offer.demand">
+                          <cellValueFactory><PropertyValueFactory property="count"/></cellValueFactory>
                       </TableColumn>
                       <TableColumn fx:id="sortBuy" minWidth="90.0" text="%market.order.profit" sortType="DESCENDING">
                           <cellFactory><DoubleCell/></cellFactory>
@@ -115,10 +135,10 @@
                       <fx:reference source="sortBuy"/>
                   </sortOrder>
               </TableView>
-          </TitledPane>
-      </panes>
-      <expandedPane>
-          <fx:reference source="sells"/>
-      </expandedPane>
+            </TitledPane>
+        </panes>
+        <expandedPane>
+            <fx:reference source="paneSells"/>
+        </expandedPane>
     </Accordion>
-</HBox>
+</GridPane>

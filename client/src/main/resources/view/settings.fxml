@@ -15,7 +15,7 @@
         </columnConstraints>
         <Label text="%settings.emdn" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"/>
         <Label text="%settings.emdn.on" GridPane.rowIndex="1"/>
-        <CheckBox fx:id="emdnOn" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <CheckBox fx:id="emdnOn" GridPane.columnIndex="1" GridPane.rowIndex="1" disable="true"/>
         <Label text="%settings.emdn.sub" GridPane.rowIndex="2" />
         <TextField fx:id="emdnSubServ" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <Label text="%settings.emdn.updateOnly" GridPane.rowIndex="3" />

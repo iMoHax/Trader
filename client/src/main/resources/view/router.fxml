@@ -80,7 +80,7 @@
         <TableView fx:id="tblOrders" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn minWidth="210.0" text="%market.order.seller">
-                    <cellValueFactory><PropertyValueFactory property="vendor"/></cellValueFactory>
+                    <cellValueFactory><PropertyValueFactory property="station"/></cellValueFactory>
                 </TableColumn>
                 <TableColumn minWidth="180.0" text="%market.item.name">
                     <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>

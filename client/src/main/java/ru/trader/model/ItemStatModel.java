@@ -19,6 +19,10 @@ public class ItemStatModel {
     private ObjectProperty<OfferModel> min;
     private ObjectProperty<OfferModel> best;
 
+    private OfferModel asModel(Offer offer){
+        return market.getModeler().get(offer);
+    }
+
     ItemStatModel(ItemStat itemStat, MarketModel market) {
         this.itemStat = itemStat;
         this.market = market;
@@ -31,21 +35,21 @@ public class ItemStatModel {
 
     public ReadOnlyObjectProperty<OfferModel> minProperty(){
         if (min == null){
-            min = new SimpleObjectProperty<>(market.asModel(itemStat.getMin()));
+            min = new SimpleObjectProperty<>(asModel(itemStat.getMin()));
         }
         return min;
     }
 
     public ReadOnlyObjectProperty<OfferModel> maxProperty(){
         if (max == null) {
-            max = new SimpleObjectProperty<>(market.asModel(itemStat.getMax()));
+            max = new SimpleObjectProperty<>(asModel(itemStat.getMax()));
         }
         return max;
     }
 
     public ReadOnlyObjectProperty<OfferModel> bestProperty(){
         if (best == null){
-            best = new SimpleObjectProperty<>(market.asModel(itemStat.getBest()));
+            best = new SimpleObjectProperty<>(asModel(itemStat.getBest()));
         }
         return best;
     }
@@ -55,19 +59,19 @@ public class ItemStatModel {
     }
 
     public OfferModel getMax() {
-        return max != null ? max.get() : market.asModel(itemStat.getMax());
+        return max != null ? max.get() : asModel(itemStat.getMax());
     }
 
     public OfferModel getMin() {
-        return min != null ? min.get() : market.asModel(itemStat.getMin());
+        return min != null ? min.get() : asModel(itemStat.getMin());
     }
 
     public OfferModel getBest() {
-        return best != null ? best.get() : market.asModel(itemStat.getBest());
+        return best != null ? best.get() : asModel(itemStat.getBest());
     }
 
     public List<OfferModel> getOffers() {
-        return itemStat.getOffers().stream().map(market::asModel).collect(Collectors.toList());
+        return itemStat.getOffers().stream().map(this::asModel).collect(Collectors.toList());
     }
 
     @Override
@@ -107,8 +111,8 @@ public class ItemStatModel {
     private void refreshProp(ObjectProperty<OfferModel> prop, Offer offer){
         if (prop!=null ){
             OfferModel model = prop.getValue();
-            if (model==null || !model.isModel(offer)){
-                prop.setValue(market.asModel(offer));
+            if (model==null || !model.getOffer().equals(offer)){
+                prop.setValue(asModel(offer));
             }
         }
     }

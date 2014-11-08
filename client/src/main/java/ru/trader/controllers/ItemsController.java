@@ -2,6 +2,7 @@ package ru.trader.controllers;
 
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 
 import javafx.scene.control.TableColumn;
@@ -10,6 +11,7 @@ import javafx.scene.input.MouseButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.model.*;
+import ru.trader.model.support.BindingsHelper;
 import ru.trader.model.support.ChangeMarketListener;
 import ru.trader.model.support.ModelBindings;
 
@@ -18,14 +20,16 @@ public class ItemsController {
     private final static Logger LOG = LoggerFactory.getLogger(ItemsController.class);
 
     @FXML
-    private TableView<ItemDescModel> tblItems;
+    private TableView<ItemModel> tblItems;
 
     @FXML
-    private TableColumn<ItemDescModel, Number> minProfit;
+    private TableColumn<ItemModel, Number> minProfit;
     @FXML
-    private TableColumn<ItemDescModel, Number> avgProfit;
+    private TableColumn<ItemModel, Number> avgProfit;
     @FXML
-    private TableColumn<ItemDescModel, Number> maxProfit;
+    private TableColumn<ItemModel, Number> maxProfit;
+
+    private final ObservableList<ItemModel> items = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() {
@@ -38,24 +42,26 @@ public class ItemsController {
             }
         });
         minProfit.setCellValueFactory((data) -> {
-            ItemDescModel iDesc = data.getValue();
+            ItemModel iDesc = data.getValue();
             return ModelBindings.diff(iDesc.minBuyProperty(),iDesc.maxSellProperty());
         });
         avgProfit.setCellValueFactory((data) -> {
-            ItemDescModel iDesc = data.getValue();
+            ItemModel iDesc = data.getValue();
             return iDesc.avgBuyProperty().subtract(iDesc.avgSellProperty());
         });
         maxProfit.setCellValueFactory((data) -> {
-            ItemDescModel iDesc = data.getValue();
+            ItemModel iDesc = data.getValue();
             return ModelBindings.diff(iDesc.maxBuyProperty(), iDesc.minSellProperty());
         });
+        BindingsHelper.setTableViewItems(tblItems, items);
         init();
     }
 
     void init(){
         MarketModel market = MainController.getMarket();
-        market.addListener(new ItemsStatChangeListener());
-        tblItems.setItems(FXCollections.observableArrayList(market.itemsProperty()));
+        market.getNotificator().add(new ItemsStatChangeListener());
+        items.clear();
+        items.addAll(market.itemsProperty());
         sort();
     }
 
@@ -64,53 +70,41 @@ public class ItemsController {
             tblItems.sort();
     }
 
-    private void refresh(OfferModel offer){
-        LOG.info("Refresh item desc link with item of offer {}", offer);
-        for (ItemDescModel descModel : tblItems.getItems()) {
-            if (descModel.hasItem(offer)){
-                descModel.refresh(offer.getType());
-                sort();
-                return;
-            }
-        }
-    }
-
     private void refresh(){
         LOG.info("Refresh all stats");
-        tblItems.getItems().forEach(ItemDescModel::refresh);
+        tblItems.getItems().forEach(ItemModel::refresh);
         sort();
     }
 
-    private void addItem(ItemDescModel item){
-        tblItems.getItems().add(item);
-        sort();
+    private void addItem(ItemModel item){
+        items.add(item);
     }
 
     private class ItemsStatChangeListener extends ChangeMarketListener {
 
         @Override
-        public void add(ItemDescModel item) {
+        public void add(ItemModel item) {
             addItem(item);
         }
 
         @Override
-        public void add(OfferModel offer) {
-            refresh(offer);
-        }
-
-        @Override
-        public void add(VendorModel vendor) {
+        public void add(StationModel station) {
             refresh();
         }
 
         @Override
+        public void add(OfferModel offer) {
+            sort();
+        }
+
+        @Override
         public void remove(OfferModel offer) {
-            refresh(offer);
+            sort();
         }
 
         @Override
         public void priceChange(OfferModel offer, double price, double value) {
-            refresh(offer);
+            sort();
         }
     }
 

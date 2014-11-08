@@ -6,6 +6,8 @@ import javafx.beans.binding.ListBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
+import javafx.scene.control.TableView;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,4 +70,17 @@ public class BindingsHelper {
         };
     }
 
+    public static <T> SortedList<T> sortedObservableList(List<T> list){
+        return (list instanceof ObservableList) ? new SortedList<>((ObservableList<? extends T>) list) : new SortedList<>(FXCollections.observableList(list));
+    }
+
+    public static <T> void setTableViewItems(TableView<T> table, List<T> items){
+        ObservableList<T> list = table.getItems();
+        SortedList<T> sList = sortedObservableList(items);
+        if (list instanceof SortedList){
+            ((SortedList)list).comparatorProperty().unbind();
+        }
+        table.setItems(sList);
+        sList.comparatorProperty().bind(table.comparatorProperty());
+    }
 }

@@ -19,6 +19,6 @@ public class GlyphBuilder implements Builder<Glyph> {
 
     @Override
     public Glyph build() {
-        return (Glyph) GlyphFontRegistry.glyph(text);
+        return Glyph.create(text);
     }
 }

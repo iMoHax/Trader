@@ -70,8 +70,8 @@ public class Main extends Application {
             try {
                 if (World.getMarket().isChange()){
                     Action res = Screeners.showConfirm(Localization.getString("dialog.confirm.save"));
-                    if (res == Dialog.Actions.YES) World.save();
-                    else if (res == Dialog.Actions.CANCEL) we.consume();
+                    if (res == Dialog.ACTION_YES) World.save();
+                    else if (res == Dialog.ACTION_CANCEL) we.consume();
                 }
                 EMDNUpdater.shutdown();
                 SETTINGS.save();

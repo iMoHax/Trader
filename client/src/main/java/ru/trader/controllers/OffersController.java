@@ -3,81 +3,125 @@ package ru.trader.controllers;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.scene.control.ListView;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import org.controlsfx.control.SegmentedButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import ru.trader.model.*;
+import ru.trader.model.support.BindingsHelper;
 import ru.trader.model.support.ChangeMarketListener;
 
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.List;
 
 
 public class OffersController {
     private final static Logger LOG = LoggerFactory.getLogger(OffersController.class);
 
-    private VendorModel vendor;
+    private StationModel station;
+    private SystemModel system;
 
     @FXML
-    private ListView<VendorModel> vendors;
+    private Insets stationsMargin;
 
     @FXML
-    private TableView<OfferDescModel> tblSell;
+    private ListView<SystemModel> systems;
 
     @FXML
-    private TableView<OfferDescModel> tblBuy;
+    private SegmentedButton stationsBar;
+
+    @FXML
+    private TableView<OfferModel> tblSell;
+
+    @FXML
+    private TableView<OfferModel> tblBuy;
+
+    private final List<OfferModel> sells = FXCollections.observableArrayList();
+    private final List<OfferModel> buys = FXCollections.observableArrayList();
+
+    private final static ToggleGroup stationsGrp = new ToggleGroup();
 
     // инициализируем форму данными
     @FXML
     private void initialize() {
-        vendors.getSelectionModel().selectedItemProperty().addListener((ob, oldValue, newValue) ->{
+        systems.getSelectionModel().selectedItemProperty().addListener((ob, oldValue, newValue) ->{
             if (newValue != null){
-                LOG.info("Change vendor to {}", newValue);
-                this.vendor = newValue;
-                fillTables(vendor);
+                LOG.info("Change system to {}", newValue);
+                fillDetails(newValue);
             } else {
-                vendors.getSelectionModel().select(oldValue);
+                systems.getSelectionModel().select(oldValue);
             }
         });
+        stationsGrp.selectedToggleProperty().addListener((v, o, n) -> {
+            if (n != null){
+                fillTables((StationModel) n.getUserData());
+            } else {
+                fillTables(null);
+            }
+        });
+        stationsBar.setToggleGroup(stationsGrp);
+
         tblSell.getSelectionModel().selectedItemProperty().addListener((v, o, n) -> {
-            if (n!=null) Screeners.changeItemDesc(n);
+            if (n != null) Screeners.changeItemDesc(n.getItem());
         });
         tblBuy.getSelectionModel().selectedItemProperty().addListener((v, o, n) -> {
-            if (n!=null) Screeners.changeItemDesc(n);
+            if (n != null) Screeners.changeItemDesc(n.getItem());
         });
         tblSell.setOnMouseClicked((e) -> {
-            if (e.getButton() == MouseButton.SECONDARY){
+            if (e.getButton() == MouseButton.SECONDARY) {
                 Screeners.showItemDesc(tblSell);
             }
         });
         tblBuy.setOnMouseClicked((e) -> {
-            if (e.getButton() == MouseButton.SECONDARY){
+            if (e.getButton() == MouseButton.SECONDARY) {
                 Screeners.showItemDesc(tblBuy);
             }
         });
+        BindingsHelper.setTableViewItems(tblSell, sells);
+        BindingsHelper.setTableViewItems(tblBuy, buys);
 
         init();
     }
 
     void init(){
         MarketModel market = MainController.getMarket();
-        market.addListener(new OffersChangeListener());
-        vendors.setItems(market.vendorsProperty());
-        vendors.getSelectionModel().selectFirst();
+        market.getNotificator().add(new OffersChangeListener());
+        systems.setItems(market.systemsProperty());
+        systems.getSelectionModel().selectFirst();
     }
 
-    private void fillTables(VendorModel vendor){
-        if (vendor != null){
-            tblSell.setItems(FXCollections.observableList(vendor.getSells(this::asOfferDescModel)));
-            tblBuy.setItems(FXCollections.observableList(vendor.getBuys(this::asOfferDescModel)));
-            sort();
-        } else {
-            tblSell.getItems().clear();
-            tblBuy.getItems().clear();
+    private void fillDetails(SystemModel system){
+        this.system = system;
+        List<StationModel> stations = system.getStations();
+        stationsBar.getButtons().clear();
+        stations.forEach(s -> stationsBar.getButtons().add(buildStationNode(s)));
+        if (!stations.isEmpty()){
+            stationsBar.getButtons().get(0).setSelected(true);
+        }
+
+        station = stations.isEmpty() ? null : stations.get(0);
+        LOG.info("Change station to {}", station);
+        fillTables(station);
+    }
+
+    private ToggleButton buildStationNode(StationModel station){
+        ToggleButton stationBtn = new ToggleButton(station.getName());
+        stationBtn.setUserData(station);
+        return stationBtn;
+    }
+
+    private void fillTables(StationModel station){
+        sells.clear();
+        buys.clear();
+        if (station != null){
+            sells.addAll(station.getSells());
+            buys.addAll(station.getBuys());
         }
     }
 
@@ -94,108 +138,77 @@ public class OffersController {
 
 
     @FXML
-    public void editPrice(TableColumn.CellEditEvent<OfferDescModel, Double> event){
-        OfferModel offer = event.getRowValue().getOffer();
+    public void editPrice(TableColumn.CellEditEvent<OfferModel, Double> event){
+        OfferModel offer = event.getRowValue();
         offer.setPrice(event.getNewValue());
     }
 
-    public VendorModel getVendor() {
-        return vendor;
+    public SystemModel getSystem() {
+        return system;
     }
 
-    public void addVendor(ActionEvent actionEvent) {
-        Screeners.showAddVendor();
+    public StationModel getStation() {
+        return station;
     }
 
-    public void editVendor(ActionEvent actionEvent) {
-        Screeners.showEditVendor(vendor);
+    public void addStation(ActionEvent actionEvent) {
+        Screeners.showAddStation(system);
     }
 
-
-    private OfferDescModel asOfferDescModel(OfferModel offer){
-        return MainController.getMarket().asOfferDescModel(offer);
+    public void editStation(ActionEvent actionEvent) {
+        Screeners.showEditStation(station);
     }
+
 
     private void addOffer(OfferModel offer){
         switch (offer.getType()){
-            case SELL: tblSell.getItems().add(asOfferDescModel(offer));
+            case SELL: sells.add(offer);
                 break;
-            case BUY:  tblBuy.getItems().add(asOfferDescModel(offer));
+            case BUY:  buys.add(offer);
                 break;
         }
     }
 
     private void removeOffer(OfferModel offer){
         switch (offer.getType()){
-            case SELL: remove(offer, tblSell.getItems());
+            case SELL: sells.remove(offer);
                 break;
-            case BUY:  remove(offer, tblBuy.getItems());
+            case BUY:  buys.remove(offer);
                 break;
-        }
-    }
-
-    private void remove(final OfferModel offer, final Collection<OfferDescModel> list){
-        Iterator<OfferDescModel> iterator = list.iterator();
-        while (iterator.hasNext()){
-            if (iterator.next().getOffer().equals(offer)){
-                iterator.remove();
-                break;
-            }
-        }
-    }
-
-    private void refresh(OfferModel offer){
-        LOG.info("Refresh lists link with item of offer {}", offer);
-        for (OfferDescModel descModel : tblSell.getItems()) {
-            if (descModel.hasItem(offer)){
-                descModel.refresh(offer.getType());
-                sort();
-                return;
-            }
-        }
-        for (OfferDescModel descModel : tblBuy.getItems()) {
-            if (descModel.hasItem(offer)){
-                descModel.refresh(offer.getType());
-                sort();
-                return;
-            }
         }
     }
 
     private void refresh(){
         LOG.info("Refresh lists");
-        tblSell.getItems().forEach(OfferDescModel::refresh);
-        tblBuy.getItems().forEach(OfferDescModel::refresh);
-        sort();
+        tblSell.getItems().forEach(OfferModel::refresh);
+        tblBuy.getItems().forEach(OfferModel::refresh);
     }
 
     private class OffersChangeListener extends ChangeMarketListener {
 
         @Override
         public void priceChange(OfferModel offer, double oldPrice, double newPrice) {
-            if (vendor.hasBuy(offer.getItem()) || vendor.hasSell(offer.getItem())){
+            if (station.hasBuy(offer.getItem()) || station.hasSell(offer.getItem())){
                 sort();
             }
         }
 
         @Override
         public void add(OfferModel offer) {
-            refresh(offer);
-            if (offer.hasVendor(vendor)){
+            if (offer.getStation().equals(station)){
                 addOffer(offer);
             }
-
         }
 
         @Override
-        public void add(VendorModel vendor) {
+        public void add(StationModel station) {
             refresh();
+            sort();
         }
 
         @Override
         public void remove(OfferModel offer) {
-            refresh(offer);
-            if (offer.hasVendor(vendor)) {
+            if (offer.getStation().equals(station)){
                 removeOffer(offer);
             }
         }

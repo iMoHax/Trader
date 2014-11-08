@@ -61,7 +61,7 @@ HBox.fields-group hbox-margin{
     -fx-fill-height: true;
 }
 
-.path-vendor {
+.path-system {
     -fx-alignment: center-left;
     -fx-text-alignment: left;
 }

@@ -10,10 +10,7 @@ import ru.trader.World;
 import ru.trader.core.*;
 import ru.trader.graph.PathRoute;
 import ru.trader.model.support.BindingsHelper;
-import ru.trader.model.support.ChangeMarketListener;
-
-import java.util.ArrayList;
-import java.util.Collection;
+import ru.trader.model.support.Notificator;
 
 
 public class MarketModel {
@@ -21,222 +18,98 @@ public class MarketModel {
 
     private final Market market;
     private final MarketAnalyzer analyzer;
+    private final ModelFabric modeler;
+    private final Notificator notificator;
 
-    private final Collection<ChangeMarketListener> listener = new ArrayList<>();
-
-    private final ListProperty<VendorModel> vendors;
-    private final ListProperty<ItemDescModel> items;
-
-    private boolean alert = true;
-
-    public ReadOnlyListProperty<VendorModel> vendorsProperty() {
-        return vendors;
-    }
-
-    public ReadOnlyListProperty<ItemDescModel> itemsProperty() {
-        return items;
-    }
-
-    public void setAlert(boolean alert) {
-        this.alert = alert;
-    }
+    private final ListProperty<SystemModel> systems;
+    private final ListProperty<ItemModel> items;
 
     public MarketModel(Market market) {
         this.market = market;
         analyzer = World.buildAnalyzer(market);
-        items = new SimpleListProperty<ItemDescModel>(BindingsHelper.observableList(market.getItems(), this::getItemDesc));
-        vendors = new SimpleListProperty<VendorModel>(BindingsHelper.observableList(market.get(), this::asModel));
+        modeler = new ModelFabric(this);
+        notificator = new Notificator();
+        items = new SimpleListProperty<>(BindingsHelper.observableList(market.getItems(), modeler::get));
+        systems = new SimpleListProperty<>(BindingsHelper.observableList(market.get(), modeler::get));
     }
 
-    public void addListener(ChangeMarketListener listener){
-        synchronized (this.listener){
-            this.listener.add(listener);
-        }
+    public MarketAnalyzer getAnalyzer() {
+        return analyzer;
     }
 
-    public void removeListeners() {
-        synchronized (listener){
-            listener.clear();
-        }
+    public ModelFabric getModeler() {
+        return modeler;
     }
 
-    public void addAllListener(Collection<? extends ChangeMarketListener> listener){
-        synchronized (this.listener){
-            this.listener.addAll(listener);
-        }
+    public Notificator getNotificator() {
+        return notificator;
     }
 
-    public Collection<ChangeMarketListener> getListeners() {
-        return listener;
+    public ReadOnlyListProperty<SystemModel> systemsProperty() {
+        return systems;
     }
 
-    void updatePosition(VendorModel model, double x, double y, double z) {
-        Vendor vendor = model.getVendor();
-        double oldX = vendor.getX();
-        double oldY = vendor.getY();
-        double oldZ = vendor.getZ();
-        market.updatePosition(vendor, x, y, z);
-        if (alert) listener.forEach((c) -> c.positionChange(model, oldX, oldY, oldZ, x, y, z));
+    public SystemModel add(String name, double x, double y, double z) {
+        SystemModel system = modeler.get(market.addPlace(name, x, y, z));
+        LOG.info("Add system {} to market {}", system, this);
+        notificator.sendAdd(system);
+        systems.add(system);
+        return system;
     }
 
-    void updateName(ItemModel model, String value) {
-        Item item = model.getItem();
-        String old = item.getName();
-        market.updateName(item, value);
-        if (alert) listener.forEach((c) -> c.nameChange(model, old, value));
+    public ReadOnlyListProperty<ItemModel> itemsProperty() {
+        return items;
     }
 
-    void updateName(VendorModel model, String value) {
-        Vendor vendor = model.getVendor();
-        String old = vendor.getName();
-        market.updateName(vendor, value);
-        if (alert) listener.forEach((c) -> c.nameChange(model, old, value));
-    }
-
-    void updatePrice(OfferModel model, double value) {
-        Offer offer = model.getOffer();
-        double old = offer.getPrice();
-        market.updatePrice(offer, value);
-        if (alert) listener.forEach((c) -> c.priceChange(model, old, value));
-    }
-
-    void add(VendorModel vendor, OfferModel offer) {
-        market.add(vendor.getVendor(), offer.getOffer());
-        if (alert) listener.forEach((c) -> c.add(offer));
-    }
-
-    void remove(VendorModel vendor, OfferModel offer) {
-        market.remove(vendor.getVendor(), offer.getOffer());
-        if (alert) listener.forEach((c) -> c.remove(offer));
-    }
-
-    public void add(VendorModel vendor) {
-        LOG.info("Add vendor {} to market {}", vendor, this);
-        market.add(vendor.getVendor());
-        if (alert) listener.forEach((c) -> c.add(vendor));
-        vendors.add(vendor);
-    }
-
-    public void add(ItemModel item) {
+    public ItemModel add(String name, Group group) {
+        ItemModel item = modeler.get(market.addItem(name, group));
         LOG.info("Add item {} to market {}", item, this);
-        market.add(item.getItem());
-        ItemDescModel model = getItemDesc(item);
-        if (alert) listener.forEach((c) -> c.add(model));
-        items.add(model);
-    }
-
-    public ItemModel newItem(String name){
-        return ModelFabrica.buildItemModel(name, this);
-    }
-
-    public VendorModel newVendor(String name){
-        return ModelFabrica.buildModel(name, this);
-    }
-
-    public OfferModel newOffer(OFFER_TYPE type, ItemModel item, double price) {
-        return ModelFabrica.buildModel(type, item, price, this);
-    }
-
-    ItemDescModel getItemDesc(Item item){
-        return getItemDesc(asModel(item));
-    }
-
-    ItemDescModel getItemDesc(ItemModel item){
-        return ModelFabrica.buildModel(item, market.getStatSell(item.getItem()), market.getStatBuy(item.getItem()), this);
-    }
-
-    public OfferDescModel asOfferDescModel(Offer offer){
-        return asOfferDescModel(asModel(offer));
-    }
-
-    public OfferDescModel asOfferDescModel(OfferModel offer){
-        Item item = offer.getOffer().getItem();
-        return ModelFabrica.buildModel(offer, market.getStatSell(item), market.getStatBuy(item), this);
+        notificator.sendAdd(item);
+        items.add(item);
+        return item;
     }
 
     ItemStat getStat(OFFER_TYPE type, Item item){
         return market.getStat(type, item);
     }
 
-    public OfferModel asModel(Offer offer){
-        return ModelFabrica.getModel(offer, this);
+    public ObservableList<OrderModel> getOrders(SystemModel from, double balance) {
+        return BindingsHelper.observableList(analyzer.getOrders(from.getSystem(), balance), modeler::get);
     }
 
-    public ItemModel asModel(Item item){
-        return ModelFabrica.getModel(item, this);
+    public ObservableList<OrderModel> getOrders(SystemModel from, SystemModel to, double balance) {
+        return BindingsHelper.observableList(analyzer.getOrders(from.getSystem(), to.getSystem(), balance), modeler::get);
     }
 
-    public VendorModel asModel(Vendor vendor) {
-        return ModelFabrica.getModel(vendor, this);
-    }
-
-    public OrderModel asModel(Order order) {
-        return new OrderModel(asOfferDescModel(order.getSell()), asModel(order.getBuy()), order.getCount());
-    }
-
-    public PathRouteModel asModel(PathRoute path) {
-        return new PathRouteModel(path, this);
-    }
-
-
-    public void setLimit(int limit){
-        analyzer.setPathsCount(limit);
-    }
-
-    public void setSegmetnSize(int segmetnSize){
-        analyzer.setSegmentSize(segmetnSize);
-    }
-
-    public void setCargo(int cargo){
-        analyzer.setCargo(cargo);
-    }
-
-    public void setTank(double tank){
-        analyzer.setTank(tank);
-    }
-
-    public void setJumps(int jumps){
-        analyzer.setJumps(jumps);
-    }
-
-    public void setDistance(double distance){
-        analyzer.setMaxDistance(distance);
-    }
-
-    public ObservableList<OrderModel> getOrders(VendorModel from, double balance) {
-        return BindingsHelper.observableList(analyzer.getOrders(from.getVendor(), balance), this::asModel);
-    }
-
-    public ObservableList<OrderModel> getOrders(VendorModel from, VendorModel to, double balance) {
-        return BindingsHelper.observableList(analyzer.getOrders(from.getVendor(), to.getVendor(), balance), this::asModel);
+    public ObservableList<OrderModel> getOrders(StationModel from, StationModel to, double balance) {
+        return BindingsHelper.observableList(analyzer.getOrders(from.getStation(), to.getStation(), balance), modeler::get);
     }
 
     public ObservableList<OrderModel> getTop(double balance){
-        return BindingsHelper.observableList(analyzer.getTop(balance), this::asModel);
+        return BindingsHelper.observableList(analyzer.getTop(balance), modeler::get);
     }
 
-    public ObservableList<PathRouteModel> getRoutes(VendorModel from, double balance){
-        return BindingsHelper.observableList(analyzer.getPaths(from.getVendor(), balance), this::asModel);
+    public ObservableList<PathRouteModel> getRoutes(SystemModel from, double balance){
+        return BindingsHelper.observableList(analyzer.getPaths(from.getSystem(), balance), modeler::get);
     }
 
-    public ObservableList<PathRouteModel> getRoutes(VendorModel from, VendorModel to, double balance){
-        return BindingsHelper.observableList(analyzer.getPaths(from.getVendor(), to.getVendor(), balance), this::asModel);
+    public ObservableList<PathRouteModel> getRoutes(SystemModel from, SystemModel to, double balance){
+        return BindingsHelper.observableList(analyzer.getPaths(from.getSystem(), to.getSystem(), balance), modeler::get);
     }
 
     public ObservableList<PathRouteModel> getTopRoutes(double balance){
-        return BindingsHelper.observableList(analyzer.getTopPaths(balance), this::asModel);
+        return BindingsHelper.observableList(analyzer.getTopPaths(balance), modeler::get);
     }
 
-    PathRoute getPath(VendorModel from, VendorModel to) {
-        return analyzer.getPath(from.getVendor(), to.getVendor());
+    PathRoute getPath(SystemModel from, SystemModel to) {
+        return analyzer.getPath(from.getSystem(), to.getSystem());
     }
 
     public PathRouteModel getPath(OrderModel order) {
-        PathRoute p = analyzer.getPath(order.getVendor().getVendor(), order.getBuyer().getVendor());
+        PathRoute p = analyzer.getPath(order.getStation().getStation().getPlace(), order.getBuyer().getStation().getPlace());
         if (p == null) return null;
         p.getRoot().getNext().setOrder(new Order(order.getOffer().getOffer(), order.getBuyOffer().getOffer(), order.getCount()));
-        order.setPath(p);
-        return asModel(p);
+        return modeler.get(p);
     }
 
 }

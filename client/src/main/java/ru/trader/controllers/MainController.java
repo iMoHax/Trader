@@ -90,9 +90,7 @@ public class MainController {
     }
 
     public void setMarket(MarketModel market) {
-        MarketModel old = MainController.market;
         MainController.market = market;
-        MainController.market.addAllListener(old.getListeners());
         Screeners.reinitAll();
     }
 
@@ -134,19 +132,35 @@ public class MainController {
                 .showTextInput();
         ItemModel item = null;
         if (res.isPresent()){
-            item = market.newItem(res.get());
-            market.add(item);
+            //TODO: implement groups
+//            item = market.add(res.get());
         }
         return Optional.ofNullable(item);
     }
 
 
-    public void addVendor(ActionEvent actionEvent) {
-        Screeners.showAddVendor();
+    public void addSystem(ActionEvent actionEvent){
+        //TODO: implement
     }
 
-    public void editVendor(ActionEvent actionEvent) {
-        Screeners.showEditVendor(offersController.getVendor());
+    public void editSystem(ActionEvent actionEvent){
+        //TODO: implement
+    }
+
+    public void removeSystem(ActionEvent actionEvent){
+        //TODO: implement
+    }
+
+    public void addStation(ActionEvent actionEvent) {
+        Screeners.showAddStation(offersController.getSystem());
+    }
+
+    public void editStation(ActionEvent actionEvent) {
+        Screeners.showEditStation(offersController.getStation());
+    }
+
+    public void removeStation(ActionEvent actionEvent){
+        //TODO: implement
     }
 
     public void editSettings(){

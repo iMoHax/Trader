@@ -1,37 +1,34 @@
 package ru.trader.model.support;
 
-import ru.trader.model.ItemDescModel;
-import ru.trader.model.ItemModel;
-import ru.trader.model.OfferModel;
-import ru.trader.model.VendorModel;
+import ru.trader.model.*;
 
 public class ChangeMarketListener {
 
-    public void nameChange(ItemModel item, String oldName, String newName){
-
+    public void add(ItemModel item) {
     }
 
-    public void nameChange(VendorModel vendor, String oldName, String newName) {
-
+    public void remove(ItemModel item) {
     }
 
-    public void add(ItemDescModel item) {
-
+    public void add(SystemModel system) {
     }
 
-    public void priceChange(OfferModel offer, double oldPrice, double newPrice) {
+    public void remove(SystemModel system) {
+    }
+
+    public void add(StationModel station) {
+    }
+
+    public void remove(StationModel station) {
     }
 
     public void add(OfferModel offer) {
-
-    }
-
-    public void add(VendorModel vendor) {
     }
 
     public void remove(OfferModel offer) {
     }
 
-    public void positionChange(VendorModel vendor, double oldX, double oldY, double oldZ, double x, double y, double z) {
+    public void priceChange(OfferModel offer, double oldPrice, double newPrice) {
     }
+
 }

@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.model.ItemModel;
 import ru.trader.model.OfferModel;
-import ru.trader.model.VendorModel;
+import ru.trader.model.SystemModel;
 
 
 public class ModelBindings {
@@ -17,11 +17,11 @@ public class ModelBindings {
 
 
     public static StringBinding asString(final OfferModel offer){
-        return Bindings.createStringBinding(offer::toVString, offer.priceProperty(), offer.getVendor().nameProperty());
+        return Bindings.createStringBinding(offer::toPString, offer.priceProperty(), offer.getSystem().nameProperty());
     }
 
     public static StringBinding asItemString(final OfferModel offer){
-        return Bindings.createStringBinding(offer::toIString, offer.priceProperty(), offer.getItem().nameProperty());
+        return Bindings.createStringBinding(offer::toIString, offer.priceProperty(), offer.nameProperty());
     }
 
     public static DoubleBinding price(final ObservableValue<OfferModel> offer){
@@ -64,7 +64,7 @@ public class ModelBindings {
     private static StringBinding asString(final ObservableValue<OfferModel> offer, final Observable... dependencies){
         return Bindings.createStringBinding(() -> {
             OfferModel o = offer.getValue();
-            return o != null ? o.toVString() : "";
+            return o != null ? o.toPString() : "";
         }, dependencies);
     }
 
@@ -110,7 +110,7 @@ public class ModelBindings {
             public javafx.collections.ObservableList<?> getDependencies() {
                 if (deep){
                     OfferModel model = offer.getValue();
-                    return new ImmutableObservableList<Observable>(offer, model.priceProperty(), model.getVendor().nameProperty(), model.getItem().nameProperty());
+                    return new ImmutableObservableList<Observable>(offer, model.priceProperty(), model.getSystem().nameProperty(), model.getItem().nameProperty());
                 }
                 else
                     return new ImmutableObservableList<Observable>(offer, offer.getValue().priceProperty());
@@ -120,7 +120,7 @@ public class ModelBindings {
                 if (model == null) return;
                 super.bind(model.priceProperty());
                 if (deep){
-                    super.bind(model.getVendor().nameProperty());
+                    super.bind(model.getSystem().nameProperty());
                     super.bind(model.getItem().nameProperty());
                 }
             }
@@ -129,7 +129,7 @@ public class ModelBindings {
                 if (model == null) return;
                 super.unbind(model.priceProperty());
                 if (deep){
-                    super.unbind(model.getVendor().nameProperty());
+                    super.unbind(model.getSystem().nameProperty());
                     super.unbind(model.getItem().nameProperty());
                 }
             }
@@ -170,16 +170,16 @@ public class ModelBindings {
     }
 
 
-    public static ObservableValue<VendorModel> vendorName(final ObservableValue<VendorModel> vendor){
-        if ((vendor == null)) {
+    public static ObservableValue<SystemModel> systemName(final ObservableValue<SystemModel> system){
+        if ((system == null)) {
             throw new NullPointerException("Operands cannot be null.");
         }
 
-        return new ObjectBinding<VendorModel>() {
+        return new ObjectBinding<SystemModel>() {
             {
-                super.bind(vendor);
-                super.bind(vendor.getValue().nameProperty());
-                vendor.addListener((observable, oldValue, newValue) -> {
+                super.bind(system);
+                super.bind(system.getValue().nameProperty());
+                system.addListener((observable, oldValue, newValue) -> {
                     super.unbind(oldValue.nameProperty());
                     super.bind(newValue.nameProperty());
                 });
@@ -187,18 +187,18 @@ public class ModelBindings {
 
             @Override
             public void dispose() {
-                super.unbind(vendor.getValue().nameProperty());
-                super.unbind(vendor);
+                super.unbind(system.getValue().nameProperty());
+                super.unbind(system);
             }
 
             @Override
-            protected VendorModel computeValue() {
-                return vendor.getValue();
+            protected SystemModel computeValue() {
+                return system.getValue();
             }
 
             @Override
             public javafx.collections.ObservableList<?> getDependencies() {
-                return new ImmutableObservableList<Observable>(vendor, vendor.getValue().nameProperty());
+                return new ImmutableObservableList<Observable>(system, system.getValue().nameProperty());
             }
         };
     }

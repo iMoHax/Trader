@@ -6,26 +6,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.controllers.MainController;
 import ru.trader.core.OFFER_TYPE;
-import ru.trader.model.ItemModel;
-import ru.trader.model.MarketModel;
-import ru.trader.model.OfferModel;
-import ru.trader.model.VendorModel;
+import ru.trader.model.*;
 
 
-public class VendorUpdater {
-    private final static Logger LOG = LoggerFactory.getLogger(VendorUpdater.class);
+public class StationUpdater {
+    private final static Logger LOG = LoggerFactory.getLogger(StationUpdater.class);
     private final ObservableList<FakeOffer> offers;
     private final StringProperty name;
     private final DoubleProperty x;
     private final DoubleProperty y;
     private final DoubleProperty z;
     private final MarketModel market;
-    private VendorModel vendor;
+    private SystemModel system;
+    private StationModel station;
     private boolean updateOnly;
 
-    public VendorUpdater(MarketModel market) {
+    public StationUpdater(MarketModel market) {
         this.market = market;
-        this.offers = BindingsHelper.observableList(MainController.getMarket().itemsProperty(), (item) -> new FakeOffer(item.getItem()));
+        this.offers = BindingsHelper.observableList(MainController.getMarket().itemsProperty(), FakeOffer::new);
         this.name = new SimpleStringProperty();
         this.x = new SimpleDoubleProperty(0);
         this.y = new SimpleDoubleProperty(0);
@@ -33,16 +31,17 @@ public class VendorUpdater {
         this.updateOnly = false;
     }
 
-    public void init(VendorModel vendor){
-        LOG.debug("Init update of {}", vendor);
-        this.vendor = vendor;
-        if (vendor != null){
-            name.setValue(vendor.getName());
-            x.setValue(vendor.getX());
-            y.setValue(vendor.getY());
-            z.setValue(vendor.getZ());
-            vendor.getSells().forEach(this::fillOffer);
-            vendor.getBuys().forEach(this::fillOffer);
+    public void init(SystemModel system, StationModel station){
+        LOG.debug("Init update of {}", station);
+        this.station = station;
+        this.system = system;
+        if (station != null){
+            name.setValue(station.getName());
+            x.setValue(system.getX());
+            y.setValue(system.getY());
+            z.setValue(system.getZ());
+            station.getSells().forEach(this::fillOffer);
+            station.getBuys().forEach(this::fillOffer);
         } else {
             name.setValue("");
             x.setValue(0);
@@ -53,7 +52,7 @@ public class VendorUpdater {
 
     private void fillOffer(OfferModel offer) {
         for (FakeOffer o : offers) {
-            if (offer.hasItem(o.item)) {
+            if (offer.getItem().equals(o.item)) {
                 switch (offer.getType()) {
                     case SELL:
                         o.setSell(offer);
@@ -71,8 +70,8 @@ public class VendorUpdater {
         return offers;
     }
 
-    public VendorModel getVendor() {
-        return vendor;
+    public StationModel getStation() {
+        return station;
     }
 
     public String getName() {
@@ -112,28 +111,29 @@ public class VendorUpdater {
     }
 
     public void commit(){
-        LOG.debug("Save changes of {}", vendor);
+        LOG.debug("Save changes of {}", station);
+        system.setPosition(x.get(), y.get(), z.get());
         if (isNew()) {
-            market.setAlert(false);
-            vendor = market.newVendor(name.get());
-            vendor.setPosition(x.get(), y.get(), z.get());
+            Notificator notificator = market.getNotificator();
+            notificator.setAlert(false);
+            station = system.add(name.get());
             offers.forEach(FakeOffer::commit);
-            market.setAlert(true);
-            market.add(vendor);
+            notificator.setAlert(true);
+            notificator.sendAdd(station);
         } else {
-            vendor.setName(name.get());
-            vendor.setPosition(x.get(), y.get(), z.get());
+            station.setName(name.get());
             offers.forEach(FakeOffer::commit);
         }
     }
 
     public void reset(){
         offers.forEach(FakeOffer::reset);
-        vendor = null;
+        station = null;
+        system = null;
     }
 
     public boolean isNew() {
-        return vendor == null;
+        return station == null;
     }
 
     public void setUpdateOnly(boolean updateOnly) {
@@ -146,15 +146,19 @@ public class VendorUpdater {
 
     public class FakeOffer {
         private final ItemModel item;
-        private DoubleProperty sprice;
-        private DoubleProperty bprice;
+        private final DoubleProperty sprice;
+        private final LongProperty supply;
+        private final DoubleProperty bprice;
+        private final LongProperty demand;
         private OfferModel sell;
         private OfferModel buy;
 
         public FakeOffer(ItemModel item){
             this.item = item;
             this.sprice = new SimpleDoubleProperty(0);
+            this.supply = new SimpleLongProperty(0);
             this.bprice = new SimpleDoubleProperty(0);
+            this.demand = new SimpleLongProperty(0);
         }
 
         public ReadOnlyStringProperty nameProperty(){
@@ -169,6 +173,22 @@ public class VendorUpdater {
             this.sprice.set(sprice);
         }
 
+        public DoubleProperty spriceProperty() {
+            return sprice;
+        }
+
+        public long getSupply() {
+            return supply.get();
+        }
+
+        public LongProperty supplyProperty() {
+            return supply;
+        }
+
+        public void setSupply(long supply) {
+            this.supply.set(supply);
+        }
+
         public double getBprice() {
             return bprice.get();
         }
@@ -181,18 +201,25 @@ public class VendorUpdater {
             return bprice;
         }
 
-        public DoubleProperty spriceProperty() {
-            return sprice;
+        public long getDemand() {
+            return demand.get();
+        }
+
+        public LongProperty demandProperty() {
+            return demand;
+        }
+
+        public void setDemand(long demand) {
+            this.demand.set(demand);
         }
 
         public boolean isChangeSell() {
-            return sell!=null && getSprice() != sell.getPrice();
+            return sell!=null && (getSprice() != sell.getPrice() || getSupply() != sell.getCount());
         }
 
         public boolean isChangeBuy() {
-            return buy!=null && getBprice() != buy.getPrice();
+            return buy!=null && (getBprice() != buy.getPrice() || getDemand() != buy.getCount());
         }
-
 
         public boolean isNewSell() {
             return sell == null && getSprice() != 0;
@@ -226,8 +253,16 @@ public class VendorUpdater {
             return sell != null ? sell.getPrice() : 0;
         }
 
+        public double getOldSupply(){
+            return sell != null ? sell.getCount() : 0;
+        }
+
         public double getOldBprice() {
             return buy != null ? buy.getPrice() : 0;
+        }
+
+        public double getOldDemand(){
+            return buy != null ? buy.getCount() : 0;
         }
 
         public void setSell(OfferModel sell) {
@@ -244,13 +279,18 @@ public class VendorUpdater {
             if (sell != null){
                 sell = null;
                 sprice.setValue(Double.NaN);
+                supply.setValue(Double.NaN);
             }
             if (buy != null){
                 buy = null;
                 bprice.setValue(Double.NaN);
+                demand.setValue(Double.NaN);
             }
+            //for fire change event
             sprice.setValue(0);
+            supply.setValue(0);
             bprice.setValue(0);
+            demand.setValue(0);
         }
 
         private void commit(){
@@ -265,18 +305,19 @@ public class VendorUpdater {
                 if (updateOnly) {
                     LOG.trace("Is update only, skip");
                 } else {
-                    vendor.add(market.newOffer(OFFER_TYPE.BUY, item, getBprice()));
+                    station.add(OFFER_TYPE.BUY, item, getBprice(), getDemand());
                 }
             } else if (isRemoveBuy()) {
                 LOG.trace("Is remove buy offer");
                 if (updateOnly) {
                     LOG.trace("Is update only, skip");
                 } else {
-                    vendor.remove(buy);
+                    station.remove(buy);
                 }
             } else if (isChangeBuy()){
-                LOG.trace("Is change buy price to {}", getBprice());
+                LOG.trace("Is change buy offer to {} ({})", getBprice(), getDemand());
                 buy.setPrice(getBprice());
+                buy.setCount(getDemand());
             } else {
                 LOG.trace("No change buy offer");
             }
@@ -286,18 +327,19 @@ public class VendorUpdater {
                 if (updateOnly) {
                     LOG.trace("Is update only, skip");
                 } else {
-                    vendor.add(market.newOffer(OFFER_TYPE.SELL, item, getSprice()));
+                    station.add(OFFER_TYPE.SELL, item, getSprice(), getSupply());
                 }
             } else if (isRemoveSell()) {
                 LOG.trace("Is remove sell offer");
                 if (updateOnly) {
                     LOG.trace("Is update only, skip");
                 } else {
-                    vendor.remove(sell);
+                    station.remove(sell);
                 }
             } else if (isChangeSell()){
-                LOG.trace("Is change sell price to {}", getSprice());
+                LOG.trace("Is change sell offer to {}({})", getSprice(), getSupply());
                 sell.setPrice(getSprice());
+                sell.setCount(getSupply());
             } else {
                 LOG.trace("No change sell offer");
             }
@@ -309,7 +351,9 @@ public class VendorUpdater {
             return "FakeOffer{" +
                     "item=" + item +
                     ", sprice=" + sprice.get() +
+                    ", supply=" + supply.get() +
                     ", bprice=" + bprice.get() +
+                    ", demand=" + demand.get() +
                     ", sell=" + sell +
                     ", buy=" + buy +
                     '}';

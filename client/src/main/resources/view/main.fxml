@@ -14,8 +14,12 @@
                <MenuItem text="%main.menu.file.import" onAction="#importWorld"/>
            </Menu>
            <Menu text="%main.menu.edit">
-               <MenuItem text="%main.menu.edit.addStation" onAction="#addVendor"/>
-               <MenuItem text="%main.menu.edit.editStation" onAction="#editVendor"/>
+               <MenuItem text="%main.menu.edit.addSystem" onAction="#addSystem"/>
+               <MenuItem text="%main.menu.edit.editSystem" onAction="#editSystem"/>
+               <MenuItem text="%main.menu.edit.removeSystem" onAction="#removeSystem"/>
+               <MenuItem text="%main.menu.edit.addStation" onAction="#addStation"/>
+               <MenuItem text="%main.menu.edit.editStation" onAction="#editStation"/>
+               <MenuItem text="%main.menu.edit.removeStation" onAction="#removeStation"/>
            </Menu>
            <Menu text="%main.menu.settings">
                <MenuItem text="%main.menu.settings.parameters" onAction="#editSettings"/>
@@ -28,7 +32,7 @@
            <Tab text="%market.items">
                <fx:include fx:id="items" source="items.fxml"/>
            </Tab>
-           <Tab text="%market.vendors">
+           <Tab text="%market.systems">
                <fx:include fx:id="offers" source="offers.fxml"/>
            </Tab>
            <Tab text="%routes">

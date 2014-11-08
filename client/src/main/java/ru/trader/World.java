@@ -3,8 +3,8 @@ package ru.trader;
 import org.xml.sax.SAXException;
 import ru.trader.core.Market;
 import ru.trader.core.MarketAnalyzer;
+import ru.trader.model.ModelFabric;
 import ru.trader.store.simple.SimpleMarket;
-import ru.trader.model.ModelFabrica;
 import ru.trader.store.simple.Store;
 import ru.trader.store.XSSFImporter;
 
@@ -31,14 +31,12 @@ public class World {
 
     public static void save() throws FileNotFoundException, UnsupportedEncodingException, XMLStreamException {
         Store.saveToFile(world, new File("world.xml"));
-        world.setChange(false);
+        world.commit();
     }
 
     public static void imp(File file) throws IOException, SAXException {
         XSSFImporter xssfImporter = new XSSFImporter(file);
         world = xssfImporter.doImport();
-        ModelFabrica.clear();
-        world.setChange(true);
     }
 
     public static Market getMarket() {

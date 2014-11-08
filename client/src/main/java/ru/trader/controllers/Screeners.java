@@ -31,7 +31,7 @@ public class Screeners {
 
     private static MainController mainController;
     private static ItemDescController itemDescController;
-    private static VendorEditorController vEditorController;
+    private static StationEditorController vEditorController;
     private static OffersEditorController oEditorController;
     private static OrdersController ordersController;
     private static TopOrdersController topOrdersController;
@@ -131,12 +131,12 @@ public class Screeners {
         return Dialogs.create().owner(mainScreen).message(text).showConfirm();
     }
 
-    public static void showAddVendor(){
-        vEditorController.showDialog(mainScreen, vEditorScreen, null);
+    public static void showAddStation(SystemModel system){
+        vEditorController.showDialog(mainScreen, vEditorScreen, system, null);
     }
 
-    public static void showEditVendor(VendorModel vendor){
-        vEditorController.showDialog(mainScreen, vEditorScreen, vendor);
+    public static void showEditStation(StationModel station){
+        vEditorController.showDialog(mainScreen, vEditorScreen, station);
     }
 
     public static Parent getMainScreen(){
@@ -148,11 +148,11 @@ public class Screeners {
     }
 
 
-    public static Collection<OrderModel> showOrders(Collection<OfferDescModel> offers, double balance, long cargo) {
+    public static Collection<OrderModel> showOrders(Collection<OfferModel> offers, double balance, long cargo) {
         return ordersController.showDialog(mainScreen, ordersScreen, offers, balance, cargo);
     }
 
-    public static void changeItemDesc(ItemDescModel item){
+    public static void changeItemDesc(ItemModel item){
         itemDescController.setItemDesc(item);
     }
 

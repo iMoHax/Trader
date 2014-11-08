@@ -70,7 +70,7 @@ public class PathRouteModel {
             p = p.getNext();
             if (cargo == null && p.getBest()!=null){
                 cargo = p.getBest();
-                OrderModel order = market.asModel(cargo);
+                OrderModel order = market.getModeler().get(cargo);
                 order.setPath(p);
                 res.add(order);
             }
@@ -82,7 +82,7 @@ public class PathRouteModel {
     }
 
     public void add(OrderModel order){
-        PathRoute p = market.getPath(order.getVendor(), order.getBuyer());
+        PathRoute p = market.getPath(order.getStation().getSystem(), order.getBuyer().getSystem());
         if (p == null) return;
         p.getRoot().getNext().setOrder(new Order(order.getOffer().getOffer(), order.getBuyOffer().getOffer(), order.getCount()));
         PathRoute head = path.getEnd();
@@ -95,6 +95,6 @@ public class PathRouteModel {
     }
 
     public PathRouteModel remove(OrderModel order) {
-        return new PathRouteModel(path.dropTo(order.getVendor().getVendor()), market);
+        return new PathRouteModel(path.dropTo(order.getStation().getStation()), market);
     }
 }

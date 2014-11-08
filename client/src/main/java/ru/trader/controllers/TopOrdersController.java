@@ -1,7 +1,6 @@
 package ru.trader.controllers;
 
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.TableColumn;
@@ -9,27 +8,18 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.LongStringConverter;
 import org.controlsfx.control.ButtonBar;
-import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
+import org.controlsfx.dialog.DialogAction;
 import ru.trader.model.OrderModel;
+import ru.trader.model.support.BindingsHelper;
 import ru.trader.view.support.Localization;
 
 import java.util.Collection;
+import java.util.List;
 
 public class TopOrdersController {
-    private final Action OK = new AbstractAction("OK") {
-        {
-            ButtonBar.setType(this, ButtonBar.ButtonType.OK_DONE);
-        }
-
-
-        @Override
-        public void handle(ActionEvent event) {
-            Dialog dlg = (Dialog) event.getSource();
-            dlg.hide();
-        }
-    };
+    private final Action OK = new DialogAction("OK", ButtonBar.ButtonType.OK_DONE, false, true, false);
 
     @FXML
     private TableView<OrderModel> tblOrders;
@@ -39,10 +29,13 @@ public class TopOrdersController {
 
     private OrderModel order;
 
+    private final List<OrderModel> orders = FXCollections.observableArrayList();
+
     @FXML
     private void initialize() {
         count.setCellFactory(TextFieldTableCell.forTableColumn(new LongStringConverter()));
         tblOrders.getSelectionModel().selectedItemProperty().addListener((v, o, n) -> changeOrder(n));
+        BindingsHelper.setTableViewItems(tblOrders, orders);
     }
 
 
@@ -52,19 +45,17 @@ public class TopOrdersController {
 
         Dialog dlg = new Dialog(parent, Localization.getString("topOrders.title"));
         dlg.setContent(content);
-        dlg.getActions().addAll(OK, Dialog.Actions.CANCEL);
+        dlg.getActions().addAll(OK, Dialog.ACTION_CANCEL);
         dlg.setResizable(false);
         OrderModel res = dlg.show() == OK ? order : null;
-        tblOrders.getItems().clear();
+        this.orders.clear();
         return res;
     }
 
 
     private void init(Collection<OrderModel> orders) {
         tblOrders.getSelectionModel().clearSelection();
-        tblOrders.setItems(FXCollections.observableArrayList(orders));
-        if (tblOrders.getSortOrder().size()>0)
-            tblOrders.sort();
+        this.orders.addAll(orders);
     }
 
     private void changeOrder(OrderModel order) {
