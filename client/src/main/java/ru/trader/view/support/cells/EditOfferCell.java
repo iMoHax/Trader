@@ -47,7 +47,7 @@ public class EditOfferCell extends TextFieldCell<StationUpdater.FakeOffer, Doubl
                 Text diff = new Text(String.format(" (%+.0f)", d));
                 hBox.getChildren().add(diff);
             }
-            Glyph glyph = Glyph.create("FontAwesome|REMOVE");
+            Glyph glyph = Glyph.create("FontAwesome|TIMES");
             glyph.addEventFilter(MouseEvent.MOUSE_CLICKED, (e) -> {
                 Platform.runLater(() -> {
                     if (isSell) {

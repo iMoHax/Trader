@@ -46,7 +46,7 @@ public class RouteNode {
             p = p.getNext();
             if (cargo == null && p.getBest() != null){
                 cargo = p.getBest();
-                icons.getChildren().add(Glyph.create("FontAwesome|UPLOAD_ALT"));
+                icons.getChildren().add(Glyph.create("FontAwesome|UPLOAD"));
             }
             if (p.isRefill()) icons.getChildren().add(Glyph.create("FontAwesome|REFRESH"));
 
@@ -75,7 +75,7 @@ public class RouteNode {
             if (cargo != null && cargo.isBuyer(p.get())){
                 v.getChildren().add(new Text(String.format(" (%+.0f) ", cargo.getProfit())));
                 cargo = null;
-                icons.getChildren().add(Glyph.create("FontAwesome|DOWNLOAD_ALT"));
+                icons.getChildren().add(Glyph.create("FontAwesome|DOWNLOAD"));
             }
         }
         node.getChildren().addAll(v, icons);
