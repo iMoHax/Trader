@@ -42,7 +42,7 @@ public class MarketStreamWriter {
     protected void writeMarket() throws XMLStreamException {
         out.writeStartElement(MarketDocHandler.MARKET);
         writeItems();
-        writeVendors(market.get());
+        writeVendors();
         out.writeEndElement();
     }
 
@@ -68,10 +68,12 @@ public class MarketStreamWriter {
         out.writeAttribute(MarketDocHandler.ID_ATTR, id);
     }
 
-    protected void writeVendors(Collection<Vendor> vendors) throws XMLStreamException {
+    protected void writeVendors() throws XMLStreamException {
         out.writeStartElement(MarketDocHandler.VENDOR_LIST);
-        for (Vendor vendor : vendors) {
-            writeVendor(vendor);
+        for (Place place : market.get()) {
+            for (Vendor vendor : place.get()) {
+                writeVendor(vendor);
+            }
         }
         out.writeEndElement();
     }
@@ -79,11 +81,14 @@ public class MarketStreamWriter {
     protected void writeVendor(Vendor vendor) throws XMLStreamException {
         out.writeStartElement(MarketDocHandler.VENDOR);
         out.writeAttribute(MarketDocHandler.NAME_ATTR, vendor.getName());
-        out.writeAttribute(MarketDocHandler.X_ATTR, String.valueOf(vendor.getX()));
-        out.writeAttribute(MarketDocHandler.Y_ATTR, String.valueOf(vendor.getY()));
-        out.writeAttribute(MarketDocHandler.Z_ATTR, String.valueOf(vendor.getZ()));
-
-        for (Offer offer : vendor.getAllOffers()) {
+        Place place = vendor.getPlace();
+        out.writeAttribute(MarketDocHandler.X_ATTR, String.valueOf(place.getX()));
+        out.writeAttribute(MarketDocHandler.Y_ATTR, String.valueOf(place.getY()));
+        out.writeAttribute(MarketDocHandler.Z_ATTR, String.valueOf(place.getZ()));
+        for (Offer offer : vendor.getAllSellOffers()) {
+            writeOffer(offer);
+        }
+        for (Offer offer : vendor.getAllBuyOffers()) {
             writeOffer(offer);
         }
         out.writeEndElement();

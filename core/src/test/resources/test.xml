@@ -8,12 +8,12 @@
         <item name="Item 5" id="i5"/>
         <item name="Item 6" id="i6"/>
     </items>
-    <vendors>
+    <places>
         <vendor name="Vendor 1">
             <offer item="i1" type="SELL" price="140"/>
         </vendor>
 
         <vendor name="Empty system" x="1" y="2" z="3"/>
 
-    </vendors>
+    </places>
 </market>

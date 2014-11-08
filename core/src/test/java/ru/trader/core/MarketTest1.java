@@ -17,57 +17,57 @@ public class MarketTest1 extends Assert {
     private final static Item ITEM2 = new SimpleItem("Item2");
     private final static Item ITEM3 = new SimpleItem("Item3");
 
-    private final static Offer bestSellOffer1 = new SimpleOffer(OFFER_TYPE.SELL,ITEM1,10);
-    private final static Offer bestSellOffer2 = new SimpleOffer(OFFER_TYPE.SELL,ITEM2,15);
-    private final static Offer bestSellOffer3 = new SimpleOffer(OFFER_TYPE.SELL,ITEM3,20);
+    private final Offer bestSellOffer1 = new SimpleOffer(OFFER_TYPE.SELL,ITEM1,10,1);
+    private final Offer bestSellOffer2 = new SimpleOffer(OFFER_TYPE.SELL,ITEM2,15,1);
+    private final Offer bestSellOffer3 = new SimpleOffer(OFFER_TYPE.SELL,ITEM3,20,1);
 
-    private final static Offer bestBuyOffer1 = new SimpleOffer(OFFER_TYPE.BUY,ITEM1,100);
-    private final static Offer bestBuyOffer2 = new SimpleOffer(OFFER_TYPE.BUY,ITEM2,200);
-    private final static Offer bestBuyOffer3 = new SimpleOffer(OFFER_TYPE.BUY,ITEM3,100);
-    private final static Offer bestBuyOffer4 = new SimpleOffer(OFFER_TYPE.BUY,ITEM2,150);
+    private final Offer bestBuyOffer1 = new SimpleOffer(OFFER_TYPE.BUY,ITEM1,100,1);
+    private final Offer bestBuyOffer2 = new SimpleOffer(OFFER_TYPE.BUY,ITEM2,200,1);
+    private final Offer bestBuyOffer3 = new SimpleOffer(OFFER_TYPE.BUY,ITEM3,100,1);
+    private final Offer bestBuyOffer4 = new SimpleOffer(OFFER_TYPE.BUY,ITEM2,150,1);
 
 
-    private final static Vendor sellVendor1 = new SimpleVendor();
-    private final static Vendor sellVendor2 = new SimpleVendor();
-    private final static Vendor sellVendor3 = new SimpleVendor();
-    private final static Vendor sellVendor4 = new SimpleVendor();
-    private final static Vendor buyVendor1 = new SimpleVendor();
-    private final static Vendor buyVendor2 = new SimpleVendor();
-    private final static Vendor buyVendor3 = new SimpleVendor();
-    private final static Vendor buyVendor4 = new SimpleVendor();
+    private final Vendor sellVendor1 = new SimpleVendor("",0,0,0);
+    private final Vendor sellVendor2 = new SimpleVendor("",0,0,0);
+    private final Vendor sellVendor3 = new SimpleVendor("",0,0,0);
+    private final Vendor sellVendor4 = new SimpleVendor("",0,0,0);
+    private final Vendor buyVendor1 = new SimpleVendor("",0,0,0);
+    private final Vendor buyVendor2 = new SimpleVendor("",0,0,0);
+    private final Vendor buyVendor3 = new SimpleVendor("",0,0,0);
+    private final Vendor buyVendor4 = new SimpleVendor("",0,0,0);
 
     private Market market;
 
     @Before
     public void fillMarket(){
         sellVendor1.add(bestSellOffer1);
-        sellVendor1.add(new SimpleOffer(OFFER_TYPE.SELL,ITEM2,100));
-        sellVendor2.add(new SimpleOffer(OFFER_TYPE.SELL,ITEM3,200));
+        sellVendor1.add(new SimpleOffer(OFFER_TYPE.SELL,ITEM2,100,1));
+        sellVendor2.add(new SimpleOffer(OFFER_TYPE.SELL,ITEM3,200,1));
         sellVendor2.add(bestSellOffer2);
-        sellVendor3.add(new SimpleOffer(OFFER_TYPE.SELL,ITEM1,300));
-        sellVendor3.add(new SimpleOffer(OFFER_TYPE.SELL,ITEM2,300));
+        sellVendor3.add(new SimpleOffer(OFFER_TYPE.SELL,ITEM1,300,1));
+        sellVendor3.add(new SimpleOffer(OFFER_TYPE.SELL,ITEM2,300,1));
         sellVendor3.add(bestSellOffer3);
-        sellVendor4.add(new SimpleOffer(OFFER_TYPE.SELL,ITEM2,150));
+        sellVendor4.add(new SimpleOffer(OFFER_TYPE.SELL,ITEM2,150,1));
 
-        buyVendor1.add(new SimpleOffer(OFFER_TYPE.BUY,ITEM2,50));
+        buyVendor1.add(new SimpleOffer(OFFER_TYPE.BUY,ITEM2,50,1));
         buyVendor1.add(bestBuyOffer1);
-        buyVendor2.add(new SimpleOffer(OFFER_TYPE.BUY,ITEM1,40));
+        buyVendor2.add(new SimpleOffer(OFFER_TYPE.BUY,ITEM1,40,1));
         buyVendor2.add(bestBuyOffer2);
-        buyVendor2.add(new SimpleOffer(OFFER_TYPE.BUY,ITEM3,50));
+        buyVendor2.add(new SimpleOffer(OFFER_TYPE.BUY,ITEM3,50,1));
         buyVendor3.add(bestBuyOffer3);
-        buyVendor3.add(new SimpleOffer(OFFER_TYPE.BUY,ITEM2,20));
-        buyVendor4.add(new SimpleOffer(OFFER_TYPE.BUY,ITEM1,80));
+        buyVendor3.add(new SimpleOffer(OFFER_TYPE.BUY,ITEM2,20,1));
+        buyVendor4.add(new SimpleOffer(OFFER_TYPE.BUY,ITEM1,80,1));
         buyVendor4.add(bestBuyOffer4);
 
         market = new SimpleMarket();
-        market.add(sellVendor1);
-        market.add(sellVendor2);
-        market.add(sellVendor3);
-        market.add(sellVendor4);
-        market.add(buyVendor1);
-        market.add(buyVendor2);
-        market.add(buyVendor3);
-        market.add(buyVendor4);
+        market.add(sellVendor1.getPlace());
+        market.add(sellVendor2.getPlace());
+        market.add(sellVendor3.getPlace());
+        market.add(sellVendor4.getPlace());
+        market.add(buyVendor1.getPlace());
+        market.add(buyVendor2.getPlace());
+        market.add(buyVendor3.getPlace());
+        market.add(buyVendor4.getPlace());
     }
 
     @Test

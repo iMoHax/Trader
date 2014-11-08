@@ -1,123 +1,65 @@
 package ru.trader.core;
 
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import ru.trader.graph.Connectable;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-public abstract class Vendor implements Comparable<Vendor>, Connectable<Vendor> {
-    private final static Logger LOG = LoggerFactory.getLogger(Vendor.class);
+public interface Vendor extends Comparable<Vendor> {
 
-    public abstract String getName();
-    public abstract void setName(String name);
+    String getName();
+    void setName(String name);
 
-    public abstract double getX();
-    public abstract void setX(double x);
+    Place getPlace();
 
-    public abstract double getY();
-    public abstract void setY(double y);
+    double getDistance();
+    void setDistance(double distance);
 
-    public abstract double getZ();
-    public abstract void setZ(double z);
+    void add(SERVICE_TYPE service);
+    void remove(SERVICE_TYPE service);
+    boolean has(SERVICE_TYPE service);
 
+    void add(Offer offer);
+    Offer addOffer(OFFER_TYPE type, Item item, double price, long count);
+    void remove(Offer offer);
 
-    protected abstract Collection<Offer> getOffers();
-    protected abstract Collection<Item> getItems(OFFER_TYPE offerType);
-    protected abstract Offer getOffer(OFFER_TYPE offerType, Item item);
-    protected abstract boolean hasOffer(OFFER_TYPE offerType, Item item);
-    protected abstract void  addOffer(Offer offer);
-    protected abstract void  removeOffer(Offer offer);
+    Collection<Offer> get(OFFER_TYPE type);
+    Offer get(OFFER_TYPE type, Item item);
+    boolean has(OFFER_TYPE type, Item item);
 
-    protected Collection<Offer> getOffers(OFFER_TYPE offerType){
-        List<Offer> offers = getOffers()
-                .stream()
-                .filter(offer -> offer.hasType(offerType))
-                .sorted()
-                .collect(Collectors.toList());
-        return Collections.unmodifiableCollection(offers);
+    default Collection<Offer> getAllSellOffers(){
+        return get(OFFER_TYPE.SELL);
     }
 
-    public final Collection<Offer> getAllOffers(){
-        return Collections.unmodifiableCollection(getOffers());
+    default Collection<Offer> getAllBuyOffers(){
+        return get(OFFER_TYPE.BUY);
     }
 
-    public final Collection<Offer> getAllSellOffers(){
-        return Collections.unmodifiableCollection(getOffers(OFFER_TYPE.SELL));
+    default Offer getSell(Item item){
+        return get(OFFER_TYPE.SELL, item);
     }
 
-    public final Collection<Offer> getAllBuyOffers(){
-        return Collections.unmodifiableCollection(getOffers(OFFER_TYPE.BUY));
+    default Offer getBuy(Item item){
+        return get(OFFER_TYPE.BUY, item);
     }
 
-    public final Offer getSell(Item item){
-        return getOffer(OFFER_TYPE.SELL, item);
+    default boolean hasSell(Item item){
+        return has(OFFER_TYPE.SELL, item);
     }
 
-    public final Offer getBuy(Item item){
-        return getOffer(OFFER_TYPE.BUY, item);
+    default boolean hasBuy(Item item){
+        return has(OFFER_TYPE.BUY, item);
     }
 
-    public final boolean hasSell(Item item){
-        return hasOffer(OFFER_TYPE.SELL, item);
-    }
-
-    public final boolean hasBuy(Item item){
-        return hasOffer(OFFER_TYPE.BUY, item);
-    }
-
-    public final void add(Offer offer){
-        LOG.trace("Add offer {} to vendor {}", offer, this);
-        offer.setVendor(this);
-        addOffer(offer);
-    }
-
-    public final void remove(Offer offer){
-        LOG.trace("Remove offer {} from vendor {}", offer, this);
-        assert this.equals(offer.getVendor());
-        removeOffer(offer);
-    }
-
-    public final Collection<Item> getSellItems() {
-        return getItems(OFFER_TYPE.SELL);
-    }
-
-    public final Collection<Item> getBuyItems() {
-        return getItems(OFFER_TYPE.BUY);
-    }
 
     @Override
-    public String toString() {
-        return getName();
-    }
-
-    @Override
-    public int compareTo(@NotNull Vendor other) {
+    default int compareTo(@NotNull Vendor other) {
         Objects.requireNonNull(other, "Not compare with null");
         if (this == other) return 0;
+        int cmp = Double.compare(getDistance(), other.getDistance());
+        if (cmp!=0) return cmp;
         String name = getName();
         String otherName = other.getName();
         return name != null ? otherName != null ? name.compareTo(otherName) : -1 : 0;
     }
-
-    @Override
-    public double getDistance(Vendor other){
-        return getDistance(other.getX(), other.getY(), other.getZ());
-    }
-
-    @Override
-    public boolean canRefill() {
-        return !getAllSellOffers().isEmpty() || !getAllBuyOffers().isEmpty();
-    }
-
-    public double getDistance(double x, double y, double z){
-        return Math.sqrt(Math.pow(x - getX(), 2) + Math.pow(y - getY(), 2) + Math.pow(z - getZ(), 2));
-    }
-
-
 }

@@ -6,7 +6,7 @@
     <xs:complexType name="marketType">
         <xs:sequence>
             <xs:element name="items" type="itemsType"/>
-            <xs:element name="vendors" type="vendorsType"/>
+            <xs:element name="places" type="vendorsType"/>
         </xs:sequence>
     </xs:complexType>
 

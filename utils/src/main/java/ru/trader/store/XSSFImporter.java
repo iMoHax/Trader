@@ -57,7 +57,9 @@ public class XSSFImporter {
             XMLReader saxParser = XMLReaderFactory.createXMLReader();
             saxParser.setContentHandler(getHandler());
             saxParser.parse(getInputSource());
-            market.addVendors(vendors);
+            for (Vendor vendor : vendors) {
+                market.add(vendor.getPlace());
+            }
         } finally {
             if (pkg!=null) {
                 try { pkg.close();} catch (IOException e) {LOG.warn("Error on close pkg",e);}
@@ -113,7 +115,7 @@ public class XSSFImporter {
                     market.add(item);
                 } else {
                     LOG.trace("add offer");
-                    Offer offer = new SimpleOffer(cell.column % 2 == 0? OFFER_TYPE.BUY : OFFER_TYPE.SELL, item, Double.valueOf(formattedValue));
+                    Offer offer = new SimpleOffer(cell.column % 2 == 0? OFFER_TYPE.BUY : OFFER_TYPE.SELL, item, Double.valueOf(formattedValue), 1000);
                     vendors.get(cell.column/2 -1).add(offer);
                 }
             }

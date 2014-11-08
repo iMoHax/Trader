@@ -18,15 +18,15 @@ public class VendorTest2 extends Assert {
     private final static Item ITEM1 = new SimpleItem("Item1");
     private final static Item ITEM2 = new SimpleItem("Item2");
     private final static Item ITEM3 = new SimpleItem("Item3");
-    private final static Offer SELL_OFFER1 = new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 10);
-    private final static Offer SELL_OFFER2 = new SimpleOffer(OFFER_TYPE.SELL, ITEM2, 10);
-    private final static Offer SELL_OFFER3 = new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 10);
-    private final static Offer DUBLE_SELL_OFFER1 = new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100);
+    private final Offer SELL_OFFER1 = new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 10, 1);
+    private final Offer SELL_OFFER2 = new SimpleOffer(OFFER_TYPE.SELL, ITEM2, 10, 1);
+    private final Offer SELL_OFFER3 = new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 10, 1);
+    private final Offer DUBLE_SELL_OFFER1 = new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100, 1);
 
-    private final static Offer BUY_OFFER1 = new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 100);
-    private final static Offer BUY_OFFER2 = new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 10);
-    private final static Offer BUY_OFFER3 = new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 10);
-    private final static Offer DUBLE_BUY_OFFER1 = new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 10);
+    private final Offer BUY_OFFER1 = new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 100, 1);
+    private final Offer BUY_OFFER2 = new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 10, 1);
+    private final Offer BUY_OFFER3 = new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 10, 1);
+    private final Offer DUBLE_BUY_OFFER1 = new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 10, 1);
 
 
     private Vendor sellVendor;

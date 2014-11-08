@@ -1,14 +1,19 @@
 package ru.trader.store.simple;
 
+import ru.trader.core.AbstractItem;
 import ru.trader.core.Group;
-import ru.trader.core.Item;
 
-public class SimpleItem extends Item {
+public class SimpleItem extends AbstractItem {
     private String name;
     private Group group;
 
     public SimpleItem(String name) {
         this.name = name;
+    }
+
+    public SimpleItem(String name, Group group) {
+        this.name = name;
+        setGroup(group);
     }
 
     @Override
@@ -17,7 +22,7 @@ public class SimpleItem extends Item {
     }
 
     @Override
-    protected void setName(String name) {
+    public void updateName(String name) {
         this.name = name;
     }
 
@@ -26,8 +31,7 @@ public class SimpleItem extends Item {
         return group;
     }
 
-    @Override
-    public void setGroup(Group group) {
+    protected void setGroup(Group group) {
         this.group = group;
     }
 }

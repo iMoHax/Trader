@@ -2,49 +2,45 @@ package ru.trader.core;
 
 import java.util.Collection;
 
-
 public interface Market {
-    boolean isChange();
 
-    ItemStat getStat(Offer offer);
+    void add(Place place);
+    Place addPlace(String name, double x, double y, double z);
+    void remove(Place place);
 
-    ItemStat getStat(OFFER_TYPE type, Item item);
-
-    ItemStat getStatSell(Item item);
-
-    ItemStat getStatBuy(Item item);
-
-    Collection<Offer> getSell(Item item);
-
-    Collection<Offer> getBuy(Item item);
-
-    void add(Vendor vendor);
+    void add(Group group);
+    Group addGroup(String name, GROUP_TYPE type);
+    void remove(Group group);
 
     void add(Item item);
-
-    void remove(Vendor vendor);
-
+    Item addItem(String name, Group group);
     void remove(Item item);
 
-    Collection<Vendor> get();
-
-    void add(Vendor vendor, Offer offer);
-
-    void remove(Vendor vendor, Offer offer);
-
+    Collection<Place> get();
+    Collection<Group> getGroups();
     Collection<Item> getItems();
+    ItemStat getStat(OFFER_TYPE type, Item item);
 
-    void addVendors(Collection<? extends Vendor> vendors);
+    boolean isChange();
+    void commit();
 
-    void addItems(Collection<? extends Item> items);
+    default ItemStat getStat(Offer offer){
+        return getStat(offer.getType(), offer.getItem());
+    }
 
-    void updatePrice(Offer offer, double price);
+    default ItemStat getStatSell(Item item){
+        return getStat(OFFER_TYPE.SELL, item);
+    }
 
-    void setChange(boolean change);
+    default ItemStat getStatBuy(Item item){
+        return getStat(OFFER_TYPE.BUY, item);
+    }
 
-    void updateName(Vendor vendor, String name);
+    default Collection<Offer> getSell(Item item){
+        return getStatSell(item).getOffers();
+    }
 
-    void updateName(Item item, String name);
-
-    void updatePosition(Vendor vendor, double x, double y, double z);
+    default Collection<Offer> getBuy(Item item){
+        return getStatBuy(item).getOffers();
+    }
 }

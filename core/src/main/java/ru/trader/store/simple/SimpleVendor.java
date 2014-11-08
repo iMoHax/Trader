@@ -1,18 +1,15 @@
 package ru.trader.store.simple;
 
-import ru.trader.core.Item;
-import ru.trader.core.OFFER_TYPE;
-import ru.trader.core.Offer;
-import ru.trader.core.Vendor;
+import ru.trader.core.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SimpleVendor extends Vendor {
+public class SimpleVendor extends AbstractVendor {
     private String name;
-    private double x;
-    private double y;
-    private double z;
+    private Place place;
+    private double distance;
+    private EnumSet<SERVICE_TYPE> services = EnumSet.noneOf(SERVICE_TYPE.class);
 
     protected Map<Item, Offer> sell;
     protected Map<Item, Offer> buy;
@@ -26,9 +23,19 @@ public class SimpleVendor extends Vendor {
         initOffers();
     }
 
+    public SimpleVendor(String name, double x, double y, double z) {
+        this(name);
+        place = new SimplePlace(name, x, y, z, this);
+    }
+
     protected void initOffers(){
         sell = new ConcurrentHashMap<>(20, 0.9f, 2);
         buy = new ConcurrentHashMap<>(20, 0.9f, 2);
+    }
+
+    @Override
+    protected Offer createOffer(OFFER_TYPE type, Item item, double price, long count) {
+        return new SimpleOffer(type, item, price, count);
     }
 
     @Override
@@ -37,42 +44,47 @@ public class SimpleVendor extends Vendor {
     }
 
     @Override
-    public void setName(String name) {
+    protected void updateName(String name) {
         this.name = name;
     }
 
     @Override
-    public double getX() {
-        return x;
+    public Place getPlace() {
+        return place;
+    }
+
+    protected void setPlace(Place place){
+        assert this.place == null;
+        this.place = place;
     }
 
     @Override
-    public void setX(double x) {
-        this.x = x;
+    public double getDistance() {
+        return distance;
     }
 
     @Override
-    public double getY() {
-        return y;
+    public void updateDistance(double distance) {
+        this.distance = distance;
     }
 
     @Override
-    public void setY(double y) {
-        this.y = y;
+    public void addService(SERVICE_TYPE service) {
+        services.add(service);
     }
 
     @Override
-    public double getZ() {
-        return z;
+    public void removeService(SERVICE_TYPE service) {
+        services.remove(service);
     }
 
     @Override
-    public void setZ(double z) {
-        this.z = z;
+    public boolean has(SERVICE_TYPE service) {
+        return services.contains(service);
     }
 
     @Override
-    protected Collection<Offer> getOffers(OFFER_TYPE offerType) {
+    public Collection<Offer> get(OFFER_TYPE offerType) {
         switch (offerType) {
             case SELL: return sell.values();
             case BUY: return buy.values();
@@ -81,23 +93,7 @@ public class SimpleVendor extends Vendor {
     }
 
     @Override
-    protected Collection<Offer> getOffers() {
-        ArrayList<Offer> offers = new ArrayList<>(sell.values());
-        offers.addAll(buy.values());
-        return offers;
-    }
-
-    @Override
-    protected Collection<Item> getItems(OFFER_TYPE offerType) {
-        switch (offerType) {
-            case SELL: return sell.keySet();
-            case BUY: return buy.keySet();
-        }
-        throw new IllegalArgumentException("Wrong offer type: "+offerType);
-    }
-
-    @Override
-    protected Offer getOffer(OFFER_TYPE offerType, Item item) {
+    public Offer get(OFFER_TYPE offerType, Item item) {
         switch (offerType) {
             case SELL: return sell.get(item);
             case BUY: return buy.get(item);
@@ -106,7 +102,7 @@ public class SimpleVendor extends Vendor {
     }
 
     @Override
-    protected boolean hasOffer(OFFER_TYPE offerType, Item item) {
+    public boolean has(OFFER_TYPE offerType, Item item) {
         switch (offerType) {
             case SELL: return sell.containsKey(item);
             case BUY: return buy.containsKey(item);
@@ -116,6 +112,9 @@ public class SimpleVendor extends Vendor {
 
     @Override
     protected void addOffer(Offer offer) {
+        if (offer instanceof SimpleOffer){
+            ((SimpleOffer) offer).setVendor(this);
+        }
         switch (offer.getType()) {
             case SELL: sell.put(offer.getItem(), offer);
                 break;

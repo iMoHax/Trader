@@ -3,7 +3,7 @@ package ru.trader.graph;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.trader.core.Vendor;
+import ru.trader.core.Place;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,27 +29,27 @@ public class RouteSearcher {
         this.segmentSize = segmentSize;
     }
 
-    public List<PathRoute> getPaths(Vendor from, Vendor to, Collection<Vendor> vendors, int jumps, double balance, int cargo, int limit){
-        return POOL.invoke(new SegmentSearcher(from, to, vendors, jumps, balance, cargo, limit));
+    public List<PathRoute> getPaths(Place from, Place to, Collection<Place> places, int jumps, double balance, int cargo, int limit){
+        return POOL.invoke(new SegmentSearcher(from, to, places, jumps, balance, cargo, limit));
     }
 
-    public List<PathRoute> getPaths(Vendor from, Collection<Vendor> vendors, int jumps, double balance, int cargo, int limit){
-        return POOL.invoke(new SegmentSearcher(from, null, vendors, jumps, balance, cargo, limit));
+    public List<PathRoute> getPaths(Place from, Collection<Place> places, int jumps, double balance, int cargo, int limit){
+        return POOL.invoke(new SegmentSearcher(from, null, places, jumps, balance, cargo, limit));
     }
 
     public class SegmentSearcher extends RecursiveTask<List<PathRoute>> {
-        protected final Vendor source;
-        protected final Vendor target;
-        protected final Collection<Vendor> vendors;
+        protected final Place source;
+        protected final Place target;
+        protected final Collection<Place> places;
         protected final int jumps;
         protected final double balance;
         protected final int cargo;
         protected int limit;
 
-        public SegmentSearcher(Vendor source, Vendor target, Collection<Vendor> vendors, int jumps, double balance, int cargo, int limit) {
+        public SegmentSearcher(Place source, Place target, Collection<Place> places, int jumps, double balance, int cargo, int limit) {
             this.source = source;
             this.target = target;
-            this.vendors = vendors;
+            this.places = places;
             this.jumps = jumps;
             this.balance = balance;
             this.cargo = cargo;
@@ -59,7 +59,7 @@ public class RouteSearcher {
         @Override
         protected List<PathRoute> compute() {
             LOG.trace("Start search route to {} from {}, jumps {}", source, target, jumps);
-            RouteGraph sGraph = new RouteGraph(source, vendors, stock, maxDistance, true, jumps, true);
+            RouteGraph sGraph = new RouteGraph(source, places, stock, maxDistance, true, jumps, true);
             int jumpsToAll = sGraph.getMinJumps();
             LOG.trace("Segment jumps {}", jumpsToAll);
             sGraph.setCargo(cargo);
@@ -67,18 +67,18 @@ public class RouteSearcher {
             List<PathRoute> res = new ArrayList<>(limit);
             if (jumps <= jumpsToAll){
                 LOG.trace("Is last segment");
-                List<Path<Vendor>> paths;
+                List<Path<Place>> paths;
                 if (target == null){
                     paths = sGraph.getPaths(limit);
                 } else {
                     paths = sGraph.getPathsTo(target, limit);
                 }
-                for (Path<Vendor> path : paths) {
+                for (Path<Place> path : paths) {
                     res.add((PathRoute) path);
                 }
             } else {
                 LOG.trace("Split to segments");
-                List<Path<Vendor>> paths = sGraph.getPaths(getPathsOnSegmentCount(sGraph), jumpsToAll-1).getList();
+                List<Path<Place>> paths = sGraph.getPaths(getPathsOnSegmentCount(sGraph), jumpsToAll-1).getList();
                 int i = 0;
                 ArrayList<SegmentSearcher> subTasks = new ArrayList<>(THRESHOLD);
                 while (i < paths.size()) {
@@ -86,7 +86,7 @@ public class RouteSearcher {
                     for (int taskIndex = 0; taskIndex < THRESHOLD && i+taskIndex < paths.size(); taskIndex++) {
                         PathRoute path = (PathRoute) paths.get(i+taskIndex);
                         double newBalance = balance + path.getRoot().getProfit();
-                        SegmentSearcher task = new SegmentSearcher(path.get(), target, vendors, jumps - path.getLength(), newBalance, cargo, 1);
+                        SegmentSearcher task = new SegmentSearcher(path.get(), target, places, jumps - path.getLength(), newBalance, cargo, 1);
                         task.fork();
                         subTasks.add(task);
                     }

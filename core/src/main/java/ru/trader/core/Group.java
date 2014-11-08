@@ -1,18 +1,18 @@
 package ru.trader.core;
 
-public abstract class Group {
-    public abstract String getName();
-    public abstract GROUP_TYPE getType();
+public interface Group {
+    public String getName();
+    public GROUP_TYPE getType();
 
-    public boolean isMarket(){
+    public default boolean isMarket(){
         return GROUP_TYPE.MARKET.equals(getType());
     }
 
-    public boolean isShip(){
+    public default boolean isShip(){
         return GROUP_TYPE.SHIP.equals(getType());
     }
 
-    public boolean isOutfit(){
+    public default boolean isOutfit(){
         return GROUP_TYPE.OUTFIT.equals(getType());
     }
 

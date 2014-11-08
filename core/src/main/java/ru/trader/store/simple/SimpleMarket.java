@@ -1,13 +1,17 @@
 package ru.trader.store.simple;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class SimpleMarket extends MarketSupport {
-    protected Set<Vendor> vendors;
+public class SimpleMarket extends AbstractMarket {
+    private final static Logger LOG = LoggerFactory.getLogger(SimpleMarket.class);
+
+    protected Set<Place> systems;
     protected List<Item> items;
+    protected List<Group> groups;
 
     //caching
     private final Map<Item,SimpleItemStat> sellItems = new HashMap<>();
@@ -18,8 +22,9 @@ public class SimpleMarket extends MarketSupport {
     }
 
     protected void init() {
-        vendors = new TreeSet<>();
+        systems = new TreeSet<>();
         items = new  ArrayList<>();
+        groups = new ArrayList<>();
     }
 
     private Map<Item,SimpleItemStat> getItemCache(OFFER_TYPE offerType){
@@ -46,14 +51,89 @@ public class SimpleMarket extends MarketSupport {
         SimpleItemStat entry = cache.get(item);
         if (entry!=null){
             entry.remove(offer);
-            if (entry.getOffersCount()==0)
+            if (entry.isEmpty())
                 cache.remove(item);
         }
     }
 
     @Override
-    public void addVendor(Vendor vendor) {
-        vendors.add(vendor);
+    protected Place createPlace(String name, double x, double y, double z) {
+        return new SimplePlace(name, x, y, z);
+    }
+
+    @Override
+    protected Group createGroup(String name, GROUP_TYPE type) {
+        return new SimpleGroup(name, type);
+    }
+
+    @Override
+    protected Item createItem(String name, Group group) {
+        return new SimpleItem(name, group);
+    }
+
+    @Override
+    protected void addPlace(Place place) {
+        systems.add(place);
+        for (Vendor vendor : place.get()) {
+            onAdd(vendor);
+        }
+    }
+
+    @Override
+    protected void removePlace(Place place) {
+        systems.remove(place);
+        for (Vendor vendor : place.get()) {
+            onRemove(vendor);
+        }
+    }
+
+    @Override
+    protected void addGroup(Group group) {
+        groups.add(group);
+    }
+
+    @Override
+    protected void removeGroup(Group group) {
+        groups.remove(group);
+    }
+
+    @Override
+    protected void addItem(Item item) {
+        items.add(item);
+    }
+
+    @Override
+    protected void removeItem(Item item) {
+        items.remove(item);
+        sellItems.remove(item);
+        buyItems.remove(item);
+    }
+
+    @Override
+    public Collection<Place> get() {
+        return systems;
+    }
+
+    @Override
+    public Collection<Group> getGroups() {
+        return groups;
+    }
+
+    @Override
+    public Collection<Item> getItems() {
+        return items;
+
+    }
+
+    @Override
+    public ItemStat getStat(OFFER_TYPE offerType, Item item) {
+        ItemStat entry = getItemCache(offerType).get(item);
+        return entry != null ? entry : new SimpleItemStat(item, offerType);
+    }
+
+    @Override
+    protected void onAdd(Vendor vendor) {
+        LOG.trace("Cached on add vendor {}", vendor);
         Collection<Offer> offers = vendor.getAllSellOffers();
         for (Offer offer : offers) {
             put(sellItems, offer);
@@ -65,8 +145,8 @@ public class SimpleMarket extends MarketSupport {
     }
 
     @Override
-    public void removeVendor(Vendor vendor) {
-        vendors.remove(vendor);
+    protected void onRemove(Vendor vendor) {
+        LOG.trace("Remove cache of vendor {}", vendor);
         Collection<Offer> offers = vendor.getAllSellOffers();
         for (Offer offer : offers) {
             remove(sellItems, offer);
@@ -78,62 +158,23 @@ public class SimpleMarket extends MarketSupport {
     }
 
     @Override
-    protected void addItem(Item item) {
-        if (!items.contains(item))
-            items.add(item);
-    }
-
-    @Override
-    protected void removeItem(Item item) {
-        items.remove(item);
-        sellItems.remove(item);
-        buyItems.remove(item);
-    }
-
-    @Override
-    protected Collection<Vendor> getVendors() {
-        return vendors;
-    }
-
-    @Override
-    protected Collection<Vendor> getVendors(OFFER_TYPE offerType, Item item) {
-        List<Vendor> result = null;
-        ItemStat entry = getItemCache(offerType).get(item);
-        if (entry!=null){
-            result = entry.getOffers()
-                          .stream()
-                          .map(Offer::getVendor)
-                          .collect(Collectors.toList());
-        }
-
-        return result!=null ? Collections.unmodifiableCollection(result) : null;
-    }
-
-    @Override
-    public ItemStat getStat(OFFER_TYPE offerType, Item item) {
-        ItemStat entry = getItemCache(offerType).get(item);
-        return entry != null ? entry : new SimpleItemStat(item, offerType);
-    }
-
-    @Override
-    protected Collection<Item> getItemList() {
-        return items;
-
-    }
-
-    @Override
     protected void onAdd(Offer offer) {
+        LOG.trace("Cached on add offer {}", offer);
         put(getItemCache(offer.getType()), offer);
     }
 
     @Override
     protected void onRemove(Offer offer) {
+        LOG.trace("Remove cache of offer {}", offer);
         remove(getItemCache(offer.getType()), offer);
     }
 
     @Override
-    public void addItems(Collection<? extends Item> items) {
-        this.items.addAll(items);
+    protected void updateName(AbstractPlace place, String name) {
+        LOG.trace("Replace system {} on change name", place);
+        systems.remove(place);
+        super.updateName(place, name);
+        systems.add(place);
     }
 
 }

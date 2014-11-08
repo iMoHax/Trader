@@ -20,15 +20,15 @@ public class ItemStatTest extends Assert {
 
     @Before
     public void fill(){
-        itemSellStat.put(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 10));
-        itemSellStat.put(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 20));
-        itemSellStat.put(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 30));
-        itemSellStat.put(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 40));
+        itemSellStat.put(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 10, 1));
+        itemSellStat.put(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 20, 1));
+        itemSellStat.put(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 30, 1));
+        itemSellStat.put(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 40, 1));
 
-        itemBuyStat.put(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 100));
-        itemBuyStat.put(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 200));
-        itemBuyStat.put(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 300));
-        itemBuyStat.put(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 400));
+        itemBuyStat.put(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 100, 1));
+        itemBuyStat.put(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 200, 1));
+        itemBuyStat.put(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 300, 1));
+        itemBuyStat.put(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 400, 1));
 
     }
 

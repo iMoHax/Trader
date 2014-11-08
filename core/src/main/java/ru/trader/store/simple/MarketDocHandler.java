@@ -16,7 +16,7 @@ public class MarketDocHandler extends DefaultHandler {
     protected final static String MARKET = "market";
     protected final static String ITEM_LIST = "items";
     protected final static String ITEM = "item";
-    protected final static String VENDOR_LIST = "vendors";
+    protected final static String VENDOR_LIST = "places";
     protected final static String VENDOR = "vendor";
     protected final static String OFFER = "offer";
     protected final static String GROUP = "group";
@@ -30,8 +30,9 @@ public class MarketDocHandler extends DefaultHandler {
     protected final static String Y_ATTR = "y";
     protected final static String Z_ATTR = "z";
 
-    protected Market world;
+    protected SimpleMarket world;
     protected Vendor curVendor;
+    protected Place curSystem;
     protected Group curGroup;
     protected final HashMap<String,Item> items = new HashMap<>();
 
@@ -57,7 +58,7 @@ public class MarketDocHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName){
-            case VENDOR: world.add(curVendor);
+            case VENDOR: curVendor = null; curSystem = null;
                 break;
             case GROUP: curGroup = null;
                 break;
@@ -66,7 +67,7 @@ public class MarketDocHandler extends DefaultHandler {
 
     @Override
     public void endDocument() throws SAXException {
-        world.setChange(false);
+        world.commit();
     }
 
     protected void parseVendor(Attributes attributes) throws SAXException {
@@ -103,26 +104,24 @@ public class MarketDocHandler extends DefaultHandler {
     }
 
     protected void onOffer(OFFER_TYPE offerType, Item item, double price){
-        Offer offer = new SimpleOffer(offerType, item, price);
-        curVendor.add(offer);
+        if (curVendor == null){
+            curVendor = curSystem.addVendor("STATION OF "+curSystem.getName());
+            curVendor.add(SERVICE_TYPE.MARKET);
+        }
+        curVendor.addOffer(offerType, item, price, 1000);
     }
 
     protected void onVendor(String name, double x, double y, double z){
-        curVendor = new SimpleVendor(name);
-        curVendor.setX(x);
-        curVendor.setY(y);
-        curVendor.setZ(z);
+        curSystem = world.addPlace(name, x, y, z);
     }
 
     protected void onItem(String name, String id) {
-        Item item = new SimpleItem(name);
-        item.setGroup(curGroup);
-        world.add(item);
+        Item item = world.addItem(name, curGroup);
         items.put(id, item);
     }
 
     protected void onGroup(String name, GROUP_TYPE type) {
-        curGroup = new SimpleGroup(name, type);
+        curGroup = world.addGroup(name, type);
     }
 
     public Market getWorld(){

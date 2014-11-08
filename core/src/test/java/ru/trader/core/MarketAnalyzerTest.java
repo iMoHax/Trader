@@ -8,10 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.TestUtil;
 import ru.trader.graph.Path;
-import ru.trader.store.simple.SimpleItem;
-import ru.trader.store.simple.SimpleMarket;
-import ru.trader.store.simple.SimpleOffer;
-import ru.trader.store.simple.SimpleVendor;
+import ru.trader.store.simple.*;
 
 import java.util.Collection;
 
@@ -19,47 +16,43 @@ public class MarketAnalyzerTest extends Assert {
     private final static Logger LOG = LoggerFactory.getLogger(MarketAnalyzerTest.class);
 
     private static Market market = new SimpleMarket();
-    private static Vendor v1;
-    private static Vendor v2;
-    private static Vendor v3;
-    private static Vendor v4;
-    private static Vendor v5;
-    private static Vendor v6;
-    private static Vendor v7;
-    private static Vendor v8;
-    private static Vendor v9;
-    private static Vendor v10;
-    private static Vendor v11;
+    private static Place v1;
+    private static Place v2;
+    private static Place v3;
+    private static Place v4;
+    private static Place v5;
+    private static Place v6;
+    private static Place v7;
+    private static Place v8;
+    private static Place v9;
+    private static Place v10;
+    private static Place v11;
     private static Item ITEM1 = new SimpleItem("ITEM1");
     private static Item ITEM2 = new SimpleItem("ITEM2");
     private static Item ITEM3 = new SimpleItem("ITEM3");
 
+    private void add(Place place, Offer offer){
+        if (place.isEmpty()){
+            place.add(new SimpleVendor());
+        }
+        Vendor vendor = place.get().iterator().next();
+        vendor.add(offer);
+    }
+
     @Before
     public void setUp() throws Exception {
-        v1 = new SimpleVendor("v1_x0y0z0");
-        v2 = new SimpleVendor("v2_x1y0z0");
-        v3 = new SimpleVendor("v3_x0y1z0");
-        v4 = new SimpleVendor("v4_x0y0z1");
-        v5 = new SimpleVendor("v5_x1y1z0");
+        v1 = new SimplePlace("v1_x0y0z0",0,0,0);
+        v2 = new SimplePlace("v2_x1y0z0",1,0,0);
+        v3 = new SimplePlace("v3_x0y1z0",0,1,0);
+        v4 = new SimplePlace("v4_x0y0z1",0,0,1);
+        v5 = new SimplePlace("v5_x1y1z0",1,1,0);
 
-        v6 = new SimpleVendor("v6_x110y100z100");
-        v7 = new SimpleVendor("v7_x115y100z100");
-        v8 = new SimpleVendor("v8_x105y105z100");
-        v9 = new SimpleVendor("v9_x100y115z100");
-        v10 = new SimpleVendor("v10_x100y100z100");
-        v11 = new SimpleVendor("v11_x105y105z105");
-
-        v1.setX(0); v1.setY(0); v1.setZ(0);
-        v2.setX(1); v2.setY(0); v2.setZ(0);
-        v3.setX(0); v3.setY(1); v3.setZ(0);
-        v4.setX(0); v4.setY(0); v4.setZ(1);
-        v5.setX(1); v5.setY(1); v5.setZ(0);
-        v6.setX(110); v6.setY(100); v6.setZ(100);
-        v7.setX(115); v7.setY(100); v7.setZ(100);
-        v8.setX(105); v8.setY(105); v8.setZ(100);
-        v9.setX(100); v9.setY(115); v9.setZ(100);
-        v10.setX(100); v10.setY(100); v10.setZ(100);
-        v11.setX(105); v11.setY(105); v11.setZ(105);
+        v6 = new SimplePlace("v6_x110y100z100",110,100,100);
+        v7 = new SimplePlace("v7_x115y100z100",115,100,100);
+        v8 = new SimplePlace("v8_x105y105z100",105,105,100);
+        v9 = new SimplePlace("v9_x100y115z100",100,115,100);
+        v10 = new SimplePlace("v10_x100y100z100",100,100,100);
+        v11 = new SimplePlace("v11_x105y105z105",105,105,105);
 
         market.add(v1);
         market.add(v2);
@@ -73,19 +66,19 @@ public class MarketAnalyzerTest extends Assert {
         market.add(v10);
         market.add(v11);
 
-        market.add(v6, new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100));
-        market.add(v7, new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100));
-        market.add(v9, new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100));
-        market.add(v10, new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100));
-        market.add(v6, new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 50));
-        market.add(v7, new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 120));
-        market.add(v9, new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 200));
-        market.add(v10, new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 150));
-        market.add(v9, new SimpleOffer(OFFER_TYPE.SELL, ITEM2, 100));
-        market.add(v6, new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 140));
-        market.add(v7, new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 154));
-        market.add(v10, new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 140));
-        market.add(v11, new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 500));
+        add(v6, new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100, 1));
+        add(v7, new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100, 1));
+        add(v9, new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100, 1));
+        add(v10, new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100, 1));
+        add(v6, new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 50, 1));
+        add(v7, new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 120, 1));
+        add(v9, new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 200, 1));
+        add(v10, new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 150, 1));
+        add(v9, new SimpleOffer(OFFER_TYPE.SELL, ITEM2, 100, 1));
+        add(v6, new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 140, 1));
+        add(v7, new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 154, 1));
+        add(v10, new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 140, 1));
+        add(v11, new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 500, 1));
 
     }
 
@@ -96,7 +89,7 @@ public class MarketAnalyzerTest extends Assert {
         MarketAnalyzer analyzer = new MarketAnalyzer(market);
         analyzer.setJumps(5);analyzer.setMaxDistance(1);analyzer.setTank(1);
 
-        Collection<Path<Vendor>> paths = analyzer.getPaths(v1, v2);
+        Collection<Path<Place>> paths = analyzer.getPaths(v1, v2);
         TestUtil.assertCollectionEquals(paths, Path.toPath(v1, v2));
 
         paths = analyzer.getPaths(v1, v3);
@@ -121,7 +114,7 @@ public class MarketAnalyzerTest extends Assert {
         MarketAnalyzer analyzer = new MarketAnalyzer(market);
         analyzer.setJumps(5);analyzer.setMaxDistance(1);analyzer.setTank(2);
 
-        Collection<Path<Vendor>> paths = analyzer.getPaths(v1, v2);
+        Collection<Path<Place>> paths = analyzer.getPaths(v1, v2);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(v1, v2));
 
         paths = analyzer.getPaths(v1, v3);
@@ -147,7 +140,7 @@ public class MarketAnalyzerTest extends Assert {
         MarketAnalyzer analyzer = new MarketAnalyzer(market);
         analyzer.setJumps(2);analyzer.setMaxDistance(10);analyzer.setTank(15);
 
-        Collection<Path<Vendor>> paths = analyzer.getPaths(v10, v6);
+        Collection<Path<Place>> paths = analyzer.getPaths(v10, v6);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(v10, v6), Path.toPath(v10, v11, v6),
                 Path.toPath(v10, v8, v6));
 
@@ -163,7 +156,7 @@ public class MarketAnalyzerTest extends Assert {
         MarketAnalyzer analyzer = new MarketAnalyzer(market);
         analyzer.setJumps(3);analyzer.setMaxDistance(10);analyzer.setTank(15);
 
-        Collection<Path<Vendor>> paths = analyzer.getPaths(v10, v6);
+        Collection<Path<Place>> paths = analyzer.getPaths(v10, v6);
         TestUtil.assertCollectionContainAll(paths, Path.toPath(v10, v6), Path.toPath(v10, v11, v6), Path.toPath(v10, v11, v10, v6),
                 Path.toPath(v10, v8, v6), Path.toPath(v10, v8, v10, v6), Path.toPath(v10, v8, v11, v6));
 

@@ -3,7 +3,7 @@ package ru.trader.store.simple;
 import ru.trader.core.GROUP_TYPE;
 import ru.trader.core.Group;
 
-public class SimpleGroup extends Group {
+public class SimpleGroup implements Group {
     private final String name;
     private final GROUP_TYPE type;
 

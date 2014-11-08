@@ -19,7 +19,7 @@ public class Order implements Comparable<Order> {
     public Order(Offer sell, Offer buy, long count) {
         this.sell = sell;
         this.buy = buy;
-        this.count = count;
+        this.count = Math.min(Math.min(buy.getCount(), sell.getCount()), count);
         this.profit = (buy.getPrice() - sell.getPrice()) * count;
     }
 
@@ -32,7 +32,7 @@ public class Order implements Comparable<Order> {
     }
 
     public void setCount(long count){
-        this.count = count;
+        this.count = Math.min(Math.min(buy.getCount(), sell.getCount()), count);
         this.profit = (buy.getPrice() - sell.getPrice()) * count;
     }
 
@@ -45,7 +45,11 @@ public class Order implements Comparable<Order> {
     }
 
     public double getDistance() {
-        return sell.getVendor().getDistance(buy.getVendor());
+        return sell.getVendor().getPlace().getDistance(buy.getVendor().getPlace()) + buy.getVendor().getDistance() * 3.17e-8;
+    }
+
+    public boolean isBuyer(Place buyer) {
+        return buy.getVendor().getPlace().equals(buyer);
     }
 
     public boolean isBuyer(Vendor buyer) {

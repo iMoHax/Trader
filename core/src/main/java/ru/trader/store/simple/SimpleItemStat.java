@@ -2,15 +2,12 @@ package ru.trader.store.simple;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.trader.core.Item;
-import ru.trader.core.ItemStat;
-import ru.trader.core.OFFER_TYPE;
-import ru.trader.core.Offer;
+import ru.trader.core.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-public class SimpleItemStat extends ItemStat {
+public class SimpleItemStat extends AbstractItemStat {
     private final static Logger LOG = LoggerFactory.getLogger(SimpleItemStat.class);
 
     private final Item item;
@@ -55,12 +52,14 @@ public class SimpleItemStat extends ItemStat {
     }
 
     @Override
-    protected synchronized void update(Offer offer, double price){
+    protected synchronized void updatePrice(AbstractOffer offer, double price) {
         LOG.trace("Update offer {} from item stat {}", offer, this);
         assert offer.hasType(type) && offer.hasItem(item) && offers.contains(offer);
         double oldPrice = offer.getPrice();
         offers.remove(offer);
-        ((SimpleOffer)offer).setPrice(price);
+
+        super.updatePrice(offer, price);
+
         offers.add(offer);
         sum += price - oldPrice;
         avg = sum / offers.size();
@@ -78,30 +77,14 @@ public class SimpleItemStat extends ItemStat {
     }
 
     @Override
-    public synchronized double getAvg(){
-        return avg;
-    }
-
-    @Override
-    public synchronized Offer getBest() {
-        if (offers.isEmpty()) return getFake();
-        return type.getOrder() > 0 ? offers.first() : offers.last();
-    }
-
-    @Override
-    public synchronized int getOffersCount(){
-        return offers.size();
-    }
-
-    @Override
-    public synchronized NavigableSet<Offer> getOffers() {
-        return Collections.unmodifiableNavigableSet(offers);
-    }
-
-    @Override
     public synchronized Offer getMin() {
         if (offers.isEmpty()) return getFake();
         return offers.first();
+    }
+
+    @Override
+    public synchronized double getAvg(){
+        return avg;
     }
 
     @Override
@@ -111,8 +94,36 @@ public class SimpleItemStat extends ItemStat {
     }
 
     @Override
-    public synchronized boolean isEmpty(){
+    public synchronized Offer getBest() {
+        if (offers.isEmpty()) return getFake();
+        return type.getOrder() > 0 ? offers.first() : offers.last();
+    }
+
+    @Override
+    public synchronized NavigableSet<Offer> getOffers() {
+        return Collections.unmodifiableNavigableSet(offers);
+    }
+
+    @Override
+    public synchronized boolean isEmpty() {
         return offers.isEmpty();
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SimpleItemStat)) return false;
+
+        SimpleItemStat itemStat = (SimpleItemStat) o;
+        return type == itemStat.type && item.equals(itemStat.item);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = item.hashCode();
+        result = 31 * result + type.hashCode();
+        return result;
     }
 
     @Override

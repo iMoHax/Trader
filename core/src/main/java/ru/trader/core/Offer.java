@@ -1,44 +1,31 @@
 package ru.trader.core;
 
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
-public abstract class Offer implements Comparable<Offer> {
-    private final static Logger LOG = LoggerFactory.getLogger(Offer.class);
+public interface Offer extends Comparable<Offer> {
 
-    public abstract Item getItem();
+    Item getItem();
+    OFFER_TYPE getType();
+    Vendor getVendor();
 
-    public abstract OFFER_TYPE getType();
+    double getPrice();
+    void setPrice(double price);
 
-    public abstract double getPrice();
-    protected abstract void setPrice(double price);
+    long getCount();
+    void setCount(long count);
 
-    public abstract Vendor getVendor();
-    protected abstract void setVendor(Vendor vendor);
-
-    public boolean hasType(OFFER_TYPE offerType) {
+    default boolean hasType(OFFER_TYPE offerType) {
         return getType().equals(offerType);
     }
 
-    public boolean hasItem(Item item) {
+    default boolean hasItem(Item item) {
         return getItem().equals(item);
     }
 
-    public boolean equalsPrice(Offer offer){
-        return equalsType(offer) && getPrice() == offer.getPrice();
-    }
-
-    public boolean equalsType(Offer offer){
-        return offer != null &&
-               getType().equals(offer.getType()) &&
-               getItem().equals(offer.getItem());
-    }
-
     @Override
-    public int compareTo(@NotNull Offer other) {
+    default int compareTo(@NotNull Offer other) {
         Objects.requireNonNull(other, "Not compare with null");
         if (this == other) return 0;
         int cmp = getType().compareTo(other.getType());
@@ -50,26 +37,12 @@ public abstract class Offer implements Comparable<Offer> {
         return getItem().compareTo(other.getItem());
     }
 
-    public String toVString(){
-        return String.format("%s (%.0f)", getVendor().getName(), getPrice());
+    default String toPString(){
+        return String.format("%s (%.0f)", getVendor().getPlace().getName(), getPrice());
     }
 
-    public String toIString(){
+    default String toIString(){
         return String.format("%s (%.0f)", getItem().getName(), getPrice());
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("{");
-        sb.append("").append(getVendor());
-        sb.append(", ").append(getItem());
-        sb.append(", ").append(getType());
-        if (LOG.isTraceEnabled()){
-            sb.append(", ").append(getPrice());
-        } else {
-            sb.append(", ").append(getPrice());
-        }
-        sb.append('}');
-        return sb.toString();
-    }
 }

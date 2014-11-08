@@ -4,21 +4,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public abstract class Item implements Comparable<Item> {
+public interface Item extends Comparable<Item> {
+    String getName();
+    void setName(String name);
 
-    public abstract String getName();
-    protected abstract void setName(String name);
-
-    public abstract Group getGroup();
-    public abstract void setGroup(Group group);
+    Group getGroup();
 
     @Override
-    public String toString(){
-        return getName();
-    }
-
-    @Override
-    public int compareTo(@NotNull Item other){
+    default int compareTo(@NotNull Item other){
         Objects.requireNonNull(other, "Not compare with null");
         if (this == other) return 0;
         String name = getName();

@@ -15,8 +15,8 @@ public class VendorTest extends Assert {
 
     private final static Item ITEM1 = new SimpleItem("Item1");
     private final static Item ITEM2 = new SimpleItem("Item2");
-    private final static Offer SELL_OFFER = new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 10);
-    private final static Offer BUY_OFFER = new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 10);
+    private final Offer SELL_OFFER = new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 10, 1);
+    private final Offer BUY_OFFER = new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 10, 1);
 
     private Vendor sellVendor;
     private Vendor buyVendor;
