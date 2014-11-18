@@ -60,6 +60,11 @@ public class VendorProxy extends AbstractVendor {
     }
 
     @Override
+    public Collection<SERVICE_TYPE> getServices() {
+        return vendor.getServices();
+    }
+
+    @Override
     protected void addOffer(Offer offer) {
         OfferProxy oProxy = ((OfferProxy)offer);
         oProxy.setVendor(this);

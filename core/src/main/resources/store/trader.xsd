@@ -6,13 +6,19 @@
     <xs:complexType name="marketType">
         <xs:sequence>
             <xs:element name="items" type="itemsType"/>
-            <xs:element name="places" type="vendorsType"/>
+            <xs:element name="places" type="placesType"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="vendorsType">
+    <xs:complexType name="placesType">
         <xs:sequence>
-            <xs:element name="vendor" type="vendorType" maxOccurs="unbounded"/>
+            <xs:element name="place" type="placeType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="servicesType">
+        <xs:sequence>
+            <xs:element name="service" type="serviceType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -44,9 +50,9 @@
         <xs:attribute name="name" type="xs:string" use="required"/>
     </xs:complexType>
 
-    <xs:complexType name="vendorType" mixed="true">
+    <xs:complexType name="placeType" mixed="true">
         <xs:sequence>
-            <xs:element name="offer" type="offerType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="vendor" type="vendorType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="name" type="xs:string" use="required"/>
         <xs:attribute name="x" type="xs:double" use="optional"/>
@@ -54,10 +60,34 @@
         <xs:attribute name="z" type="xs:double" use="optional"/>
     </xs:complexType>
 
+    <xs:complexType name="vendorType" mixed="true">
+        <xs:sequence>
+            <xs:element name="services" type="servicesType"/>
+            <xs:element name="offer" type="offerType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="serviceType">
+        <xs:attribute name="type" type="SERVICE_TYPE" use="required"/>
+    </xs:complexType>
+
+    <xs:simpleType name="SERVICE_TYPE">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="MARKET"/>
+            <xs:enumeration value="BLACK_MARKET"/>
+            <xs:enumeration value="REPAIR"/>
+            <xs:enumeration value="MUNITION"/>
+            <xs:enumeration value="OUTFIT"/>
+            <xs:enumeration value="SHIPYARD"/>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:complexType name="offerType">
         <xs:attribute name="item" type="xs:IDREFS" use="required"/>
         <xs:attribute name="type" type="OFFER_TYPE" use="required"/>
         <xs:attribute name="price" type="xs:double" use="required"/>
+        <xs:attribute name="count" type="xs:long" use="required"/>
     </xs:complexType>
 
     <xs:simpleType name="OFFER_TYPE">

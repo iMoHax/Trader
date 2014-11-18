@@ -18,6 +18,7 @@ public interface Vendor extends Comparable<Vendor> {
     void add(SERVICE_TYPE service);
     void remove(SERVICE_TYPE service);
     boolean has(SERVICE_TYPE service);
+    Collection<SERVICE_TYPE> getServices();
 
     void add(Offer offer);
     Offer addOffer(OFFER_TYPE type, Item item, double price, long count);

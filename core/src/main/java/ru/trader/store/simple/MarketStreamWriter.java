@@ -69,7 +69,7 @@ public class MarketStreamWriter {
     }
 
     protected void writeVendors() throws XMLStreamException {
-        out.writeStartElement(MarketDocHandler.VENDOR_LIST);
+        out.writeStartElement(MarketDocHandler.PLACES_LIST);
         for (Place place : market.get()) {
             for (Vendor vendor : place.get()) {
                 writeVendor(vendor);
@@ -85,6 +85,12 @@ public class MarketStreamWriter {
         out.writeAttribute(MarketDocHandler.X_ATTR, String.valueOf(place.getX()));
         out.writeAttribute(MarketDocHandler.Y_ATTR, String.valueOf(place.getY()));
         out.writeAttribute(MarketDocHandler.Z_ATTR, String.valueOf(place.getZ()));
+        out.writeStartElement(MarketDocHandler.SERVICES_LIST);
+        for (SERVICE_TYPE service_type : vendor.getServices()) {
+            out.writeEmptyElement(MarketDocHandler.SERVICE);
+            out.writeAttribute(MarketDocHandler.TYPE_ATTR, service_type.toString());
+        }
+        out.writeEndElement();
         for (Offer offer : vendor.getAllSellOffers()) {
             writeOffer(offer);
         }

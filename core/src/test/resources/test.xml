@@ -9,11 +9,12 @@
         <item name="Item 6" id="i6"/>
     </items>
     <places>
-        <vendor name="Vendor 1">
-            <offer item="i1" type="SELL" price="140"/>
-        </vendor>
-
-        <vendor name="Empty system" x="1" y="2" z="3"/>
-
+        <place name="Place 1">
+            <vendor name="Vendor 1">
+                <services><service type="MARKET"/></services>
+                <offer item="i1" type="SELL" price="140" count="10"/>
+            </vendor>
+        </place>
+        <place name="Empty system" x="1" y="2" z="3"/>
     </places>
 </market>

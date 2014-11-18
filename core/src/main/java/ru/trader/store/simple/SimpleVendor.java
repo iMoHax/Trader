@@ -84,6 +84,11 @@ public class SimpleVendor extends AbstractVendor {
     }
 
     @Override
+    public Collection<SERVICE_TYPE> getServices() {
+        return services;
+    }
+
+    @Override
     public Collection<Offer> get(OFFER_TYPE offerType) {
         switch (offerType) {
             case SELL: return sell.values();

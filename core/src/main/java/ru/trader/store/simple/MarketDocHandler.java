@@ -16,8 +16,11 @@ public class MarketDocHandler extends DefaultHandler {
     protected final static String MARKET = "market";
     protected final static String ITEM_LIST = "items";
     protected final static String ITEM = "item";
-    protected final static String VENDOR_LIST = "places";
+    protected final static String PLACES_LIST = "places";
+    protected final static String PLACE = "place";
     protected final static String VENDOR = "vendor";
+    protected final static String SERVICES_LIST = "services";
+    protected final static String SERVICE = "service";
     protected final static String OFFER = "offer";
     protected final static String GROUP = "group";
 
@@ -25,6 +28,7 @@ public class MarketDocHandler extends DefaultHandler {
     protected final static String NAME_ATTR = "name";
     protected final static String TYPE_ATTR = "type";
     protected final static String PRICE_ATTR = "price";
+    protected final static String COUNT_ATTR = "count";
     protected final static String ITEM_ATTR = "item";
     protected final static String X_ATTR = "x";
     protected final static String Y_ATTR = "y";
@@ -32,7 +36,7 @@ public class MarketDocHandler extends DefaultHandler {
 
     protected SimpleMarket world;
     protected Vendor curVendor;
-    protected Place curSystem;
+    protected Place curPlace;
     protected Group curGroup;
     protected final HashMap<String,Item> items = new HashMap<>();
 
@@ -46,7 +50,11 @@ public class MarketDocHandler extends DefaultHandler {
         switch (qName){
             case ITEM: parseItem(attributes);
                 break;
+            case PLACE: parsePlace(attributes);
+                break;
             case VENDOR: parseVendor(attributes);
+                break;
+            case SERVICE: parseService(attributes);
                 break;
             case OFFER: parseOffer(attributes);
                 break;
@@ -58,7 +66,9 @@ public class MarketDocHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName){
-            case VENDOR: curVendor = null; curSystem = null;
+            case PLACE: curPlace = null;
+                break;
+            case VENDOR: curVendor = null;
                 break;
             case GROUP: curGroup = null;
                 break;
@@ -70,14 +80,27 @@ public class MarketDocHandler extends DefaultHandler {
         world.commit();
     }
 
-    protected void parseVendor(Attributes attributes) throws SAXException {
+    protected void parsePlace(Attributes attributes) throws SAXException {
         String name = attributes.getValue(NAME_ATTR);
         String x = attributes.getValue(X_ATTR);
         String y = attributes.getValue(Y_ATTR);
         String z = attributes.getValue(Z_ATTR);
-        LOG.debug("parse vendor {} position ({};{};{})", name, x, y, z);
-        onVendor(name, x != null ? Double.valueOf(x) : 0, y != null ? Double.valueOf(y) : 0, z != null ? Double.valueOf(z) : 0);
+        LOG.debug("parse place {} position ({};{};{})", name, x, y, z);
+        onPlace(name, x != null ? Double.valueOf(x) : 0, y != null ? Double.valueOf(y) : 0, z != null ? Double.valueOf(z) : 0);
     }
+
+    protected void parseVendor(Attributes attributes) throws SAXException {
+        String name = attributes.getValue(NAME_ATTR);
+        LOG.debug("parse vendor {} position ({};{};{})", name);
+        onVendor(name);
+    }
+
+    protected void parseService(Attributes attributes) throws SAXException {
+        SERVICE_TYPE type = SERVICE_TYPE.valueOf(attributes.getValue(TYPE_ATTR));
+        LOG.debug("add service {}", type);
+        onService(type);
+    }
+
 
     protected void parseItem(Attributes attributes) throws SAXException {
         String name = attributes.getValue(NAME_ATTR);
@@ -93,7 +116,8 @@ public class MarketDocHandler extends DefaultHandler {
             throw new SAXException(String.format("Item (id = %s) not found", refid));
         OFFER_TYPE offerType = OFFER_TYPE.valueOf(attributes.getValue(TYPE_ATTR));
         double price = Double.valueOf(attributes.getValue(PRICE_ATTR));
-        onOffer(offerType, item, price);
+        long count = Long.valueOf(attributes.getValue(COUNT_ATTR));
+        onOffer(offerType, item, price, count);
     }
 
     protected void parseGroup(Attributes attributes) throws SAXException {
@@ -103,16 +127,20 @@ public class MarketDocHandler extends DefaultHandler {
         onGroup(name, type);
     }
 
-    protected void onOffer(OFFER_TYPE offerType, Item item, double price){
-        if (curVendor == null){
-            curVendor = curSystem.addVendor("STATION OF "+curSystem.getName());
-            curVendor.add(SERVICE_TYPE.MARKET);
-        }
-        curVendor.addOffer(offerType, item, price, 1000);
+    protected void onOffer(OFFER_TYPE offerType, Item item, double price, long count){
+        curVendor.addOffer(offerType, item, price, count);
     }
 
-    protected void onVendor(String name, double x, double y, double z){
-        curSystem = world.addPlace(name, x, y, z);
+    protected void onPlace(String name, double x, double y, double z){
+        curPlace = world.addPlace(name, x, y, z);
+    }
+
+    protected void onVendor(String name){
+        curVendor = curPlace.addVendor(name);
+    }
+
+    protected void onService(SERVICE_TYPE type){
+        curVendor.add(type);
     }
 
     protected void onItem(String name, String id) {

@@ -3,6 +3,7 @@ package ru.trader.store.berkeley.entities;
 import com.sleepycat.persist.model.*;
 import ru.trader.core.SERVICE_TYPE;
 
+import java.util.Collection;
 import java.util.EnumSet;
 
 @Entity(version = 1)
@@ -69,4 +70,7 @@ public class BDBVendor {
         return services.contains(service);
     }
 
+    public Collection<SERVICE_TYPE> getServices() {
+        return services;
+    }
 }
