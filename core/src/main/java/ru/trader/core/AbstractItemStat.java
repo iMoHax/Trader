@@ -156,6 +156,11 @@ public abstract class AbstractItemStat implements ItemStat {
         }
 
         @Override
+        public Collection<SERVICE_TYPE> getServices() {
+            return Collections.emptyList();
+        }
+
+        @Override
         public Offer addOffer(OFFER_TYPE type, Item item, double price, long count) {
             throw new UnsupportedOperationException("Is fake vendor, change unsupported");
         }
@@ -172,7 +177,7 @@ public abstract class AbstractItemStat implements ItemStat {
 
         @Override
         public Collection<Offer> get(OFFER_TYPE type) {
-            return null;
+            return Collections.emptyList();
         }
 
         @Override
