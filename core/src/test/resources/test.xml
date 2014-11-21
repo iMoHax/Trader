@@ -10,7 +10,7 @@
     </items>
     <places>
         <place name="Place 1">
-            <vendor name="Vendor 1">
+            <vendor name="Vendor 1" distance="10000.4">
                 <services><service type="MARKET"/></services>
                 <offer item="i1" type="SELL" price="140" count="10"/>
             </vendor>

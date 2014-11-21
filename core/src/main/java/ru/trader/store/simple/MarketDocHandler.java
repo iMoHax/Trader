@@ -30,6 +30,7 @@ public class MarketDocHandler extends DefaultHandler {
     protected final static String PRICE_ATTR = "price";
     protected final static String COUNT_ATTR = "count";
     protected final static String ITEM_ATTR = "item";
+    protected final static String DISTANCE_ATTR = "distance";
     protected final static String X_ATTR = "x";
     protected final static String Y_ATTR = "y";
     protected final static String Z_ATTR = "z";
@@ -91,8 +92,9 @@ public class MarketDocHandler extends DefaultHandler {
 
     protected void parseVendor(Attributes attributes) throws SAXException {
         String name = attributes.getValue(NAME_ATTR);
-        LOG.debug("parse vendor {} position ({};{};{})", name);
-        onVendor(name);
+        String distance = attributes.getValue(DISTANCE_ATTR);
+        LOG.debug("parse vendor {}, distance {}", name, distance);
+        onVendor(name, distance != null ? Double.valueOf(distance) : 0);
     }
 
     protected void parseService(Attributes attributes) throws SAXException {
@@ -135,8 +137,9 @@ public class MarketDocHandler extends DefaultHandler {
         curPlace = world.addPlace(name, x, y, z);
     }
 
-    protected void onVendor(String name){
+    protected void onVendor(String name, double distance){
         curVendor = curPlace.addVendor(name);
+        curVendor.setDistance(distance);
     }
 
     protected void onService(SERVICE_TYPE type){
