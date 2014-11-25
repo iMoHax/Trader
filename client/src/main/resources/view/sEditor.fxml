@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import ru.trader.view.support.cells.PriceCellImpl?>
+<?import ru.trader.view.support.cells.OfferCellValueImpl?>
+
+<?import ru.trader.view.support.cells.DoubleCell?>
+<?import org.controlsfx.glyphfont.Glyph?>
+<?import org.controlsfx.control.SegmentedButton?>
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="ru.trader.controllers.SystemsEditorController"  styleClass="dialog"
+          hgap="10" vgap="5" prefHeight="400">
+
+    <columnConstraints>
+        <ColumnConstraints />
+        <ColumnConstraints minWidth="180" />
+        <ColumnConstraints minWidth="180" />
+        <ColumnConstraints minWidth="180" />
+    </columnConstraints>
+
+    <Label text="%sEditor.text.orientates" prefWidth="170" GridPane.rowSpan="2"/>
+    <ComboBox fx:id="system1" prefWidth="160" GridPane.columnIndex="1" />
+    <ComboBox fx:id="system2" prefWidth="160" GridPane.columnIndex="2" />
+    <ComboBox fx:id="system3" prefWidth="160" GridPane.columnIndex="3" />
+    <ComboBox fx:id="system4" prefWidth="160" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+    <ComboBox fx:id="system5" prefWidth="160" GridPane.rowIndex="1" GridPane.columnIndex="2" />
+    <ComboBox fx:id="system6" prefWidth="160" GridPane.rowIndex="1" GridPane.columnIndex="3" />
+
+    <TableView fx:id="tblSystems" editable="true" prefWidth="725.0" GridPane.rowIndex="2" GridPane.columnSpan="4">
+        <columns>
+            <TableColumn fx:id="clnName" minWidth="180.0" text="%market.systems">
+                <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="clnX" minWidth="60.0" text="x">
+                <cellValueFactory><PropertyValueFactory property="x"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="clnY" minWidth="60.0" text="y">
+                <cellValueFactory><PropertyValueFactory property="y"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="clnZ" minWidth="60.0" text="z">
+                <cellValueFactory><PropertyValueFactory property="z"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn text="%sEditor.table.distance">
+                <columns>
+                    <TableColumn fx:id="clnS1" minWidth="60.0" text="">
+                        <cellValueFactory><PropertyValueFactory property="s1"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="clnS2" minWidth="60.0" text="">
+                        <cellValueFactory><PropertyValueFactory property="s2"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="clnS3" minWidth="60.0" text="">
+                        <cellValueFactory><PropertyValueFactory property="s3"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="clnS4" minWidth="60.0" text="">
+                        <cellValueFactory><PropertyValueFactory property="s4"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="clnS5" minWidth="60.0" text="">
+                        <cellValueFactory><PropertyValueFactory property="s5"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="clnS6" minWidth="60.0" text="">
+                        <cellValueFactory><PropertyValueFactory property="s6"/></cellValueFactory>
+                    </TableColumn>
+                </columns>
+            </TableColumn>
+
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+    </TableView>
+</GridPane>

@@ -6,17 +6,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.controllers.MainController;
 import ru.trader.core.OFFER_TYPE;
+import ru.trader.core.SERVICE_TYPE;
 import ru.trader.model.*;
 
 
 public class StationUpdater {
     private final static Logger LOG = LoggerFactory.getLogger(StationUpdater.class);
+    private final static SERVICE_TYPE[] SERVICE_TYPES = SERVICE_TYPE.values();
     private final ObservableList<FakeOffer> offers;
     private final StringProperty name;
-    private final DoubleProperty x;
-    private final DoubleProperty y;
-    private final DoubleProperty z;
+    private final DoubleProperty distance;
+    private final BooleanProperty[] services;
     private final MarketModel market;
+
     private SystemModel system;
     private StationModel station;
     private boolean updateOnly;
@@ -25,9 +27,11 @@ public class StationUpdater {
         this.market = market;
         this.offers = BindingsHelper.observableList(MainController.getMarket().itemsProperty(), FakeOffer::new);
         this.name = new SimpleStringProperty();
-        this.x = new SimpleDoubleProperty(0);
-        this.y = new SimpleDoubleProperty(0);
-        this.z = new SimpleDoubleProperty(0);
+        this.distance = new SimpleDoubleProperty(0);
+        this.services = new BooleanProperty[SERVICE_TYPES.length];
+        for (int i = 0; i < services.length; i++) {
+            services[i] = new SimpleBooleanProperty();
+        }
         this.updateOnly = false;
     }
 
@@ -35,18 +39,20 @@ public class StationUpdater {
         LOG.debug("Init update of {}", station);
         this.station = station;
         this.system = system;
+        for (BooleanProperty service : services) {
+            service.set(false);
+        }
         if (station != null){
             name.setValue(station.getName());
-            x.setValue(system.getX());
-            y.setValue(system.getY());
-            z.setValue(system.getZ());
+            distance.setValue(station.getDistance());
+            for (SERVICE_TYPE service : station.getServices()) {
+                serviceProperty(service).set(true);
+            }
             station.getSells().forEach(this::fillOffer);
             station.getBuys().forEach(this::fillOffer);
         } else {
             name.setValue("");
-            x.setValue(0);
-            y.setValue(0);
-            z.setValue(0);
+            distance.setValue(0);
         }
     }
 
@@ -82,28 +88,16 @@ public class StationUpdater {
         return name;
     }
 
-    public double getX() {
-        return x.get();
+    public double getDistance() {
+        return distance.get();
     }
 
-    public DoubleProperty xProperty() {
-        return x;
+    public DoubleProperty distanceProperty() {
+        return distance;
     }
 
-    public double getY() {
-        return y.get();
-    }
-
-    public DoubleProperty yProperty() {
-        return y;
-    }
-
-    public double getZ() {
-        return z.get();
-    }
-
-    public DoubleProperty zProperty() {
-        return z;
+    public BooleanProperty serviceProperty(SERVICE_TYPE service){
+        return services[service.ordinal()];
     }
 
     public void add(int index, ItemModel item){
@@ -112,16 +106,29 @@ public class StationUpdater {
 
     public void commit(){
         LOG.debug("Save changes of {}", station);
-        system.setPosition(x.get(), y.get(), z.get());
         if (isNew()) {
             Notificator notificator = market.getNotificator();
             notificator.setAlert(false);
             station = system.add(name.get());
+            station.setDistance(distance.get());
+            for (int i = 0; i < services.length; i++) {
+                if (services[i].get()){
+                    station.addService(SERVICE_TYPES[i]);
+                }
+            }
             offers.forEach(FakeOffer::commit);
             notificator.setAlert(true);
             notificator.sendAdd(station);
         } else {
             station.setName(name.get());
+            station.setDistance(distance.get());
+            for (int i = 0; i < services.length; i++) {
+                if (services[i].get()){
+                    station.addService(SERVICE_TYPES[i]);
+                } else {
+                    station.removeService(SERVICE_TYPES[i]);
+                }
+            }
             offers.forEach(FakeOffer::commit);
         }
     }
@@ -268,11 +275,13 @@ public class StationUpdater {
         public void setSell(OfferModel sell) {
             this.sell = sell;
             sprice.set(sell.getPrice());
+            supply.set(sell.getCount());
         }
 
         public void setBuy(OfferModel buy) {
             this.buy = buy;
             bprice.set(buy.getPrice());
+            demand.set(buy.getCount());
         }
 
         public void reset(){

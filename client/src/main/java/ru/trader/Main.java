@@ -92,6 +92,7 @@ public class Main extends Application {
         Screeners.loadTopOrdersStage(getUrl(("topOrders.fxml")));
         Screeners.loadPathsStage(getUrl(("paths.fxml")));
         Screeners.loadSettingsStage(getUrl(("settings.fxml")));
+        Screeners.loadSEditorStage(getUrl(("sEditor.fxml")));
     }
 
     private static URL getUrl(String filename) throws MalformedURLException {

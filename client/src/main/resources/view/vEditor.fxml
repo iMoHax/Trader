@@ -14,13 +14,22 @@
       vgap="10" hgap="4">
     <fx:define><Insets fx:id="hbox_margin" left="10" /></fx:define>
     <TextField fx:id="name" GridPane.columnSpan="2" alignment="CENTER" />
-    <HBox GridPane.rowIndex="1" GridPane.columnIndex="1" spacing="4" alignment="BASELINE_CENTER">
-        <Label text="x:" HBox.margin="$hbox_margin" />
-        <NumberField fx:id="x" prefWidth="60" />
-        <Label text="z:" HBox.margin="$hbox_margin" />
-        <NumberField fx:id="z" prefWidth="60" />
-        <Label text="y:" HBox.margin="$hbox_margin" />
-        <NumberField fx:id="y" prefWidth="60" />
+    <HBox GridPane.rowIndex="1" GridPane.columnIndex="1" spacing="4">
+        <VBox prefWidth="200" alignment="CENTER">
+            <Label text="%vEditor.text.distance"/>
+            <NumberField fx:id="distance" maxWidth="60" />
+        </VBox>
+        <VBox HBox.hgrow="ALWAYS" alignment="CENTER">
+            <Label text="%vEditor.text.services"/>
+            <TilePane hgap="5" vgap="5" maxWidth="320" tileAlignment="BASELINE_LEFT">
+                <CheckBox fx:id="cbMarket" text="%services.MARKET"/>
+                <CheckBox fx:id="cbBlackMarket" text="%services.BLACK_MARKET"/>
+                <CheckBox fx:id="cbRepair" text="%services.REPAIR"/>
+                <CheckBox fx:id="cbMunition" text="%services.MUNITION"/>
+                <CheckBox fx:id="cbOutfit" text="%services.OUTFIT"/>
+                <CheckBox fx:id="cbShipyard" text="%services.SHIPYARD"/>
+            </TilePane>
+        </VBox>
     </HBox>
     <VBox GridPane.rowIndex="2" alignment="CENTER" spacing="10">
         <Button prefWidth="30" onAction="#up"><graphic><Glyph text="FontAwesome|ARROW_UP"/></graphic></Button>
@@ -28,7 +37,7 @@
         <Button prefWidth="30" onAction="#add"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
         <Button prefWidth="30" onAction="#updateFromEMDN"><graphic><Glyph text="FontAwesome|REFRESH"/></graphic></Button>
     </VBox>
-    <TableView fx:id="items" prefWidth="395.0" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+    <TableView fx:id="items" prefWidth="575" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
         <columns>
             <TableColumn minWidth="200.0" text="%market.item.name" editable="false">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
@@ -38,6 +47,12 @@
             </TableColumn>
             <TableColumn fx:id="sell" minWidth="90.0" text="%market.offer.buy">
                 <cellValueFactory><PropertyValueFactory property="sprice"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="demand" minWidth="90.0" text="%market.offer.demand">
+                <cellValueFactory><PropertyValueFactory property="demand"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="supply" minWidth="90.0" text="%market.offer.supply">
+                <cellValueFactory><PropertyValueFactory property="supply"/></cellValueFactory>
             </TableColumn>
         </columns>
     </TableView>

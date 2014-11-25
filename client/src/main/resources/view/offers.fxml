@@ -22,7 +22,7 @@
         <ColumnConstraints fillWidth="true"/>
     </columnConstraints>
 
-    <TitledPane GridPane.rowSpan="2" text="%market.systems" minWidth="250" prefHeight="510" collapsible="false">
+    <TitledPane GridPane.rowSpan="3" text="%market.systems" minWidth="250" prefHeight="530" collapsible="false">
         <ListView fx:id="systems">
             <contextMenu>
                 <ContextMenu>
@@ -38,7 +38,23 @@
     <TitledPane GridPane.columnIndex="1" text="%market.stations" maxHeight="60" collapsible="false">
         <SegmentedButton fx:id="stationsBar" />
     </TitledPane>
-    <Accordion GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+    <TitledPane GridPane.rowIndex="1" GridPane.columnIndex="1" text="" maxHeight="60" collapsible="false">
+        <HBox spacing="4">
+            <Label text="%offers.text.distance"/>
+            <Label fx:id="distance" minWidth="60"/>
+            <Label text="%offers.text.services"/>
+            <HBox spacing="20">
+                <CheckBox fx:id="cbMarket" text="%services.MARKET"/>
+                <CheckBox fx:id="cbBlackMarket" text="%services.BLACK_MARKET"/>
+                <CheckBox fx:id="cbRepair" text="%services.REPAIR"/>
+                <CheckBox fx:id="cbMunition" text="%services.MUNITION"/>
+                <CheckBox fx:id="cbOutfit" text="%services.OUTFIT"/>
+                <CheckBox fx:id="cbShipyard" text="%services.SHIPYARD"/>
+            </HBox>
+        </HBox>
+
+    </TitledPane>
+    <Accordion GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
         <panes>
             <TitledPane fx:id="paneSells" animated="false" text="%offers.pane.sell">
               <TableView fx:id="tblSell" editable="true">

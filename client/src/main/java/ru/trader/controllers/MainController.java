@@ -17,6 +17,7 @@ import ru.trader.World;
 import ru.trader.model.ItemModel;
 import ru.trader.model.MarketModel;
 import ru.trader.model.StationModel;
+import ru.trader.model.SystemModel;
 import ru.trader.view.support.Localization;
 
 import javax.xml.stream.XMLStreamException;
@@ -141,11 +142,12 @@ public class MainController {
 
 
     public void addSystem(ActionEvent actionEvent){
-        //TODO: implement
+        Screeners.showSystemsEditor(null);
     }
 
     public void editSystem(ActionEvent actionEvent){
-        //TODO: implement
+        SystemModel system = offersController.getSystem();
+        Screeners.showSystemsEditor(system);
     }
 
     public void removeSystem(ActionEvent actionEvent){
@@ -153,7 +155,10 @@ public class MainController {
     }
 
     public void addStation(ActionEvent actionEvent) {
-        Screeners.showAddStation(offersController.getSystem());
+        SystemModel system = offersController.getSystem();
+        if (system != null){
+            Screeners.showAddStation(offersController.getSystem());
+        }
     }
 
     public void editStation(ActionEvent actionEvent) {

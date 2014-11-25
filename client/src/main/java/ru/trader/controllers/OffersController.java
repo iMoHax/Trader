@@ -14,9 +14,11 @@ import org.controlsfx.control.SegmentedButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javafx.fxml.FXML;
+import ru.trader.core.SERVICE_TYPE;
 import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.model.support.ChangeMarketListener;
+import ru.trader.view.support.NumberField;
 
 import java.util.List;
 
@@ -29,18 +31,28 @@ public class OffersController {
 
     @FXML
     private Insets stationsMargin;
-
     @FXML
     private ListView<SystemModel> systems;
-
     @FXML
     private SegmentedButton stationsBar;
-
     @FXML
     private TableView<OfferModel> tblSell;
-
     @FXML
     private TableView<OfferModel> tblBuy;
+    @FXML
+    private Label distance;
+    @FXML
+    private CheckBox cbMarket;
+    @FXML
+    private CheckBox cbBlackMarket;
+    @FXML
+    private CheckBox cbRepair;
+    @FXML
+    private CheckBox cbMunition;
+    @FXML
+    private CheckBox cbOutfit;
+    @FXML
+    private CheckBox cbShipyard;
 
     private final List<OfferModel> sells = FXCollections.observableArrayList();
     private final List<OfferModel> buys = FXCollections.observableArrayList();
@@ -106,7 +118,6 @@ public class OffersController {
         }
 
         station = stations.isEmpty() ? null : stations.get(0);
-        LOG.info("Change station to {}", station);
         fillTables(station);
     }
 
@@ -117,9 +128,24 @@ public class OffersController {
     }
 
     private void fillTables(StationModel station){
+        LOG.info("Change station to {}", station);
         sells.clear();
         buys.clear();
+        distance.setText("");
+        cbMarket.setSelected(false);
+        cbBlackMarket.setSelected(false);
+        cbMunition.setSelected(false);
+        cbRepair.setSelected(false);
+        cbOutfit.setSelected(false);
+        cbShipyard.setSelected(false);
         if (station != null){
+            distance.setText(String.valueOf(station.getDistance()));
+            cbMarket.setSelected(station.hasService(SERVICE_TYPE.MARKET));
+            cbBlackMarket.setSelected(station.hasService(SERVICE_TYPE.BLACK_MARKET));
+            cbMunition.setSelected(station.hasService(SERVICE_TYPE.MUNITION));
+            cbRepair.setSelected(station.hasService(SERVICE_TYPE.REPAIR));
+            cbOutfit.setSelected(station.hasService(SERVICE_TYPE.OUTFIT));
+            cbShipyard.setSelected(station.hasService(SERVICE_TYPE.SHIPYARD));
             sells.addAll(station.getSells());
             buys.addAll(station.getBuys());
         }
@@ -202,6 +228,7 @@ public class OffersController {
 
         @Override
         public void add(StationModel station) {
+            stationsBar.getButtons().add(buildStationNode(station));
             refresh();
             sort();
         }

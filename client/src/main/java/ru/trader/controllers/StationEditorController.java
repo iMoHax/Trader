@@ -2,9 +2,11 @@ package ru.trader.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.util.converter.LongStringConverter;
 import org.controlsfx.control.ButtonBar;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
@@ -12,6 +14,7 @@ import org.controlsfx.dialog.DialogAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.EMDNUpdater;
+import ru.trader.core.SERVICE_TYPE;
 import ru.trader.model.*;
 import ru.trader.model.support.StationUpdater;
 import ru.trader.view.support.Localization;
@@ -19,6 +22,7 @@ import ru.trader.view.support.NumberField;
 import ru.trader.view.support.PriceStringConverter;
 import ru.trader.view.support.ViewUtils;
 import ru.trader.view.support.cells.EditOfferCell;
+import ru.trader.view.support.cells.TextFieldCell;
 
 import java.util.Optional;
 
@@ -35,13 +39,25 @@ public class StationEditorController {
     private TableColumn<StationUpdater.FakeOffer, Double> buy;
     @FXML
     private TableColumn<StationUpdater.FakeOffer, Double> sell;
+    @FXML
+    private TableColumn<StationUpdater.FakeOffer, Long> supply;
+    @FXML
+    private TableColumn<StationUpdater.FakeOffer, Long> demand;
 
     @FXML
-    private NumberField x;
+    private NumberField distance;
     @FXML
-    private NumberField y;
+    private CheckBox cbMarket;
     @FXML
-    private NumberField z;
+    private CheckBox cbBlackMarket;
+    @FXML
+    private CheckBox cbRepair;
+    @FXML
+    private CheckBox cbMunition;
+    @FXML
+    private CheckBox cbOutfit;
+    @FXML
+    private CheckBox cbShipyard;
 
     private StationUpdater updater;
 
@@ -61,11 +77,11 @@ public class StationEditorController {
         items.getSelectionModel().setCellSelectionEnabled(true);
         buy.setCellFactory(EditOfferCell.forTable(new PriceStringConverter(), false));
         sell.setCellFactory(EditOfferCell.forTable(new PriceStringConverter(), true));
-        actSave.disabledProperty().bind(x.wrongProperty().or(y.wrongProperty().or(z.wrongProperty())));
-        name.setOnAction((v)->x.requestFocus());
-        x.setOnAction((v) -> z.requestFocus());
-        z.setOnAction((v) -> y.requestFocus());
-        y.setOnAction((v) -> {
+        demand.setCellFactory(TextFieldCell.forTableColumn(new LongStringConverter()));
+        supply.setCellFactory(TextFieldCell.forTableColumn(new LongStringConverter()));
+        actSave.disabledProperty().bind(distance.wrongProperty());
+        name.setOnAction((v)->distance.requestFocus());
+        distance.setOnAction((v) -> {
             items.requestFocus();
             items.getSelectionModel().select(0, buy);
         });
@@ -73,11 +89,19 @@ public class StationEditorController {
     }
 
     private void init(){
+        if (updater != null){
+            name.textProperty().unbindBidirectional(updater.nameProperty());
+            distance.numberProperty().unbindBidirectional(updater.distanceProperty());
+        }
         updater = new StationUpdater(MainController.getMarket());
         name.textProperty().bindBidirectional(updater.nameProperty());
-        x.numberProperty().bindBidirectional(updater.xProperty());
-        y.numberProperty().bindBidirectional(updater.yProperty());
-        z.numberProperty().bindBidirectional(updater.zProperty());
+        distance.numberProperty().bindBidirectional(updater.distanceProperty());
+        cbMarket.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.MARKET));
+        cbBlackMarket.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.BLACK_MARKET));
+        cbMunition.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.MUNITION));
+        cbRepair.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.REPAIR));
+        cbOutfit.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.OUTFIT));
+        cbShipyard.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.SHIPYARD));
         items.setItems(updater.getOffers());
     }
 

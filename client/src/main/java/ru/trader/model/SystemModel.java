@@ -72,6 +72,10 @@ public class SystemModel {
         return system.getDistance(other.getSystem());
     }
 
+    public double getDistance(double x, double y, double z){
+        return system.getDistance(x, y, z);
+    }
+
     public List<StationModel> getStations() {
         return system.get().stream().map(this::asModel).collect(Collectors.toList());
     }

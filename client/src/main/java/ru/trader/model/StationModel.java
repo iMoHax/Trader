@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.OFFER_TYPE;
 import ru.trader.core.Offer;
+import ru.trader.core.SERVICE_TYPE;
 import ru.trader.core.Vendor;
 
 import java.util.*;
@@ -47,6 +48,26 @@ public class StationModel {
         if (getDistance() == value) return;
         LOG.info("Change distance station {} to {}", station, value);
         station.setDistance(value);
+    }
+
+    public boolean hasService(SERVICE_TYPE service){
+        return station.has(service);
+    }
+
+    public Collection<SERVICE_TYPE> getServices(){
+        return station.getServices();
+    }
+
+    public void addService(SERVICE_TYPE service){
+        if (station.has(service)) return;
+        LOG.info("Add service {} to station {}",  service, station);
+        station.add(service);
+    }
+
+    public void removeService(SERVICE_TYPE service){
+        if (!station.has(service)) return;
+        LOG.info("Remove service {} from station {}",  service, station);
+        station.remove(service);
     }
 
     public SystemModel getSystem(){

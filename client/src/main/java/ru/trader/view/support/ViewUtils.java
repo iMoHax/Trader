@@ -19,6 +19,7 @@ public class ViewUtils {
     // Edit next cell
     public static <S> void editNext(TableView<S> tableView){
         TableView.TableViewSelectionModel<S> sm = tableView.getSelectionModel();
+        if (!sm.isCellSelectionEnabled()) return;
         sm.selectNext();
         ObservableList<TablePosition> pos = sm.getSelectedCells();
         for (TablePosition p : pos) {

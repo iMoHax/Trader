@@ -28,6 +28,7 @@ public class Screeners {
     private static Parent topOrdersScreen;
     private static Parent pathsScreen;
     private static Parent settingsScreen;
+    private static Parent sEditorScreen;
 
     private static MainController mainController;
     private static ItemDescController itemDescController;
@@ -37,6 +38,7 @@ public class Screeners {
     private static TopOrdersController topOrdersController;
     private static PathsController pathsController;
     private static SettingsController settingsController;
+    private static SystemsEditorController systemsEditorController;
 
     private static FXMLLoader initLoader(URL url){
         FXMLLoader loader = new FXMLLoader(url, Localization.getResources());
@@ -118,6 +120,14 @@ public class Screeners {
         stage.setScene(new Scene(settingsScreen));
     }
 
+    public static void loadSEditorStage(URL fxml) throws IOException {
+        FXMLLoader loader =  initLoader(fxml);
+        sEditorScreen = loader.load();
+        addStylesheet(sEditorScreen);
+        systemsEditorController = loader.getController();
+    }
+
+
     public static void show(Node node){
         mainController.getMainPane().setCenter(node);
     }
@@ -129,6 +139,10 @@ public class Screeners {
 
     public static Action showConfirm(String text){
         return Dialogs.create().owner(mainScreen).message(text).showConfirm();
+    }
+
+    public static void showSystemsEditor(SystemModel system){
+        systemsEditorController.showDialog(mainScreen, sEditorScreen, system);
     }
 
     public static void showAddStation(SystemModel system){
