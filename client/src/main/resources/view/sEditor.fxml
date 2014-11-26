@@ -30,7 +30,16 @@
     <ComboBox fx:id="system5" prefWidth="160" GridPane.rowIndex="1" GridPane.columnIndex="2" />
     <ComboBox fx:id="system6" prefWidth="160" GridPane.rowIndex="1" GridPane.columnIndex="3" />
 
-    <TableView fx:id="tblSystems" editable="true" prefWidth="725.0" GridPane.rowIndex="2" GridPane.columnSpan="4">
+    <HBox GridPane.rowIndex="2" spacing="4">
+        <Button prefWidth="30" onAction="#add">
+            <graphic><Glyph text="FontAwesome|PLUS"/></graphic>
+        </Button>
+        <Button prefWidth="30" onAction="#compute">
+            <graphic><Glyph text="FontAwesome|CROSSHAIRS"/></graphic>
+        </Button>
+    </HBox>
+
+    <TableView fx:id="tblSystems" editable="true" prefWidth="725.0" GridPane.rowIndex="3" GridPane.columnSpan="4">
         <columns>
             <TableColumn fx:id="clnName" minWidth="180.0" text="%market.systems">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>

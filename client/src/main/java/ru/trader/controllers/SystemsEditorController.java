@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.model.MarketModel;
 import ru.trader.model.SystemModel;
+import ru.trader.model.support.PositionComputer;
 import ru.trader.view.support.Localization;
 import ru.trader.view.support.cells.TextFieldCell;
 
@@ -83,6 +84,13 @@ public class SystemsEditorController {
         clnS6.setCellFactory(TextFieldCell.forTableColumn(new DoubleStringConverter()));
         tblSystems.setItems(FXCollections.observableArrayList());
         tblSystems.getSelectionModel().setCellSelectionEnabled(true);
+        tblSystems.setSortPolicy(t -> true);
+        system1.valueProperty().addListener((ov, o, n) -> clnS1.setText(n != null ? n.getName() : ""));
+        system2.valueProperty().addListener((ov, o, n) -> clnS2.setText(n != null ? n.getName() : ""));
+        system3.valueProperty().addListener((ov, o, n) -> clnS3.setText(n != null ? n.getName() : ""));
+        system4.valueProperty().addListener((ov, o, n) -> clnS4.setText(n != null ? n.getName() : ""));
+        system5.valueProperty().addListener((ov, o, n) -> clnS5.setText(n != null ? n.getName() : ""));
+        system6.valueProperty().addListener((ov, o, n) -> clnS6.setText(n != null ? n.getName() : ""));
         init();
     }
 
@@ -111,10 +119,33 @@ public class SystemsEditorController {
         reset();
     }
 
-    public void add() {
+    public void add(){
         tblSystems.getItems().add(new SystemData());
     }
 
+    public void compute(){
+        SystemModel sys1 = system1.getValue();
+        SystemModel sys2 = system2.getValue();
+        SystemModel sys3 = system3.getValue();
+        SystemModel sys4 = system4.getValue();
+        SystemModel sys5 = system5.getValue();
+        SystemModel sys6 = system6.getValue();
+
+        for (SystemData systemData : tblSystems.getItems()) {
+            if (systemData.name.isEmpty().get()) continue;
+            PositionComputer computer = new PositionComputer();
+            if (sys1 != null) computer.addLandMark(sys1, systemData.s1.get());
+            if (sys2 != null) computer.addLandMark(sys2, systemData.s2.get());
+            if (sys3 != null) computer.addLandMark(sys3, systemData.s3.get());
+            if (sys4 != null) computer.addLandMark(sys4, systemData.s4.get());
+            if (sys5 != null) computer.addLandMark(sys5, systemData.s5.get());
+            if (sys6 != null) computer.addLandMark(sys6, systemData.s6.get());
+            PositionComputer.Coordinates coord = computer.compute();
+            systemData.x.set(coord.getX());
+            systemData.y.set(coord.getY());
+            systemData.z.set(coord.getZ());
+        }
+    }
 
     private void commit(){
         for (SystemData systemData : tblSystems.getItems()) {
@@ -196,8 +227,12 @@ public class SystemsEditorController {
             return s6;
         }
 
+        public boolean isEmpty(){
+            return name.get().isEmpty() || Double.isNaN(x.get()) || Double.isNaN(y.get()) || Double.isNaN(z.get());
+        }
+
         private void commit(){
-            if (!name.get().isEmpty() && !Double.isNaN(x.get()) && !Double.isNaN(y.get()) && !Double.isNaN(z.get())){
+            if (!isEmpty()){
                 if (system != null){
                     system.setName(name.get());
                     system.setPosition(x.get(), y.get(), z.get());
