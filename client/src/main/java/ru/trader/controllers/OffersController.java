@@ -117,8 +117,7 @@ public class OffersController {
             stationsBar.getButtons().get(0).setSelected(true);
         }
 
-        station = stations.isEmpty() ? null : stations.get(0);
-        fillTables(station);
+        fillTables(stations.isEmpty() ? null : stations.get(0));
     }
 
     private ToggleButton buildStationNode(StationModel station){
@@ -129,6 +128,7 @@ public class OffersController {
 
     private void fillTables(StationModel station){
         LOG.info("Change station to {}", station);
+        this.station = station;
         sells.clear();
         buys.clear();
         distance.setText("");
