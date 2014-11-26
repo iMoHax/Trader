@@ -12,6 +12,10 @@ public class Settings {
     private final Properties values = new Properties();
     private final File file;
 
+    public Settings() {
+        this.file = null;
+    }
+
     public Settings(File file) {
         this.file = file;
     }

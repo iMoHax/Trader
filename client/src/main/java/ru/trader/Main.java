@@ -22,7 +22,7 @@ import java.util.Locale;
 
 public class Main extends Application {
     private final static Logger LOG = LoggerFactory.getLogger(Main.class);
-    public static Settings SETTINGS;
+    public static Settings SETTINGS = new Settings();
     private static Stage primaryStage;
 
     @Override
