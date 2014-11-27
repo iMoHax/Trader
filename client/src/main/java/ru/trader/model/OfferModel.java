@@ -199,11 +199,11 @@ public class OfferModel {
         return diffProperty().get();
     }
 
-    public String toPString(){
+    public String toStationString(){
         return offer.toPString();
     }
 
-    public String toIString(){
+    public String toItemString(){
         return offer.toIString();
     }
 

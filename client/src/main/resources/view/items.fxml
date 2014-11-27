@@ -10,35 +10,35 @@
 
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.ItemsController">
-    <TableView fx:id="tblItems" editable="true" VBox.vgrow="ALWAYS" prefWidth="1095.0">
+    <TableView fx:id="tblItems" editable="true" VBox.vgrow="ALWAYS" prefWidth="1175.0">
         <columns>
             <TableColumn editable="true" minWidth="200.0" text="%market.item.name">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
             <TableColumn editable="true" resizable="false" text="%market.offer.buy">
                 <columns>
-                    <TableColumn minWidth="120.0" text="%market.offer.min">
+                    <TableColumn minWidth="140.0" text="%market.offer.min">
                         <cellValueFactory><OfferCellValueImpl property="minSell"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn minWidth="80.0" text="%market.offer.avg">
                         <cellFactory><DoubleCell/></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="avgSell"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn minWidth="120.0" text="%market.offer.max">
+                    <TableColumn minWidth="140.0" text="%market.offer.max">
                         <cellValueFactory><OfferCellValueImpl property="maxSell"/></cellValueFactory>
                     </TableColumn>
                 </columns>
             </TableColumn>
             <TableColumn editable="true" resizable="false" text="%market.offer.sell">
                 <columns>
-                    <TableColumn minWidth="120.0" text="%market.offer.min">
+                    <TableColumn minWidth="140.0" text="%market.offer.min">
                         <cellValueFactory><OfferCellValueImpl property="minBuy"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn minWidth="80.0" text="%market.offer.avg">
                         <cellFactory><DoubleCell/></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="avgBuy"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn minWidth="120.0" text="%market.offer.max">
+                    <TableColumn minWidth="140.0" text="%market.offer.max">
                         <cellValueFactory><OfferCellValueImpl property="maxBuy"/></cellValueFactory>
                     </TableColumn>
                 </columns>

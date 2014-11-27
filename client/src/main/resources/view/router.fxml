@@ -79,10 +79,13 @@
     <VBox HBox.hgrow="ALWAYS">
         <TableView fx:id="tblOrders" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn minWidth="210.0" text="%market.order.seller">
+                <TableColumn minWidth="140.0" text="%market.system.name">
+                    <cellValueFactory><PropertyValueFactory property="system"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="150.0" text="%market.order.seller">
                     <cellValueFactory><PropertyValueFactory property="station"/></cellValueFactory>
                 </TableColumn>
-                <TableColumn minWidth="180.0" text="%market.item.name">
+                <TableColumn minWidth="140.0" text="%market.item.name">
                     <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
                 </TableColumn>
                 <TableColumn minWidth="80.0" text="%market.offer.price">
@@ -92,7 +95,7 @@
                 <TableColumn minWidth="80.0" text="%market.order.count">
                     <cellValueFactory><PropertyValueFactory property="count"/></cellValueFactory>
                 </TableColumn>
-                <TableColumn minWidth="120.0" text="%market.order.buyer">
+                <TableColumn minWidth="160.0" text="%market.order.buyer">
                     <cellValueFactory><OfferCellValueImpl property="buyOffer"/></cellValueFactory>
                 </TableColumn>
                 <TableColumn minWidth="80.0" text="%market.order.distance">

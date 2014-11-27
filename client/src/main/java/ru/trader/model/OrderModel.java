@@ -94,6 +94,9 @@ public class OrderModel {
         this.max.setValue(max);
     }
 
+    public SystemModel getSystem() {
+        return offer.getSystem();
+    }
 
     public StationModel getStation() {
         return offer.getStation();

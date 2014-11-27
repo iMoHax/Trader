@@ -17,11 +17,11 @@ public class ModelBindings {
 
 
     public static StringBinding asString(final OfferModel offer){
-        return Bindings.createStringBinding(offer::toPString, offer.priceProperty(), offer.getSystem().nameProperty());
+        return Bindings.createStringBinding(offer::toStationString, offer.priceProperty(), offer.getSystem().nameProperty());
     }
 
     public static StringBinding asItemString(final OfferModel offer){
-        return Bindings.createStringBinding(offer::toIString, offer.priceProperty(), offer.nameProperty());
+        return Bindings.createStringBinding(offer::toItemString, offer.priceProperty(), offer.nameProperty());
     }
 
     public static DoubleBinding price(final ObservableValue<OfferModel> offer){
@@ -56,7 +56,7 @@ public class ModelBindings {
     private static StringBinding asItemString(final ObservableValue<OfferModel> offer, final Observable... dependencies){
         return Bindings.createStringBinding(() -> {
             OfferModel o = offer.getValue();
-            return o != null ? o.toIString(): "";
+            return o != null ? o.toItemString(): "";
         }, dependencies);
     }
 
@@ -64,7 +64,7 @@ public class ModelBindings {
     private static StringBinding asString(final ObservableValue<OfferModel> offer, final Observable... dependencies){
         return Bindings.createStringBinding(() -> {
             OfferModel o = offer.getValue();
-            return o != null ? o.toPString() : "";
+            return o != null ? o.toStationString() : "";
         }, dependencies);
     }
 
