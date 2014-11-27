@@ -4,6 +4,8 @@ package ru.trader.controllers;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -56,7 +58,7 @@ public class RouterController {
 
     private MarketModel market;
     private PathRouteModel route;
-    private final List<OrderModel> orders = FXCollections.observableArrayList();
+    private final ObservableList<OrderModel> orders = FXCollections.observableArrayList();
 
     @FXML
     private void initialize(){
@@ -97,16 +99,16 @@ public class RouterController {
         editBtn.disableProperty().bind(tblOrders.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
         removeBtn.disableProperty().bind(Bindings.createBooleanBinding(()-> {
             int sel = tblOrders.getSelectionModel().getSelectedIndex();
-            return sel == -1 || sel != tblOrders.getItems().size()-1;
+            return sel == -1 || sel != orders.size()-1;
         }, tblOrders.getSelectionModel().selectedIndexProperty()));
 
-        BindingsHelper.setTableViewItems(tblOrders, orders);
-        tblOrders.getItems().addListener((ListChangeListener<OrderModel>) c -> {
+        tblOrders.setItems(orders);
+        orders.addListener((ListChangeListener<OrderModel>) c -> {
             while (c.next()) {
-                if (c.wasRemoved()){
+                if (c.wasRemoved()) {
                     c.getRemoved().forEach(this::onRemove);
                 }
-                if (c.wasAdded()){
+                if (c.wasAdded()) {
                     c.getAddedSubList().forEach(this::onAdd);
                 }
             }
@@ -150,7 +152,7 @@ public class RouterController {
 
         OrderModel order = Screeners.showOrders(market.getOrders(sel.getStation(), sel.getBuyer(), sel.getBalance()));
         if (order!=null){
-            tblOrders.getItems().set(index, order);
+            orders.set(index, order);
         }
 
     }
@@ -164,13 +166,13 @@ public class RouterController {
             } else {
                 route = null;
             }
-            tblOrders.getItems().remove(index);
+            orders.remove(index);
             refreshPath();
         }
     }
 
     public void removeAll(){
-        tblOrders.getItems().clear();
+        orders.clear();
         totalBalance.setValue(balance.getValue());
         totalProfit.setValue(0);
         route = null;
