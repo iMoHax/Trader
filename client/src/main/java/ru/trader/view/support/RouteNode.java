@@ -9,6 +9,7 @@ import org.controlsfx.glyphfont.Glyph;
 import ru.trader.core.Order;
 import ru.trader.graph.PathRoute;
 import ru.trader.model.PathRouteModel;
+import ru.trader.view.support.cells.DistanceCell;
 
 public class RouteNode {
     private final static String CSS_PATH = "path";
@@ -52,7 +53,7 @@ public class RouteNode {
 
             node.getChildren().addAll(v, icons);
 
-            Text t = new Text(String.format("(%.2f LY)", p.getDistance()));
+            Text t = new Text(DistanceCell.distanceToString(p.getDistance()));
             t.getStyleClass().add(CSS_TRACK_TEXT);
 
 

@@ -2,10 +2,7 @@ package ru.trader.model;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.trader.core.OFFER_TYPE;
-import ru.trader.core.Offer;
-import ru.trader.core.SERVICE_TYPE;
-import ru.trader.core.Vendor;
+import ru.trader.core.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -106,7 +103,10 @@ public class StationModel {
     }
 
     public double getDistance(StationModel other){
-        return station.getPlace().getDistance(other.station.getPlace());
+        Place place = station.getPlace();
+        Place otherPlace = other.station.getPlace();
+        if (!place.equals(otherPlace)) return station.getPlace().getDistance(other.station.getPlace());
+        return (station.getDistance() + other.station.getDistance() + Math.abs(station.getDistance() - other.station.getDistance())) * 0.00000003169 / 2;
     }
 
     @Override

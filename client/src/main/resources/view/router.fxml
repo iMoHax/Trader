@@ -9,6 +9,7 @@
 <?import ru.trader.view.support.cells.OfferCellValueImpl?>
 
 <?import javafx.geometry.Insets?>
+<?import ru.trader.view.support.cells.DistanceCell?>
 <HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.RouterController">
     <fx:define><Insets fx:id="fields_group_margin" left="2" right="10"/></fx:define>
@@ -99,7 +100,7 @@
                     <cellValueFactory><OfferCellValueImpl property="buyOffer"/></cellValueFactory>
                 </TableColumn>
                 <TableColumn minWidth="80.0" text="%market.order.distance">
-                    <cellFactory><DoubleCell format="\%.2f LY"/></cellFactory>
+                    <cellFactory><DistanceCell /></cellFactory>
                     <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
                 </TableColumn>
                 <TableColumn minWidth="80.0" text="%market.order.profit">

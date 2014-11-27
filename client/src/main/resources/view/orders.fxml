@@ -9,6 +9,7 @@
 
 <?import ru.trader.view.support.cells.OfferCellValueImpl?>
 <?import ru.trader.view.support.cells.OfferTableCell?>
+<?import ru.trader.view.support.cells.DistanceCell?>
 <HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.OrdersController" styleClass="dialog"
       prefWidth="1010">
@@ -58,7 +59,7 @@
                 <cellValueFactory><PropertyValueFactory property="price"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="curDistance" minWidth="80.0" text="%market.order.distance">
-                <cellFactory><DoubleCell format="\%.2f LY"/></cellFactory>
+                <cellFactory><DistanceCell/></cellFactory>
             </TableColumn>
             <TableColumn fx:id="curProfit" minWidth="80.0" text="%market.order.profit" sortType="DESCENDING">
                 <cellFactory><DoubleCell/></cellFactory>
