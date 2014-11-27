@@ -3,6 +3,7 @@ package ru.trader.model;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
+import ru.trader.core.Order;
 import ru.trader.graph.PathRoute;
 import ru.trader.model.support.ModelBindings;
 
@@ -45,7 +46,7 @@ public class OrderModel {
 
     public OrderModel(OfferModel offer, double balance, long limit) {
         this(offer);
-        this.max.setValue(Math.min(offer.getCount(), Math.min(limit, (long) Math.floor(balance / offer.getPrice()))));
+        this.max.setValue(Order.getMaxCount(offer.getOffer(), balance, limit));
     }
 
     PathRoute getPath() {
@@ -131,8 +132,9 @@ public class OrderModel {
         return profitProperty().get();
     }
 
-    public ObservableValue<Double> getProfit(OfferModel buyer) {
-        return buyer.priceProperty().subtract(offer.priceProperty()).multiply(Bindings.min(max, buyer.countProperty())).asObject();
+    public ObservableValue<Number> getProfit(OfferModel buyer) {
+        return Bindings.createDoubleBinding(() -> offer.getPrice() * Order.getMaxCount(offer.getOffer(), buyer.getOffer(), max.get()),
+                buyer.priceProperty(), offer.priceProperty(), max, buyer.countProperty());
     }
 
     public ReadOnlyDoubleProperty profitProperty() {

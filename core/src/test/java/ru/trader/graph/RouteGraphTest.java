@@ -36,16 +36,16 @@ public class RouteGraphTest extends Assert {
         v3 = new SimpleVendor("v3");
         v4 = new SimpleVendor("v4");
 
-        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100, 1));
-        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM2, 200, 1));
-        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 300, 1));
-        v2.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 150, 1));
-        v2.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 320, 1));
-        v3.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 390, 1));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 100, -1));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM2, 200, -1));
+        v1.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 300, -1));
+        v2.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM1, 150, -1));
+        v2.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 320, -1));
+        v3.add(new SimpleOffer(OFFER_TYPE.SELL, ITEM3, 390, -1));
 
-        v2.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 225, 1));
-        v3.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 200, 1));
-        v4.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 450, 1));
+        v2.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 225, -1));
+        v3.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 200, -1));
+        v4.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 450, -1));
 
         p1.add(v1);p2.add(v2);p3.add(v3);p4.add(v4);
         market.add(p1);market.add(p2);market.add(p3);market.add(p4);

@@ -49,7 +49,7 @@ public class MarketAnalyzer {
             for (Offer sell : vendor.getAllSellOffers()) {
                 LOG.trace("Sell offer {}", sell);
                 if (sell.getCount() == 0) continue;
-                long count = Math.min(sell.getCount(), Math.min(cargo, (long) Math.floor(balance / sell.getPrice())));
+                long count = Order.getMaxCount(sell, balance, cargo);
                 LOG.trace("count = {}", count);
                 if (count == 0) continue;
                 Iterator<Offer> buyers = market.getStatBuy(sell.getItem()).getOffers().descendingIterator();
@@ -84,7 +84,7 @@ public class MarketAnalyzer {
         for (Vendor seller : from.get()) {
             for (Offer sell : seller.getAllSellOffers()) {
                 if (sell.getCount() == 0) continue;
-                long count = Math.min(sell.getCount(), Math.min(cargo, (long) Math.floor(balance / sell.getPrice())));
+                long count = Order.getMaxCount(sell, balance, cargo);
                 LOG.trace("Sell offer {}, count = {}", sell, count);
                 if (count == 0) continue;
                 for (Vendor buyer : to.get()) {
@@ -109,7 +109,7 @@ public class MarketAnalyzer {
         }
         for (Offer sell : from.getAllSellOffers()) {
             if (sell.getCount() == 0) continue;
-            long count = Math.min(sell.getCount(), Math.min(cargo, (long) Math.floor(balance / sell.getPrice())));
+            long count = Order.getMaxCount(sell, balance, cargo);
             LOG.trace("Sell offer {}, count = {}", sell, count);
             if (count == 0) continue;
 

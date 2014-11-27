@@ -19,7 +19,7 @@ public class Order implements Comparable<Order> {
     public Order(Offer sell, Offer buy, long count) {
         this.sell = sell;
         this.buy = buy;
-        this.count = Math.min(Math.min(buy.getCount(), sell.getCount()), count);
+        this.count = getMaxCount(sell, buy, count);
         this.profit = (buy.getPrice() - sell.getPrice()) * count;
     }
 
@@ -32,7 +32,7 @@ public class Order implements Comparable<Order> {
     }
 
     public void setCount(long count){
-        this.count = Math.min(Math.min(buy.getCount(), sell.getCount()), count);
+        this.count = getMaxCount(sell, buy, count);
         this.profit = (buy.getPrice() - sell.getPrice()) * count;
     }
 
@@ -110,6 +110,24 @@ public class Order implements Comparable<Order> {
     }
 
     public void setMax(double balance, long limit) {
-        setCount((long) Math.min(balance/sell.getPrice(), limit));
+        setCount(getMaxCount(sell, balance, limit));
+    }
+
+    public static long getMaxCount(Offer sell, double balance, long limit){
+        return getMaxCount(sell, null, balance, limit);
+    }
+
+    public static long getMaxCount(Offer sell, Offer buy, long limit){
+        return getMaxCount(sell, buy, Double.POSITIVE_INFINITY, limit);
+    }
+
+    public static long getMaxCount(Offer sell, Offer buy, double balance, long limit){
+        long supply = sell.getCount();
+        if (supply == 0) return 0;
+        if (supply == -1) supply = Long.MAX_VALUE;
+        long demand = buy != null ? buy.getCount() : -1;
+        if (demand <= 0) demand = Long.MAX_VALUE;
+        if (Double.isInfinite(balance)) return Math.min(limit, Math.min(supply, demand));
+        return (long) Math.min(limit, Math.min(Math.min(supply, demand), Math.floor(balance/sell.getPrice())));
     }
 }

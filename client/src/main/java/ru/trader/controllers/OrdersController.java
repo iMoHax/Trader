@@ -19,7 +19,6 @@ import ru.trader.view.support.Localization;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -39,7 +38,7 @@ public class OrdersController {
     private TableColumn<OrderModel, Long> maxCount;
 
     @FXML
-    private TableColumn<OfferModel, Double> curProfit;
+    private TableColumn<OfferModel, Number> curProfit;
 
     @FXML
     private TableColumn<OfferModel, Double> curDistance;
@@ -56,7 +55,7 @@ public class OrdersController {
         tblBuyers.getSelectionModel().selectedItemProperty().addListener((v, o, n) -> setBuyer(n));
         curProfit.setCellValueFactory(param -> {
             OfferModel offer = param.getValue();
-            return order !=null ? order.getProfit(offer) : new SimpleDoubleProperty(Double.NaN).asObject();
+            return order !=null ? order.getProfit(offer) : new SimpleDoubleProperty(Double.NaN);
         });
         curDistance.setCellValueFactory(param -> {
             OfferModel offer = param.getValue();
