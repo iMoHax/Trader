@@ -66,6 +66,17 @@ HBox.fields-group hbox-margin{
     -fx-text-alignment: left;
 }
 
+.path-text {
+    -fx-alignment: center;
+}
+
+.path-system-text {
+}
+
+.path-station-text {
+    -fx-font-size: 8pt;
+}
+
 .path-icons {
     -fx-alignment: center;
 }

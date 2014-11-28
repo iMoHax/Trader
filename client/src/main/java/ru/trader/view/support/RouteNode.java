@@ -7,6 +7,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import org.controlsfx.glyphfont.Glyph;
 import ru.trader.core.Order;
+import ru.trader.core.Vendor;
 import ru.trader.graph.PathRoute;
 import ru.trader.model.PathRouteModel;
 import ru.trader.view.support.cells.DistanceCell;
@@ -17,6 +18,9 @@ public class RouteNode {
     private final static String CSS_TRACK = "path-track";
     private final static String CSS_TRACK_TEXT = "path-track-text";
     private final static String CSS_SYSTEM = "path-system";
+    private final static String CSS_TEXT = "path-text";
+    private final static String CSS_SYSTEM_TEXT = "path-system-text";
+    private final static String CSS_STATION_TEXT = "path-station-text";
 
     private final PathRoute path;
     private final HBox node = new HBox();
@@ -40,10 +44,9 @@ public class RouteNode {
 
         PathRoute p = path.getRoot();
 
-        v.getChildren().add(new Text(p.get().getName()));
+        v.getChildren().add(buildText(p.get()));
         Order cargo = null;
         while (p.hasNext()){
-            //TODO: fix icons
             p = p.getNext();
             if (cargo == null && p.getBest() != null){
                 cargo = p.getBest();
@@ -71,7 +74,8 @@ public class RouteNode {
             icons.getStyleClass().add(CSS_ICONS);
             track.getStyleClass().add(CSS_TRACK);
 
-            v.getChildren().add(new Text(p.get().getName()));
+
+            v.getChildren().add(buildText(p.get()));
             v.getChildren().add(icons);
             if (cargo != null && cargo.isBuyer(p.get())){
                 v.getChildren().add(new Text(String.format(" (%+.0f) ", cargo.getProfit())));
@@ -80,6 +84,24 @@ public class RouteNode {
             }
         }
         node.getChildren().addAll(v, icons);
+    }
+
+    private VBox buildText(Vendor vendor){
+        Text systemText = new Text(vendor.getPlace().getName());
+        systemText.getStyleClass().add(CSS_SYSTEM_TEXT);
+
+        VBox text = new VBox(2);
+        VBox.setVgrow(text, Priority.ALWAYS);
+        text.getStyleClass().add(CSS_TEXT);
+        text.getChildren().addAll(systemText);
+
+        if (!vendor.getName().isEmpty()) {
+            Text stationText = new Text(vendor.getName());
+            stationText.getStyleClass().add(CSS_STATION_TEXT);
+            text.getChildren().addAll(stationText);
+        }
+
+        return text;
     }
 
     public Node getNode() {
