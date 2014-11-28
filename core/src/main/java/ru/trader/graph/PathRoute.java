@@ -4,12 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.Offer;
 import ru.trader.core.Order;
-import ru.trader.core.Place;
 import ru.trader.core.Vendor;
 
 import java.util.*;
 
-public class PathRoute extends Path<Place> {
+public class PathRoute extends Path<Vendor> {
     private final static Logger LOG = LoggerFactory.getLogger(PathRoute.class);
 
     private final ArrayList<Order> orders = new ArrayList<>();
@@ -21,21 +20,21 @@ public class PathRoute extends Path<Place> {
     private PathRoute tail;
     public final static Order TRANSIT = null;
 
-    public PathRoute(Vertex<Place> source) {
+    public PathRoute(Vertex<Vendor> source) {
         this(source, false);
     }
 
-    public static PathRoute buildAvg(Vertex<Place> source){
+    public static PathRoute buildAvg(Vertex<Vendor> source){
         return new PathRoute(source, true);
     }
 
-    private PathRoute(Vertex<Place> source, boolean byAvg) {
+    private PathRoute(Vertex<Vendor> source, boolean byAvg) {
         super(source);
         this.byAvg = byAvg;
     }
 
 
-    private PathRoute(PathRoute head, Vertex<Place> vertex, boolean refill) {
+    private PathRoute(PathRoute head, Vertex<Vendor> vertex, boolean refill) {
         super(head, vertex, refill);
         assert head.tail == null;
         head.tail = this;
@@ -45,7 +44,7 @@ public class PathRoute extends Path<Place> {
     }
 
     @Override
-    public Path<Place> connectTo(Vertex<Place> vertex, boolean refill) {
+    public Path<Vendor> connectTo(Vertex<Vendor> vertex, boolean refill) {
         LOG.trace("Connect path {} to {}", this, vertex);
         return new PathRoute(this.getCopy(), vertex, refill);
     }
@@ -127,27 +126,17 @@ public class PathRoute extends Path<Place> {
         orders.clear();
         orders.add(TRANSIT);
         LOG.trace("Fill orders of path {}", this);
-        Place placeSeller = getPrevious().get();
-        for (Vendor seller : placeSeller.get()) {
-            for (Offer sell : seller.getAllSellOffers()) {
-                PathRoute p = this;
-                while (p != null) {
-                    Place placeBuyer = p.get();
-                    Order best = null;
-                    for (Vendor buyer : placeBuyer.get()) {
-                        Offer buy = buyer.getBuy(sell.getItem());
-                        if (buy != null){
-                            Order order = new Order(sell, buy);
-                            if (best == null || best.compareTo(order) < 0){
-                                best = order;
-                            }
-                        }
-                    }
-                    if (best != null){
-                        addOrder(best);
-                    }
-                    p = p.getNext();
+        Vendor seller = getPrevious().get();
+        for (Offer sell : seller.getAllSellOffers()) {
+            PathRoute p = this;
+            while (p != null) {
+                Vendor buyer = p.get();
+                Offer buy = buyer.getBuy(sell.getItem());
+                if (buy != null){
+                    Order order = new Order(sell, buy);
+                    addOrder(order);
                 }
+                p = p.getNext();
             }
         }
     }
@@ -225,7 +214,7 @@ public class PathRoute extends Path<Place> {
         PathRoute p = getPrevious();
         balance = p.balance;
         if (!p.isRoot()) {
-            Place buyer = p.get();
+            Vendor buyer = p.get();
             while (!p.isRoot()){
                 for (Order order : p.orders) {
                     if (order == TRANSIT) continue;
@@ -267,7 +256,7 @@ public class PathRoute extends Path<Place> {
 
     public double getProfit(Order order){
         if (order == TRANSIT) return getTransitProfit();
-        if (isPathFrom(order.getBuyer().getPlace())) return order.getProfit() + profit;
+        if (isPathFrom(order.getBuyer())) return order.getProfit() + profit;
         return hasNext() ? getNext().getProfit(order) : order.getProfit();
     }
 
@@ -340,7 +329,7 @@ public class PathRoute extends Path<Place> {
         while (p.hasNext()){
             p = p.getNext();
             // lands for sell
-            if (order != null && p.isPathFrom(order.getBuyer().getPlace())){
+            if (order != null && p.isPathFrom(order.getBuyer())){
                 LOG.trace("{} is lands for sell by order {}", p, order);
                 return res + p.getLandsCount() + 1;
             } else {
@@ -403,15 +392,15 @@ public class PathRoute extends Path<Place> {
 
     public PathRoute dropTo(Vendor vendor){
         PathRoute p = getCopy(true).getEnd();
-        while (!p.isRoot() && !p.get().equals(vendor.getPlace())){
+        while (!p.isRoot() && !p.get().equals(vendor)){
             p = p.getPrevious();
         }
         p.tail = null;
         return p;
     }
 
-    public static PathRoute toPathRoute(Place... items){
-        Place t = items[0];
+    public static PathRoute toPathRoute(Vendor... items){
+        Vendor t = items[0];
         PathRoute path = new PathRoute(new Vertex<>(t));
         for (int i = 1; i < items.length; i++) {
             t = items[i];

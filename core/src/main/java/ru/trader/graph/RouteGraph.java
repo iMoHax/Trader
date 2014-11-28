@@ -1,10 +1,10 @@
 package ru.trader.graph;
 
-import ru.trader.core.Place;
+import ru.trader.core.Vendor;
 
 import java.util.*;
 
-public class RouteGraph extends Graph<Place> {
+public class RouteGraph extends Graph<Vendor> {
 
     private double balance;
     private int cargo;
@@ -28,11 +28,11 @@ public class RouteGraph extends Graph<Place> {
         return byProfitComparator.compare(p1, p2);
     };
 
-    public RouteGraph(Place start, Collection<Place> set, double stock, double maxDistance, boolean withRefill, int maxDeep) {
+    public RouteGraph(Vendor start, Collection<Vendor> set, double stock, double maxDistance, boolean withRefill, int maxDeep) {
         this(start, set, stock, maxDistance, withRefill, maxDeep, false);
     }
 
-    public RouteGraph(Place start, Collection<Place> set, double stock, double maxDistance, boolean withRefill, int maxDeep, boolean groupRes) {
+    public RouteGraph(Vendor start, Collection<Vendor> set, double stock, double maxDistance, boolean withRefill, int maxDeep, boolean groupRes) {
         super(start, set, stock, maxDistance, withRefill, maxDeep, groupRes ? PathRoute::buildAvg : PathRoute::new);
         if (groupRes){
             this.groupRes = maxDeep > minJumps;
@@ -48,7 +48,7 @@ public class RouteGraph extends Graph<Place> {
     }
 
     @Override
-    protected TopList<Path<Place>> newTopList(int count) {
+    protected TopList<Path<Vendor>> newTopList(int count) {
         int groupSize = 0;
         if (groupRes && getMinJumps() > 1){
             groupSize = Math.floorDiv(count, root.getLevel());
@@ -56,7 +56,7 @@ public class RouteGraph extends Graph<Place> {
         return new TopRoutes(count, groupSize);
     }
 
-    private class TopRoutes extends TopList<Path<Place>> {
+    private class TopRoutes extends TopList<Path<Vendor>> {
         private final int groupSize;
 
         public TopRoutes(int limit, int groupSize) {
@@ -65,7 +65,7 @@ public class RouteGraph extends Graph<Place> {
         }
 
         @Override
-        public boolean add(Path<Place> entry) {
+        public boolean add(Path<Vendor> entry) {
             if (comparator != null){
                 ((PathRoute)entry).sort(balance, cargo);
             }

@@ -36,8 +36,8 @@ public class PathRouteTest extends Assert {
         v2.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 350, -1));
         v2.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 400, -1));
 
-        PathRoute res = new PathRoute(new Vertex<>(v1.getPlace()));
-        res = (PathRoute) res.connectTo(new Vertex<>(v2.getPlace()), false);
+        PathRoute res = new PathRoute(new Vertex<>(v1));
+        res = (PathRoute) res.connectTo(new Vertex<>(v2), false);
         res.finish();
         res.sort(10000, 5);
         return res.getRoot();
@@ -77,9 +77,9 @@ public class PathRouteTest extends Assert {
         v3.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 350, -1));
         v3.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 400, -1));
 
-        PathRoute res = new PathRoute(new Vertex<>(v1.getPlace()));
-        res = (PathRoute) res.connectTo(new Vertex<>(v2.getPlace()), false);
-        res = (PathRoute) res.connectTo(new Vertex<>(v3.getPlace()), false);
+        PathRoute res = new PathRoute(new Vertex<>(v1));
+        res = (PathRoute) res.connectTo(new Vertex<>(v2), false);
+        res = (PathRoute) res.connectTo(new Vertex<>(v3), false);
         res.finish();
         res.sort(10000, 5);
         return res.getRoot();
@@ -129,10 +129,10 @@ public class PathRouteTest extends Assert {
         v3.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 200, -1));
         v4.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 450, -1));
 
-        PathRoute res = new PathRoute(new Vertex<>(v1.getPlace()));
-        res = (PathRoute) res.connectTo(new Vertex<>(v2.getPlace()), false);
-        res = (PathRoute) res.connectTo(new Vertex<>(v3.getPlace()), false);
-        res = (PathRoute) res.connectTo(new Vertex<>(v4.getPlace()), false);
+        PathRoute res = new PathRoute(new Vertex<>(v1));
+        res = (PathRoute) res.connectTo(new Vertex<>(v2), false);
+        res = (PathRoute) res.connectTo(new Vertex<>(v3), false);
+        res = (PathRoute) res.connectTo(new Vertex<>(v4), false);
         res.finish();
         res.sort(10000, 5);
         return res.getRoot();
@@ -193,11 +193,11 @@ public class PathRouteTest extends Assert {
         v4.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 370, -1));
         v5.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 400, -1));
 
-        PathRoute res = new PathRoute(new Vertex<>(v1.getPlace()));
-        res = (PathRoute) res.connectTo(new Vertex<>(v2.getPlace()), false);
-        res = (PathRoute) res.connectTo(new Vertex<>(v3.getPlace()), false);
-        res = (PathRoute) res.connectTo(new Vertex<>(v4.getPlace()), false);
-        res = (PathRoute) res.connectTo(new Vertex<>(v5.getPlace()), false);
+        PathRoute res = new PathRoute(new Vertex<>(v1));
+        res = (PathRoute) res.connectTo(new Vertex<>(v2), false);
+        res = (PathRoute) res.connectTo(new Vertex<>(v3), false);
+        res = (PathRoute) res.connectTo(new Vertex<>(v4), false);
+        res = (PathRoute) res.connectTo(new Vertex<>(v5), false);
         res.finish();
         res.sort(10000, 5);
         return res.getRoot();
@@ -265,10 +265,10 @@ public class PathRouteTest extends Assert {
         v3.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 200, -1));
         v4.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 450, -1));
 
-        PathRoute res = new PathRoute(new Vertex<>(v1.getPlace()));
-        res = (PathRoute) res.connectTo(new Vertex<>(v2.getPlace()), false);
-        res = (PathRoute) res.connectTo(new Vertex<>(v3.getPlace()), false);
-        res = (PathRoute) res.connectTo(new Vertex<>(v4.getPlace()), false);
+        PathRoute res = new PathRoute(new Vertex<>(v1));
+        res = (PathRoute) res.connectTo(new Vertex<>(v2), false);
+        res = (PathRoute) res.connectTo(new Vertex<>(v3), false);
+        res = (PathRoute) res.connectTo(new Vertex<>(v4), false);
         res.finish();
         res.sort(500, 5);
         return res.getRoot();
@@ -325,8 +325,8 @@ public class PathRouteTest extends Assert {
 
         v2.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM2, 225, -1));
 
-        PathRoute res = new PathRoute(new Vertex<>(v1.getPlace()));
-        res = (PathRoute) res.connectTo(new Vertex<>(v2.getPlace()), false);
+        PathRoute res = new PathRoute(new Vertex<>(v1));
+        res = (PathRoute) res.connectTo(new Vertex<>(v2), false);
         res.finish();
         res.sort(500, 5);
         return res.getRoot();
@@ -342,9 +342,9 @@ public class PathRouteTest extends Assert {
         v3.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM1, 200, -1));
         v4.add(new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 450, -1));
 
-        PathRoute res = new PathRoute(new Vertex<>(v2.getPlace()));
-        res = (PathRoute) res.connectTo(new Vertex<>(v3.getPlace()), false);
-        res = (PathRoute) res.connectTo(new Vertex<>(v4.getPlace()), false);
+        PathRoute res = new PathRoute(new Vertex<>(v2));
+        res = (PathRoute) res.connectTo(new Vertex<>(v3), false);
+        res = (PathRoute) res.connectTo(new Vertex<>(v4), false);
         res.finish();
         res.sort(500, 5);
         return res.getRoot();

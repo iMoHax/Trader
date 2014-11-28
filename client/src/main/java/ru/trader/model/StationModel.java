@@ -103,10 +103,7 @@ public class StationModel {
     }
 
     public double getDistance(StationModel other){
-        Place place = station.getPlace();
-        Place otherPlace = other.station.getPlace();
-        if (!place.equals(otherPlace)) return station.getPlace().getDistance(other.station.getPlace());
-        return (station.getDistance() + other.station.getDistance() + Math.abs(station.getDistance() - other.station.getDistance())) * 0.00000003169 / 2;
+        return station.getDistance(other.station);
     }
 
     @Override

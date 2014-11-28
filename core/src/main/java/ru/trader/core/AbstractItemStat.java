@@ -1,5 +1,7 @@
 package ru.trader.core;
 
+import ru.trader.graph.Connectable;
+
 import java.util.Collection;
 import java.util.Collections;
 
@@ -112,6 +114,11 @@ public abstract class AbstractItemStat implements ItemStat {
         public void remove(Vendor vendor) {
             throw new UnsupportedOperationException("Is fake place, change unsupported");
         }
+
+        @Override
+        public int compareTo(Connectable<Place> o) {
+            return 0;
+        }
     };
 
     private static Vendor NONE_VENDOR = new Vendor() {
@@ -188,6 +195,11 @@ public abstract class AbstractItemStat implements ItemStat {
         @Override
         public boolean has(OFFER_TYPE type, Item item) {
             return false;
+        }
+
+        @Override
+        public int compareTo(Connectable<Vendor> o) {
+            return 0;
         }
     };
 }

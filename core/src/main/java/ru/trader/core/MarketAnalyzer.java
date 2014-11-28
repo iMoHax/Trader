@@ -1,5 +1,6 @@
 package ru.trader.core;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.graph.*;
@@ -44,7 +45,7 @@ public class MarketAnalyzer {
     private Collection<Order> getOrders(Place place, double balance, double lowProfit) {
         List<Order> res = new ArrayList<>(20);
         Collection<Place> places = market.get();
-        RouteGraph graph = new RouteGraph(place, places, tank, maxDistance, true, jumps);
+        Graph<Place> graph = new Graph<>(place, places, tank, maxDistance, true, jumps, Path::new);
         for (Vendor vendor : place.get()) {
             for (Offer sell : vendor.getAllSellOffers()) {
                 LOG.trace("Sell offer {}", sell);
@@ -76,7 +77,7 @@ public class MarketAnalyzer {
 
     public Collection<Order> getOrders(Place from, Place to, double balance) {
         Collection<Order> res = new ArrayList<>();
-        RouteGraph graph = new RouteGraph(from, market.get(), tank, maxDistance, true, jumps);
+        Graph<Place> graph = new Graph<>(from, market.get(), tank, maxDistance, true, jumps, Path::new);
         if (!graph.isAccessible(to)){
             LOG.trace("Is inaccessible buyer");
             return res;
@@ -102,7 +103,7 @@ public class MarketAnalyzer {
 
     public Collection<Order> getOrders(Vendor from, Vendor to, double balance) {
         Collection<Order> res = new ArrayList<>();
-        RouteGraph graph = new RouteGraph(from.getPlace(), market.get(), tank, maxDistance, true, jumps);
+        Graph<Place> graph = new Graph<>(from.getPlace(), market.get(), tank, maxDistance, true, jumps, Path::new);
         if (!graph.isAccessible(to.getPlace())){
             LOG.trace("Is inaccessible buyer");
             return res;
@@ -124,31 +125,60 @@ public class MarketAnalyzer {
     }
 
     public Collection<Path<Place>> getPaths(Place from, Place to){
-        RouteGraph graph = new RouteGraph(from, market.get(), tank, maxDistance, true, jumps);
+        Graph<Place> graph = new Graph<>(from, market.get(), tank, maxDistance, true, jumps, Path::new);
         return graph.getPathsTo(to);
     }
 
-    public PathRoute getPath(Place from, Place to){
-        RouteGraph graph = new RouteGraph(from, market.get(), tank, maxDistance, true, jumps);
-        return (PathRoute) graph.getFastPathTo(to);
+    public Path<Place> getPath(Place from, Place to){
+        Graph<Place> graph = new Graph<>(from, market.get(), tank, maxDistance, true, jumps, Path::new);
+        return graph.getFastPathTo(to);
+    }
+
+    public PathRoute getPath(Vendor from, Vendor to){
+        RouteGraph graph = new RouteGraph(from, market.getVendors(), tank, maxDistance, true, jumps);
+        return (PathRoute)graph.getFastPathTo(to);
     }
 
     public Collection<PathRoute> getPaths(Place from, double balance){
         RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
-        return searcher.getPaths(from, market.get(), jumps, balance, cargo, limit);
+        Collection<Vendor> vendors = market.getVendors();
+        for (Vendor vendor : from.get()) {
+            Collection<PathRoute> paths = searcher.getPaths(vendor, vendors, jumps, balance, cargo, limit);
+            if (paths.size()>0){
+                return paths;
+            }
+        }
+        return Collections.emptyList();
+
+    }
+
+    public Collection<PathRoute> getPaths(Vendor from, Vendor to, double balance){
+        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
+        return searcher.getPaths(from, to, market.getVendors(), jumps, balance, cargo, limit);
     }
 
     public Collection<PathRoute> getPaths(Place from, Place to, double balance){
         RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
-        return searcher.getPaths(from, to, market.get(), jumps, balance, cargo, limit);
+        Collection<Vendor> vendors = market.getVendors();
+        Collection<Vendor> fVendors = from.get();
+        Collection<Vendor> toVendors = to.get();
+        for (Vendor fromVendor : fVendors) {
+            for (Vendor toVendor : toVendors) {
+                Collection<PathRoute> paths = searcher.getPaths(fromVendor, toVendor, vendors, jumps, balance, cargo, limit);
+                if (paths.size()>0){
+                    return paths;
+                }
+            }
+        }
+        return Collections.emptyList();
     }
 
     public Collection<PathRoute> getTopPaths(double balance){
         List<PathRoute> top = new ArrayList<>(limit);
         RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
-        Collection<Place> places = market.get();
-        for (Place place : places) {
-            Collection<PathRoute> paths = searcher.getPaths(place, place, places, jumps, balance, cargo, 3);
+        Collection<Vendor> vendors = new PlacesWrapper(market.get());
+        for (Vendor vendor : vendors) {
+            Collection<PathRoute> paths = searcher.getPaths(vendor, vendor, vendors, jumps, balance, cargo, 3);
             TopList.addAllToTop(top, paths, limit, RouteGraph.byProfitComparator);
         }
         return top;

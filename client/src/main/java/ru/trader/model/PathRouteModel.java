@@ -82,7 +82,7 @@ public class PathRouteModel {
     }
 
     public void add(OrderModel order){
-        PathRoute p = market.getPath(order.getStation().getSystem(), order.getBuyer().getSystem());
+        PathRoute p = market.getPath(order.getStation(), order.getBuyer());
         if (p == null) return;
         p.getRoot().getNext().setOrder(new Order(order.getOffer().getOffer(), order.getBuyOffer().getOffer(), order.getCount()));
         PathRoute head = path.getEnd();

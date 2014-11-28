@@ -101,12 +101,12 @@ public class MarketModel {
         return BindingsHelper.observableList(analyzer.getTopPaths(balance), modeler::get);
     }
 
-    PathRoute getPath(SystemModel from, SystemModel to) {
-        return analyzer.getPath(from.getSystem(), to.getSystem());
+    PathRoute getPath(StationModel from, StationModel to) {
+        return analyzer.getPath(from.getStation(), to.getStation());
     }
 
     public PathRouteModel getPath(OrderModel order) {
-        PathRoute p = analyzer.getPath(order.getStation().getStation().getPlace(), order.getBuyer().getStation().getPlace());
+        PathRoute p = analyzer.getPath(order.getStation().getStation(), order.getBuyer().getStation());
         if (p == null) return null;
         p.getRoot().getNext().setOrder(new Order(order.getOffer().getOffer(), order.getBuyOffer().getOffer(), order.getCount()));
         return modeler.get(p);

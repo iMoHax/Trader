@@ -1,11 +1,9 @@
 package ru.trader.core;
 
-import org.jetbrains.annotations.NotNull;
-
+import ru.trader.graph.Connectable;
 import java.util.Collection;
-import java.util.Objects;
 
-public interface Vendor extends Comparable<Vendor> {
+public interface Vendor extends Connectable<Vendor> {
 
     String getName();
     void setName(String name);
@@ -53,14 +51,18 @@ public interface Vendor extends Comparable<Vendor> {
     }
 
 
-    @Override
-    default int compareTo(@NotNull Vendor other) {
-        Objects.requireNonNull(other, "Not compare with null");
-        if (this == other) return 0;
-        int cmp = Double.compare(getDistance(), other.getDistance());
-        if (cmp!=0) return cmp;
-        String name = getName();
-        String otherName = other.getName();
-        return name != null ? otherName != null ? name.compareTo(otherName) : -1 : 0;
+    static  double LS = 0.00000003169;
+
+    default double getDistance(Vendor other){
+        Place place = getPlace();
+        Place otherPlace = other.getPlace();
+        if (!place.equals(otherPlace)){
+            return getPlace().getDistance(other.getPlace()) + other.getDistance() * LS;
+        }
+        return (getDistance() + other.getDistance() + Math.abs(getDistance() - other.getDistance())) * LS / 2;
+    }
+
+    default boolean canRefill(){
+        return getPlace().canRefill();
     }
 }

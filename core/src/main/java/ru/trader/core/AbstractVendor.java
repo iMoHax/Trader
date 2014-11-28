@@ -1,7 +1,11 @@
 package ru.trader.core;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.graph.Connectable;
+
+import java.util.Objects;
 
 public abstract class AbstractVendor implements Vendor {
     private final static Logger LOG = LoggerFactory.getLogger(AbstractVendor.class);
@@ -107,4 +111,15 @@ public abstract class AbstractVendor implements Vendor {
         return getName();
     }
 
+    @Override
+    public int compareTo(@NotNull Connectable<Vendor> o) {
+        Objects.requireNonNull(o, "Not compare with null");
+        Vendor other = (Vendor) o;
+        if (this == other) return 0;
+        int cmp = Double.compare(getDistance(), other.getDistance());
+        if (cmp!=0) return cmp;
+        String name = getName();
+        String otherName = other.getName();
+        return name != null ? otherName != null ? name.compareTo(otherName) : -1 : 0;
+    }
 }

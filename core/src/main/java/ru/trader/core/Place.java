@@ -19,6 +19,10 @@ public interface Place extends Connectable<Place> {
     Vendor addVendor(String name);
     void remove(Vendor vendor);
 
+    default int count(){
+        return get().size();
+    }
+
     default boolean isEmpty(){
         return get().isEmpty();
     }

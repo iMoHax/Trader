@@ -26,10 +26,10 @@ public class MarketAnalyzerTest2 extends Assert {
         // Balance: 6000000, cargo: 440, tank: 40, distance: 13.4, jumps: 6
         // Ithaca (Palladium to LHS 3262) -> Morgor -> LHS 3006 -> LHS 3262 (Consumer Technology to Ithaca) -> LHS 3006 -> Morgor -> Ithaca
         // Profit: 981200, avg: 490600, distance: 67.5, lands: 2
-        Place ithaca = market.get().stream().filter((v)->v.getName().equals("Ithaca")).findFirst().get();
-        Place morgor = market.get().stream().filter((v)->v.getName().equals("Morgor")).findFirst().get();
-        Place lhs3006 = market.get().stream().filter((v)->v.getName().equals("LHS 3006")).findFirst().get();
-        Place lhs3262 = market.get().stream().filter((v)->v.getName().equals("LHS 3262")).findFirst().get();
+        Vendor ithaca = market.get().stream().filter((v)->v.getName().equals("Ithaca")).findFirst().get().get().iterator().next();
+        Vendor morgor = market.get().stream().filter((v)->v.getName().equals("Morgor")).findFirst().get().get().iterator().next();
+        Vendor lhs3006 = market.get().stream().filter((v)->v.getName().equals("LHS 3006")).findFirst().get().get().iterator().next();
+        Vendor lhs3262 = market.get().stream().filter((v)->v.getName().equals("LHS 3262")).findFirst().get().get().iterator().next();
         analyzer.setCargo(440);analyzer.setTank(40);analyzer.setMaxDistance(13.4);analyzer.setJumps(6);
         Collection<PathRoute> paths = analyzer.getPaths(ithaca, ithaca, 6000000);
         PathRoute expect = PathRoute.toPathRoute(ithaca, morgor, lhs3006, lhs3262, lhs3006, morgor, ithaca);

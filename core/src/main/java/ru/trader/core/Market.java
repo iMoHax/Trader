@@ -17,6 +17,9 @@ public interface Market {
     void remove(Item item);
 
     Collection<Place> get();
+    default Collection<Vendor> getVendors(){
+        return new PlacesWrapper(get());
+    }
     Collection<Group> getGroups();
     Collection<Item> getItems();
     ItemStat getStat(OFFER_TYPE type, Item item);

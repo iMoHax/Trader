@@ -3,10 +3,11 @@ package ru.trader.core;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.graph.Connectable;
 
 import java.util.Objects;
 
-public abstract class AbstractPlace implements Place, Comparable<Place> {
+public abstract class AbstractPlace implements Place {
     private final static Logger LOG = LoggerFactory.getLogger(AbstractPlace.class);
     private AbstractMarket market;
 
@@ -84,8 +85,9 @@ public abstract class AbstractPlace implements Place, Comparable<Place> {
     }
 
     @Override
-    public int compareTo(@NotNull Place other) {
-        Objects.requireNonNull(other, "Not compare with null");
+    public int compareTo(@NotNull Connectable<Place> o) {
+        Objects.requireNonNull(o, "Not compare with null");
+        Place other = (Place) o;
         if (this == other) return 0;
         String name = getName();
         String otherName = other.getName();

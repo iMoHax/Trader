@@ -1,5 +1,9 @@
 package ru.trader.graph;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
+
 public class Point implements Connectable<Point> {
     private int x;
     private String name;
@@ -41,5 +45,12 @@ public class Point implements Connectable<Point> {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public int compareTo(@NotNull Connectable<Point> o) {
+        Objects.requireNonNull(o, "Not compare with null");
+        Point other =(Point)o;
+        return Integer.compare(hashCode(), other.hashCode());
     }
 }
