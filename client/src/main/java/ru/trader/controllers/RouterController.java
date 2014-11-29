@@ -5,7 +5,6 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -13,11 +12,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 import ru.trader.Main;
 import ru.trader.model.*;
-import ru.trader.model.support.BindingsHelper;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.RouteNode;
 
-import java.util.List;
 
 
 public class RouterController {
@@ -44,8 +41,15 @@ public class RouterController {
 
     @FXML
     private ComboBox<SystemModel> source;
+
+    @FXML
+    private ComboBox<StationModel> sStation;
+
     @FXML
     private ComboBox<SystemModel> target;
+
+    @FXML
+    private ComboBox<StationModel> tStation;
 
     @FXML
     private TableView<OrderModel> tblOrders;
@@ -83,6 +87,25 @@ public class RouterController {
             market.getAnalyzer().setJumps(n.intValue());
             Main.SETTINGS.setJumps(n.intValue());
         });
+        source.valueProperty().addListener((ov, o, n) -> {
+            if (n != ModelFabric.NONE_SYSTEM){
+                ObservableList<StationModel> stations = FXCollections.observableArrayList(ModelFabric.NONE_STATION);
+                stations.addAll(n.getStations());
+                sStation.setItems(stations);
+            } else {
+                sStation.setItems(FXCollections.observableArrayList(ModelFabric.NONE_STATION));
+            }
+        });
+        target.valueProperty().addListener((ov, o, n) -> {
+            if (n != ModelFabric.NONE_SYSTEM){
+                ObservableList<StationModel> stations = FXCollections.observableArrayList(ModelFabric.NONE_STATION);
+                stations.addAll(n.getStations());
+                tStation.setItems(stations);
+            } else {
+                tStation.setItems(FXCollections.observableArrayList(ModelFabric.NONE_STATION));
+            }
+        });
+
 
         balance.setOnAction((v)->cargo.requestFocus());
         cargo.setOnAction((v) -> tank.requestFocus());
@@ -132,14 +155,16 @@ public class RouterController {
     private void onAdd(OrderModel order){
         totalProfit.add(order.getProfit());
         totalBalance.add(order.getProfit());
-        source.getSelectionModel().select(order.getBuyOffer().getSystem());
+        source.setValue(order.getBuyer().getSystem());
+        sStation.setValue(order.getBuyer());
         balance.setDisable(true);
     }
 
     private void onRemove(OrderModel order) {
         totalProfit.sub(order.getProfit());
         totalBalance.sub(order.getProfit());
-        source.getSelectionModel().select(order.getStation().getSystem());
+        source.setValue(order.getSystem());
+        sStation.setValue(order.getStation());
         if (orders.isEmpty()) {
             balance.setDisable(false);
             source.setDisable(false);
@@ -189,30 +214,24 @@ public class RouterController {
     }
 
     public void showOrders(){
-        //TODO: fix set balanace
-        SystemModel s = source.getSelectionModel().getSelectedItem();
-        SystemModel t = target.getSelectionModel().getSelectedItem();
-        OrderModel order;
-        if (t == ModelFabric.NONE_SYSTEM){
-            order = Screeners.showOrders(market.getOrders(s, totalBalance.getValue().doubleValue()));
-        } else {
-            order = Screeners.showOrders(market.getOrders(s, t, totalBalance.getValue().doubleValue()));
-        }
+        SystemModel s = source.getValue();
+        SystemModel t = target.getValue();
+        StationModel sS = sStation.getValue();
+        StationModel tS = tStation.getValue();
+        OrderModel order = Screeners.showOrders(market.getOrders(s, sS, t, tS, totalBalance.getValue().doubleValue()));
         if (order!=null){
+            //TODO: fix set balanace
             orders.add(order);
             addOrderToPath(order);
         }
     }
 
     public void showRoutes(){
-        SystemModel s = source.getSelectionModel().getSelectedItem();
-        SystemModel t = target.getSelectionModel().getSelectedItem();
-        PathRouteModel path;
-        if (t == ModelFabric.NONE_SYSTEM){
-            path = Screeners.showRouters(market.getRoutes(s, totalBalance.getValue().doubleValue()));
-        } else {
-            path = Screeners.showRouters(market.getRoutes(s, t, totalBalance.getValue().doubleValue()));
-        }
+        SystemModel s = source.getValue();
+        SystemModel t = target.getValue();
+        StationModel sS = sStation.getValue();
+        StationModel tS = tStation.getValue();
+        PathRouteModel path = Screeners.showRouters(market.getRoutes(s, sS, t, tS, totalBalance.getValue().doubleValue()));
         if (path!=null){
             orders.addAll(path.getOrders());
             addRouteToPath(path);

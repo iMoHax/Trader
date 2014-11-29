@@ -5,6 +5,7 @@ import ru.trader.core.*;
 import ru.trader.graph.PathRoute;
 
 import java.lang.ref.WeakReference;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -102,6 +103,7 @@ public class ModelFabric {
     }
 
     public static SystemModel NONE_SYSTEM = new FAKE_SYSTEM_MODEL();
+    public static StationModel NONE_STATION = new FAKE_STATION_MODEL();
 
     private static class FAKE_SYSTEM_MODEL extends SystemModel {
         FAKE_SYSTEM_MODEL() {
@@ -174,4 +176,100 @@ public class ModelFabric {
         }
     }
 
+    private static class FAKE_STATION_MODEL extends StationModel {
+
+        FAKE_STATION_MODEL() {
+            super();
+        }
+
+        @Override
+        Vendor getStation() {
+            throw new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public String getName() {
+            throw  new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public void setName(String value) {
+            throw  new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public double getDistance() {
+            throw  new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public void setDistance(double value) {
+            throw  new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public boolean hasService(SERVICE_TYPE service) {
+            throw  new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public Collection<SERVICE_TYPE> getServices() {
+            throw  new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public void addService(SERVICE_TYPE service) {
+            throw  new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public void removeService(SERVICE_TYPE service) {
+            throw  new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public SystemModel getSystem() {
+            throw  new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public List<OfferModel> getSells() {
+            throw  new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public List<OfferModel> getBuys() {
+            throw  new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public OfferModel add(OFFER_TYPE type, ItemModel item, double price, long count) {
+            throw  new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public void remove(OfferModel offer) {
+            throw  new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public boolean hasSell(ItemModel item) {
+            throw  new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public boolean hasBuy(ItemModel item) {
+            throw  new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public double getDistance(StationModel other) {
+            throw  new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public String toString() {
+            return "";
+        }
+    }
 }

@@ -22,7 +22,7 @@
         <ColumnConstraints fillWidth="true"/>
     </columnConstraints>
 
-    <TitledPane GridPane.rowSpan="3" text="%market.systems" minWidth="250" prefHeight="530" collapsible="false">
+    <TitledPane GridPane.rowSpan="3" text="%market.systems" minWidth="250" prefHeight="570" collapsible="false">
         <ListView fx:id="systems">
             <contextMenu>
                 <ContextMenu>

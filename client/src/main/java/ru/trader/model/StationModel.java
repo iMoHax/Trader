@@ -20,6 +20,11 @@ public class StationModel {
         return market.getModeler().get(offer, item);
     }
 
+    StationModel() {
+        this.station = null;
+        this.market = null;
+    }
+
     StationModel(Vendor station, MarketModel market) {
         this.station = station;
         this.market = market;

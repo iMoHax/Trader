@@ -12,6 +12,8 @@ import ru.trader.graph.PathRoute;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.model.support.Notificator;
 
+import java.util.Collection;
+
 
 public class MarketModel {
     private final static Logger LOG = LoggerFactory.getLogger(MarketModel.class);
@@ -74,15 +76,41 @@ public class MarketModel {
     }
 
     public ObservableList<OrderModel> getOrders(SystemModel from, double balance) {
-        return BindingsHelper.observableList(analyzer.getOrders(from.getSystem(), balance), modeler::get);
+        return getOrders(from, ModelFabric.NONE_STATION, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, balance);
     }
 
     public ObservableList<OrderModel> getOrders(SystemModel from, SystemModel to, double balance) {
-        return BindingsHelper.observableList(analyzer.getOrders(from.getSystem(), to.getSystem(), balance), modeler::get);
+        return getOrders(from, ModelFabric.NONE_STATION, to, ModelFabric.NONE_STATION, balance);
     }
 
     public ObservableList<OrderModel> getOrders(StationModel from, StationModel to, double balance) {
-        return BindingsHelper.observableList(analyzer.getOrders(from.getStation(), to.getStation(), balance), modeler::get);
+        return getOrders(from.getSystem(), from, to.getSystem(), to, balance);
+    }
+
+    public ObservableList<OrderModel> getOrders(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo, double balance) {
+        Collection<Order> orders;
+        if (stationFrom != null && stationFrom != ModelFabric.NONE_STATION){
+            if (stationTo != null && stationTo != ModelFabric.NONE_STATION){
+                orders = analyzer.getOrders(stationFrom.getStation(), stationTo.getStation(), balance);
+            } else {
+                if (to != null && to != ModelFabric.NONE_SYSTEM){
+                    orders = analyzer.getOrders(stationFrom.getStation(), to.getSystem(), balance);
+                } else {
+                    orders = analyzer.getOrders(stationFrom.getStation(), balance);
+                }
+            }
+        } else {
+            if (stationTo != null && stationTo != ModelFabric.NONE_STATION){
+                orders = analyzer.getOrders(from.getSystem(), stationTo.getStation(), balance);
+            } else {
+                if (to != null && to != ModelFabric.NONE_SYSTEM){
+                    orders = analyzer.getOrders(from.getSystem(), to.getSystem(), balance);
+                } else {
+                    orders = analyzer.getOrders(from.getSystem(), balance);
+                }
+            }
+        }
+        return BindingsHelper.observableList(orders, modeler::get);
     }
 
     public ObservableList<OrderModel> getTop(double balance){
@@ -90,12 +118,40 @@ public class MarketModel {
     }
 
     public ObservableList<PathRouteModel> getRoutes(SystemModel from, double balance){
-        return BindingsHelper.observableList(analyzer.getPaths(from.getSystem(), balance), modeler::get);
+        return getRoutes(from, ModelFabric.NONE_STATION, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, balance);
     }
 
     public ObservableList<PathRouteModel> getRoutes(SystemModel from, SystemModel to, double balance){
-        return BindingsHelper.observableList(analyzer.getPaths(from.getSystem(), to.getSystem(), balance), modeler::get);
+        return getRoutes(from, ModelFabric.NONE_STATION, to, ModelFabric.NONE_STATION, balance);
     }
+
+    public ObservableList<PathRouteModel> getRoutes(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo, double balance) {
+        Collection<PathRoute> routes;
+        if (stationFrom != null && stationFrom != ModelFabric.NONE_STATION){
+            if (stationTo != null && stationTo != ModelFabric.NONE_STATION){
+                routes = analyzer.getPaths(stationFrom.getStation(), stationTo.getStation(), balance);
+            } else {
+                if (to != null && to != ModelFabric.NONE_SYSTEM){
+                    routes = analyzer.getPaths(stationFrom.getStation(), to.getSystem(), balance);
+                } else {
+                    routes = analyzer.getPaths(stationFrom.getStation(), balance);
+                }
+            }
+        } else {
+            if (stationTo != null && stationTo != ModelFabric.NONE_STATION){
+                routes = analyzer.getPaths(from.getSystem(), stationTo.getStation(), balance);
+            } else {
+                if (to != null && to != ModelFabric.NONE_SYSTEM){
+                    routes = analyzer.getPaths(from.getSystem(), to.getSystem(), balance);
+                } else {
+                    routes = analyzer.getPaths(from.getSystem(), balance);
+                }
+            }
+        }
+        return BindingsHelper.observableList(routes, modeler::get);
+    }
+
+
 
     public ObservableList<PathRouteModel> getTopRoutes(double balance){
         return BindingsHelper.observableList(analyzer.getTopPaths(balance), modeler::get);

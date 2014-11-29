@@ -40,13 +40,15 @@
                 </columnConstraints>
                 <Label text="%router.pane.route.from" />
                 <ComboBox fx:id="source" prefWidth="160" GridPane.columnIndex="1" />
-                <Label text="%router.pane.route.to" GridPane.rowIndex="1"/>
-                <ComboBox fx:id="target" prefWidth="160" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                <Label text="%router.pane.route.jumps" GridPane.rowIndex="2" />
-                <NumberField fx:id="jumps" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <ComboBox fx:id="sStation" prefWidth="160" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                <Label text="%router.pane.route.to" GridPane.rowIndex="2"/>
+                <ComboBox fx:id="target" prefWidth="160" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <ComboBox fx:id="tStation" prefWidth="160" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                <Label text="%router.pane.route.jumps" GridPane.rowIndex="4" />
+                <NumberField fx:id="jumps" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
-                <Separator GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.margin="$separator_margin"/>
-                <VBox GridPane.columnSpan="2" GridPane.rowIndex="4" spacing="5">
+                <Separator GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.margin="$separator_margin"/>
+                <VBox GridPane.columnSpan="2" GridPane.rowIndex="6" spacing="5">
                     <HBox alignment="CENTER" spacing="5">
                         <Button fx:id="editBtn" text="%dialog.button.edit" onAction="#editOrders"/>
                         <Button fx:id="removeBtn" text="%dialog.button.remove" onAction="#removeSelected"/>
