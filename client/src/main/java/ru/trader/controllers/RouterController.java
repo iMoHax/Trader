@@ -12,6 +12,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 import ru.trader.Main;
 import ru.trader.model.*;
+import ru.trader.model.support.ChangeMarketListener;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.RouteNode;
 
@@ -141,6 +142,7 @@ public class RouterController {
 
     void init(){
         market = MainController.getMarket();
+        market.getNotificator().add(new RouterChangeListener());
         source.setItems(market.systemsProperty());
         source.getSelectionModel().selectFirst();
         target.setItems(FXCollections.observableArrayList(market.systemsProperty()));
@@ -271,4 +273,35 @@ public class RouterController {
             path.setContent(null);
     }
 
+    private class RouterChangeListener extends ChangeMarketListener {
+        @Override
+        public void add(SystemModel system) {
+            target.getItems().add(system);
+        }
+
+        @Override
+        public void remove(SystemModel system) {
+            target.getItems().remove(system);
+        }
+
+        @Override
+        public void add(StationModel station) {
+            if (station.getSystem().equals(source.getValue())){
+                sStation.getItems().add(station);
+            }
+            if (station.getSystem().equals(target.getValue())){
+                tStation.getItems().add(station);
+            }
+        }
+
+        @Override
+        public void remove(StationModel station) {
+            if (station.getSystem().equals(source.getValue())){
+                sStation.getItems().remove(station);
+            }
+            if (station.getSystem().equals(target.getValue())){
+                tStation.getItems().remove(station);
+            }
+        }
+    }
 }
