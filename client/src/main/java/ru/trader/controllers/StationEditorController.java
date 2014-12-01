@@ -58,6 +58,10 @@ public class StationEditorController {
     private CheckBox cbOutfit;
     @FXML
     private CheckBox cbShipyard;
+    @FXML
+    private CheckBox cbMediumLandpad;
+    @FXML
+    private CheckBox cbLargeLandpad;
 
     private StationUpdater updater;
 
@@ -102,6 +106,8 @@ public class StationEditorController {
         cbRepair.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.REPAIR));
         cbOutfit.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.OUTFIT));
         cbShipyard.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.SHIPYARD));
+        cbMediumLandpad.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.MEDIUM_LANDPAD));
+        cbLargeLandpad.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.LARGE_LANDPAD));
         items.setItems(updater.getOffers());
     }
 

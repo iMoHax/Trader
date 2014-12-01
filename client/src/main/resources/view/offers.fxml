@@ -43,13 +43,15 @@
             <Label text="%offers.text.distance"/>
             <Label fx:id="distance" minWidth="60"/>
             <Label text="%offers.text.services"/>
-            <HBox spacing="20">
+            <HBox spacing="15">
                 <CheckBox fx:id="cbMarket" text="%services.MARKET"/>
                 <CheckBox fx:id="cbBlackMarket" text="%services.BLACK_MARKET"/>
                 <CheckBox fx:id="cbRepair" text="%services.REPAIR"/>
                 <CheckBox fx:id="cbMunition" text="%services.MUNITION"/>
                 <CheckBox fx:id="cbOutfit" text="%services.OUTFIT"/>
                 <CheckBox fx:id="cbShipyard" text="%services.SHIPYARD"/>
+                <CheckBox fx:id="cbMediumLandpad" text="%services.MEDIUM_LANDPAD"/>
+                <CheckBox fx:id="cbLargeLandpad" text="%services.LARGE_LANDPAD"/>
             </HBox>
         </HBox>
 

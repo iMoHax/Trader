@@ -53,6 +53,10 @@ public class OffersController {
     private CheckBox cbOutfit;
     @FXML
     private CheckBox cbShipyard;
+    @FXML
+    private CheckBox cbMediumLandpad;
+    @FXML
+    private CheckBox cbLargeLandpad;
 
     private final List<OfferModel> sells = FXCollections.observableArrayList();
     private final List<OfferModel> buys = FXCollections.observableArrayList();
@@ -146,6 +150,8 @@ public class OffersController {
             cbRepair.setSelected(station.hasService(SERVICE_TYPE.REPAIR));
             cbOutfit.setSelected(station.hasService(SERVICE_TYPE.OUTFIT));
             cbShipyard.setSelected(station.hasService(SERVICE_TYPE.SHIPYARD));
+            cbMediumLandpad.setSelected(station.hasService(SERVICE_TYPE.MEDIUM_LANDPAD));
+            cbLargeLandpad.setSelected(station.hasService(SERVICE_TYPE.LARGE_LANDPAD));
             sells.addAll(station.getSells());
             buys.addAll(station.getBuys());
         }

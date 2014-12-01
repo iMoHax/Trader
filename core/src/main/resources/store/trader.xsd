@@ -81,6 +81,8 @@
             <xs:enumeration value="MUNITION"/>
             <xs:enumeration value="OUTFIT"/>
             <xs:enumeration value="SHIPYARD"/>
+            <xs:enumeration value="MEDIUM_LANDPAD"/>
+            <xs:enumeration value="LARGE_LANDPAD"/>
         </xs:restriction>
     </xs:simpleType>
 
