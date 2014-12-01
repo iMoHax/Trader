@@ -5,11 +5,44 @@ import ru.trader.store.berkeley.entities.BDBGroup;
 import ru.trader.store.berkeley.entities.BDBItem;
 import ru.trader.store.berkeley.entities.BDBPlace;
 
-import java.util.Collection;
+import java.util.*;
 
 public class BDBMarket extends AbstractMarket {
     private final BDBStore store;
 
+    //caching
+    private final Map<Item,BDBItemStat> sellItems = new HashMap<>();
+    private final Map<Item,BDBItemStat> buyItems = new HashMap<>();
+
+
+    private Map<Item,BDBItemStat> getItemCache(OFFER_TYPE offerType){
+        switch (offerType) {
+            case SELL: return sellItems;
+            case BUY: return buyItems;
+            default:
+                throw new IllegalArgumentException("Wrong offer type: "+offerType);
+        }
+    }
+
+    private void put(Map<Item, BDBItemStat> cache, Offer offer){
+        Item item = offer.getItem();
+        BDBItemStat entry = cache.get(item);
+        if (entry == null){
+            entry = new BDBItemStat((ItemProxy) item, offer.getType(), store);
+            cache.put(item, entry);
+        }
+        entry.put(offer);
+    }
+
+    private void remove(Map<Item, BDBItemStat> cache, Offer offer){
+        Item item = offer.getItem();
+        BDBItemStat entry = cache.get(item);
+        if (entry!=null){
+            entry.remove(offer);
+            if (entry.isEmpty())
+                cache.remove(item);
+        }
+    }
 
     public BDBMarket(BDBStore store) {
         this.store = store;
