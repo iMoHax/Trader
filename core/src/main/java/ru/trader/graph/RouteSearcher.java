@@ -79,7 +79,7 @@ public class RouteSearcher {
                 }
             } else {
                 LOG.trace("Split to segments");
-                List<Path<Vendor>> paths = sGraph.getPaths(getPathsOnSegmentCount(sGraph), jumpsToAll-1).getList();
+                List<Path<Vendor>> paths = sGraph.getPaths(getPathsOnSegmentCount(sGraph), jumpsToAll).getList();
                 int i = 0;
                 ArrayList<SegmentSearcher> subTasks = new ArrayList<>(THRESHOLD);
                 while (i < paths.size()) {
