@@ -11,18 +11,12 @@ import java.util.Collection;
 import java.util.Optional;
 
 public class MarketAnalyzerTest2 extends Assert {
-    private static MarketAnalyzer analyzer;
-    private static Market market;
-
-    @Before
-    public void setUp() throws Exception {
-        InputStream is = getClass().getResourceAsStream("/world.xml");
-        market = Store.loadFromFile(is);
-        analyzer = new MarketAnalyzer(market);
-    }
 
     @Test
     public void testRoutes() throws Exception {
+        InputStream is = getClass().getResourceAsStream("/world.xml");
+        Market market = Store.loadFromFile(is);
+        MarketAnalyzer analyzer = new MarketAnalyzer(market);
         // Balance: 6000000, cargo: 440, tank: 40, distance: 13.4, jumps: 6
         // Ithaca (Palladium to LHS 3262) -> Morgor -> LHS 3006 -> LHS 3262 (Consumer Technology to Ithaca) -> LHS 3006 -> Morgor -> Ithaca
         // Profit: 981200, avg: 490600, distance: 67.5, lands: 2
@@ -42,4 +36,34 @@ public class MarketAnalyzerTest2 extends Assert {
         assertEquals(2, actual.getLandsCount());
         assertEquals(490600, actual.getAvgProfit() , 0.00001);
     }
+
+    //test best avg profit
+    @Test
+    public void testRoutes2() throws Exception {
+        InputStream is = getClass().getResourceAsStream("/test2.xml");
+        Market market = Store.loadFromFile(is);
+        MarketAnalyzer analyzer = new MarketAnalyzer(market);
+        // Balance: 6000000, cargo: 104 tank: 150, distance: 12.6, jumps: 4
+        // LHS 21 (Resonatic Separator to Sui Xing) -> Bonde -> Sui Xing (Palladium to LHS 21) -> Bonde -> LHS 21
+        // Profit: 981200, avg: 490600, distance: 67.5, lands: 2
+        Place lhs21 = market.get().stream().filter((v)->v.getName().equals("LHS 21")).findFirst().get();
+        Place suiXing = market.get().stream().filter((v)->v.getName().equals("Sui Xing")).findFirst().get();
+        analyzer.setCargo(104);analyzer.setTank(150);analyzer.setMaxDistance(12.6);analyzer.setJumps(4);analyzer.setPathsCount(100);
+        Collection<PathRoute> paths = analyzer.getPaths(lhs21, lhs21, 6000000);
+        Optional<PathRoute> path = paths.stream().findFirst();
+        assertTrue(path.isPresent());
+        PathRoute actual = path.get().getRoot();
+
+        assertEquals(199056, actual.getProfit(), 0.00001);
+        assertEquals(28.72, actual.getDistance(), 0.01);
+        assertEquals(2, actual.getLandsCount());
+        assertEquals(99528, actual.getAvgProfit() , 0.00001);
+
+        Place aPlace = actual.get().getPlace();
+        assertEquals(lhs21, aPlace);
+        actual = actual.getNext().getNext();
+        aPlace = actual.get().getPlace();
+        assertEquals(suiXing, aPlace);
+    }
+
 }

@@ -77,7 +77,7 @@ public class PathRoute extends Path<Vendor> {
 
     public PathRoute getCopy(boolean withOrders){
         PathRoute path = getRoot();
-        PathRoute res = new PathRoute(path.getTarget());
+        PathRoute res = new PathRoute(path.getTarget(), path.byAvg);
         if (withOrders) {
             res.orders.clear();
             res.orders.addAll(path.getOrders());
