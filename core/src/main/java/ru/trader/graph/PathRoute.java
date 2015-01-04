@@ -133,8 +133,12 @@ public class PathRoute extends Path<Vendor> {
                 Vendor buyer = p.get();
                 Offer buy = buyer.getBuy(sell.getItem());
                 if (buy != null){
-                    Order order = new Order(sell, buy);
-                    addOrder(order);
+                    Order order = new Order(sell, buy, 1);
+                    if (order.getProfit() < 0) {
+                        LOG.trace("{} - is no profit, skip", order);
+                    } else {
+                        addOrder(order);
+                    }
                 }
                 p = p.getNext();
             }

@@ -223,7 +223,7 @@ public class PathRouteTest extends Assert {
 
         assertEquals(10000, path.getBalance(), 0.0001);
         assertEquals(1000, path.getProfit(), 0.0001);
-        TestUtil.assertCollectionEquals(orders, order3, order1, order4, PathRoute.TRANSIT, order2);
+        TestUtil.assertCollectionEquals(orders, order3, order1, order4, PathRoute.TRANSIT);
 
         path = path.getNext();
         orders = path.getOrders();
