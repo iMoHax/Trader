@@ -187,19 +187,19 @@ public class MarketAnalyzer {
     }
 
     public Collection<PathRoute> getPaths(Place from, Place to, double balance){
+        List<PathRoute> top = new ArrayList<>(limit);
         RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
         Collection<Vendor> vendors = market.getVendors();
         Collection<Vendor> fVendors = from.get();
         Collection<Vendor> toVendors = to.get();
+        int count = (int) Math.ceil(limit / fVendors.size());
         for (Vendor fromVendor : fVendors) {
             for (Vendor toVendor : toVendors) {
-                Collection<PathRoute> paths = searcher.getPaths(fromVendor, toVendor, vendors, jumps, balance, cargo, limit);
-                if (paths.size()>0){
-                    return paths;
-                }
+                Collection<PathRoute> paths = searcher.getPaths(fromVendor, toVendor, vendors, jumps, balance, cargo, count);
+                TopList.addAllToTop(top, paths, limit, RouteGraph.byProfitComparator);
             }
         }
-        return Collections.emptyList();
+        return top;
     }
 
     public Collection<PathRoute> getPaths(Vendor from, Place to, double balance){
@@ -207,24 +207,25 @@ public class MarketAnalyzer {
         RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
         Collection<Vendor> vendors = market.getVendors();
         Collection<Vendor> toVendors = to.get();
+        int count = (int) Math.ceil(limit / toVendors.size());
         for (Vendor toVendor : toVendors) {
-            Collection<PathRoute> paths = searcher.getPaths(from, toVendor, vendors, jumps, balance, cargo, limit);
+            Collection<PathRoute> paths = searcher.getPaths(from, toVendor, vendors, jumps, balance, cargo, count);
             TopList.addAllToTop(top, paths, limit, RouteGraph.byProfitComparator);
         }
         return top;
     }
 
     public Collection<PathRoute> getPaths(Place from, Vendor to, double balance){
+        List<PathRoute> top = new ArrayList<>(limit);
         RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
         Collection<Vendor> vendors = market.getVendors();
         Collection<Vendor> fVendors = from.get();
+        int count = (int) Math.ceil(limit / fVendors.size());
         for (Vendor fromVendor : fVendors) {
-            Collection<PathRoute> paths = searcher.getPaths(fromVendor, to, vendors, jumps, balance, cargo, limit);
-            if (paths.size()>0){
-                return paths;
-            }
+            Collection<PathRoute> paths = searcher.getPaths(fromVendor, to, vendors, jumps, balance, cargo, count);
+            TopList.addAllToTop(top, paths, limit, RouteGraph.byProfitComparator);
         }
-        return Collections.emptyList();
+        return top;
     }
 
     public Collection<PathRoute> getTopPaths(double balance){
