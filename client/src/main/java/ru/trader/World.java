@@ -3,7 +3,6 @@ package ru.trader;
 import org.xml.sax.SAXException;
 import ru.trader.core.Market;
 import ru.trader.core.MarketAnalyzer;
-import ru.trader.model.ModelFabric;
 import ru.trader.store.simple.SimpleMarket;
 import ru.trader.store.simple.Store;
 import ru.trader.store.XSSFImporter;
@@ -47,6 +46,7 @@ public class World {
         MarketAnalyzer analyzer = new MarketAnalyzer(market);
         analyzer.setSegmentSize(Main.SETTINGS.getSegmentSize());
         analyzer.setPathsCount(Main.SETTINGS.getPathsCount());
+        analyzer.setFilter(Main.SETTINGS.getFilter(market));
         return analyzer;
     }
 }

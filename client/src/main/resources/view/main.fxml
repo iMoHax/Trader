@@ -22,6 +22,7 @@
                <MenuItem text="%main.menu.edit.removeStation" onAction="#removeStation"/>
            </Menu>
            <Menu text="%main.menu.settings">
+               <MenuItem text="%main.menu.settings.filter" onAction="#editFilter"/>
                <MenuItem text="%main.menu.settings.parameters" onAction="#editSettings"/>
                <Menu fx:id="langs" text="%main.menu.settings.language"/>
            </Menu>

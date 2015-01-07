@@ -9,7 +9,8 @@ import java.util.*;
 public class MarketAnalyzer {
     private final static Logger LOG = LoggerFactory.getLogger(MarketAnalyzer.class);
 
-    private Market market;
+    private final Market market;
+    private MarketFilter filter;
     private double tank;
     private double maxDistance;
     private int segmentSize;
@@ -25,220 +26,9 @@ public class MarketAnalyzer {
         this.segmentSize = 0;
     }
 
-    public Collection<Order> getTop(double balance){
-        LOG.debug("Get top {}", limit);
-        Iterable<Place> places = market.get();
-        List<Order> top = new ArrayList<>(limit);
-        for (Place place : places) {
-             LOG.trace("Check place {}", place);
-             Collection<Order> orders = getOrders(place, balance, top.isEmpty() ? 0 : top.get(top.size()-1).getProfit());
-             TopList.addAllToTop(top, orders, limit, orderComparator);
-        }
-        return top;
+    public void setFilter(MarketFilter filter) {
+        this.filter = filter;
     }
-
-    public Collection<Order> getOrders(Vendor vendor, double balance) {
-        Collection<Place> places = market.get();
-        Graph<Place> graph = new Graph<Place>(vendor.getPlace(), places, tank, maxDistance, true, jumps, Path::new);
-        return getOrders(graph, Collections.singleton(vendor), balance, 0);
-    }
-
-    public Collection<Order> getOrders(Place place, double balance) {
-        return getOrders(place, balance, 0);
-    }
-
-    private Collection<Order> getOrders(Place place, double balance, double lowProfit) {
-        Collection<Place> places = market.get();
-        Graph<Place> graph = new Graph<>(place, places, tank, maxDistance, true, jumps, Path::new);
-        return getOrders(graph, place.get(), balance, lowProfit);
-    }
-
-    private Collection<Order> getOrders(Graph<Place> graph, Collection<Vendor> sellers, double balance, double lowProfit) {
-        List<Order> res = new ArrayList<>(20);
-        for (Vendor vendor : sellers) {
-            for (Offer sell : vendor.getAllSellOffers()) {
-                LOG.trace("Sell offer {}", sell);
-                if (sell.getCount() == 0) continue;
-                long count = Order.getMaxCount(sell, balance, cargo);
-                LOG.trace("count = {}", count);
-                if (count == 0) continue;
-                Iterator<Offer> buyers = market.getStatBuy(sell.getItem()).getOffers().descendingIterator();
-                while (buyers.hasNext()){
-                    Offer buy = buyers.next();
-                    if (!graph.isAccessible(buy.getVendor().getPlace())){
-                        LOG.trace("Is inaccessible buyer, skip");
-                        continue;
-                    }
-                    Order order = new Order(sell, buy, count);
-                    LOG.trace("Buy offer {} profit = {}", buy, order.getProfit());
-                    if (order.getProfit() <= 0 && order.getCount() > 0) break;
-                    if (order.getProfit() < lowProfit && order.getCount() == count) {
-                        LOG.trace("Is low profit, skip");
-                        break;
-                    }
-                    res.add(order);
-                }
-            }
-        }
-        res.sort(orderComparator);
-        return res;
-    }
-
-    private Collection<Order> getOrders(Collection<Vendor> sellers, Collection<Vendor> buyers, double balance, double lowProfit) {
-        List<Order> res = new ArrayList<>();
-        for (Vendor seller : sellers) {
-            for (Offer sell : seller.getAllSellOffers()) {
-                if (sell.getCount() == 0) continue;
-                long count = Order.getMaxCount(sell, balance, cargo);
-                LOG.trace("Sell offer {}, count = {}", sell, count);
-                if (count == 0) continue;
-                for (Vendor buyer : buyers) {
-                    Offer buy = buyer.getBuy(sell.getItem());
-                    if (buy != null){
-                        Order order = new Order(sell, buy, count);
-                        LOG.trace("Buy offer {} profit = {}", buy, order.getProfit());
-                        if (order.getProfit() < lowProfit) {
-                            LOG.trace("Is low profit, skip");
-                            continue;
-                        }
-                        res.add(order);
-                    }
-                }
-            }
-        }
-        res.sort(orderComparator);
-        return res;
-    }
-
-    public Collection<Order> getOrders(Vendor from, Vendor to, double balance) {
-        Graph<Place> graph = new Graph<Place>(from.getPlace(), market.get(), tank, maxDistance, true, jumps, Path::new);
-        if (!graph.isAccessible(to.getPlace())){
-            LOG.trace("Is inaccessible buyer");
-            return Collections.emptyList();
-        }
-        return getOrders(Collections.singleton(from), Collections.singleton(to), balance, 0);
-    }
-
-    public Collection<Order> getOrders(Place from, Place to, double balance) {
-        Graph<Place> graph = new Graph<Place>(from, market.get(), tank, maxDistance, true, jumps, Path::new);
-        if (!graph.isAccessible(to)){
-            LOG.trace("Is inaccessible buyer");
-            return Collections.emptyList();
-        }
-        return getOrders(from.get(), to.get(), balance, 0);
-    }
-
-
-    public Collection<Order> getOrders(Vendor from, Place to, double balance) {
-        Graph<Place> graph = new Graph<Place>(from.getPlace(), market.get(), tank, maxDistance, true, jumps, Path::new);
-        if (!graph.isAccessible(to)){
-            LOG.trace("Is inaccessible buyer");
-            return Collections.emptyList();
-        }
-        return getOrders(Collections.singleton(from), to.get(), balance, 0);
-    }
-
-    public Collection<Order> getOrders(Place from, Vendor to, double balance) {
-        Graph<Place> graph = new Graph<Place>(from, market.get(), tank, maxDistance, true, jumps, Path::new);
-        if (!graph.isAccessible(to.getPlace())){
-            LOG.trace("Is inaccessible buyer");
-            return Collections.emptyList();
-        }
-        return getOrders(from.get(), Collections.singleton(to), balance, 0);
-    }
-
-
-    public Collection<Path<Place>> getPaths(Place from, Place to){
-        Graph<Place> graph = new Graph<Place>(from, market.get(), tank, maxDistance, true, jumps, Path::new);
-        return graph.getPathsTo(to);
-    }
-
-    public Path<Place> getPath(Place from, Place to){
-        Graph<Place> graph = new Graph<Place>(from, market.get(), tank, maxDistance, true, jumps, Path::new);
-        return graph.getFastPathTo(to);
-    }
-
-    public PathRoute getPath(Vendor from, Vendor to){
-        RouteGraph graph = new RouteGraph(from, market.getVendors(), tank, maxDistance, true, jumps);
-        return (PathRoute)graph.getFastPathTo(to);
-    }
-
-    public Collection<PathRoute> getPaths(Vendor from, double balance){
-        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
-        Collection<Vendor> vendors = market.getVendors();
-        return searcher.getPaths(from, vendors, jumps, balance, cargo, limit);
-    }
-
-    public Collection<PathRoute> getPaths(Place from, double balance){
-        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
-        Collection<Vendor> vendors = market.getVendors();
-        for (Vendor vendor : from.get()) {
-            Collection<PathRoute> paths = searcher.getPaths(vendor, vendors, jumps, balance, cargo, limit);
-            if (paths.size()>0){
-                return paths;
-            }
-        }
-        return Collections.emptyList();
-    }
-
-    public Collection<PathRoute> getPaths(Vendor from, Vendor to, double balance){
-        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
-        return searcher.getPaths(from, to, market.getVendors(), jumps, balance, cargo, limit);
-    }
-
-    public Collection<PathRoute> getPaths(Place from, Place to, double balance){
-        List<PathRoute> top = new ArrayList<>(limit);
-        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
-        Collection<Vendor> vendors = market.getVendors();
-        Collection<Vendor> fVendors = from.get();
-        Collection<Vendor> toVendors = to.get();
-        int count = (int) Math.ceil(limit / fVendors.size());
-        for (Vendor fromVendor : fVendors) {
-            for (Vendor toVendor : toVendors) {
-                Collection<PathRoute> paths = searcher.getPaths(fromVendor, toVendor, vendors, jumps, balance, cargo, count);
-                TopList.addAllToTop(top, paths, limit, RouteGraph.byProfitComparator);
-            }
-        }
-        return top;
-    }
-
-    public Collection<PathRoute> getPaths(Vendor from, Place to, double balance){
-        List<PathRoute> top = new ArrayList<>(limit);
-        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
-        Collection<Vendor> vendors = market.getVendors();
-        Collection<Vendor> toVendors = to.get();
-        int count = (int) Math.ceil(limit / toVendors.size());
-        for (Vendor toVendor : toVendors) {
-            Collection<PathRoute> paths = searcher.getPaths(from, toVendor, vendors, jumps, balance, cargo, count);
-            TopList.addAllToTop(top, paths, limit, RouteGraph.byProfitComparator);
-        }
-        return top;
-    }
-
-    public Collection<PathRoute> getPaths(Place from, Vendor to, double balance){
-        List<PathRoute> top = new ArrayList<>(limit);
-        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
-        Collection<Vendor> vendors = market.getVendors();
-        Collection<Vendor> fVendors = from.get();
-        int count = (int) Math.ceil(limit / fVendors.size());
-        for (Vendor fromVendor : fVendors) {
-            Collection<PathRoute> paths = searcher.getPaths(fromVendor, to, vendors, jumps, balance, cargo, count);
-            TopList.addAllToTop(top, paths, limit, RouteGraph.byProfitComparator);
-        }
-        return top;
-    }
-
-    public Collection<PathRoute> getTopPaths(double balance){
-        List<PathRoute> top = new ArrayList<>(limit);
-        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
-        Collection<Vendor> vendors = new PlacesWrapper(market.get());
-        for (Vendor vendor : vendors) {
-            Collection<PathRoute> paths = searcher.getPaths(vendor, vendor, vendors, jumps, balance, cargo, 3);
-            TopList.addAllToTop(top, paths, limit, RouteGraph.byProfitComparator);
-        }
-        return top;
-    }
-
 
     public void setTank(double tank) {
         this.tank = tank;
@@ -262,5 +52,280 @@ public class MarketAnalyzer {
 
     public void setPathsCount(int count) {
         this.limit = count;
+    }
+
+    public Collection<Order> getTop(double balance){
+        LOG.debug("Get top {}", limit);
+        Iterable<Place> places = getPlaces();
+        List<Order> top = new ArrayList<>(limit);
+        for (Place place : places) {
+             LOG.trace("Check place {}", place);
+             Collection<Order> orders = getOrders(place, balance, top.isEmpty() ? 0 : top.get(top.size()-1).getProfit());
+             TopList.addAllToTop(top, orders, limit, orderComparator);
+        }
+        return top;
+    }
+
+    public Collection<Order> getOrders(Vendor vendor, double balance) {
+        Collection<Place> places = getPlaces();
+        Graph<Place> graph = new Graph<Place>(vendor.getPlace(), places, tank, maxDistance, true, jumps, Path::new);
+        return getOrders(graph, Collections.singleton(vendor), balance, 0);
+    }
+
+    public Collection<Order> getOrders(Place place, double balance) {
+        return getOrders(place, balance, 0);
+    }
+
+    private Collection<Order> getOrders(Place place, double balance, double lowProfit) {
+        Collection<Place> places = getPlaces();
+        Graph<Place> graph = new Graph<>(place, places, tank, maxDistance, true, jumps, Path::new);
+        return getOrders(graph, place.get(), balance, lowProfit);
+    }
+
+    private Collection<Order> getOrders(Graph<Place> graph, Collection<Vendor> sellers, double balance, double lowProfit) {
+        List<Order> res = new ArrayList<>(20);
+        for (Vendor vendor : sellers) {
+            if (isFiltered(vendor)){
+                LOG.trace("Is filtered, skip");
+                continue;
+            }
+            for (Offer sell : vendor.getAllSellOffers()) {
+                LOG.trace("Sell offer {}", sell);
+                if (sell.getCount() == 0) continue;
+                long count = Order.getMaxCount(sell, balance, cargo);
+                LOG.trace("count = {}", count);
+                if (count == 0) continue;
+                Iterator<Offer> buyers = market.getStatBuy(sell.getItem()).getOffers().descendingIterator();
+                while (buyers.hasNext()){
+                    Offer buy = buyers.next();
+                    if (isFiltered(buy.getVendor())){
+                        LOG.trace("Is filtered, skip");
+                        continue;
+                    }
+                    if (!graph.isAccessible(buy.getVendor().getPlace())){
+                        LOG.trace("Is inaccessible buyer, skip");
+                        continue;
+                    }
+                    Order order = new Order(sell, buy, count);
+                    LOG.trace("Buy offer {} profit = {}", buy, order.getProfit());
+                    if (order.getProfit() <= 0 && order.getCount() > 0) break;
+                    if (order.getProfit() < lowProfit && order.getCount() == count) {
+                        LOG.trace("Is low profit, skip");
+                        break;
+                    }
+                    res.add(order);
+                }
+            }
+        }
+        res.sort(orderComparator);
+        return res;
+    }
+
+    private Collection<Order> getOrders(Collection<Vendor> sellers, Collection<Vendor> buyers, double balance, double lowProfit) {
+        List<Order> res = new ArrayList<>();
+        for (Vendor seller : sellers) {
+            if (isFiltered(seller)){
+                LOG.trace("Is filtered, skip");
+                continue;
+            }
+            for (Offer sell : seller.getAllSellOffers()) {
+                if (sell.getCount() == 0) continue;
+                long count = Order.getMaxCount(sell, balance, cargo);
+                LOG.trace("Sell offer {}, count = {}", sell, count);
+                if (count == 0) continue;
+                for (Vendor buyer : buyers) {
+                    if (isFiltered(buyer)){
+                        LOG.trace("Is filtered, skip");
+                        continue;
+                    }
+                    Offer buy = buyer.getBuy(sell.getItem());
+                    if (buy != null){
+                        Order order = new Order(sell, buy, count);
+                        LOG.trace("Buy offer {} profit = {}", buy, order.getProfit());
+                        if (order.getProfit() < lowProfit) {
+                            LOG.trace("Is low profit, skip");
+                            continue;
+                        }
+                        res.add(order);
+                    }
+                }
+            }
+        }
+        res.sort(orderComparator);
+        return res;
+    }
+
+    public Collection<Order> getOrders(Vendor from, Vendor to, double balance) {
+        Graph<Place> graph = new Graph<Place>(from.getPlace(), getPlaces(), tank, maxDistance, true, jumps, Path::new);
+        if (!graph.isAccessible(to.getPlace())){
+            LOG.trace("Is inaccessible buyer");
+            return Collections.emptyList();
+        }
+        return getOrders(Collections.singleton(from), Collections.singleton(to), balance, 0);
+    }
+
+    public Collection<Order> getOrders(Place from, Place to, double balance) {
+        Graph<Place> graph = new Graph<Place>(from, getPlaces(), tank, maxDistance, true, jumps, Path::new);
+        if (!graph.isAccessible(to)){
+            LOG.trace("Is inaccessible buyer");
+            return Collections.emptyList();
+        }
+        return getOrders(from.get(), to.get(), balance, 0);
+    }
+
+
+    public Collection<Order> getOrders(Vendor from, Place to, double balance) {
+        Graph<Place> graph = new Graph<Place>(from.getPlace(), getPlaces(), tank, maxDistance, true, jumps, Path::new);
+        if (!graph.isAccessible(to)){
+            LOG.trace("Is inaccessible buyer");
+            return Collections.emptyList();
+        }
+        return getOrders(Collections.singleton(from), to.get(), balance, 0);
+    }
+
+    public Collection<Order> getOrders(Place from, Vendor to, double balance) {
+        Graph<Place> graph = new Graph<Place>(from, getPlaces(), tank, maxDistance, true, jumps, Path::new);
+        if (!graph.isAccessible(to.getPlace())){
+            LOG.trace("Is inaccessible buyer");
+            return Collections.emptyList();
+        }
+        return getOrders(from.get(), Collections.singleton(to), balance, 0);
+    }
+
+
+    public Collection<Path<Place>> getPaths(Place from, Place to){
+        Graph<Place> graph = new Graph<Place>(from, getPlaces(), tank, maxDistance, true, jumps, Path::new);
+        return graph.getPathsTo(to);
+    }
+
+    public Path<Place> getPath(Place from, Place to){
+        Graph<Place> graph = new Graph<Place>(from, getPlaces(), tank, maxDistance, true, jumps, Path::new);
+        return graph.getFastPathTo(to);
+    }
+
+    public PathRoute getPath(Vendor from, Vendor to){
+        RouteGraph graph = new RouteGraph(from, getVendors(), tank, maxDistance, true, jumps);
+        return (PathRoute)graph.getFastPathTo(to);
+    }
+
+    public Collection<PathRoute> getPaths(Vendor from, double balance){
+        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
+        Collection<Vendor> vendors = getVendors();
+        return searcher.getPaths(from, vendors, jumps, balance, cargo, limit);
+    }
+
+    public Collection<PathRoute> getPaths(Place from, double balance){
+        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
+        Collection<Vendor> vendors = getVendors();
+        for (Vendor vendor : from.get()) {
+            if (isFiltered(vendor)){
+                LOG.trace("Is filtered, skip");
+                continue;
+            }
+            Collection<PathRoute> paths = searcher.getPaths(vendor, vendors, jumps, balance, cargo, limit);
+            if (paths.size()>0){
+                return paths;
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    public Collection<PathRoute> getPaths(Vendor from, Vendor to, double balance){
+        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
+        return searcher.getPaths(from, to, getVendors(), jumps, balance, cargo, limit);
+    }
+
+    public Collection<PathRoute> getPaths(Place from, Place to, double balance){
+        List<PathRoute> top = new ArrayList<>(limit);
+        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
+        Collection<Vendor> vendors = getVendors();
+        Collection<Vendor> fVendors = from.get();
+        Collection<Vendor> toVendors = to.get();
+        int count = (int) Math.ceil(limit / fVendors.size());
+        for (Vendor fromVendor : fVendors) {
+            if (isFiltered(fromVendor)){
+                LOG.trace("Is filtered, skip");
+                continue;
+            }
+            for (Vendor toVendor : toVendors) {
+                if (isFiltered(toVendor)){
+                    LOG.trace("Is filtered, skip");
+                    continue;
+                }
+                Collection<PathRoute> paths = searcher.getPaths(fromVendor, toVendor, vendors, jumps, balance, cargo, count);
+                TopList.addAllToTop(top, paths, limit, RouteGraph.byProfitComparator);
+            }
+        }
+        return top;
+    }
+
+    public Collection<PathRoute> getPaths(Vendor from, Place to, double balance){
+        List<PathRoute> top = new ArrayList<>(limit);
+        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
+        Collection<Vendor> vendors = getVendors();
+        Collection<Vendor> toVendors = to.get();
+        int count = (int) Math.ceil(limit / toVendors.size());
+        for (Vendor toVendor : toVendors) {
+            if (isFiltered(toVendor)){
+                LOG.trace("Is filtered, skip");
+                continue;
+            }
+            Collection<PathRoute> paths = searcher.getPaths(from, toVendor, vendors, jumps, balance, cargo, count);
+            TopList.addAllToTop(top, paths, limit, RouteGraph.byProfitComparator);
+        }
+        return top;
+    }
+
+    public Collection<PathRoute> getPaths(Place from, Vendor to, double balance){
+        List<PathRoute> top = new ArrayList<>(limit);
+        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
+        Collection<Vendor> vendors = getVendors();
+        Collection<Vendor> fVendors = from.get();
+        int count = (int) Math.ceil(limit / fVendors.size());
+        for (Vendor fromVendor : fVendors) {
+            if (isFiltered(fromVendor)){
+                LOG.trace("Is filtered, skip");
+                continue;
+            }
+            Collection<PathRoute> paths = searcher.getPaths(fromVendor, to, vendors, jumps, balance, cargo, count);
+            TopList.addAllToTop(top, paths, limit, RouteGraph.byProfitComparator);
+        }
+        return top;
+    }
+
+    public Collection<PathRoute> getTopPaths(double balance){
+        List<PathRoute> top = new ArrayList<>(limit);
+        RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize);
+        Collection<Vendor> vendors = getVendors();
+        for (Vendor vendor : vendors) {
+            Collection<PathRoute> paths = searcher.getPaths(vendor, vendor, vendors, jumps, balance, cargo, 3);
+            TopList.addAllToTop(top, paths, limit, RouteGraph.byProfitComparator);
+        }
+        return top;
+    }
+
+    private Collection<Place> getPlaces(){
+        if (filter != null){
+            return filter.filtered(market.get());
+        } else {
+            return market.get();
+        }
+    }
+
+    private Collection<Vendor> getVendors(){
+        if (filter != null){
+            Collection<Vendor> vendors = new PlacesWrapper(getPlaces());
+            return filter.filteredVendors(vendors);
+        } else {
+            return market.getVendors();
+        }
+    }
+
+    public MarketFilter getFilter() {
+        return filter;
+    }
+
+    private boolean isFiltered(Vendor vendor){
+        return filter != null && (filter.isFiltered(vendor.getPlace()) || filter.isFiltered(vendor));
     }
 }

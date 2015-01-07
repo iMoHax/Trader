@@ -3,6 +3,7 @@ package ru.trader.core;
 import ru.trader.graph.Connectable;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface Place extends Connectable<Place> {
 
@@ -15,6 +16,10 @@ public interface Place extends Connectable<Place> {
     void setPosition(double x, double y, double z);
 
     Collection<Vendor> get();
+    default Vendor get(String name){
+        Optional<Vendor> vendor = get().stream().filter(p -> name.equals(p.getName())).findFirst();
+        return vendor.isPresent() ? vendor.get() : null;
+    }
     void add(Vendor vendor);
     Vendor addVendor(String name);
     void remove(Vendor vendor);

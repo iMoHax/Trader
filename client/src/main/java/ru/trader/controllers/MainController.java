@@ -177,6 +177,10 @@ public class MainController {
         Screeners.showSettings();
     }
 
+    public void editFilter(){
+        Screeners.showFilter(market.getAnalyzer().getFilter());
+    }
+
     private void reload(){
         world = new MarketModel(World.getMarket());
         market = world;

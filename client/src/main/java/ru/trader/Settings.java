@@ -2,6 +2,7 @@ package ru.trader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.core.*;
 
 import java.io.*;
 import java.util.Properties;
@@ -124,5 +125,13 @@ public class Settings {
 
     public int getPathsCount(){
         return Integer.valueOf(values.getProperty("performance.limit","100"));
+    }
+
+    public MarketFilter getFilter(Market market){
+        return MarketFilter.buildFilter(values, market);
+    }
+
+    public void setFilter(MarketFilter filter){
+        filter.writeTo(values);
     }
 }

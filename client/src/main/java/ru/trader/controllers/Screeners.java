@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialogs;
 import ru.trader.EMDNUpdater;
+import ru.trader.Main;
+import ru.trader.core.MarketFilter;
 import ru.trader.model.*;
 import ru.trader.view.support.CustomBuilderFactory;
 import ru.trader.view.support.Localization;
@@ -29,6 +31,7 @@ public class Screeners {
     private static Parent pathsScreen;
     private static Parent settingsScreen;
     private static Parent sEditorScreen;
+    private static Parent filterScreen;
 
     private static MainController mainController;
     private static ItemDescController itemDescController;
@@ -39,6 +42,7 @@ public class Screeners {
     private static PathsController pathsController;
     private static SettingsController settingsController;
     private static SystemsEditorController systemsEditorController;
+    private static FilterController filterController;
 
     private static FXMLLoader initLoader(URL url){
         FXMLLoader loader = new FXMLLoader(url, Localization.getResources());
@@ -127,6 +131,12 @@ public class Screeners {
         systemsEditorController = loader.getController();
     }
 
+    public static void loadFilterStage(URL fxml) throws IOException {
+        FXMLLoader loader =  initLoader(fxml);
+        filterScreen = loader.load();
+        addStylesheet(filterScreen);
+        filterController = loader.getController();
+    }
 
     public static void show(Node node){
         mainController.getMainPane().setCenter(node);
@@ -195,8 +205,21 @@ public class Screeners {
         settingsController.showDialog(mainScreen, settingsScreen);
     }
 
+    public static MarketFilter showFilter() {
+        Action res = filterController.showDialog(mainScreen, filterScreen);
+        return res == filterController.actSave ? filterController.getFilter() : null;
+    }
+
+    public static void showFilter(MarketFilter filter) {
+        Action res = filterController.showDialog(mainScreen, filterScreen, filter);
+        if (res == filterController.actSave){
+            Main.SETTINGS.setFilter(filter);
+        }
+    }
+
     public static void reinitAll() {
         mainController.init();
+        filterController.init();
         EMDNUpdater.setMarket(MainController.getMarket());
     }
 }

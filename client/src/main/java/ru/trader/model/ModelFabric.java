@@ -45,6 +45,9 @@ public class ModelFabric {
         return res;
     }
 
+    public Place get(SystemModel model){
+        return model.getSystem();
+    }
 
     public StationModel get(Vendor station){
         if (station == null) return NONE_STATION;
@@ -60,6 +63,9 @@ public class ModelFabric {
         return res;
     }
 
+    public Vendor get(StationModel model){
+        return model.getStation();
+    }
 
     public ItemModel get(Item item){
         if (item == null) return null;

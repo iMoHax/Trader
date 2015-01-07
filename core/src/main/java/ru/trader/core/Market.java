@@ -1,12 +1,17 @@
 package ru.trader.core;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface Market {
 
     void add(Place place);
     Place addPlace(String name, double x, double y, double z);
     void remove(Place place);
+    default Place get(String name){
+        Optional<Place> place = get().stream().filter(p -> name.equals(p.getName())).findFirst();
+        return place.isPresent() ? place.get() : null;
+    }
 
     void add(Group group);
     Group addGroup(String name, GROUP_TYPE type);
