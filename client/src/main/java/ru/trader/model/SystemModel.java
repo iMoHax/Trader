@@ -1,6 +1,8 @@
 package ru.trader.model;
 
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.Place;
@@ -78,6 +80,12 @@ public class SystemModel {
 
     public List<StationModel> getStations() {
         return system.get().stream().map(this::asModel).collect(Collectors.toList());
+    }
+
+    public ObservableList<StationModel> getStationsList() {
+        ObservableList<StationModel> res = FXCollections.observableArrayList(ModelFabric.NONE_STATION);
+        res.addAll(getStations());
+        return res;
     }
 
     public List<StationModel> getStations(final SERVICE_TYPE service) {

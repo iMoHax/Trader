@@ -89,22 +89,10 @@ public class RouterController {
             Main.SETTINGS.setJumps(n.intValue());
         });
         source.valueProperty().addListener((ov, o, n) -> {
-            if (n != ModelFabric.NONE_SYSTEM){
-                ObservableList<StationModel> stations = FXCollections.observableArrayList(ModelFabric.NONE_STATION);
-                stations.addAll(n.getStations());
-                sStation.setItems(stations);
-            } else {
-                sStation.setItems(FXCollections.observableArrayList(ModelFabric.NONE_STATION));
-            }
+            sStation.setItems(n.getStationsList());
         });
         target.valueProperty().addListener((ov, o, n) -> {
-            if (n != ModelFabric.NONE_SYSTEM){
-                ObservableList<StationModel> stations = FXCollections.observableArrayList(ModelFabric.NONE_STATION);
-                stations.addAll(n.getStations());
-                tStation.setItems(stations);
-            } else {
-                tStation.setItems(FXCollections.observableArrayList(ModelFabric.NONE_STATION));
-            }
+            tStation.setItems(n.getStationsList());
         });
 
 
@@ -145,8 +133,7 @@ public class RouterController {
         market.getNotificator().add(new RouterChangeListener());
         source.setItems(market.systemsProperty());
         source.getSelectionModel().selectFirst();
-        target.setItems(FXCollections.observableArrayList(market.systemsProperty()));
-        target.getItems().add(0, ModelFabric.NONE_SYSTEM);
+        target.setItems(market.systemsListProperty());
         target.getSelectionModel().selectFirst();
         orders.clear();
         totalBalance.setValue(balance.getValue());
@@ -274,15 +261,6 @@ public class RouterController {
     }
 
     private class RouterChangeListener extends ChangeMarketListener {
-        @Override
-        public void add(SystemModel system) {
-            target.getItems().add(system);
-        }
-
-        @Override
-        public void remove(SystemModel system) {
-            target.getItems().remove(system);
-        }
 
         @Override
         public void add(StationModel station) {

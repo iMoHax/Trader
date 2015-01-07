@@ -3,6 +3,8 @@ package ru.trader.model;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,8 @@ public class MarketModel {
     private final Notificator notificator;
 
     private final ListProperty<SystemModel> systems;
+    // with NONE_SYSTEM
+    private ListProperty<SystemModel> systemsList;
     private final ListProperty<ItemModel> items;
 
     public MarketModel(Market market) {
@@ -33,7 +37,21 @@ public class MarketModel {
         notificator = new Notificator();
         items = new SimpleListProperty<>(BindingsHelper.observableList(market.getItems(), modeler::get));
         systems = new SimpleListProperty<>(BindingsHelper.observableList(market.get(), modeler::get));
+        systemsList = new SimpleListProperty<>(FXCollections.observableArrayList(ModelFabric.NONE_SYSTEM));
+        systemsList.addAll(systems);
+        systems.addListener(SYSTEMS_CHANGE_LISTENER);
     }
+
+    private ListChangeListener<SystemModel> SYSTEMS_CHANGE_LISTENER = l -> {
+        while (l.next()) {
+            if (l.wasRemoved()) {
+                systemsList.removeAll(l.getRemoved());
+            }
+            if (l.wasAdded()) {
+                systemsList.addAll(l.getAddedSubList());
+            }
+        }
+    };
 
     public MarketAnalyzer getAnalyzer() {
         return analyzer;
@@ -49,6 +67,9 @@ public class MarketModel {
 
     public ReadOnlyListProperty<SystemModel> systemsProperty() {
         return systems;
+    }
+    public ReadOnlyListProperty<SystemModel> systemsListProperty() {
+        return systemsList;
     }
 
     public SystemModel add(String name, double x, double y, double z) {

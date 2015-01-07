@@ -1,6 +1,8 @@
 package ru.trader.model;
 
 import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import ru.trader.core.*;
 import ru.trader.graph.PathRoute;
 
@@ -30,7 +32,7 @@ public class ModelFabric {
     }
 
     public SystemModel get(Place system){
-        if (system == null) return null;
+        if (system == null) return NONE_SYSTEM;
         SystemModel res=null;
         WeakReference<SystemModel> ref = systems.get(system);
         if (ref != null){
@@ -45,7 +47,7 @@ public class ModelFabric {
 
 
     public StationModel get(Vendor station){
-        if (station == null) return null;
+        if (station == null) return NONE_STATION;
         StationModel res=null;
         WeakReference<StationModel> ref = stations.get(station);
         if (ref != null){
@@ -158,6 +160,11 @@ public class ModelFabric {
         @Override
         public List<StationModel> getStations() {
             throw new UnsupportedOperationException("Is fake system, change unsupported");
+        }
+
+        @Override
+        public ObservableList<StationModel> getStationsList() {
+            return FXCollections.observableArrayList(ModelFabric.NONE_STATION);
         }
 
         @Override
