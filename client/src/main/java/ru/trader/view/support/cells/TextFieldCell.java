@@ -74,11 +74,12 @@ public class TextFieldCell<S,T> extends TableCell<S,T> {
     public void cancelEdit() {
         LOG.trace("Cancel edit");
         //lost focus
-        if (!isCommit()) commit(false);
-        if (isCommit()) {
+        //crash on scroll, disable
+        //if (!isCommit()) commit(false);
+        //if (isCommit()) {
             super.cancelEdit();
             outItem();
-        }
+        //}
     }
 
 
