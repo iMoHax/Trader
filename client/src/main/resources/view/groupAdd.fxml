@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      styleClass="dialog"
+      fx:controller="ru.trader.controllers.GroupAddController" spacing="4">
+    <Label text="%dialog.group.id"/>
+    <TextField fx:id="name" minWidth="200"/>
+    <Label text="%dialog.group.type"/>
+    <ComboBox fx:id="type" minWidth="200"/>
+
+</HBox>

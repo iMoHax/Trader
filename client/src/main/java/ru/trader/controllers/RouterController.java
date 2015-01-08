@@ -89,10 +89,18 @@ public class RouterController {
             Main.SETTINGS.setJumps(n.intValue());
         });
         source.valueProperty().addListener((ov, o, n) -> {
-            sStation.setItems(n.getStationsList());
+            if (n != null) {
+                sStation.setItems(n.getStationsList());
+            } else {
+                sStation.setItems(FXCollections.emptyObservableList());
+            }
         });
         target.valueProperty().addListener((ov, o, n) -> {
-            tStation.setItems(n.getStationsList());
+            if (n != null) {
+                tStation.setItems(n.getStationsList());
+            } else {
+                tStation.setItems(FXCollections.emptyObservableList());
+            }
         });
 
 

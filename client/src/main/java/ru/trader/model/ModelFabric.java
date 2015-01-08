@@ -67,6 +67,11 @@ public class ModelFabric {
         return model.getStation();
     }
 
+    public GroupModel get(Group group){
+        if (group == null) return null;
+        return new GroupModel(group);
+    }
+
     public ItemModel get(Item item){
         if (item == null) return null;
         ItemModel res=null;

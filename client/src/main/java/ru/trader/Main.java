@@ -94,6 +94,8 @@ public class Main extends Application {
         Screeners.loadSettingsStage(getUrl(("settings.fxml")));
         Screeners.loadSEditorStage(getUrl(("sEditor.fxml")));
         Screeners.loadFilterStage(getUrl(("filter.fxml")));
+        Screeners.loadItemAddStage(getUrl("itemAdd.fxml"));
+        Screeners.loadGroupAddStage(getUrl("groupAdd.fxml"));
     }
 
     private static URL getUrl(String filename) throws MalformedURLException {

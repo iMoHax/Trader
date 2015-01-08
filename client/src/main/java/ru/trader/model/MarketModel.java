@@ -28,6 +28,7 @@ public class MarketModel {
     private final ListProperty<SystemModel> systems;
     // with NONE_SYSTEM
     private ListProperty<SystemModel> systemsList;
+    private final ListProperty<GroupModel> groups;
     private final ListProperty<ItemModel> items;
 
     public MarketModel(Market market) {
@@ -35,6 +36,7 @@ public class MarketModel {
         analyzer = World.buildAnalyzer(market);
         modeler = new ModelFabric(this);
         notificator = new Notificator();
+        groups = new SimpleListProperty<>(BindingsHelper.observableList(market.getGroups(), modeler::get));
         items = new SimpleListProperty<>(BindingsHelper.observableList(market.getItems(), modeler::get));
         systems = new SimpleListProperty<>(BindingsHelper.observableList(market.get(), modeler::get));
         systemsList = new SimpleListProperty<>(FXCollections.observableArrayList(ModelFabric.NONE_SYSTEM));
@@ -80,12 +82,30 @@ public class MarketModel {
         return system;
     }
 
+    public void remove(SystemModel system) {
+        LOG.info("Remove system {} from market {}", system, this);
+        notificator.sendRemove(system);
+        market.remove(system.getSystem());
+        systems.remove(system);
+    }
+
+    public ReadOnlyListProperty<GroupModel> getGroups(){
+        return groups;
+    }
+
+    public GroupModel addGroup(String name, GROUP_TYPE type){
+        GroupModel group = modeler.get(market.addGroup(name, type));
+        LOG.info("Add group {} to market {}", group, this);
+        groups.add(group);
+        return group;
+    }
+
     public ReadOnlyListProperty<ItemModel> itemsProperty() {
         return items;
     }
 
-    public ItemModel add(String name, Group group) {
-        ItemModel item = modeler.get(market.addItem(name, group));
+    public ItemModel add(String name, GroupModel group) {
+        ItemModel item = modeler.get(market.addItem(name, group.getGroup()));
         LOG.info("Add item {} to market {}", item, this);
         notificator.sendAdd(item);
         items.add(item);

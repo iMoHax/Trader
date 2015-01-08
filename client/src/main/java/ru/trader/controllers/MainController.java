@@ -8,16 +8,14 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
-import org.controlsfx.dialog.Dialogs;
+import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.Dialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import ru.trader.Main;
 import ru.trader.World;
-import ru.trader.model.ItemModel;
-import ru.trader.model.MarketModel;
-import ru.trader.model.StationModel;
-import ru.trader.model.SystemModel;
+import ru.trader.model.*;
 import ru.trader.view.support.Localization;
 
 import javax.xml.stream.XMLStreamException;
@@ -126,17 +124,13 @@ public class MainController {
         }
     }
 
+    public Optional<GroupModel> addGroup(){
+        GroupModel group = Screeners.showAddGroup(market);
+        return Optional.ofNullable(group);
+    }
 
     public Optional<ItemModel> addItem(){
-        Optional<String> res = Dialogs.create()
-                .title(Localization.getString("dialog.addItem.title"))
-                .message(Localization.getString("dialog.addItem.message"))
-                .showTextInput();
-        ItemModel item = null;
-        if (res.isPresent()){
-            //TODO: implement groups
-//            item = market.add(res.get());
-        }
+        ItemModel item = Screeners.showAddItem(market);
         return Optional.ofNullable(item);
     }
 
@@ -147,11 +141,19 @@ public class MainController {
 
     public void editSystem(ActionEvent actionEvent){
         SystemModel system = offersController.getSystem();
-        Screeners.showSystemsEditor(system);
+        if (system != null) {
+            Screeners.showSystemsEditor(system);
+        }
     }
 
     public void removeSystem(ActionEvent actionEvent){
-        //TODO: implement
+        SystemModel system = offersController.getSystem();
+        if (system != null) {
+            Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), system.getName()));
+            if (res == Dialog.ACTION_YES) {
+                market.remove(system);
+            }
+        }
     }
 
     public void addStation(ActionEvent actionEvent) {
@@ -162,15 +164,20 @@ public class MainController {
     }
 
     public void editStation(ActionEvent actionEvent) {
-        //TODO: disable edit station, if station is null
         StationModel station = offersController.getStation();
-        if (station!=null) {
+        if (station != null) {
             Screeners.showEditStation(offersController.getStation());
         }
     }
 
     public void removeStation(ActionEvent actionEvent){
-        //TODO: implement
+        StationModel station = offersController.getStation();
+        if (station != null) {
+            Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), station.getName()));
+            if (res == Dialog.ACTION_YES) {
+                station.getSystem().remove(station);
+            }
+        }
     }
 
     public void editSettings(){

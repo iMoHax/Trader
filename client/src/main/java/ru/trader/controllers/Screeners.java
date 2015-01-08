@@ -32,6 +32,8 @@ public class Screeners {
     private static Parent settingsScreen;
     private static Parent sEditorScreen;
     private static Parent filterScreen;
+    private static Parent itemAddScreen;
+    private static Parent groupAddScreen;
 
     private static MainController mainController;
     private static ItemDescController itemDescController;
@@ -43,6 +45,8 @@ public class Screeners {
     private static SettingsController settingsController;
     private static SystemsEditorController systemsEditorController;
     private static FilterController filterController;
+    private static ItemAddController itemAddController;
+    private static GroupAddController groupAddController;
 
     private static FXMLLoader initLoader(URL url){
         FXMLLoader loader = new FXMLLoader(url, Localization.getResources());
@@ -138,6 +142,20 @@ public class Screeners {
         filterController = loader.getController();
     }
 
+    public static void loadItemAddStage(URL fxml) throws IOException {
+        FXMLLoader loader =  initLoader(fxml);
+        itemAddScreen = loader.load();
+        addStylesheet(itemAddScreen);
+        itemAddController = loader.getController();
+    }
+
+    public static void loadGroupAddStage(URL fxml) throws IOException {
+        FXMLLoader loader =  initLoader(fxml);
+        groupAddScreen = loader.load();
+        addStylesheet(groupAddScreen);
+        groupAddController = loader.getController();
+    }
+
     public static void show(Node node){
         mainController.getMainPane().setCenter(node);
     }
@@ -149,6 +167,14 @@ public class Screeners {
 
     public static Action showConfirm(String text){
         return Dialogs.create().owner(mainScreen).message(text).showConfirm();
+    }
+
+    public static GroupModel showAddGroup(MarketModel market){
+        return groupAddController.showDialog(mainScreen, groupAddScreen, market);
+    }
+
+    public static ItemModel showAddItem(MarketModel market){
+        return itemAddController.showDialog(mainScreen, itemAddScreen, market);
     }
 
     public static void showSystemsEditor(SystemModel system){
@@ -187,6 +213,9 @@ public class Screeners {
 
     public static Optional<ItemModel> showAddItem(){
         return mainController.addItem();
+    }
+    public static Optional<GroupModel> showAddGroup(){
+        return mainController.addGroup();
     }
 
     public static void closeAll() {

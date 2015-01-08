@@ -99,6 +99,16 @@ public class SystemModel {
         return station;
     }
 
+    public void remove(StationModel station) {
+        LOG.info("Remove station {} from system {}", station, this);
+        market.getNotificator().sendRemove(station);
+        system.remove(station.getStation());
+    }
+
+    public boolean isEmpty(){
+        return system.isEmpty();
+    }
+
     @Override
     public String toString() {
         if (LOG.isTraceEnabled()){

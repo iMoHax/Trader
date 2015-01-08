@@ -88,9 +88,17 @@ public class ItemsController {
         }
 
         @Override
+        public void remove(SystemModel system) {
+            if (!system.isEmpty()) refresh();
+        }
+
+        @Override
         public void add(StationModel station) {
             refresh();
         }
+
+        @Override
+        public void remove(StationModel station) { refresh();}
 
         @Override
         public void add(OfferModel offer) {

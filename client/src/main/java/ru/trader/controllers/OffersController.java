@@ -4,12 +4,8 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import org.controlsfx.control.SegmentedButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +14,6 @@ import ru.trader.core.SERVICE_TYPE;
 import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.model.support.ChangeMarketListener;
-import ru.trader.view.support.NumberField;
 
 import java.util.List;
 
@@ -142,6 +137,8 @@ public class OffersController {
         cbRepair.setSelected(false);
         cbOutfit.setSelected(false);
         cbShipyard.setSelected(false);
+        cbMediumLandpad.setSelected(false);
+        cbLargeLandpad.setSelected(false);
         if (station != null){
             distance.setText(String.valueOf(station.getDistance()));
             cbMarket.setSelected(station.hasService(SERVICE_TYPE.MARKET));
@@ -245,5 +242,14 @@ public class OffersController {
                 removeOffer(offer);
             }
         }
+
+        @Override
+        public void remove(StationModel station) {
+            stationsBar.getToggleGroup().getSelectedToggle().setSelected(false);
+            stationsBar.getButtons().removeIf(b -> b.getUserData().equals(station));
+            refresh();
+            sort();
+        }
+
     }
 }

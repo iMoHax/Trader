@@ -56,11 +56,11 @@
                     </HBox>
                     <HBox alignment="CENTER" spacing="5">
                         <Button prefWidth="80" text="%market.offers" onAction="#showOrders" />
-                        <Button text="%route.button.top" onAction="#showTopOrders" />
+                        <Button text="%router.button.top" onAction="#showTopOrders" />
                     </HBox>
                     <HBox alignment="CENTER" spacing="5">
                         <Button prefWidth="80" text="%routes" onAction="#showRoutes" />
-                        <Button text="%route.button.top" onAction="#showTopRoutes" />
+                        <Button text="%router.button.top" onAction="#showTopRoutes" />
                     </HBox>
                 </VBox>
             </GridPane>
