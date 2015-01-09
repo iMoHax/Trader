@@ -145,7 +145,7 @@ public class PathRoute extends Path<Vendor> {
                 Offer buy = buyer.getBuy(sell.getItem());
                 if (buy != null){
                     Order order = new Order(sell, buy, 1);
-                    if (order.getProfit() < 0) {
+                    if (order.getProfit() <= 0) {
                         LOG.trace("{} - is no profit, skip", order);
                     } else {
                         addOrder(order);
@@ -270,9 +270,15 @@ public class PathRoute extends Path<Vendor> {
     }
 
     public double getProfit(Order order){
+        return getProfit(order, true);
+    }
+
+    private double getProfit(Order order, boolean first){
         if (order == TRANSIT) return getTransitProfit();
-        if (isPathFrom(order.getBuyer())) return order.getProfit() + profit;
-        return hasNext() ? getNext().getProfit(order) : order.getProfit();
+        if (isPathFrom(order.getBuyer())) {
+            return first ? order.getProfit() : order.getProfit() + profit;
+        }
+        return hasNext() ? getNext().getProfit(order, false) : order.getProfit();
     }
 
     private int simpleCompareOrders(Order o1, Order o2){
