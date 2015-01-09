@@ -49,26 +49,36 @@ public class PathRoute extends Path<Vendor> {
         return new PathRoute(this.getCopy(), vertex, refill);
     }
 
-    public void add(PathRoute path, boolean withOrders) {
+    public void add(PathRoute path, boolean noSort) {
         LOG.trace("Add path {} to {}", path, this);
         PathRoute res = this;
         path = path.getRoot();
         if (!path.getTarget().equals(getTarget())){
+            LOG.trace("Is not connected path, add edge from {} to {}", path.getTarget(), getTarget());
             res = new PathRoute(res, path.getTarget(), true);
+            res.updateDistance();
         }
         while (path.hasNext()){
             path = path.getNext();
-            res = new PathRoute(res, path.getTarget(), res == this || path.isRefill());
-            if (withOrders){
-                res.orders.clear();
-                res.orders.addAll(path.getOrders());
+            res = new PathRoute(res, path.getTarget(), path.isRefill());
+            if (noSort){
+                copyField(path, res);
             }
         }
-        if (withOrders){
+        if (noSort){
             update();
         } else {
             res.finish();
         }
+    }
+
+    private void copyField(PathRoute source, PathRoute dest){
+        dest.orders.clear();
+        dest.orders.addAll(source.getOrders());
+        dest.distance = source.distance;
+        dest.profit = source.profit;
+        dest.balance = source.balance;
+        dest.landsCount = source.landsCount;
     }
 
     public PathRoute getCopy(){
@@ -79,15 +89,13 @@ public class PathRoute extends Path<Vendor> {
         PathRoute path = getRoot();
         PathRoute res = new PathRoute(path.getTarget(), path.byAvg);
         if (withOrders) {
-            res.orders.clear();
-            res.orders.addAll(path.getOrders());
+            copyField(path, res);
         }
         while (path.hasNext()){
             path = path.getNext();
             res = new PathRoute(res, path.getTarget(), path.isRefill());
             if (withOrders) {
-                res.orders.clear();
-                res.orders.addAll(path.getOrders());
+                copyField(path, res);
             }
         }
         return res;
@@ -114,12 +122,15 @@ public class PathRoute extends Path<Vendor> {
             p = p.getNext();
             p.updateBalance();
         }
-        while (p != this){
+        p = this;
+        p.updateProfit();
+        p.updateLandsCount();
+        while (!p.isRoot()){
+            p = p.getPrevious();
             p.updateProfit();
             p.updateLandsCount();
-            p = p.getPrevious();
         }
-        getRoot().updateDistance();
+        p.updateDistance();
     }
 
     private void fillOrders(){

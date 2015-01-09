@@ -217,7 +217,6 @@ public class RouterController {
         StationModel tS = tStation.getValue();
         OrderModel order = Screeners.showOrders(market.getOrders(s, sS, t, tS, totalBalance.getValue().doubleValue()));
         if (order!=null){
-            //TODO: fix set balanace
             orders.add(order);
             addOrderToPath(order);
         }
