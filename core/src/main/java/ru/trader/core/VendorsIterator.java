@@ -157,6 +157,11 @@ public class VendorsIterator implements Iterator<Vendor> {
         public int hashCode() {
             return place.hashCode();
         }
+
+        @Override
+        public String toString() {
+            return "Transit";
+        }
     }
 
 }

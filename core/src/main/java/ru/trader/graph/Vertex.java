@@ -17,6 +17,10 @@ public class Vertex<T extends Connectable<T>> {
         return entry;
     }
 
+    public boolean isEntry(T entry){
+        return this.entry.equals(entry);
+    }
+
     public boolean isConnected(Vertex<T> other){
         return isConnected(other.entry);
     }

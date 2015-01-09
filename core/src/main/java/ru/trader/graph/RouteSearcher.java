@@ -3,12 +3,9 @@ package ru.trader.graph;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.trader.core.Place;
 import ru.trader.core.Vendor;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 
@@ -65,7 +62,7 @@ public class RouteSearcher {
             LOG.trace("Segment jumps {}", jumpsToAll);
             sGraph.setCargo(cargo);
             sGraph.setBalance(balance);
-            List<PathRoute> res = new ArrayList<>(limit);
+            TopList<PathRoute> res = new TopList<>(limit, RouteGraph.byProfitComparator);
             if (jumps <= jumpsToAll){
                 LOG.trace("Is last segment");
                 List<Path<Vendor>> paths;
@@ -83,6 +80,13 @@ public class RouteSearcher {
                 int i = 0;
                 ArrayList<SegmentSearcher> subTasks = new ArrayList<>(THRESHOLD);
                 while (i < paths.size()) {
+                    if (target != null){
+                        PathRoute path = (PathRoute) paths.get(i);
+                        if (path.getTarget().isEntry(target)){
+                            LOG.trace("Is path to target, add to res");
+                            res.add(path);
+                        }
+                    }
                     subTasks.clear();
                     for (int taskIndex = 0; taskIndex < THRESHOLD && i+taskIndex < paths.size(); taskIndex++) {
                         PathRoute path = (PathRoute) paths.get(i+taskIndex);
@@ -98,8 +102,8 @@ public class RouteSearcher {
                     i+=subTasks.size();
                 }
             }
-            finish(res);
-            return res;
+            res.finish();
+            return res.getList();
         }
 
         private int getPathsOnSegmentCount(RouteGraph graph){
@@ -111,21 +115,18 @@ public class RouteSearcher {
         }
 
 
-        private void add(SegmentSearcher task, PathRoute path, List<PathRoute> res){
+        private void add(SegmentSearcher task, PathRoute path, TopList<PathRoute> res){
             List<PathRoute> tail = task.join();
             if (tail.isEmpty()){
                 LOG.trace("Not found route from {} to {}, jumps {}", task.source, task.target, task.jumps);
             } else {
                 path.add(tail.get(0), false);
                 path.sort(balance, cargo);
-                TopList.addToTop(res, path.getEnd(), limit, RouteGraph.byProfitComparator);
+                res.add(path.getEnd());
             }
         }
 
-        private void finish(List<PathRoute> res){
-            if (res.size() < limit)
-                res.sort(RouteGraph.byProfitComparator);
-        }
+
 
     }
 

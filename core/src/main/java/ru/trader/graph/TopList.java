@@ -31,6 +31,11 @@ public class TopList<T> {
         return true;
     }
 
+    public void finish(){
+        if (comparator != null && list.size() < limit)
+            list.sort(comparator);
+    }
+
     public List<T> getList() {
         return list;
     }
@@ -55,7 +60,7 @@ public class TopList<T> {
         if (list.size() == limit) {
             int index = Collections.binarySearch(list, entry, comparator);
             if (index < 0) index = -1 - index;
-            if (index == limit) return null;
+            if (index == limit || list.get(index).equals(entry)) return null;
             list.add(index, entry);
             return list.remove(limit);
 
@@ -75,7 +80,7 @@ public class TopList<T> {
             if (list.size() == limit) {
                 int index = Collections.binarySearch(list, entry, comparator);
                 if (index < 0) index = -1 - index;
-                if (index == limit) return;
+                if (index == limit || list.get(index).equals(entry)) return;
                 list.add(index, entry);
                 list.remove(limit);
             } else {

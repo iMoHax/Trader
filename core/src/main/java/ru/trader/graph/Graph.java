@@ -96,6 +96,7 @@ public class Graph<T extends Connectable<T>> {
         Vertex<T> target = getVertex(entry);
         TopList<Path<T>> paths = newTopList(max);
         findPathsTo(target, paths, deep);
+        paths.finish();
         return paths;
     }
 
@@ -112,6 +113,7 @@ public class Graph<T extends Connectable<T>> {
                 paths.add(path);
             }
         }
+        paths.finish();
         return paths;
     }
 
