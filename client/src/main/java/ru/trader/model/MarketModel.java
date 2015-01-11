@@ -9,12 +9,17 @@ import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.World;
+import ru.trader.controllers.AnalyzerProgress;
+import ru.trader.controllers.Screeners;
 import ru.trader.core.*;
 import ru.trader.graph.PathRoute;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.model.support.Notificator;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 
 public class MarketModel {
@@ -167,29 +172,37 @@ public class MarketModel {
     }
 
     public ObservableList<PathRouteModel> getRoutes(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo, double balance) {
-        Collection<PathRoute> routes;
-        if (stationFrom != null && stationFrom != ModelFabric.NONE_STATION){
-            if (stationTo != null && stationTo != ModelFabric.NONE_STATION){
-                routes = analyzer.getPaths(stationFrom.getStation(), stationTo.getStation(), balance);
-            } else {
-                if (to != null && to != ModelFabric.NONE_SYSTEM){
-                    routes = analyzer.getPaths(stationFrom.getStation(), to.getSystem(), balance);
+        AnalyzerProgress progress = new AnalyzerProgress();
+        progress.show(Screeners.getMainScreen(), "Get routes", analyzer);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        ObservableList<PathRouteModel> res = FXCollections.observableArrayList();
+        executor.execute(() -> {
+                Collection<PathRoute> routes;
+
+                if (stationFrom != null && stationFrom != ModelFabric.NONE_STATION) {
+                    if (stationTo != null && stationTo != ModelFabric.NONE_STATION) {
+                        routes = analyzer.getPaths(stationFrom.getStation(), stationTo.getStation(), balance);
+                    } else {
+                        if (to != null && to != ModelFabric.NONE_SYSTEM) {
+                            routes = analyzer.getPaths(stationFrom.getStation(), to.getSystem(), balance);
+                        } else {
+                            routes = analyzer.getPaths(stationFrom.getStation(), balance);
+                        }
+                    }
                 } else {
-                    routes = analyzer.getPaths(stationFrom.getStation(), balance);
+                    if (stationTo != null && stationTo != ModelFabric.NONE_STATION) {
+                        routes = analyzer.getPaths(from.getSystem(), stationTo.getStation(), balance);
+                    } else {
+                        if (to != null && to != ModelFabric.NONE_SYSTEM) {
+                            routes = analyzer.getPaths(from.getSystem(), to.getSystem(), balance);
+                        } else {
+                            routes = analyzer.getPaths(from.getSystem(), balance);
+                        }
+                    }
                 }
-            }
-        } else {
-            if (stationTo != null && stationTo != ModelFabric.NONE_STATION){
-                routes = analyzer.getPaths(from.getSystem(), stationTo.getStation(), balance);
-            } else {
-                if (to != null && to != ModelFabric.NONE_SYSTEM){
-                    routes = analyzer.getPaths(from.getSystem(), to.getSystem(), balance);
-                } else {
-                    routes = analyzer.getPaths(from.getSystem(), balance);
-                }
-            }
-        }
-        return BindingsHelper.observableList(routes, modeler::get);
+                routes.stream().map(modeler::get).forEach(res::add);
+        });
+        return res;
     }
 
 

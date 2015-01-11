@@ -1,6 +1,8 @@
 package ru.trader.controllers;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.TableView;
@@ -29,7 +31,7 @@ public class PathsController {
     }
 
 
-    public PathRouteModel showDialog(Parent parent, Parent content, Collection<PathRouteModel> paths) {
+    public PathRouteModel showDialog(Parent parent, Parent content, ObservableList<PathRouteModel> paths) {
 
         init(paths);
 
@@ -46,10 +48,17 @@ public class PathsController {
         return tblPaths.getSelectionModel().getSelectedItem();
     }
 
-    private void init(Collection<PathRouteModel> paths) {
+    private void init(ObservableList<PathRouteModel> paths) {
         tblPaths.getSelectionModel().clearSelection();
         this.paths.clear();
         this.paths.addAll(paths);
+        paths.addListener((ListChangeListener<PathRouteModel>) l -> {
+            while (l.next()) {
+                if (l.wasAdded()) {
+                    this.paths.addAll(l.getAddedSubList());
+                }
+            }
+        });
     }
 
 }

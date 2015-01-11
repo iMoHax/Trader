@@ -23,6 +23,7 @@ public class Graph<T extends Connectable<T>> {
 
     protected final Vertex<T> root;
     protected final Map<T,Vertex<T>> vertexes;
+    private final GraphCallBack<T> callback;
 
     protected final double stock;
     protected final double maxDistance;
@@ -48,15 +49,22 @@ public class Graph<T extends Connectable<T>> {
     }
 
     public Graph(T start, Collection<T> set, double stock, double maxDistance, boolean withRefill, int maxDeep, PathConstructor<T> pathFabric) {
+        this(start, set, stock, maxDistance, withRefill, maxDeep, pathFabric, new GraphCallBack<>());
+    }
+
+    public Graph(T start, Collection<T> set, double stock, double maxDistance, boolean withRefill, int maxDeep, PathConstructor<T> pathFabric, GraphCallBack<T> callback) {
         this.maxDistance = maxDistance;
         this.stock = stock;
         this.withRefill = withRefill;
         this.pathFabric = pathFabric;
+        this.callback = callback;
         root = new Vertex<>(start);
         root.setLevel(maxDeep);
         vertexes = new ConcurrentHashMap<>(50, 0.9f, THRESHOLD);
         vertexes.put(root.getEntry(), root);
+        callback.onStartBuild(start);
         build(root, set, maxDeep, stock);
+        callback.onEndBuild();
     }
 
     private void build(Vertex<T> root, Collection<T> set, int maxDeep, double stock) {
@@ -81,7 +89,9 @@ public class Graph<T extends Connectable<T>> {
     }
 
     private void findPathsTo(Vertex<T> target, TopList<Path<T>> res, int deep){
+        callback.onStartFind(root, target);
         POOL.invoke(new PathFinder(res, pathFabric.build(root), target, deep-1, stock));
+        callback.onEndFind();
     }
 
     public List<Path<T>> getPathsTo(T entry){
@@ -95,7 +105,9 @@ public class Graph<T extends Connectable<T>> {
     public TopList<Path<T>> getPathsTo(T entry, int max, int deep){
         Vertex<T> target = getVertex(entry);
         TopList<Path<T>> paths = newTopList(max);
+        callback.setCount(1);
         findPathsTo(target, paths, deep);
+        callback.inc();
         paths.finish();
         return paths;
     }
@@ -106,12 +118,15 @@ public class Graph<T extends Connectable<T>> {
 
     public TopList<Path<T>> getPaths(int count, int deep){
         TopList<Path<T>> paths = newTopList(count);
+        callback.setCount(vertexes.size());
         for (Vertex<T> target : vertexes.values()) {
+            if (callback.isCancel()) break;
             TopList<Path<T>> p = newTopList(minJumps);
             findPathsTo(target, p, deep);
             for (Path<T> path : p.getList()) {
                 paths.add(path);
             }
+            callback.inc();
         }
         paths.finish();
         return paths;
@@ -204,6 +219,7 @@ public class Graph<T extends Connectable<T>> {
             ArrayList<GraphBuilder> subTasks = new ArrayList<>(set.size());
             Iterator<T> iterator = set.iterator();
             while (iterator.hasNext()) {
+                if (callback.isCancel()) break;
                 T entry = iterator.next();
                 if (entry == vertex.getEntry()) continue;
                 double distance = vertex.getEntry().getDistance(entry);
@@ -236,14 +252,22 @@ public class Graph<T extends Connectable<T>> {
                 }
                 if (subTasks.size() == THRESHOLD || !iterator.hasNext()){
                     for (GraphBuilder subTask : subTasks) {
-                        subTask.join();
+                        if (callback.isCancel()){
+                            subTask.cancel(true);
+                        } else {
+                            subTask.join();
+                        }
                     }
                     subTasks.clear();
                 }
             }
             if (!subTasks.isEmpty()){
                 for (GraphBuilder subTask : subTasks) {
-                    subTask.join();
+                    if (callback.isCancel()){
+                        subTask.cancel(true);
+                    } else {
+                        subTask.join();
+                    }
                 }
                 subTasks.clear();
             }
@@ -282,6 +306,7 @@ public class Graph<T extends Connectable<T>> {
                     synchronized (paths){
                         if (!paths.add(path)) complete(null);
                     }
+                    callback.onFound();
                 }
             }
             if (deep > 0 ){
@@ -291,7 +316,7 @@ public class Graph<T extends Connectable<T>> {
                     Iterator<Edge<T>> iterator = source.getEdges().iterator();
                     while (iterator.hasNext()) {
                         Edge<T> next = iterator.next();
-                        if (isDone()) break;
+                        if (isDone() || callback.isCancel()) break;
                         // target already added if source consist edge
                         if (next.isConnect(target)) continue;
                         if (!distanceFilter.test(next.getLength())) continue;
@@ -305,8 +330,8 @@ public class Graph<T extends Connectable<T>> {
                         subTasks.add(task);
                         if (subTasks.size() == THRESHOLD || !iterator.hasNext()){
                             for (PathFinder subTask : subTasks) {
-                                if (isDone()) {
-                                    subTask.cancel(false);
+                                if (isDone() || callback.isCancel()) {
+                                    subTask.cancel(callback.isCancel());
                                 } else {
                                     subTask.join();
                                 }
@@ -316,8 +341,8 @@ public class Graph<T extends Connectable<T>> {
                     }
                     if (!subTasks.isEmpty()){
                         for (PathFinder subTask : subTasks) {
-                            if (isDone()) {
-                                subTask.cancel(false);
+                            if (isDone() || callback.isCancel()) {
+                                subTask.cancel(callback.isCancel());
                             } else {
                                 subTask.join();
                             }

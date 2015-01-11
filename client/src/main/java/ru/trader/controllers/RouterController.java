@@ -1,6 +1,7 @@
 package ru.trader.controllers;
 
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -227,11 +228,12 @@ public class RouterController {
         SystemModel t = target.getValue();
         StationModel sS = sStation.getValue();
         StationModel tS = tStation.getValue();
+        Platform.runLater(() -> {
         PathRouteModel path = Screeners.showRouters(market.getRoutes(s, sS, t, tS, totalBalance.getValue().doubleValue()));
         if (path!=null){
             orders.addAll(path.getOrders());
             addRouteToPath(path);
-        }
+        }});
     }
 
     public void showTopRoutes(){

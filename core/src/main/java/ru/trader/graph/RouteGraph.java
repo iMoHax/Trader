@@ -31,9 +31,12 @@ public class RouteGraph extends Graph<Vendor> {
     public RouteGraph(Vendor start, Collection<Vendor> set, double stock, double maxDistance, boolean withRefill, int maxDeep) {
         this(start, set, stock, maxDistance, withRefill, maxDeep, false);
     }
-
     public RouteGraph(Vendor start, Collection<Vendor> set, double stock, double maxDistance, boolean withRefill, int maxDeep, boolean groupRes) {
-        super(start, set, stock, maxDistance, withRefill, maxDeep, groupRes ? PathRoute::buildAvg : PathRoute::new);
+        this(start, set, stock, maxDistance, withRefill, maxDeep, groupRes, new GraphCallBack<>());
+    }
+
+    public RouteGraph(Vendor start, Collection<Vendor> set, double stock, double maxDistance, boolean withRefill, int maxDeep, boolean groupRes, GraphCallBack<Vendor> callback) {
+        super(start, set, stock, maxDistance, withRefill, maxDeep, groupRes ? PathRoute::buildAvg : PathRoute::new, callback);
         if (groupRes){
             this.groupRes = maxDeep > minJumps;
         }

@@ -14,17 +14,19 @@ public class RouteSearcher {
     private final static ForkJoinPool POOL = new ForkJoinPool();
     private final static int THRESHOLD = (int) Math.ceil(Runtime.getRuntime().availableProcessors()/2.0);
 
+    private final RouteSearcherCallBack callback;
     private final double maxDistance;
     private final double stock;
     private final int segmentSize;
 
     public RouteSearcher(double maxDistance, double stock) {
-        this(maxDistance, stock, 0);
+        this(maxDistance, stock, 0, new RouteSearcherCallBack());
     }
-    public RouteSearcher(double maxDistance, double stock, int segmentSize) {
+    public RouteSearcher(double maxDistance, double stock, int segmentSize, RouteSearcherCallBack callback) {
         this.maxDistance = maxDistance;
         this.stock = stock;
         this.segmentSize = segmentSize;
+        this.callback = callback;
     }
 
     public List<PathRoute> getPaths(Vendor from, Vendor to, Collection<Vendor> vendors, int jumps, double balance, int cargo, int limit){
@@ -56,8 +58,10 @@ public class RouteSearcher {
 
         @Override
         protected List<PathRoute> compute() {
+            if (callback.isCancel()) return Collections.emptyList();
             LOG.trace("Start search route to {} from {}, jumps {}", source, target, jumps);
-            RouteGraph sGraph = new RouteGraph(source, vendors, stock, maxDistance, true, jumps, true);
+            GraphCallBack<Vendor> gCallBack = callback.onStart();
+            RouteGraph sGraph = new RouteGraph(source, vendors, stock, maxDistance, true, jumps, true, gCallBack);
             int jumpsToAll = sGraph.getMinJumps();
             LOG.trace("Segment jumps {}", jumpsToAll);
             sGraph.setCargo(cargo);
@@ -87,8 +91,10 @@ public class RouteSearcher {
                             res.add(path);
                         }
                     }
+                    if (callback.isCancel()) break;
                     subTasks.clear();
                     for (int taskIndex = 0; taskIndex < THRESHOLD && i+taskIndex < paths.size(); taskIndex++) {
+                        if (callback.isCancel()) break;
                         PathRoute path = (PathRoute) paths.get(i+taskIndex);
                         double newBalance = balance + path.getRoot().getProfit();
                         SegmentSearcher task = new SegmentSearcher(path.get(), target, vendors, jumps - path.getLength(), newBalance, cargo, 1);
@@ -103,6 +109,7 @@ public class RouteSearcher {
                 }
             }
             res.finish();
+            callback.onEnd(gCallBack);
             return res.getList();
         }
 
@@ -116,6 +123,10 @@ public class RouteSearcher {
 
 
         private void add(SegmentSearcher task, PathRoute path, TopList<PathRoute> res){
+            if (callback.isCancel()){
+                task.cancel(true);
+                return;
+            }
             List<PathRoute> tail = task.join();
             if (tail.isEmpty()){
                 LOG.trace("Not found route from {} to {}, jumps {}", task.source, task.target, task.jumps);
