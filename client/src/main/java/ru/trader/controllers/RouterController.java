@@ -172,12 +172,13 @@ public class RouterController {
     public void editOrders(){
         OrderModel sel = tblOrders.getSelectionModel().getSelectedItem();
         int index = tblOrders.getSelectionModel().getSelectedIndex();
+        market.getOrders(sel.getStation(), sel.getBuyer(), sel.getBalance(), result -> {
+            OrderModel order = Screeners.showOrders(result);
+            if (order!=null){
+                orders.set(index, order);
+            }
 
-        OrderModel order = Screeners.showOrders(market.getOrders(sel.getStation(), sel.getBuyer(), sel.getBalance()));
-        if (order!=null){
-            orders.set(index, order);
-        }
-
+        });
     }
 
     public void removeSelected(){
@@ -204,11 +205,13 @@ public class RouterController {
 
 
     public void showTopOrders(){
-        OrderModel order = Screeners.showOrders(market.getTop(totalBalance.getValue().doubleValue()));
-        if (order!=null){
-            orders.add(order);
-            addOrderToPath(order);
-        }
+        market.getTop(totalBalance.getValue().doubleValue(), result -> {
+            OrderModel order = Screeners.showOrders(result);
+            if (order!=null){
+                orders.add(order);
+                addOrderToPath(order);
+            }
+        });
     }
 
     public void showOrders(){
@@ -216,11 +219,13 @@ public class RouterController {
         SystemModel t = target.getValue();
         StationModel sS = sStation.getValue();
         StationModel tS = tStation.getValue();
-        OrderModel order = Screeners.showOrders(market.getOrders(s, sS, t, tS, totalBalance.getValue().doubleValue()));
-        if (order!=null){
-            orders.add(order);
-            addOrderToPath(order);
-        }
+        market.getOrders(s, sS, t, tS, totalBalance.getValue().doubleValue(), result -> {
+            OrderModel order = Screeners.showOrders(result);
+            if (order!=null){
+                orders.add(order);
+                addOrderToPath(order);
+            }
+        });
     }
 
     public void showRoutes(){
@@ -228,20 +233,23 @@ public class RouterController {
         SystemModel t = target.getValue();
         StationModel sS = sStation.getValue();
         StationModel tS = tStation.getValue();
-        Platform.runLater(() -> {
-        PathRouteModel path = Screeners.showRouters(market.getRoutes(s, sS, t, tS, totalBalance.getValue().doubleValue()));
-        if (path!=null){
-            orders.addAll(path.getOrders());
-            addRouteToPath(path);
-        }});
+        market.getRoutes(s, sS, t, tS, totalBalance.getValue().doubleValue(), routes -> {
+            PathRouteModel path = Screeners.showRouters(routes);
+            if (path!=null){
+                orders.addAll(path.getOrders());
+                addRouteToPath(path);
+            }
+        });
     }
 
     public void showTopRoutes(){
-        PathRouteModel path = Screeners.showRouters(market.getTopRoutes(totalBalance.getValue().doubleValue()));
-        if (path!=null){
-            orders.addAll(path.getOrders());
-            addRouteToPath(path);
-        }
+        market.getTopRoutes(totalBalance.getValue().doubleValue(), routes -> {
+            PathRouteModel path = Screeners.showRouters(routes);
+            if (path!=null){
+                orders.addAll(path.getOrders());
+                addRouteToPath(path);
+            }
+        });
     }
 
     private void addRouteToPath(PathRouteModel route){

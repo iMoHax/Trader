@@ -105,7 +105,7 @@ public class Graph<T extends Connectable<T>> {
     public TopList<Path<T>> getPathsTo(T entry, int max, int deep){
         Vertex<T> target = getVertex(entry);
         TopList<Path<T>> paths = newTopList(max);
-        callback.setCount(1);
+        callback.setMax(1);
         findPathsTo(target, paths, deep);
         callback.inc();
         paths.finish();
@@ -118,7 +118,7 @@ public class Graph<T extends Connectable<T>> {
 
     public TopList<Path<T>> getPaths(int count, int deep){
         TopList<Path<T>> paths = newTopList(count);
-        callback.setCount(vertexes.size());
+        callback.setMax(vertexes.size());
         for (Vertex<T> target : vertexes.values()) {
             if (callback.isCancel()) break;
             TopList<Path<T>> p = newTopList(minJumps);

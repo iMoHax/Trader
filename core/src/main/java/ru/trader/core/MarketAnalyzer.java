@@ -68,7 +68,7 @@ public class MarketAnalyzer {
         LOG.debug("Get top {}", limit);
         Collection<Place> places = getPlaces();
         List<Order> top = new ArrayList<>(limit);
-        callback.setCount(places.size());
+        callback.setMax(places.size());
         for (Place place : places) {
             if (callback.isCancel()) break;
             LOG.trace("Check place {}", place);
@@ -98,7 +98,7 @@ public class MarketAnalyzer {
 
     private Collection<Order> getOrders(Graph<Place> graph, Collection<Vendor> sellers, double balance, double lowProfit) {
         List<Order> res = new ArrayList<>(20);
-        callback.setCount(sellers.size());
+        callback.setMax(sellers.size());
         for (Vendor vendor : sellers) {
             if (callback.isCancel()) break;
             if (isFiltered(vendor)){
@@ -143,7 +143,7 @@ public class MarketAnalyzer {
 
     private Collection<Order> getOrders(Collection<Vendor> sellers, Collection<Vendor> buyers, double balance, double lowProfit) {
         List<Order> res = new ArrayList<>();
-        callback.setCount(sellers.size());
+        callback.setMax(sellers.size());
         for (Vendor seller : sellers) {
             if (callback.isCancel()) break;
             if (isFiltered(seller)){
@@ -235,7 +235,7 @@ public class MarketAnalyzer {
     }
 
     public Collection<PathRoute> getPaths(Vendor from, double balance){
-        callback.setCount(1);
+        callback.setMax(1);
         RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize, callback.onStartSearch());
         Collection<Vendor> vendors = getVendors();
         Collection<PathRoute> res = searcher.getPaths(from, vendors, jumps, balance, cargo, limit);
@@ -247,7 +247,7 @@ public class MarketAnalyzer {
     public Collection<PathRoute> getPaths(Place from, double balance){
         List<PathRoute> top = new ArrayList<>(limit);
         Collection<Vendor> vendors = getVendors();
-        callback.setCount(vendors.size());
+        callback.setMax(vendors.size());
         RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize, callback.onStartSearch());
         for (Vendor vendor : from.get()) {
             if (callback.isCancel()) break;
@@ -265,7 +265,7 @@ public class MarketAnalyzer {
     }
 
     public Collection<PathRoute> getPaths(Vendor from, Vendor to, double balance){
-        callback.setCount(1);
+        callback.setMax(1);
         RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize, callback.onStartSearch());
         Collection<PathRoute> res = searcher.getPaths(from, to, getVendors(), jumps, balance, cargo, limit);
         callback.inc();
@@ -279,7 +279,7 @@ public class MarketAnalyzer {
         Collection<Vendor> fVendors = from.get();
         Collection<Vendor> toVendors = to.get();
         int count = (int) Math.ceil(limit / fVendors.size());
-        callback.setCount(fVendors.size() * toVendors.size());
+        callback.setMax(fVendors.size() * toVendors.size());
         RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize, callback.onStartSearch());
         for (Vendor fromVendor : fVendors) {
             if (callback.isCancel()) break;
@@ -309,7 +309,7 @@ public class MarketAnalyzer {
         Collection<Vendor> vendors = getVendors();
         Collection<Vendor> toVendors = to.get();
         int count = (int) Math.ceil(limit / toVendors.size());
-        callback.setCount(toVendors.size());
+        callback.setMax(toVendors.size());
         RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize, callback.onStartSearch());
         for (Vendor toVendor : toVendors) {
             if (callback.isCancel()) break;
@@ -331,7 +331,7 @@ public class MarketAnalyzer {
         Collection<Vendor> vendors = getVendors();
         Collection<Vendor> fVendors = from.get();
         int count = (int) Math.ceil(limit / fVendors.size());
-        callback.setCount(fVendors.size());
+        callback.setMax(fVendors.size());
         RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize, callback.onStartSearch());
         for (Vendor fromVendor : fVendors) {
             if (callback.isCancel()) break;
@@ -351,7 +351,7 @@ public class MarketAnalyzer {
     public Collection<PathRoute> getTopPaths(double balance){
         List<PathRoute> top = new ArrayList<>(limit);
         Collection<Vendor> vendors = getVendors();
-        callback.setCount(vendors.size());
+        callback.setMax(vendors.size());
         RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize, callback.onStartSearch());
         for (Vendor vendor : vendors) {
             if (callback.isCancel()) break;

@@ -13,7 +13,7 @@ public class GraphCallBack<T extends Connectable<T>> {
     public void onEndFind(){}
 
 
-    public void setCount(long count){}
+    public void setMax(long count){}
     public void inc(){}
 
     public final boolean isCancel() {

@@ -38,7 +38,7 @@ public class MarketAnalyzerCallBack {
 
     protected void onEnd(){}
 
-    public void setCount(long count){}
+    public void setMax(long max){}
     public void inc(){}
 
 
