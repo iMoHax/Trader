@@ -50,18 +50,18 @@ public class ProgressController {
         text.textProperty().bind(task.messageProperty());
         cancel.getProperties().put(TASK_KEY, task);
         task.setOnSucceeded(e -> {
-            dlg.hide();
+            Platform.runLater(dlg::hide);
             onSuccess.accept(task.getValue());
             unbind();
         });
         task.setOnCancelled(e -> {
-            dlg.hide();
+            Platform.runLater(dlg::hide);
             onSuccess.accept(task.getValue());
             unbind();
         });
 
         task.setOnFailed(e -> {
-            dlg.hide();
+            Platform.runLater(dlg::hide);
             Screeners.showException(task.getException());
         });
     }
