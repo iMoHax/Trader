@@ -128,7 +128,11 @@ public class SimpleMarket extends AbstractMarket {
     @Override
     public ItemStat getStat(OFFER_TYPE offerType, Item item) {
         ItemStat entry = getItemCache(offerType).get(item);
-        return entry != null ? entry : new SimpleItemStat(item, offerType);
+        if (entry == null){
+            entry = new SimpleItemStat(item, offerType);
+            getItemCache(offerType).put(item, (SimpleItemStat) entry);
+        }
+        return entry;
     }
 
     @Override
