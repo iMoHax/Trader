@@ -63,6 +63,10 @@ public class World {
         analyzer.setSegmentSize(Main.SETTINGS.getSegmentSize());
         analyzer.setPathsCount(Main.SETTINGS.getPathsCount());
         analyzer.setFilter(Main.SETTINGS.getFilter(market));
+        analyzer.setCargo(Main.SETTINGS.getCargo());
+        analyzer.setTank(Main.SETTINGS.getTank());
+        analyzer.setMaxDistance(Main.SETTINGS.getDistance());
+        analyzer.setJumps(Main.SETTINGS.getJumps());
         return analyzer;
     }
 }
