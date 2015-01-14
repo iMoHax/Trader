@@ -248,6 +248,8 @@ public class Screeners {
 
     public static void reinitAll() {
         mainController.init();
+        systemsEditorController.init();
+        vEditorController.init();
         filterController.init();
         EMDNUpdater.setMarket(MainController.getMarket());
     }

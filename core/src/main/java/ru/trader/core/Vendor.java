@@ -1,6 +1,8 @@
 package ru.trader.core;
 
 import ru.trader.graph.Connectable;
+
+import java.util.ArrayList;
 import java.util.Collection;
 
 public interface Vendor extends Connectable<Vendor> {
@@ -64,5 +66,13 @@ public interface Vendor extends Connectable<Vendor> {
 
     default boolean canRefill(){
         return getPlace().canRefill();
+    }
+
+    default void clear(){
+        Collection<Offer> offers = new ArrayList<>(getAllSellOffers());
+        offers.addAll(getAllBuyOffers());
+        for (Offer offer : offers) {
+            remove(offer);
+        }
     }
 }

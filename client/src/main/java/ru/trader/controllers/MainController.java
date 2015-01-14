@@ -18,6 +18,7 @@ import ru.trader.World;
 import ru.trader.model.*;
 import ru.trader.view.support.Localization;
 
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -111,16 +112,80 @@ public class MainController {
     public void importWorld(ActionEvent actionEvent) {
         try {
             FileChooser fileChooser = new FileChooser();
-            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Excel files (*.xlsx)", "*.xlsx");
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML bd files (*.xml)", "*.xml");
             fileChooser.getExtensionFilters().add(extFilter);
             fileChooser.setInitialDirectory(new File("."));
             File file = fileChooser.showOpenDialog(null);
             if (file !=null) {
-                World.imp(file);
+                World.impXml(file);
                 reload();
             }
-        } catch (SAXException | IOException e) {
+        } catch (ParserConfigurationException | SAXException | IOException e) {
             LOG.error("Error on import file", e);
+        }
+    }
+
+    public void exportWorld(ActionEvent actionEvent) {
+        try {
+            FileChooser fileChooser = new FileChooser();
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML bd files (*.xml)", "*.xml");
+            fileChooser.getExtensionFilters().add(extFilter);
+            fileChooser.setInitialDirectory(new File("."));
+            File file = fileChooser.showSaveDialog(null);
+            if (file !=null) {
+                World.saveTo(file);
+                reload();
+            }
+        } catch (FileNotFoundException | UnsupportedEncodingException | XMLStreamException e) {
+            LOG.error("Error on save as file", e);
+        }
+    }
+
+    public void clear(ActionEvent actionEvent){
+        Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.all")));
+        if (res == Dialog.ACTION_YES) {
+            market.clear();
+            reload();
+        }
+    }
+
+    public void clearOffers(ActionEvent actionEvent){
+        Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.offers")));
+        if (res == Dialog.ACTION_YES) {
+            market.clearOffers();
+            reload();
+        }
+    }
+
+    public void clearStations(ActionEvent actionEvent){
+        Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.stations")));
+        if (res == Dialog.ACTION_YES) {
+            market.clearStations();
+            reload();
+        }
+    }
+
+    public void clearSystems(ActionEvent actionEvent){
+        Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.systems")));
+        if (res == Dialog.ACTION_YES) {
+            market.clearSystems();
+            reload();
+        }
+    }
+
+    public void clearItems(ActionEvent actionEvent){
+        Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.items")));
+        if (res == Dialog.ACTION_YES) {
+            market.clearItems();
+            reload();
+        }
+    }
+
+    public void clearGroups(ActionEvent actionEvent){
+        Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.groups")));
+        if (res == Dialog.ACTION_YES) {
+            market.clearGroups();
+            reload();
         }
     }
 
@@ -189,6 +254,7 @@ public class MainController {
     }
 
     private void reload(){
+        if (world != null) world.getModeler().clear();
         world = new MarketModel(World.getMarket());
         market = world;
         Screeners.reinitAll();

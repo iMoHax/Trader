@@ -203,4 +203,33 @@ public class MarketModel {
         return modeler.get(p);
     }
 
+    public void clear(){
+        LOG.info("Clear market");
+        market.clear();
+    }
+
+    public void clearOffers(){
+        LOG.info("Clear offers");
+        market.clearOffers();
+    }
+
+    public void clearStations(){
+        LOG.info("Clear stations");
+        market.clearVendors();
+    }
+
+    public void clearSystems(){
+        LOG.info("Clear systems");
+        market.clearPlaces();
+    }
+
+    public void clearItems(){
+        LOG.info("Clear items");
+        market.clearItems();
+    }
+
+    public void clearGroups(){
+        LOG.info("Clear groups");
+        market.clearGroups();
+    }
 }

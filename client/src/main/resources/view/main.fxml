@@ -12,6 +12,7 @@
            <Menu text="%main.menu.file">
                <MenuItem text="%main.menu.file.save" onAction="#save"/>
                <MenuItem text="%main.menu.file.import" onAction="#importWorld"/>
+               <MenuItem text="%main.menu.file.export" onAction="#exportWorld"/>
            </Menu>
            <Menu text="%main.menu.edit">
                <MenuItem text="%main.menu.edit.addSystem" onAction="#addSystem"/>
@@ -20,6 +21,14 @@
                <MenuItem text="%main.menu.edit.addStation" onAction="#addStation"/>
                <MenuItem text="%main.menu.edit.editStation" onAction="#editStation"/>
                <MenuItem text="%main.menu.edit.removeStation" onAction="#removeStation"/>
+               <Menu text="%main.menu.edit.clear">
+                   <MenuItem text="%market.offers" onAction="#clearOffers"/>
+                   <MenuItem text="%market.stations" onAction="#clearStations"/>
+                   <MenuItem text="%market.systems" onAction="#clearSystems"/>
+                   <MenuItem text="%market.items" onAction="#clearItems"/>
+                   <MenuItem text="%market.groups" onAction="#clearGroups"/>
+                   <MenuItem text="%market.all" onAction="#clear"/>
+               </Menu>
            </Menu>
            <Menu text="%main.menu.settings">
                <MenuItem text="%main.menu.settings.filter" onAction="#editFilter"/>

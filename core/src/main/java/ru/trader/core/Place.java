@@ -2,6 +2,7 @@ package ru.trader.core;
 
 import ru.trader.graph.Connectable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -46,4 +47,16 @@ public interface Place extends Connectable<Place> {
         return Math.sqrt(Math.pow(x - getX(), 2) + Math.pow(y - getY(), 2) + Math.pow(z - getZ(), 2));
     }
 
+    default void clear(){
+        Collection<Vendor> vendors = new ArrayList<>(get());
+        for (Vendor vendor : vendors) {
+            remove(vendor);
+        }
+    }
+
+    default void clearOffers(){
+        for (Vendor vendor : get()) {
+            vendor.clear();
+        }
+    }
 }

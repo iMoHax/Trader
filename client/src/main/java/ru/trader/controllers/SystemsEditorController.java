@@ -94,7 +94,7 @@ public class SystemsEditorController {
         init();
     }
 
-    private void init(){
+    void init(){
         market = MainController.getMarket();
         system1.setItems(market.systemsProperty());
         system2.setItems(market.systemsProperty());

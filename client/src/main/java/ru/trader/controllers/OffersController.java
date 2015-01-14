@@ -101,6 +101,8 @@ public class OffersController {
     }
 
     void init(){
+        station = null;
+        system = null;
         MarketModel market = MainController.getMarket();
         market.getNotificator().add(new OffersChangeListener());
         systems.setItems(market.systemsProperty());

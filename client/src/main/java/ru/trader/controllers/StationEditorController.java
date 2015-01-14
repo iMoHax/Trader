@@ -92,7 +92,7 @@ public class StationEditorController {
         init();
     }
 
-    private void init(){
+    void init(){
         if (updater != null){
             name.textProperty().unbindBidirectional(updater.nameProperty());
             distance.numberProperty().unbindBidirectional(updater.distanceProperty());
