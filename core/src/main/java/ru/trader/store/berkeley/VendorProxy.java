@@ -5,15 +5,35 @@ import ru.trader.store.berkeley.entities.BDBOffer;
 import ru.trader.store.berkeley.entities.BDBVendor;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class VendorProxy extends AbstractVendor {
     private final BDBVendor vendor;
     private final BDBStore store;
     private Place place;
+    protected Map<Long, Offer> sell;
+    protected Map<Long, Offer> buy;
 
     public VendorProxy(BDBVendor vendor, BDBStore store) {
         this.vendor = vendor;
         this.store = store;
+        init();
+    }
+
+    private void init(){
+        sell = new ConcurrentHashMap<>(20, 0.9f, 2);
+        buy = new ConcurrentHashMap<>(20, 0.9f, 2);
+        for (Offer offer : store.getOfferAccessor().getAllByType(vendor.getId(), OFFER_TYPE.SELL)) {
+            sell.put(((ItemProxy)offer.getItem()).getId(), offer);
+        }
+        for (Offer offer : store.getOfferAccessor().getAllByType(vendor.getId(), OFFER_TYPE.BUY)) {
+            buy.put(((ItemProxy)offer.getItem()).getId(), offer);
+        }
+    }
+
+    private Map<Long, Offer> getCache(OFFER_TYPE type){
+        return type == OFFER_TYPE.SELL ? sell : buy;
     }
 
     protected long getId(){
@@ -69,11 +89,14 @@ public class VendorProxy extends AbstractVendor {
         OfferProxy oProxy = ((OfferProxy)offer);
         oProxy.setVendor(this);
         store.getOfferAccessor().put(oProxy.getEntity());
+        getCache(offer.getType()).put(((ItemProxy)oProxy.getItem()).getId(), oProxy);
     }
 
     @Override
     protected void removeOffer(Offer offer) {
-        store.getOfferAccessor().delete(((OfferProxy) offer).getEntity());
+        OfferProxy oProxy = ((OfferProxy)offer);
+        getCache(offer.getType()).remove(((ItemProxy)oProxy.getItem()).getId());
+        store.getOfferAccessor().delete(oProxy.getEntity());
     }
 
 
@@ -102,17 +125,17 @@ public class VendorProxy extends AbstractVendor {
 
     @Override
     public Collection<Offer> get(OFFER_TYPE type) {
-        return store.getOfferAccessor().getAllByType(vendor.getId(), type);
+        return getCache(type).values();
     }
 
     @Override
     public Offer get(OFFER_TYPE type, Item item) {
-        return store.getOfferAccessor().get(vendor.getId(), type, ((ItemProxy)item).getId());
+        return getCache(type).get(((ItemProxy)item).getId());
     }
 
     @Override
     public boolean has(OFFER_TYPE type, Item item) {
-        return store.getOfferAccessor().has(vendor.getId(), type, ((ItemProxy)item).getId());
+        return getCache(type).containsKey(((ItemProxy)item).getId());
     }
 
     @Override

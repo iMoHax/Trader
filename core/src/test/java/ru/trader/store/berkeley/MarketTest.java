@@ -340,8 +340,6 @@ public class MarketTest  extends Assert {
 
         assertEquals(0, market.getSell(item1).size());
         assertEquals(0, market.getBuy(item1).size());
-        assertEquals(0, vendor1.getAllBuyOffers().size());
-        assertEquals(0, vendor1.getAllSellOffers().size());
         assertEquals(0, market.getVendors().size());
         assertEquals(0, market.get().size());
         assertEquals(0, sellStat.getOffers().size());
