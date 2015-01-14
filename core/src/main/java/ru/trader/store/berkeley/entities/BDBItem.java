@@ -38,4 +38,22 @@ public class BDBItem {
         return groupId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BDBItem)) return false;
+
+        BDBItem bdbItem = (BDBItem) o;
+
+        if (id != bdbItem.id) return false;
+        if (!groupId.equals(bdbItem.groupId)) return false;
+        if (!name.equals(bdbItem.name)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
+    }
 }

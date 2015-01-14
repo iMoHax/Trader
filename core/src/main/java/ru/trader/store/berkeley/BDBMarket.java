@@ -1,5 +1,7 @@
 package ru.trader.store.berkeley;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
 import ru.trader.store.berkeley.entities.BDBGroup;
 import ru.trader.store.berkeley.entities.BDBItem;
@@ -8,12 +10,17 @@ import ru.trader.store.berkeley.entities.BDBPlace;
 import java.util.*;
 
 public class BDBMarket extends AbstractMarket {
+    private final static Logger LOG = LoggerFactory.getLogger(BDBMarket.class);
     private final BDBStore store;
 
     //caching
     private final Map<Item,BDBItemStat> sellItems = new HashMap<>();
     private final Map<Item,BDBItemStat> buyItems = new HashMap<>();
 
+    public BDBMarket(BDBStore store) {
+        this.store = store;
+        store.setMarket(this);
+    }
 
     private Map<Item,BDBItemStat> getItemCache(OFFER_TYPE offerType){
         switch (offerType) {
@@ -30,8 +37,9 @@ public class BDBMarket extends AbstractMarket {
         if (entry == null){
             entry = new BDBItemStat((ItemProxy) item, offer.getType(), store);
             cache.put(item, entry);
+        } else {
+            entry.put(offer);
         }
-        entry.put(offer);
     }
 
     private void remove(Map<Item, BDBItemStat> cache, Offer offer){
@@ -42,10 +50,6 @@ public class BDBMarket extends AbstractMarket {
             if (entry.isEmpty())
                 cache.remove(item);
         }
-    }
-
-    public BDBMarket(BDBStore store) {
-        this.store = store;
     }
 
     @Override
@@ -70,6 +74,9 @@ public class BDBMarket extends AbstractMarket {
 
     @Override
     protected void removePlace(Place place) {
+        for (Vendor vendor : place.get()) {
+            onRemove(vendor);
+        }
         store.getPlaceAccessor().delete(((PlaceProxy) place).getEntity());
     }
 
@@ -91,6 +98,8 @@ public class BDBMarket extends AbstractMarket {
     @Override
     protected void removeItem(Item item) {
         store.getItemAccessor().delete(((ItemProxy) item).getEntity());
+        sellItems.remove(item);
+        buyItems.remove(item);
     }
 
     @Override
@@ -110,8 +119,50 @@ public class BDBMarket extends AbstractMarket {
 
     @Override
     public ItemStat getStat(OFFER_TYPE type, Item item) {
-        //TODO: добавить
-        return null;
+        ItemStat entry = getItemCache(type).get(item);
+        if (entry == null){
+            entry = new BDBItemStat((ItemProxy) item, type, store);
+            getItemCache(type).put(item, (BDBItemStat) entry);
+        }
+        return entry;
+    }
+
+    @Override
+    protected void onAdd(Vendor vendor) {
+        LOG.trace("Cached on add vendor {}", vendor);
+        Collection<Offer> offers = vendor.getAllSellOffers();
+        for (Offer offer : offers) {
+            put(sellItems, offer);
+        }
+        offers = vendor.getAllBuyOffers();
+        for (Offer offer : offers) {
+            put(buyItems, offer);
+        }
+    }
+
+    @Override
+    protected void onRemove(Vendor vendor) {
+        LOG.trace("Remove cache of vendor {}", vendor);
+        Collection<Offer> offers = vendor.getAllSellOffers();
+        for (Offer offer : offers) {
+            remove(sellItems, offer);
+        }
+        offers = vendor.getAllBuyOffers();
+        for (Offer offer : offers) {
+            remove(buyItems, offer);
+        }
+    }
+
+    @Override
+    protected void onAdd(Offer offer) {
+        LOG.trace("Cached on add offer {}", offer);
+        put(getItemCache(offer.getType()), offer);
+    }
+
+    @Override
+    protected void onRemove(Offer offer) {
+        LOG.trace("Remove cache of offer {}", offer);
+        remove(getItemCache(offer.getType()), offer);
     }
 
 }

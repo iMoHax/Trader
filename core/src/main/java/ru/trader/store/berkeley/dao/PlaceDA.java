@@ -13,12 +13,16 @@ import java.util.function.Function;
 public class PlaceDA<T> {
     private final PrimaryIndex<Long, BDBPlace> indexById;
     private final SecondaryIndex<Double, Long, BDBPlace> indexByDistance;
-    private final Function<BDBPlace,T> convertFunc;
+    private Function<BDBPlace,T> convertFunc;
 
     public PlaceDA(EntityStore store, Function<BDBPlace, T> convertFunc) {
         this.convertFunc = convertFunc;
         this.indexById = store.getPrimaryIndex(Long.class, BDBPlace.class);
         this.indexByDistance = store.getSecondaryIndex(indexById, Double.class, "distance");
+    }
+
+    public void setConvertFunc(Function<BDBPlace, T> convertFunc) {
+        this.convertFunc = convertFunc;
     }
 
     public T get(long id){

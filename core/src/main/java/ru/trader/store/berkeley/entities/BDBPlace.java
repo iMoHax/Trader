@@ -59,4 +59,25 @@ public class BDBPlace {
         this.distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BDBPlace)) return false;
+
+        BDBPlace bdbPlace = (BDBPlace) o;
+
+        if (id != bdbPlace.id) return false;
+        if (Double.compare(bdbPlace.x, x) != 0) return false;
+        if (Double.compare(bdbPlace.y, y) != 0) return false;
+        if (Double.compare(bdbPlace.z, z) != 0) return false;
+        if (!name.equals(bdbPlace.name)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
+    }
 }

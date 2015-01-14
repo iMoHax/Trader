@@ -23,6 +23,7 @@ public class BDBStore {
     private final ItemDA<Item> iDA;
     private final GroupDA<Group> gDA;
     private final PlaceDA<Place> pDA;
+    private BDBMarket market;
 
     public BDBStore(String path){
         EnvironmentConfig envConfig = new EnvironmentConfig();
@@ -39,13 +40,19 @@ public class BDBStore {
             oDA = new OfferDA<>(store, o -> new OfferProxy(o, this));
             iDA = new ItemDA<>(store, i -> new ItemProxy(i, this));
             gDA = new GroupDA<>(store, g -> g);
-            pDA = new PlaceDA<>(store, p -> new PlaceProxy(p, this));
+            pDA = new PlaceDA<>(store, p -> new PlaceProxy(p, null, this));
 
         } catch (DatabaseException e){
             LOG.error("Error on open DB, path {}", path);
             LOG.error("",e);
             throw e;
         }
+    }
+
+    void setMarket(BDBMarket market) {
+        assert this.market == null;
+        this.market = market;
+        pDA.setConvertFunc(p -> new PlaceProxy(p, market, this));
     }
 
     public VendorDA<Vendor> getVendorAccessor() {

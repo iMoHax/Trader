@@ -4,7 +4,7 @@ import com.sleepycat.persist.model.*;
 import ru.trader.core.SERVICE_TYPE;
 
 import java.util.Collection;
-import java.util.EnumSet;
+import java.util.HashSet;
 
 @Entity(version = 1)
 public class BDBVendor {
@@ -13,14 +13,13 @@ public class BDBVendor {
     private long id;
 
     @SecondaryKey(relate = Relationship.MANY_TO_ONE,
-            relatedEntity = BDBPlace.class,
-            onRelatedEntityDelete = DeleteAction.NULLIFY)
+                  relatedEntity = BDBPlace.class, onRelatedEntityDelete = DeleteAction.CASCADE)
     private long placeId;
     private String name;
     private double distance;
 
-    @SecondaryKey(relate=Relationship.ONE_TO_MANY)
-    EnumSet<SERVICE_TYPE> services = EnumSet.noneOf(SERVICE_TYPE.class);
+    @SecondaryKey(relate=Relationship.MANY_TO_MANY)
+    Collection<SERVICE_TYPE> services = new HashSet<>();
 
     private BDBVendor() {
     }
@@ -72,5 +71,26 @@ public class BDBVendor {
 
     public Collection<SERVICE_TYPE> getServices() {
         return services;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BDBVendor)) return false;
+
+        BDBVendor bdbVendor = (BDBVendor) o;
+
+        if (Double.compare(bdbVendor.distance, distance) != 0) return false;
+        if (id != bdbVendor.id) return false;
+        if (placeId != bdbVendor.placeId) return false;
+        if (!name.equals(bdbVendor.name)) return false;
+        if (!services.equals(bdbVendor.services)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
     }
 }

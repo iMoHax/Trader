@@ -5,13 +5,12 @@ import ru.trader.store.berkeley.entities.BDBOffer;
 
 public class OfferProxy extends AbstractOffer {
     private final BDBOffer offer;
-    private final Item item;
+    private Item item;
     private BDBStore store;
     private Vendor vendor;
 
     public OfferProxy(BDBOffer offer, BDBStore store) {
         this.offer = offer;
-        this.item = store.getItemAccessor().get(offer.getItemId());
         this.store = store;
     }
 
@@ -43,6 +42,9 @@ public class OfferProxy extends AbstractOffer {
 
     @Override
     public Item getItem() {
+        if (item == null){
+            item = store.getItemAccessor().get(offer.getItemId());
+        }
         return item;
     }
 
@@ -69,4 +71,20 @@ public class OfferProxy extends AbstractOffer {
         return offer.getCount();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OfferProxy)) return false;
+
+        OfferProxy that = (OfferProxy) o;
+
+        if (!offer.equals(that.offer)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return offer.hashCode();
+    }
 }

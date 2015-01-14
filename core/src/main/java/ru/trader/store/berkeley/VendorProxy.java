@@ -114,4 +114,21 @@ public class VendorProxy extends AbstractVendor {
     public boolean has(OFFER_TYPE type, Item item) {
         return store.getOfferAccessor().has(vendor.getId(), type, ((ItemProxy)item).getId());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof VendorProxy)) return false;
+
+        VendorProxy that = (VendorProxy) o;
+
+        if (!vendor.equals(that.vendor)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return vendor.hashCode();
+    }
 }

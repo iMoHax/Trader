@@ -16,6 +16,11 @@ public class PlaceProxy extends AbstractPlace {
         this.store = store;
     }
 
+    public PlaceProxy(BDBPlace place, BDBMarket market, BDBStore store) {
+        this(place, store);
+        setMarket(market);
+    }
+
     protected long getId(){
         return place.getId();
     }
@@ -76,4 +81,20 @@ public class PlaceProxy extends AbstractPlace {
         return store.getVendorAccessor().getAllByPlace(place.getId());
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PlaceProxy)) return false;
+
+        PlaceProxy that = (PlaceProxy) o;
+
+        if (!place.equals(that.place)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return place.hashCode();
+    }
 }

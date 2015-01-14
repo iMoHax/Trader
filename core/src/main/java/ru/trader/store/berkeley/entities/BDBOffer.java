@@ -10,20 +10,21 @@ public class BDBOffer {
     private long id;
 
     @SecondaryKey(relate = Relationship.MANY_TO_ONE,
-            relatedEntity = BDBItem.class,
-            onRelatedEntityDelete = DeleteAction.NULLIFY)
+            relatedEntity = BDBItem.class, onRelatedEntityDelete = DeleteAction.CASCADE)
     private long itemId;
 
     @SecondaryKey(relate = Relationship.MANY_TO_ONE,
-            relatedEntity = BDBVendor.class,
-            onRelatedEntityDelete = DeleteAction.NULLIFY)
+            relatedEntity = BDBVendor.class, onRelatedEntityDelete = DeleteAction.CASCADE)
     private long vendorId;
 
-    @SecondaryKey(relate = Relationship.ONE_TO_ONE)
+    @SecondaryKey(relate = Relationship.MANY_TO_ONE)
     private OFFER_TYPE type;
 
     private double price;
     private long count;
+
+    private BDBOffer() {
+    }
 
     public BDBOffer(OFFER_TYPE type, long itemId, double price, long count, long vendorId) {
         this.type = type;
@@ -69,4 +70,24 @@ public class BDBOffer {
         this.vendorId = vendorId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BDBOffer)) return false;
+
+        BDBOffer bdbOffer = (BDBOffer) o;
+
+        if (count != bdbOffer.count) return false;
+        if (id != bdbOffer.id) return false;
+        if (itemId != bdbOffer.itemId) return false;
+        if (Double.compare(bdbOffer.price, price) != 0) return false;
+        if (type != bdbOffer.type) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
+    }
 }

@@ -31,4 +31,24 @@ public class BDBGroup implements Group {
     public GROUP_TYPE getType() {
         return type;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BDBGroup)) return false;
+
+        BDBGroup bdbGroup = (BDBGroup) o;
+
+        if (!name.equals(bdbGroup.name)) return false;
+        if (type != bdbGroup.type) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + type.hashCode();
+        return result;
+    }
 }

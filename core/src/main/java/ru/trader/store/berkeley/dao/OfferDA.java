@@ -6,6 +6,7 @@ import ru.trader.store.berkeley.entities.BDBOffer;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.TreeSet;
 import java.util.function.Function;
 
 public class OfferDA<T> {
@@ -67,6 +68,20 @@ public class OfferDA<T> {
     public Collection<T> getAllByType(long vendorId, OFFER_TYPE type){
         EntityJoin<Long,BDBOffer> join = new EntityJoin<>(indexById);
         join.addCondition(indexByVendorId, vendorId);
+        join.addCondition(indexByType, type);
+        Collection<T> res = new LinkedList<>();
+        try (ForwardCursor<BDBOffer> cursor = join.entities())
+        {
+            for(BDBOffer entity : cursor){
+                res.add(convertFunc.apply(entity));
+            }
+        }
+        return res;
+    }
+
+    public Collection<T> getAllByItem(long itemId, OFFER_TYPE type){
+        EntityJoin<Long,BDBOffer> join = new EntityJoin<>(indexById);
+        join.addCondition(indexByItemId, itemId);
         join.addCondition(indexByType, type);
         Collection<T> res = new LinkedList<>();
         try (ForwardCursor<BDBOffer> cursor = join.entities())
