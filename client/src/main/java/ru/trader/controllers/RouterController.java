@@ -1,7 +1,6 @@
 package ru.trader.controllers;
 
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -34,6 +33,9 @@ public class RouterController {
 
     @FXML
     private ScrollPane path;
+
+    @FXML
+    private Button addBtn;
 
     @FXML
     private Button editBtn;
@@ -117,6 +119,11 @@ public class RouterController {
         distance.setValue(Main.SETTINGS.getDistance());
         jumps.setValue(Main.SETTINGS.getJumps());
 
+        addBtn.disableProperty().bind(Bindings.createBooleanBinding(()-> {
+            StationModel st = tStation.getValue();
+            return st == null || st == ModelFabric.NONE_STATION;
+        }, tStation.valueProperty()));
+
         editBtn.disableProperty().bind(tblOrders.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
         removeBtn.disableProperty().bind(Bindings.createBooleanBinding(()-> {
             int sel = tblOrders.getSelectionModel().getSelectedIndex();
@@ -155,6 +162,7 @@ public class RouterController {
         totalBalance.add(order.getProfit());
         source.setValue(order.getBuyer().getSystem());
         sStation.setValue(order.getBuyer());
+        target.setValue(ModelFabric.NONE_SYSTEM);
         balance.setDisable(true);
     }
 
@@ -163,10 +171,25 @@ public class RouterController {
         totalBalance.sub(order.getProfit());
         source.setValue(order.getSystem());
         sStation.setValue(order.getStation());
+        target.setValue(ModelFabric.NONE_SYSTEM);
         if (orders.isEmpty()) {
             balance.setDisable(false);
             source.setDisable(false);
         }
+    }
+
+    public void addStationToRoute(){
+        StationModel sS = sStation.getValue();
+        StationModel tS = tStation.getValue();
+        PathRouteModel r = market.getPath(sS, tS);
+        if (route != null){
+            route = route.add(r);
+        } else {
+            route = r;
+        }
+        refreshPath();
+        source.setValue(tS.getSystem());
+        sStation.setValue(tS);
     }
 
     public void editOrders(){
@@ -192,6 +215,29 @@ public class RouterController {
             }
             orders.remove(index);
             refreshPath();
+        }
+    }
+
+    public void recompute(){
+        if (route != null){
+            route.recompute(balance.getValue().doubleValue(), cargo.getValue().longValue());
+            orders.clear();
+            orders.addAll(route.getOrders());
+            refreshPath();
+        }
+    }
+
+    public void rebuild(){
+        if (route != null){
+            PathRouteModel r = market.getRoute(route, balance.getValue().doubleValue());
+            if (r != null){
+                route = r;
+                orders.clear();
+                orders.addAll(route.getOrders());
+                refreshPath();
+            } else {
+                recompute();
+            }
         }
     }
 
@@ -256,14 +302,14 @@ public class RouterController {
         if (this.route == null){
             this.route = route;
         } else {
-            this.route.add(route.getPath());
+            this.route = this.route.add(route);
         }
         refreshPath();
     }
 
     private void addOrderToPath(OrderModel order){
         if (route != null){
-            route.add(order);
+            route = route.add(order);
         } else {
             route = market.getPath(order);
         }

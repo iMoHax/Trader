@@ -10,7 +10,9 @@ import ru.trader.store.simple.SimpleItem;
 import ru.trader.store.simple.SimpleOffer;
 import ru.trader.store.simple.SimpleVendor;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 public class PathRouteTest extends Assert {
     private final static Logger LOG = LoggerFactory.getLogger(PathRouteTest.class);
@@ -437,4 +439,50 @@ public class PathRouteTest extends Assert {
         TestUtil.assertCollectionEquals(orders, order7, PathRoute.TRANSIT);
 
     }
+
+    @Test
+    public void testEntries() throws Exception {
+        LOG.info("Start test get entries");
+        v1 = new SimpleVendor("v1",0,0,0);
+        v2 = new SimpleVendor("v2",0,0,0);
+        v3 = new SimpleVendor("v3",0,0,0);
+        v4 = new SimpleVendor("v4",0,0,0);
+
+        PathRoute path = new PathRoute(new Vertex<>(v1));
+        path = (PathRoute) path.connectTo(new Vertex<>(v2), false);
+        path = (PathRoute) path.connectTo(new Vertex<>(v3), false);
+        path.finish();
+        TestUtil.assertCollectionContainAll(path.getEntries(), v1, v2, v3);
+    }
+
+    @Test
+    public void testContains() throws Exception {
+        LOG.info("Start test get entries");
+        v1 = new SimpleVendor("v1",0,0,0);
+        v2 = new SimpleVendor("v2",0,0,0);
+        v3 = new SimpleVendor("v3",0,0,0);
+        v4 = new SimpleVendor("v4",0,0,0);
+
+        PathRoute path = new PathRoute(new Vertex<>(v1));
+        path = (PathRoute) path.connectTo(new Vertex<>(v2), false);
+        path = (PathRoute) path.connectTo(new Vertex<>(v3), false);
+        path.finish();
+        Collection<Vendor> vendors = new ArrayList<>();
+        Collections.addAll(vendors, v1, v2, v3);
+        assertTrue(path.contains(vendors));
+        vendors.clear();
+        Collections.addAll(vendors, v2);
+        assertTrue(path.contains(vendors));
+        vendors.clear();
+        Collections.addAll(vendors, v4);
+        assertFalse(path.contains(vendors));
+        vendors.clear();
+        Collections.addAll(vendors, v3, v2, v4, v1);
+        assertFalse(path.contains(vendors));
+        vendors.clear();
+        Collections.addAll(vendors, v1, v2, v3, v4);
+        assertFalse(path.contains(vendors));
+
+    }
+
 }

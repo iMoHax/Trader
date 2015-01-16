@@ -363,6 +363,23 @@ public class MarketAnalyzer {
         return top;
     }
 
+    public PathRoute getPath(Collection<Vendor> vendors, double balance) {
+        PathRoute res = null;
+        callback.setMax(vendors.size());
+        for (Vendor from : vendors) {
+            RouteSearcher searcher = new RouteSearcher(maxDistance, tank, segmentSize, callback.onStartSearch());
+            //TODO: implement search with constant length
+            Collection<PathRoute> paths = searcher.getPaths(from, vendors, jumps, balance, cargo, limit);
+            Optional<PathRoute> route = paths.stream().filter(p -> p.contains(vendors)).findFirst();
+            if (route.isPresent() && (res == null || RouteGraph.byProfitComparator.compare(res, route.get()) < 0)){
+                res = route.get();
+            }
+            callback.inc();
+        }
+        callback.onEndSearch();
+        return res;
+    }
+
     private Collection<Place> getPlaces(){
         if (filter != null){
             return filter.filtered(market.get());

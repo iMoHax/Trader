@@ -20,8 +20,6 @@ import ru.trader.services.OrdersSearchTask;
 import ru.trader.services.RoutesSearchTask;
 import ru.trader.view.support.Localization;
 
-import java.util.Collection;
-import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 
@@ -192,8 +190,20 @@ public class MarketModel {
         getRoutes(ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, balance, result);
     }
 
-    PathRoute getPath(StationModel from, StationModel to) {
+    public PathRouteModel getRoute(PathRouteModel path, double balance) {
+        PathRoute p = analyzer.getPath(path.getPath().getEntries(), balance);
+        if (p == null) return null;
+        return modeler.get(p);
+    }
+
+    PathRoute _getPath(StationModel from, StationModel to) {
         return analyzer.getPath(from.getStation(), to.getStation());
+    }
+
+    public PathRouteModel getPath(StationModel from, StationModel to) {
+        PathRoute p = analyzer.getPath(from.getStation(), to.getStation());
+        if (p == null) return null;
+        return modeler.get(p);
     }
 
     public PathRouteModel getPath(OrderModel order) {

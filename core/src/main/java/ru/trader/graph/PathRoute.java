@@ -49,7 +49,7 @@ public class PathRoute extends Path<Vendor> {
         return new PathRoute(this.getCopy(), vertex, refill);
     }
 
-    public void add(PathRoute path, boolean noSort) {
+    public PathRoute add(PathRoute path, boolean noSort) {
         LOG.trace("Add path {} to {}", path, this);
         PathRoute res = this;
         path = path.getRoot();
@@ -70,6 +70,7 @@ public class PathRoute extends Path<Vendor> {
         } else {
             res.finish();
         }
+        return res;
     }
 
     private void copyField(PathRoute source, PathRoute dest){
@@ -104,6 +105,10 @@ public class PathRoute extends Path<Vendor> {
     private void addOrder(Order order){
         LOG.trace("Add order {} to path {}", order, this);
         orders.add(order);
+    }
+
+    public void refresh(){
+        getEnd().finish();
     }
 
     @Override

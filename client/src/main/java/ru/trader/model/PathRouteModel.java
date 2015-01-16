@@ -14,11 +14,11 @@ public class PathRouteModel {
     private final int refuels;
     private final int lands;
 
-    private final PathRoute path;
+    private final PathRoute _path;
 
     PathRouteModel(PathRoute path, MarketModel market) {
         this.market = market;
-        this.path = path;
+        this._path = path;
         PathRoute p = path.getRoot();
         totalProfit = p.getProfit();
         lands = p.getLandsCount();
@@ -51,7 +51,7 @@ public class PathRouteModel {
     }
 
     public PathRoute getPath() {
-        return path;
+        return _path;
     }
 
     public int getLands() {
@@ -64,37 +64,48 @@ public class PathRouteModel {
 
     public Collection<OrderModel> getOrders(){
         Collection<OrderModel> res = new ArrayList<>(lands);
-        PathRoute p = path.getRoot();
+        PathRoute path = _path.getRoot();
         Order cargo = null;
-        while (p.hasNext()){
-            p = p.getNext();
-            if (cargo == null && p.getBest()!=null){
-                cargo = p.getBest();
+        while (path.hasNext()){
+            path = path.getNext();
+            if (cargo == null && path.getBest()!=null){
+                cargo = path.getBest();
                 OrderModel order = market.getModeler().get(cargo);
-                order.setPath(p);
+                order.setPath(path);
                 res.add(order);
             }
-            if (cargo!=null && cargo.isBuyer(p.get())){
+            if (cargo!=null && cargo.isBuyer(path.get())){
                 cargo = null;
             }
         }
         return res;
     }
 
-    public void add(OrderModel order){
-        PathRoute p = market.getPath(order.getStation(), order.getBuyer());
-        if (p == null) return;
-        p.getRoot().getNext().setOrder(new Order(order.getOffer().getOffer(), order.getBuyOffer().getOffer(), order.getCount()));
-        PathRoute head = path.getEnd();
-        add(p);
-        order.setPath(head);
+    PathRoute _add(PathRoute route){
+        return _path.add(route, true);
     }
 
-    public void add(PathRoute route){
-        path.getEnd().add(route, true);
+    public PathRouteModel add(OrderModel order){
+        PathRoute path = market._getPath(order.getStation(), order.getBuyer());
+        if (path == null) return this;
+        path.getRoot().getNext().setOrder(new Order(order.getOffer().getOffer(), order.getBuyOffer().getOffer(), order.getCount()));
+        PathRoute head = _path.getEnd();
+        PathRouteModel res = new PathRouteModel(_add(path), market);
+        order.setPath(head);
+        return res;
+    }
+
+    public PathRouteModel add(PathRouteModel route){
+        return new PathRouteModel(_add(route.getPath()), market);
     }
 
     public PathRouteModel remove(OrderModel order) {
-        return new PathRouteModel(path.dropTo(order.getStation().getStation()), market);
+        return new PathRouteModel(_path.dropTo(order.getStation().getStation()), market);
     }
+
+    public void recompute(double balance, long cargo) {
+        _path.refresh();
+        _path.sort(balance, cargo);
+    }
+
 }

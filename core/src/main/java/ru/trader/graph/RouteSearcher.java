@@ -131,9 +131,9 @@ public class RouteSearcher {
             if (tail.isEmpty()){
                 LOG.trace("Not found route from {} to {}, jumps {}", task.source, task.target, task.jumps);
             } else {
-                path.add(tail.get(0), false);
+                path = path.add(tail.get(0), false);
                 path.sort(balance, cargo);
-                res.add(path.getEnd());
+                res.add(path);
             }
         }
 

@@ -18,11 +18,11 @@
     <fx:define><Insets fx:id="stationsPadding" left="12" right="10" /></fx:define>
 
     <columnConstraints>
-        <ColumnConstraints minWidth="250" maxWidth="250"/>
+        <ColumnConstraints minWidth="270" maxWidth="270"/>
         <ColumnConstraints fillWidth="true"/>
     </columnConstraints>
 
-    <TitledPane GridPane.rowSpan="3" text="%market.systems" minWidth="250" prefHeight="570" collapsible="false">
+    <TitledPane GridPane.rowSpan="3" text="%market.systems" minWidth="270" prefHeight="590" collapsible="false">
         <ListView fx:id="systems">
             <contextMenu>
                 <ContextMenu>

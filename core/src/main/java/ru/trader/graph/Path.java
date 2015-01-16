@@ -1,5 +1,10 @@
 package ru.trader.graph;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+
 public class Path<T extends Connectable<T>> {
     private final Path<T> head;
     private final Vertex<T> target;
@@ -110,5 +115,24 @@ public class Path<T extends Connectable<T>> {
         return isRoot() ? 0 : 1 + getPrevious().getLength();
     }
 
+    public Collection<T> getEntries(){
+        Collection<T> res = new HashSet<>();
+        res.add(target.getEntry());
+        Path<T> p = getPrevious();
+        while (p != null){
+            res.add(p.target.getEntry());
+            p = p.getPrevious();
+        }
+        return res;
+    }
 
+    public boolean contains(Collection<T> items){
+        if (items.isEmpty()) return true;
+        Collection<T> remains = new ArrayList<>(items);
+        remains.remove(target.getEntry());
+        if (isRoot()) {
+            return remains.isEmpty();
+        }
+        return getPrevious().contains(remains);
+    }
 }
