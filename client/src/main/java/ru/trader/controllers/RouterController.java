@@ -182,6 +182,7 @@ public class RouterController {
         StationModel sS = sStation.getValue();
         StationModel tS = tStation.getValue();
         PathRouteModel r = market.getPath(sS, tS);
+        if (r == null) return;
         if (route != null){
             route = route.add(r);
         } else {
