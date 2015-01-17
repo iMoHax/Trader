@@ -371,7 +371,7 @@ public class MarketAnalyzer {
             //TODO: implement search with constant length
             Collection<PathRoute> paths = searcher.getPaths(from, vendors, jumps, balance, cargo, limit);
             Optional<PathRoute> route = paths.stream().filter(p -> p.contains(vendors)).findFirst();
-            if (route.isPresent() && (res == null || RouteGraph.byProfitComparator.compare(res, route.get()) < 0)){
+            if (route.isPresent() && (res == null || RouteGraph.byProfitComparator.compare(res, route.get()) > 0)){
                 res = route.get();
             }
             callback.inc();
