@@ -18,6 +18,12 @@ public class ItemModel {
     private final ItemStatModel statSell;
     private final ItemStatModel statBuy;
 
+    ItemModel() {
+        this.item = null;
+        this.statSell = null;
+        this.statBuy = null;
+    }
+
     ItemModel(Item item, MarketModel market) {
         this.item = item;
         this.statSell = new ItemStatModel(market.getStat(OFFER_TYPE.SELL, item), market);
@@ -30,7 +36,7 @@ public class ItemModel {
 
     public String getId() {return item.getName();}
 
-    public String getName() {return name != null ? name.get() : item.getName();}
+    public String getName() {return name != null ? name.get() : Localization.getString("item." + item.getName(), item.getName());}
 
     public void setName(String value) {
         LOG.info("Change name of item {} to {}", item, value);

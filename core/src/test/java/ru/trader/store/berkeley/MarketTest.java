@@ -166,7 +166,6 @@ public class MarketTest  extends Assert {
 
         int c = 3;
         for (Vendor vendor : market.getVendors()) {
-            if ("Transit".equals(vendor.toString())) continue;
             if ("Vendor 1".equals(vendor.getName())){
                 assertEquals(vendor1, vendor);
                 assertEquals(place1, vendor.getPlace());
@@ -208,12 +207,12 @@ public class MarketTest  extends Assert {
         place1.remove(vendor2);
         place2.remove(vendor3);
 
-        assertEquals(2, market.getVendors().size());
+        assertEquals(0, market.getVendors().size());
 
         market.remove(place1);
         market.remove(place2);
 
-        assertEquals(0, market.getVendors().size());
+        assertEquals(0, market.getVendors(true).size());
     }
 
     @Test
@@ -340,7 +339,7 @@ public class MarketTest  extends Assert {
 
         assertEquals(0, market.getSell(item1).size());
         assertEquals(0, market.getBuy(item1).size());
-        assertEquals(0, market.getVendors().size());
+        assertEquals(0, market.getVendors(true).size());
         assertEquals(0, market.get().size());
         assertEquals(0, sellStat.getOffers().size());
         assertEquals(0, buyStat.getOffers().size());

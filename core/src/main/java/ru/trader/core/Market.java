@@ -25,7 +25,10 @@ public interface Market {
 
     Collection<Place> get();
     default Collection<Vendor> getVendors(){
-        return new PlacesWrapper(get());
+        return getVendors(false);
+    }
+    default Collection<Vendor> getVendors(boolean includeTransit){
+        return new PlacesWrapper(get(), includeTransit);
     }
     Collection<Group> getGroups();
     Collection<Item> getItems();

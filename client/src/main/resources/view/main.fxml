@@ -45,8 +45,11 @@
            <Tab text="%market.systems">
                <fx:include fx:id="offers" source="offers.fxml"/>
            </Tab>
-           <Tab text="%routes">
+           <Tab text="%main.tab.routes">
                <fx:include fx:id="router" source="router.fxml"/>
+           </Tab>
+           <Tab text="%main.tab.search">
+               <fx:include source="search.fxml"/>
            </Tab>
        </TabPane>
    </center>

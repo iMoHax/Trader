@@ -1,5 +1,7 @@
 package ru.trader.model;
 
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -117,6 +119,7 @@ public class ModelFabric {
 
     public static SystemModel NONE_SYSTEM = new FAKE_SYSTEM_MODEL();
     public static StationModel NONE_STATION = new FAKE_STATION_MODEL();
+    public static ItemModel NONE_ITEM = new FAKE_ITEM_MODEL();
 
     private static class FAKE_SYSTEM_MODEL extends SystemModel {
         FAKE_SYSTEM_MODEL() {
@@ -130,7 +133,7 @@ public class ModelFabric {
 
         @Override
         public String getName() {
-            throw new UnsupportedOperationException("Is fake system, change unsupported");
+            return "";
         }
 
         @Override
@@ -207,7 +210,7 @@ public class ModelFabric {
 
         @Override
         public String getName() {
-            throw  new UnsupportedOperationException("Is fake system, unsupported");
+            return "";
         }
 
         @Override
@@ -283,6 +286,112 @@ public class ModelFabric {
         @Override
         public double getDistance(StationModel other) {
             throw  new UnsupportedOperationException("Is fake system, unsupported");
+        }
+
+        @Override
+        public String toString() {
+            return "";
+        }
+    }
+
+    public static class FAKE_ITEM_MODEL extends ItemModel {
+
+        FAKE_ITEM_MODEL() {
+            super();
+        }
+
+        FAKE_ITEM_MODEL(Item item, MarketModel market) {
+            super(item, market);
+        }
+
+        @Override
+        Item getItem() {
+            throw new UnsupportedOperationException("Is fake item, unsupported");
+        }
+
+        @Override
+        public String getId() {
+            throw new UnsupportedOperationException("Is fake item, unsupported");
+        }
+
+        @Override
+        public String getName() {
+            return "";
+        }
+
+        @Override
+        public void setName(String value) {
+            throw new UnsupportedOperationException("Is fake item, unsupported");
+        }
+
+        @Override
+        public ReadOnlyStringProperty nameProperty() {
+            throw new UnsupportedOperationException("Is fake item, unsupported");
+        }
+
+        @Override
+        public ReadOnlyDoubleProperty avgBuyProperty() {
+            throw new UnsupportedOperationException("Is fake item, unsupported");
+        }
+
+        @Override
+        public ReadOnlyObjectProperty<OfferModel> minBuyProperty() {
+            throw new UnsupportedOperationException("Is fake item, unsupported");
+        }
+
+        @Override
+        public ReadOnlyObjectProperty<OfferModel> maxBuyProperty() {
+            throw new UnsupportedOperationException("Is fake item, unsupported");
+        }
+
+        @Override
+        public ReadOnlyObjectProperty<OfferModel> bestBuyProperty() {
+            throw new UnsupportedOperationException("Is fake item, unsupported");
+        }
+
+        @Override
+        public ReadOnlyDoubleProperty avgSellProperty() {
+            throw new UnsupportedOperationException("Is fake item, unsupported");
+        }
+
+        @Override
+        public ReadOnlyObjectProperty<OfferModel> minSellProperty() {
+            throw new UnsupportedOperationException("Is fake item, unsupported");
+        }
+
+        @Override
+        public ReadOnlyObjectProperty<OfferModel> maxSellProperty() {
+            throw new UnsupportedOperationException("Is fake item, unsupported");
+        }
+
+        @Override
+        public ReadOnlyObjectProperty<OfferModel> bestSellProperty() {
+            throw new UnsupportedOperationException("Is fake item, unsupported");
+        }
+
+        @Override
+        public List<OfferModel> getSeller() {
+            throw new UnsupportedOperationException("Is fake item, unsupported");
+        }
+
+        @Override
+        public List<OfferModel> getBuyer() {
+            throw new UnsupportedOperationException("Is fake item, unsupported");
+        }
+
+        @Override
+        public boolean isMarketItem() {
+            throw new UnsupportedOperationException("Is fake item, unsupported");
+        }
+
+        @Override
+        public void refresh() {
+            throw new UnsupportedOperationException("Is fake item, unsupported");
+        }
+
+        @Override
+        public void refresh(OFFER_TYPE type) {
+            throw new UnsupportedOperationException("Is fake item, unsupported");
         }
 
         @Override

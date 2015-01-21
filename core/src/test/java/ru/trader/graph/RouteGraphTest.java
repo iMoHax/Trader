@@ -65,7 +65,7 @@ public class RouteGraphTest extends Assert {
 
     @Test
     public void testRoutes() throws Exception {
-        RouteGraph graph = new RouteGraph(v1, market.getVendors(), 1, 1, true, 4);
+        RouteGraph graph = new RouteGraph(v1, market.getVendors(true), 1, 1, true, 4);
         graph.setBalance(500);
         graph.setCargo(5);
         //Profit: 150 180 200   230  670   620  950    890   620   950 1015   1180   890   950   930
@@ -97,7 +97,7 @@ public class RouteGraphTest extends Assert {
 
     @Test
     public void testRoutes2() throws Exception {
-        RouteGraph graph = new RouteGraph(v5, market.getVendors(), 1, 15, true, 4);
+        RouteGraph graph = new RouteGraph(v5, market.getVendors(true), 1, 15, true, 4);
         graph.setBalance(500);
         graph.setCargo(5);
         ArrayList<Path<Vendor>> routes = (ArrayList<Path<Vendor>>) graph.getPathsTo(v1, 5);

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
+<?import ru.trader.view.support.NumberField?>
+<?import ru.trader.view.support.cells.DistanceCell?>
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="ru.trader.controllers.SearchController">
+
+    <fx:define><Insets fx:id="separator_margin" top="10" bottom="10"/></fx:define>
+
+    <columnConstraints>
+        <ColumnConstraints minWidth="270" maxWidth="270"/>
+        <ColumnConstraints fillWidth="true"/>
+    </columnConstraints>
+
+    <TitledPane text="%market.systems" prefHeight="590" collapsible="false">
+        <GridPane vgap="4">
+            <columnConstraints>
+                <ColumnConstraints minWidth="100"/>
+                <ColumnConstraints minWidth="150" maxWidth="150"/>
+            </columnConstraints>
+            <Label text="%search.text.from" />
+            <ComboBox fx:id="source" prefWidth="150" GridPane.columnIndex="1" />
+            <Label text="%search.text.item" GridPane.rowIndex="1"/>
+            <ComboBox fx:id="items" prefWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <Label text="%search.text.distance" GridPane.rowIndex="2" />
+            <NumberField fx:id="distance" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="%filter.services" GridPane.rowIndex="3" />
+            <TilePane hgap="5" vgap="5" tileAlignment="BASELINE_LEFT" GridPane.columnSpan="2" GridPane.rowIndex="4" >
+                <CheckBox fx:id="cbMarket" text="%services.MARKET"/>
+                <CheckBox fx:id="cbBlackMarket" text="%services.BLACK_MARKET"/>
+                <CheckBox fx:id="cbRepair" text="%services.REPAIR"/>
+                <CheckBox fx:id="cbMunition" text="%services.MUNITION"/>
+                <CheckBox fx:id="cbOutfit" text="%services.OUTFIT"/>
+                <CheckBox fx:id="cbShipyard" text="%services.SHIPYARD"/>
+                <CheckBox fx:id="cbMediumLandpad" text="%services.MEDIUM_LANDPAD"/>
+                <CheckBox fx:id="cbLargeLandpad" text="%services.LARGE_LANDPAD"/>
+            </TilePane>
+            <Separator GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.margin="$separator_margin"/>
+            <HBox GridPane.columnSpan="2" GridPane.rowIndex="6" spacing="10" alignment="CENTER">
+                <Button text="%search.button.find" onAction="#searchStations" />
+            </HBox>
+        </GridPane>
+    </TitledPane>
+    <TableView fx:id="tblResults" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+        <columns>
+            <TableColumn minWidth="200.0" text="%market.system.name">
+                <cellValueFactory><PropertyValueFactory property="system"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="200.0" text="%market.station.name">
+                <cellValueFactory><PropertyValueFactory property="station"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="180.0" text="%market.item.name">
+                <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="110.0" text="%market.offer.price">
+                <cellValueFactory><PropertyValueFactory property="price"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="110.0" text="%market.offer.supply">
+                <cellValueFactory><PropertyValueFactory property="count"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="110.0" text="%market.order.distance" fx:id="sortColumn" sortType="ASCENDING">
+                <cellFactory><DistanceCell /></cellFactory>
+                <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
+            </TableColumn>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+        <sortOrder>
+            <fx:reference source="sortColumn"/>
+        </sortOrder>
+    </TableView>
+</GridPane>

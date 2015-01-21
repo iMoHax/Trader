@@ -9,11 +9,13 @@ import java.util.Iterator;
 public class VendorsIterator implements Iterator<Vendor> {
 
     private final Iterator<Place> places;
+    private final boolean includeTransit;
     private Iterator<Vendor> vendors;
     private Vendor next;
 
-    public VendorsIterator(Collection<Place> places) {
+    public VendorsIterator(Collection<Place> places, boolean includeTransit) {
         this.places = places.iterator();
+        this.includeTransit = includeTransit;
         nextPlace();
     }
 
@@ -25,7 +27,10 @@ public class VendorsIterator implements Iterator<Vendor> {
                 vendors = v.iterator();
                 nextVendor();
             } else {
-                next = new TransitVendor(place);
+                if (includeTransit)
+                    next = new TransitVendor(place);
+                else
+                    nextPlace();
             }
         } else {
             next = null;

@@ -20,6 +20,7 @@ import ru.trader.services.OrdersSearchTask;
 import ru.trader.services.RoutesSearchTask;
 import ru.trader.view.support.Localization;
 
+import java.util.Collection;
 import java.util.function.Consumer;
 
 
@@ -120,6 +121,14 @@ public class MarketModel {
 
     ItemStat getStat(OFFER_TYPE type, Item item){
         return market.getStat(type, item);
+    }
+
+    public ObservableList<OfferModel> getOffers(ItemModel item, MarketFilter filter){
+        return BindingsHelper.observableList(analyzer.getOffers(item.getItem(), filter), modeler::get);
+    }
+
+    public Collection<StationModel> getStations(MarketFilter filter){
+        return BindingsHelper.observableList(analyzer.getVendors(filter), modeler::get);
     }
 
     public void getOrders(SystemModel from, double balance, Consumer<ObservableList<OrderModel>> result) {
