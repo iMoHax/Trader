@@ -59,7 +59,6 @@ public class RouteNode {
             Text t = new Text(DistanceCell.distanceToString(p.getDistance()));
             t.getStyleClass().add(CSS_TRACK_TEXT);
 
-
             track.getChildren().addAll(t, Glyph.create("FontAwesome|LONG_ARROW_RIGHT"));
 
             node.getChildren().addAll(track);
@@ -98,7 +97,9 @@ public class RouteNode {
         if (!vendor.getName().isEmpty()) {
             Text stationText = new Text(vendor.getName());
             stationText.getStyleClass().add(CSS_STATION_TEXT);
-            text.getChildren().addAll(stationText);
+            Text distanceText = new Text(String.format("%.0f Ls", vendor.getDistance()));
+            distanceText.getStyleClass().add(CSS_STATION_TEXT);
+            text.getChildren().addAll(stationText, distanceText);
         }
 
         return text;

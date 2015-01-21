@@ -38,7 +38,7 @@ public interface Offer extends Comparable<Offer> {
     }
 
     default String toPString(){
-        return String.format("%.0f (%s - %s)", getPrice(), getVendor().getPlace().getName(), getVendor().getName());
+        return String.format("%.0f (%s - %s (%.0f Ls))", getPrice(), getVendor().getPlace().getName(), getVendor().getName(), getVendor().getDistance());
     }
 
     default String toIString(){
