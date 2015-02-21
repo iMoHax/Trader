@@ -29,6 +29,10 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         SETTINGS = new Settings(new File("profile.properties"));
         SETTINGS.load();
+        Locale locale = SETTINGS.getLocale();
+        if (locale != null){
+            Localization.setLocale(locale);
+        }
         Main.primaryStage = primaryStage;
         loadMainScene();
         loadResources();

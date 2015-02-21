@@ -21,7 +21,7 @@ public class Localization {
 
 
     static {
-        setLocale(Locale.getDefault());
+        setLocale(getSupported(Locale.getDefault()));
     }
 
     private static Locale getSupported(Locale locale){
@@ -47,11 +47,12 @@ public class Localization {
     public static void setLocale(Locale locale){
         Locale.setDefault(locale);
         Localization.locale = locale;
+        Main.SETTINGS.setLocale(locale);
         rb = getResources(locale);
     }
 
     public static ResourceBundle getResources(Locale locale){
-        return ResourceBundle.getBundle("locale", getSupported(locale), loader);
+        return ResourceBundle.getBundle("locale", locale, loader);
     }
 
     public static ResourceBundle getResources(){

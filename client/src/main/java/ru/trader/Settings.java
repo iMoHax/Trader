@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
 
 import java.io.*;
+import java.util.Locale;
 import java.util.Properties;
 
 public class Settings {
@@ -37,6 +38,15 @@ public class Settings {
         } catch (IOException e) {
             LOG.error("Error on load settings", e);
         }
+    }
+
+    public void setLocale(Locale locale){
+        values.setProperty("locale", locale.toLanguageTag());
+    }
+
+    public Locale getLocale(){
+        String locale = values.getProperty("locale");
+        return locale != null ? Locale.forLanguageTag(locale): null;
     }
 
     public void setEMDNActive(boolean active){
