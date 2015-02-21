@@ -26,12 +26,16 @@
             </columnConstraints>
             <Label text="%search.text.from" />
             <ComboBox fx:id="source" prefWidth="150" GridPane.columnIndex="1" />
-            <Label text="%search.text.item" GridPane.rowIndex="1"/>
-            <ComboBox fx:id="items" prefWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-            <Label text="%search.text.distance" GridPane.rowIndex="2" />
-            <NumberField fx:id="distance" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Label text="%filter.services" GridPane.rowIndex="3" />
-            <TilePane hgap="5" vgap="5" tileAlignment="BASELINE_LEFT" GridPane.columnSpan="2" GridPane.rowIndex="4" >
+            <HBox GridPane.columnSpan="2" GridPane.rowIndex="1" spacing="10" alignment="BOTTOM_CENTER">
+                <RadioButton fx:id="rbSeller" text="%market.order.seller"/>
+                <RadioButton fx:id="rbBuyer" text="%market.order.buyer" />
+            </HBox>
+            <Label text="%search.text.item" GridPane.rowIndex="2"/>
+            <ComboBox fx:id="items" prefWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Label text="%search.text.distance" GridPane.rowIndex="3" />
+            <NumberField fx:id="distance" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="%filter.services" GridPane.rowIndex="4" />
+            <TilePane hgap="5" vgap="5" tileAlignment="BASELINE_LEFT" GridPane.columnSpan="2" GridPane.rowIndex="5" >
                 <CheckBox fx:id="cbMarket" text="%services.MARKET"/>
                 <CheckBox fx:id="cbBlackMarket" text="%services.BLACK_MARKET"/>
                 <CheckBox fx:id="cbRepair" text="%services.REPAIR"/>
@@ -41,8 +45,8 @@
                 <CheckBox fx:id="cbMediumLandpad" text="%services.MEDIUM_LANDPAD"/>
                 <CheckBox fx:id="cbLargeLandpad" text="%services.LARGE_LANDPAD"/>
             </TilePane>
-            <Separator GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.margin="$separator_margin"/>
-            <HBox GridPane.columnSpan="2" GridPane.rowIndex="6" spacing="10" alignment="CENTER">
+            <Separator GridPane.columnSpan="2" GridPane.rowIndex="6" GridPane.margin="$separator_margin"/>
+            <HBox GridPane.columnSpan="2" GridPane.rowIndex="7" spacing="10" alignment="CENTER">
                 <Button text="%search.button.find" onAction="#searchStations" />
             </HBox>
         </GridPane>

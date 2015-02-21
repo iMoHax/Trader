@@ -57,6 +57,10 @@ public interface Market {
         return getStatBuy(item).getOffers();
     }
 
+    default Collection<Offer> getOffers(OFFER_TYPE offerType, Item item){
+        return getStat(offerType, item).getOffers();
+    }
+
     default void add(Market market){
         // add groups
         Collection<Group> groups = market.getGroups();

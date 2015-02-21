@@ -123,8 +123,8 @@ public class MarketModel {
         return market.getStat(type, item);
     }
 
-    public ObservableList<OfferModel> getOffers(ItemModel item, MarketFilter filter){
-        return BindingsHelper.observableList(analyzer.getOffers(item.getItem(), filter), modeler::get);
+    public ObservableList<OfferModel> getOffers(OFFER_TYPE offerType, ItemModel item, MarketFilter filter){
+        return BindingsHelper.observableList(analyzer.getOffers(offerType, item.getItem(), filter), modeler::get);
     }
 
     public Collection<StationModel> getStations(MarketFilter filter){

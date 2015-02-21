@@ -64,8 +64,8 @@ public class MarketAnalyzer {
         this.limit = count;
     }
 
-    public Collection<Offer> getOffers(Item item, MarketFilter filter){
-        Collection<Offer> offers = market.getSell(item);
+    public Collection<Offer> getOffers(OFFER_TYPE offerType, Item item, MarketFilter filter){
+        Collection<Offer> offers = market.getOffers(offerType, item);
         Collection<Offer> res = new ArrayList<>(offers.size());
         callback.setMax(offers.size());
         for (Offer offer : offers) {

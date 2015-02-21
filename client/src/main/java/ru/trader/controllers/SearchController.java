@@ -9,6 +9,7 @@ import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.MarketFilter;
+import ru.trader.core.OFFER_TYPE;
 import ru.trader.core.SERVICE_TYPE;
 import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
@@ -25,6 +26,10 @@ public class SearchController {
 
     @FXML
     private ComboBox<SystemModel> source;
+    @FXML
+    private RadioButton rbSeller;
+    @FXML
+    private RadioButton rbBuyer;
     @FXML
     private ComboBox<ItemModel> items;
     @FXML
@@ -50,11 +55,17 @@ public class SearchController {
 
     private final List<ResultEntry> results = FXCollections.observableArrayList();
     private final ObservableList<ItemModel> itemsList = FXCollections.observableArrayList();
+    private final ToggleGroup offerType = new ToggleGroup();
 
     private MarketModel market;
 
     @FXML
     private void initialize() {
+        rbBuyer.setToggleGroup(offerType);
+        rbBuyer.setUserData(OFFER_TYPE.BUY);
+        rbSeller.setToggleGroup(offerType);
+        rbSeller.setUserData(OFFER_TYPE.SELL);
+        rbSeller.setSelected(true);
         items.setCellFactory(new CustomListCell<>(ItemModel::getName));
         items.setConverter(new StringConverter<ItemModel>() {
             @Override
@@ -108,7 +119,8 @@ public class SearchController {
             Collection<StationModel> stations = market.getStations(filter);
             fill(stations);
         } else {
-            Collection<OfferModel> offers = market.getOffers(item, filter);
+            OFFER_TYPE oType = (OFFER_TYPE) offerType.getSelectedToggle().getUserData();
+            Collection<OfferModel> offers = market.getOffers(oType, item, filter);
             fill(offers);
         }
     }
