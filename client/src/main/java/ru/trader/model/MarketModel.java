@@ -45,6 +45,7 @@ public class MarketModel {
         notificator = new Notificator();
         groups = new SimpleListProperty<>(BindingsHelper.observableList(market.getGroups(), modeler::get));
         items = new SimpleListProperty<>(BindingsHelper.observableList(market.getItems(), modeler::get));
+        items.sort((i1, i2) -> i1.compareTo(i2));
         systems = new SimpleListProperty<>(BindingsHelper.observableList(market.get(), modeler::get));
         systemsList = new SimpleListProperty<>(FXCollections.observableArrayList(ModelFabric.NONE_SYSTEM));
         systemsList.addAll(systems);

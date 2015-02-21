@@ -6,7 +6,7 @@ import javafx.beans.property.StringProperty;
 import ru.trader.core.Group;
 import ru.trader.view.support.Localization;
 
-public class GroupModel {
+public class GroupModel implements Comparable<GroupModel> {
 
     private final Group group;
     private StringProperty name;
@@ -37,6 +37,13 @@ public class GroupModel {
 
     private String buildName(){
         return Localization.getString("item.group." + group.getName(), group.getName());
+    }
+
+    @Override
+    public int compareTo(GroupModel other) {
+        int cmp = group.getType().compareTo(other.group.getType());
+        if (cmp != 0) return cmp;
+        return getName().compareTo(other.getName());
     }
 
     @Override

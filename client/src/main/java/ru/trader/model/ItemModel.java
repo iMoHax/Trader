@@ -9,7 +9,7 @@ import ru.trader.view.support.Localization;
 
 import java.util.List;
 
-public class ItemModel {
+public class ItemModel implements Comparable<ItemModel> {
     private final static Logger LOG = LoggerFactory.getLogger(ItemModel.class);
 
     private final Item item;
@@ -17,17 +17,20 @@ public class ItemModel {
 
     private final ItemStatModel statSell;
     private final ItemStatModel statBuy;
+    private final GroupModel group;
 
     ItemModel() {
         this.item = null;
         this.statSell = null;
         this.statBuy = null;
+        this.group = null;
     }
 
     ItemModel(Item item, MarketModel market) {
         this.item = item;
         this.statSell = new ItemStatModel(market.getStat(OFFER_TYPE.SELL, item), market);
         this.statBuy = new ItemStatModel(market.getStat(OFFER_TYPE.BUY, item), market);
+        this.group = market.getModeler().get(item.getGroup());
     }
 
     Item getItem(){
@@ -110,6 +113,13 @@ public class ItemModel {
             case BUY: statBuy.refresh();
                 break;
         }
+    }
+
+    @Override
+    public int compareTo(ItemModel other) {
+        int cmp = group != null ? other.group != null ? group.compareTo(other.group) : 1 : 0;
+        if (cmp != 0) return cmp;
+        return getName().compareTo(other.getName());
     }
 
     @Override
