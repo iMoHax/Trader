@@ -39,7 +39,7 @@ public class ItemModel implements Comparable<ItemModel> {
 
     public String getId() {return item.getName();}
 
-    public String getName() {return name != null ? name.get() : Localization.getString("item." + item.getName(), item.getName());}
+    public String getName() {return name != null ? name.get() : buildName();}
 
     public void setName(String value) {
         LOG.info("Change name of item {} to {}", item, value);
@@ -49,10 +49,20 @@ public class ItemModel implements Comparable<ItemModel> {
 
     public ReadOnlyStringProperty nameProperty() {
         if (name == null) {
-            String lName = Localization.getString("item." + item.getName(), item.getName());
+            String lName = buildName();
             name = new SimpleStringProperty(lName);
         }
         return name;
+    }
+
+    private String buildName(){
+        return Localization.getString("item." + item.getName(), item.getName());
+    }
+
+    void updateName(){
+        if (name != null){
+            name.setValue(buildName());
+        }
     }
 
     public ReadOnlyDoubleProperty avgBuyProperty() {

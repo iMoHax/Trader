@@ -39,6 +39,12 @@ public class GroupModel implements Comparable<GroupModel> {
         return Localization.getString("item.group." + group.getName(), group.getName());
     }
 
+    void updateName(){
+        if (name != null){
+            name.setValue(buildName());
+        }
+    }
+
     @Override
     public int compareTo(GroupModel other) {
         int cmp = group.getType().compareTo(other.group.getType());

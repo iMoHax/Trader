@@ -65,8 +65,10 @@ public class MainController {
         }
         toggleGroup.selectedToggleProperty().addListener((cb, o, n) -> {
             try {
-                if (n!=null)
+                if (n != null) {
                     Main.changeLocale((Locale) n.getUserData());
+                    world.refresh();
+                }
             } catch (IOException e) {
                 LOG.error("Error on change locale to {}", n.getUserData());
                 LOG.error("",e);

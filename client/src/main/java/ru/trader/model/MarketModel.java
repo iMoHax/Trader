@@ -252,4 +252,10 @@ public class MarketModel {
         LOG.info("Clear groups");
         market.clearGroups();
     }
+
+    public void refresh(){
+        LOG.debug("Refresh names");
+        groups.get().forEach(GroupModel::updateName);
+        items.get().forEach(ItemModel::updateName);
+    }
 }
