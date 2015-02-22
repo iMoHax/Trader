@@ -22,6 +22,10 @@ public interface Market {
     void add(Item item);
     Item addItem(String name, Group group);
     void remove(Item item);
+    default Item getItem(String name){
+        Optional<Item> item = getItems().stream().filter(i -> name.equals(i.getName())).findFirst();
+        return item.isPresent() ? item.get() : null;
+    }
 
     Collection<Place> get();
     default Collection<Vendor> getVendors(){
@@ -73,26 +77,49 @@ public interface Market {
         Collection<Item> items = market.getItems();
         HashMap<Item, Item> mapItems = new HashMap<>(items.size(), 0.9f);
         for (Item item : items) {
-            Item nItem = this.addItem(item.getName(), mapGroups.get(item.getGroup()));
+            Item nItem = getItem(item.getName());
+            if (nItem == null) nItem = this.addItem(item.getName(), mapGroups.get(item.getGroup()));
             mapItems.put(item, nItem);
         }
         mapGroups.clear();
         // add places and vendors
         for (Place place : market.get()) {
-            Place nPlace = this.addPlace(place.getName(), place.getX(), place.getY(), place.getZ());
+            Place nPlace = get(place.getName());
+            if (nPlace == null){
+                nPlace = this.addPlace(place.getName(), place.getX(), place.getY(), place.getZ());
+            } else {
+                nPlace.setPosition(place.getX(), place.getY(), place.getZ());
+            }
             for (Vendor vendor : place.get()) {
-                Vendor nVendor = nPlace.addVendor(vendor.getName());
-                nVendor.setDistance(vendor.getDistance());
-                // add services
-                for (SERVICE_TYPE service : vendor.getServices()) {
-                    nVendor.add(service);
+                Vendor nVendor = nPlace.get(vendor.getName());
+                if (nVendor == null){
+                    nVendor = nPlace.addVendor(vendor.getName());
+                    // add services
+                    for (SERVICE_TYPE service : vendor.getServices()) {
+                        nVendor.add(service);
+                    }
+                }
+                if (vendor.getDistance() > 0){
+                    nVendor.setDistance(vendor.getDistance());
                 }
                 // add offers
                 for (Offer offer : vendor.getAllBuyOffers()) {
-                    nVendor.addOffer(offer.getType(), mapItems.get(offer.getItem()), offer.getPrice(), offer.getCount());
+                    Offer nOffer = nVendor.get(offer.getType(), mapItems.get(offer.getItem()));
+                    if (nOffer == null) {
+                        nVendor.addOffer(offer.getType(), mapItems.get(offer.getItem()), offer.getPrice(), offer.getCount());
+                    } else {
+                        nOffer.setPrice(offer.getPrice());
+                        nOffer.setCount(offer.getCount());
+                    }
                 }
                 for (Offer offer : vendor.getAllSellOffers()) {
-                    nVendor.addOffer(offer.getType(), mapItems.get(offer.getItem()), offer.getPrice(), offer.getCount());
+                    Offer nOffer = nVendor.get(offer.getType(), mapItems.get(offer.getItem()));
+                    if (nOffer == null) {
+                        nVendor.addOffer(offer.getType(), mapItems.get(offer.getItem()), offer.getPrice(), offer.getCount());
+                    } else {
+                        nOffer.setPrice(offer.getPrice());
+                        nOffer.setCount(offer.getCount());
+                    }
                 }
             }
         }
