@@ -339,6 +339,12 @@ footer a:hover {
 * html .clearfix {height: 1%;}
 .clearfix {display: block;}
 
+dt {
+    font-weight: bold;
+    float:left;
+    padding-right: 4px;
+}
+
 /* #Media Queries
 ================================================== */
 

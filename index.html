@@ -23,19 +23,92 @@
         </header>
 
         <section id="downloads" class="clearfix">
-          <a href="https://github.com/iMoHax/Trader/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/iMoHax/Trader/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/iMoHax/Trader/releases/download/v1.7/Trader-1.7.zip" id="download-zip" class="button"><span>Download .zip</span></a>
           <a href="https://github.com/iMoHax/Trader" id="view-on-github" class="button"><span>View on GitHub</span></a>
         </section>
 
         <hr>
 
         <section id="main_content">
-          <h1>
-<a id="trader" class="anchor" href="#trader" aria-hidden="true"><span class="octicon octicon-link"></span></a>Trader</h1>
-
-<p>Программа для анализа цен и планирования маршрута в Elite:Dangerous.</p>
+            <h1><a id="trader" class="anchor" href="#trader" aria-hidden="true"><span class="octicon octicon-link"></span></a>Trader</h1>
+            <p>Программа для анализа цен и планирования маршрута в Elite:Dangerous.</p>
+            <p><strong>Основные возможности:</strong></p>
+            <ul>
+                <li>Удобный редактор станции</li>
+                <li>Определение максимальной, средней и минимальной цены на товар во вселенной</li>
+                <li>Поиск наиболее прибыльных маршрутов, с учетом запасов товара на складе и расстояния</li>
+                <li>Настраиваемая система фильтрации станций</li>
+                <li>Поиск ближайшего продавца, либо покупателя конкретного товара</li>
+                <li>Поддержка Русской и Английской локализации</li>
+            </ul>
         </section>
+
+          <hr>
+
+          <section>
+              <h1>Документация</h1>
+              <h2>Добавление звездной системы</h2>
+              <p>Для добавления новой системы необходимо:</p>
+              <ol>
+                  <li>Выбрать в меню <strong>Правка</strong> пункт <strong>Добавить систему</strong></li>
+                  <li>Выбрать 6 систем - ориентиров, на основе которых будут определятся координаты системы</li>
+                  <li>Ввести название системы в колонку <strong>Системы</strong> и занести рассояния от добавлямой системы до систем-ориентиров</li>
+                  <li>Нажать кнопку расчета координат <img src="images/screens/btnCompute.png"/></li>
+                  <li>Проверить полученные координаты на корректность, если координаты явно лежат в другой области галактической карты, то
+                      поменять одну систему-ориентир на другую и повторить расчет</li>
+                  <li>Нажать кнопку <strong>Сохранить</strong></li>
+              </ol>
+              <img src="images/screens/systemEdit.png" title="Добавление системы"/>
+
+              <hr>
+              <h2>Добавление/Редактирование станции</h2>
+              <p>Для добавления новой станции, либо редактирования уже добавленной, необходимо:</p>
+              <ol>
+                  <li>На вкладке <strong>Системы</strong> выбрать систему, в которой находится станция.</li>
+                  <li>Выбрать редактируемую станцию, нажав кнопку с ее названием.</li>
+                  <li>Выбрать в меню <strong>Правка</strong> пункт <strong>Редактировать станцию</strong>, либо <strong>Добавить станцию</strong></li>
+                  <li>В открывшемся окне заполнить необходимые поля</li>
+                  <li>Нажать кнопку <strong>Сохранить</strong></li>
+              </ol>
+              <img src="images/screens/stationEdit.png" title="Редактирование станции"/>
+
+              <hr>
+              <h2>Настройка фильтра</h2>
+              <p>Для настройки фильтрации при поиске лучших маршрутов и продавцов товаров, необходимо:</p>
+              <ol>
+                  <li>Выбрать в меню <strong>Настройки</strong> пункт <strong>Фильтр</strong></li>
+                  <li>Заполнить необходимые параметры:
+                      <dl>
+                          <dt>Центр и радиус -</dt>
+                          <dd>системы, находящиеся за пределом сферы, c заданным центром и радиусом, будут исключены из анализа</dd>
+                          <dt>Дистанция до станции -</dt>
+                          <dd>станции, находящиеся на дистанции, превышающей заданную дистанцию, будут исключены из анализа</dd>
+                          <dt>Сервисы -</dt>
+                          <dd>в анализ будут включены только станции с заданными сервисами. Если ни один сервис не выбран,
+                              то данный параметр не учитывается</dd>
+                          <dt>Исключаемые станции -</dt>
+                          <dd>список конкретных станций, исключаемых из анализа</dd>
+                      </dl>
+                  </li>
+                  <li>Нажать кнопку <strong>Сохранить</strong></li>
+              </ol>
+              <img src="images/screens/filter.png" title="Настройка фильтрации"/>
+
+          </section>
+
+          <hr>
+
+          <section>
+              <h1>Скриншоты</h1>
+              <p>
+                  <a href="images/screens/items.png"><img src="images/screens/thumbs/items.png" width="800" title="Список товаров"/></a>
+                  <a href="images/screens/systems.png"><img src="images/screens/thumbs/systems.png" width="800" title="Системы и станции"/></a>
+                  <a href="images/screens/routes.png"><img src="images/screens/thumbs/routes.png" width="800" title="Маршруты"/></a>
+                  <a href="images/screens/search.png"><img src="images/screens/thumbs/search.png" width="800" title="Поиск"/></a>
+                  <a href="images/screens/addOrder.png"><img src="images/screens/thumbs/addorder.png" width="783" title="Выбор заказа"/></a>
+                  <a href="images/screens/addRoute.png"><img src="images/screens/thumbs/addroute.png" width="800" title="Выбор маршрута"/></a>
+              </p>
+          </section>
 
         <footer>
           Trader is maintained by <a href="https://github.com/iMoHax">iMoHax</a><br>
