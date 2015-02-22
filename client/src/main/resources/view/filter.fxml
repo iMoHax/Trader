@@ -16,11 +16,11 @@
               styleClass="dialog" vgap="4" hgap="8">
         <columnConstraints>
             <ColumnConstraints minWidth="180"  maxWidth="180"/>
-            <ColumnConstraints minWidth="220"  maxWidth="220"/>
+            <ColumnConstraints minWidth="250"  maxWidth="250"/>
         </columnConstraints>
         <Label text="%filter.title" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"/>
         <Label text="%filter.center" GridPane.rowIndex="1"/>
-        <ComboBox fx:id="center" GridPane.columnIndex="1" GridPane.rowIndex="1" minWidth="220"/>
+        <ComboBox fx:id="center" GridPane.columnIndex="1" GridPane.rowIndex="1" minWidth="250"/>
         <Label text="%filter.radius" GridPane.rowIndex="2" />
         <NumberField fx:id="radius" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <Label text="%filter.distance" GridPane.rowIndex="3" />

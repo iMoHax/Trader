@@ -21,7 +21,7 @@
         </VBox>
         <VBox HBox.hgrow="ALWAYS" alignment="CENTER">
             <Label text="%vEditor.text.services"/>
-            <TilePane hgap="5" vgap="5" maxWidth="320" tileAlignment="BASELINE_LEFT">
+            <TilePane hgap="5" vgap="5" maxWidth="350" tileAlignment="BASELINE_LEFT">
                 <CheckBox fx:id="cbMarket" text="%services.MARKET"/>
                 <CheckBox fx:id="cbBlackMarket" text="%services.BLACK_MARKET"/>
                 <CheckBox fx:id="cbRepair" text="%services.REPAIR"/>
