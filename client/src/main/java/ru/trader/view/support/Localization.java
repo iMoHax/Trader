@@ -13,6 +13,7 @@ public class Localization {
     private static final ClassLoader loader = getLoader();
     private static final Locale[] supportedLocales = {
         DEFAULT,
+        new Locale("ru", "RU", "FULL"),
         new Locale("en", "US")
     };
 
