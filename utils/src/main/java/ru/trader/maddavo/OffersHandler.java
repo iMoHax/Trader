@@ -50,7 +50,7 @@ public class OffersHandler implements ParseHandler {
     }
 
     private void updateStation() {
-        LOG.trace("Update offers of station {}", station);
+        LOG.debug("Update offers of station {}", station);
         station.getAllBuyOffers().forEach(this::updateOffer);
         station.getAllSellOffers().forEach(this::updateOffer);
         buyUpdates.entrySet().forEach( entry -> addOffer(entry, OFFER_TYPE.BUY));
@@ -77,7 +77,7 @@ public class OffersHandler implements ParseHandler {
     private void addOffer(Map.Entry<Item,OfferData> entry, OFFER_TYPE type){
         OfferData offer = entry.getValue();
         if (offer.isnew){
-            station.addOffer(type, entry.getKey(), offer.price, offer.count != null ? offer.count : 0);
+            station.addOffer(type, entry.getKey(), offer.price, offer.count != null ? offer.count : -1);
         }
     }
 
@@ -142,7 +142,7 @@ public class OffersHandler implements ParseHandler {
                     sellUpdates.put(item, new OfferData(sell, supply));
                 }
             } else {
-                LOG.warn("Item {} not found", name);
+                LOG.warn("Item {} not found, line: {}", name, str);
             }
 
         } else {
