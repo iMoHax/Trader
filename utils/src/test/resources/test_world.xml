@@ -1,0 +1,954 @@
+<?xml version="1.0" ?>
+<market>
+    <items>
+        <group name="chemicals" type="MARKET">
+            <item name="explosives" id="i0"/>
+            <item name="hydrogenfuel" id="i1"/>
+            <item name="mineraloil" id="i2"/>
+            <item name="pesticides" id="i3"/>
+        </group>
+        <group name="consumer_items" type="MARKET">
+            <item name="clothing" id="i4"/>
+            <item name="consumertechnology" id="i5"/>
+            <item name="domesticappliances" id="i6"/>
+        </group>
+        <group name="foods" type="MARKET">
+            <item name="algae" id="i7"/>
+            <item name="animalmeat" id="i8"/>
+            <item name="coffee" id="i9"/>
+            <item name="energydrinks" id="i10"/>
+            <item name="fish" id="i11"/>
+            <item name="foodcartridges" id="i12"/>
+            <item name="fruitandvegetables" id="i13"/>
+            <item name="grain" id="i14"/>
+            <item name="syntheticmeat" id="i15"/>
+            <item name="tea" id="i16"/>
+        </group>
+        <group name="engineered_ceramics" type="MARKET">
+            <item name="polymers" id="i17"/>
+            <item name="semiconductors" id="i18"/>
+            <item name="superconductors" id="i19"/>
+        </group>
+        <group name="drugs" type="MARKET">
+            <item name="beer" id="i20"/>
+            <item name="liquor" id="i21"/>
+            <item name="basicnarcotics" id="i22"/>
+            <item name="tobacco" id="i23"/>
+            <item name="wine" id="i24"/>
+        </group>
+        <group name="machinery" type="MARKET">
+            <item name="atmosphericprocessors" id="i25"/>
+            <item name="cropharvesters" id="i26"/>
+            <item name="marinesupplies" id="i27"/>
+            <item name="microbialfurnaces" id="i28"/>
+            <item name="mineralextractors" id="i29"/>
+            <item name="powergenerators" id="i30"/>
+            <item name="waterpurifiers" id="i31"/>
+        </group>
+        <group name="medicines" type="MARKET">
+            <item name="agriculturalmedicines" id="i32"/>
+            <item name="basicmedicines" id="i33"/>
+            <item name="combatstabilisers" id="i34"/>
+            <item name="performanceenhancers" id="i35"/>
+            <item name="progenitorcells" id="i36"/>
+        </group>
+        <group name="metals" type="MARKET">
+            <item name="aluminium" id="i37"/>
+            <item name="beryllium" id="i38"/>
+            <item name="cobalt" id="i39"/>
+            <item name="copper" id="i40"/>
+            <item name="gallium" id="i41"/>
+            <item name="gold" id="i42"/>
+            <item name="indium" id="i43"/>
+            <item name="lithium" id="i44"/>
+            <item name="palladium" id="i45"/>
+            <item name="platinum" id="i46"/>
+            <item name="silver" id="i47"/>
+            <item name="tantalum" id="i48"/>
+            <item name="titanium" id="i49"/>
+            <item name="uranium" id="i50"/>
+        </group>
+        <group name="minerals" type="MARKET">
+            <item name="bauxite" id="i51"/>
+            <item name="bertrandite" id="i52"/>
+            <item name="coltan" id="i53"/>
+            <item name="gallite" id="i54"/>
+            <item name="indite" id="i55"/>
+            <item name="lepidolite" id="i56"/>
+            <item name="rutile" id="i57"/>
+            <item name="uraninite" id="i58"/>
+        </group>
+        <group name="slaves" type="MARKET">
+            <item name="imperialslaves" id="i59"/>
+            <item name="slaves" id="i60"/>
+        </group>
+        <group name="technology" type="MARKET">
+            <item name="advancedcatalysers" id="i61"/>
+            <item name="animalmonitors" id="i62"/>
+            <item name="aquaponicsystems" id="i63"/>
+            <item name="autofabricators" id="i64"/>
+            <item name="bioreducinglichen" id="i65"/>
+            <item name="computercomponents" id="i66"/>
+            <item name="hazardousenvironmentsuits" id="i67"/>
+            <item name="landenrichmentsystems" id="i68"/>
+            <item name="resonatingseparators" id="i69"/>
+            <item name="robotics" id="i70"/>
+        </group>
+        <group name="textiles" type="MARKET">
+            <item name="leather" id="i71"/>
+            <item name="naturalfabrics" id="i72"/>
+            <item name="syntheticfabrics" id="i73"/>
+        </group>
+        <group name="waste" type="MARKET">
+            <item name="biowaste" id="i74"/>
+            <item name="chemicalwaste" id="i75"/>
+            <item name="scrap" id="i76"/>
+        </group>
+        <group name="weapons" type="MARKET">
+            <item name="battleweapons" id="i77"/>
+            <item name="nonlethalweapons" id="i78"/>
+            <item name="personalweapons" id="i79"/>
+            <item name="reactivearmour" id="i80"/>
+        </group>
+        <group name="ships" type="SHIP">
+            <item name="Sidewinder" id="i81"/>
+            <item name="Hauler" id="i82"/>
+            <item name="Eagle" id="i83"/>
+            <item name="Adder" id="i84"/>
+            <item name="Viper" id="i85"/>
+            <item name="Cobra MK3" id="i86"/>
+            <item name="TYPE-6" id="i87"/>
+            <item name="TYPE-7" id="i88"/>
+            <item name="TYPE-9" id="i89"/>
+            <item name="ASP" id="i90"/>
+            <item name="Python" id="i91"/>
+            <item name="Orca" id="i92"/>
+            <item name="Imperial Clipper" id="i93"/>
+            <item name="Federal Dropship" id="i94"/>
+            <item name="Anaconda" id="i95"/>
+        </group>
+        <group name="powerplant" type="OUTFIT">
+            <item name="Power Plant A1" id="i96"/>
+            <item name="Power Plant B1" id="i97"/>
+            <item name="Power Plant C1" id="i98"/>
+            <item name="Power Plant D1" id="i99"/>
+            <item name="Power Plant A2" id="i100"/>
+            <item name="Power Plant B2" id="i101"/>
+            <item name="Power Plant C2" id="i102"/>
+            <item name="Power Plant D2" id="i103"/>
+            <item name="Power Plant A3" id="i104"/>
+            <item name="Power Plant B3" id="i105"/>
+            <item name="Power Plant C3" id="i106"/>
+            <item name="Power Plant D3" id="i107"/>
+            <item name="Power Plant A4" id="i108"/>
+            <item name="Power Plant B4" id="i109"/>
+            <item name="Power Plant C4" id="i110"/>
+            <item name="Power Plant D4" id="i111"/>
+            <item name="Power Plant A5" id="i112"/>
+            <item name="Power Plant B5" id="i113"/>
+            <item name="Power Plant C5" id="i114"/>
+            <item name="Power Plant D5" id="i115"/>
+        </group>
+        <group name="powerdistributor" type="OUTFIT">
+            <item name="Power Distributor A1" id="i116"/>
+            <item name="Power Distributor B1" id="i117"/>
+            <item name="Power Distributor C1" id="i118"/>
+            <item name="Power Distributor D1" id="i119"/>
+            <item name="Power Distributor A2" id="i120"/>
+            <item name="Power Distributor B2" id="i121"/>
+            <item name="Power Distributor C2" id="i122"/>
+            <item name="Power Distributor D2" id="i123"/>
+            <item name="Power Distributor A3" id="i124"/>
+            <item name="Power Distributor B3" id="i125"/>
+            <item name="Power Distributor C3" id="i126"/>
+            <item name="Power Distributor D3" id="i127"/>
+            <item name="Power Distributor A4" id="i128"/>
+            <item name="Power Distributor B4" id="i129"/>
+            <item name="Power Distributor C4" id="i130"/>
+            <item name="Power Distributor D4" id="i131"/>
+            <item name="Power Distributor A5" id="i132"/>
+            <item name="Power Distributor B5" id="i133"/>
+            <item name="Power Distributor C5" id="i134"/>
+            <item name="Power Distributor D5" id="i135"/>
+        </group>
+        <group name="sensors" type="OUTFIT">
+            <item name="Sensors A1" id="i136"/>
+            <item name="Sensors B1" id="i137"/>
+            <item name="Sensors C1" id="i138"/>
+            <item name="Sensors D1" id="i139"/>
+            <item name="Sensors A2" id="i140"/>
+            <item name="Sensors B2" id="i141"/>
+            <item name="Sensors C2" id="i142"/>
+            <item name="Sensors D2" id="i143"/>
+            <item name="Sensors A3" id="i144"/>
+            <item name="Sensors B3" id="i145"/>
+            <item name="Sensors C3" id="i146"/>
+            <item name="Sensors D3" id="i147"/>
+            <item name="Sensors A4" id="i148"/>
+            <item name="Sensors B4" id="i149"/>
+            <item name="Sensors C4" id="i150"/>
+            <item name="Sensors D4" id="i151"/>
+            <item name="Sensors A5" id="i152"/>
+            <item name="Sensors B5" id="i153"/>
+            <item name="Sensors C5" id="i154"/>
+            <item name="Sensors D5" id="i155"/>
+        </group>
+        <group name="thrusters" type="OUTFIT">
+            <item name="Thrusters A1" id="i156"/>
+            <item name="Thrusters B1" id="i157"/>
+            <item name="Thrusters C1" id="i158"/>
+            <item name="Thrusters D1" id="i159"/>
+            <item name="Thrusters A2" id="i160"/>
+            <item name="Thrusters B2" id="i161"/>
+            <item name="Thrusters C2" id="i162"/>
+            <item name="Thrusters D2" id="i163"/>
+            <item name="Thrusters A3" id="i164"/>
+            <item name="Thrusters B3" id="i165"/>
+            <item name="Thrusters C3" id="i166"/>
+            <item name="Thrusters D3" id="i167"/>
+            <item name="Thrusters A4" id="i168"/>
+            <item name="Thrusters B4" id="i169"/>
+            <item name="Thrusters C4" id="i170"/>
+            <item name="Thrusters D4" id="i171"/>
+            <item name="Thrusters A5" id="i172"/>
+            <item name="Thrusters B5" id="i173"/>
+            <item name="Thrusters C5" id="i174"/>
+            <item name="Thrusters D5" id="i175"/>
+        </group>
+        <group name="fsd" type="OUTFIT">
+            <item name="FSD A1" id="i176"/>
+            <item name="FSD B1" id="i177"/>
+            <item name="FSD C1" id="i178"/>
+            <item name="FSD D1" id="i179"/>
+            <item name="FSD A2" id="i180"/>
+            <item name="FSD B2" id="i181"/>
+            <item name="FSD C2" id="i182"/>
+            <item name="FSD D2" id="i183"/>
+            <item name="FSD A3" id="i184"/>
+            <item name="FSD B3" id="i185"/>
+            <item name="FSD C3" id="i186"/>
+            <item name="FSD D3" id="i187"/>
+            <item name="FSD A4" id="i188"/>
+            <item name="FSD B4" id="i189"/>
+            <item name="FSD C4" id="i190"/>
+            <item name="FSD D4" id="i191"/>
+            <item name="FSD A5" id="i192"/>
+            <item name="FSD B5" id="i193"/>
+            <item name="FSD C5" id="i194"/>
+            <item name="FSD D5" id="i195"/>
+        </group>
+        <group name="shieldgenerator" type="OUTFIT">
+            <item name="Shield Generator A1" id="i196"/>
+            <item name="Shield Generator B1" id="i197"/>
+            <item name="Shield Generator C1" id="i198"/>
+            <item name="Shield Generator D1" id="i199"/>
+            <item name="Shield Generator A2" id="i200"/>
+            <item name="Shield Generator B2" id="i201"/>
+            <item name="Shield Generator C2" id="i202"/>
+            <item name="Shield Generator D2" id="i203"/>
+            <item name="Shield Generator A3" id="i204"/>
+            <item name="Shield Generator B3" id="i205"/>
+            <item name="Shield Generator C3" id="i206"/>
+            <item name="Shield Generator D3" id="i207"/>
+            <item name="Shield Generator A4" id="i208"/>
+            <item name="Shield Generator B4" id="i209"/>
+            <item name="Shield Generator C4" id="i210"/>
+            <item name="Shield Generator D4" id="i211"/>
+            <item name="Shield Generator A5" id="i212"/>
+            <item name="Shield Generator B5" id="i213"/>
+            <item name="Shield Generator C5" id="i214"/>
+            <item name="Shield Generator D5" id="i215"/>
+        </group>
+        <group name="shieldgenerator" type="OUTFIT">
+            <item name="Cargo Rack E1" id="i216"/>
+            <item name="Cargo Rack E2" id="i217"/>
+            <item name="Cargo Rack E3" id="i218"/>
+            <item name="Cargo Rack E4" id="i219"/>
+            <item name="Cargo Rack E5" id="i220"/>
+            <item name="Cargo Rack E6" id="i221"/>
+        </group>
+        <group name="shieldcellbank" type="OUTFIT">
+            <item name="Shield Cell Bank A1" id="i222"/>
+            <item name="Shield Cell Bank B1" id="i223"/>
+            <item name="Shield Cell Bank C1" id="i224"/>
+            <item name="Shield Cell Bank D1" id="i225"/>
+            <item name="Shield Cell Bank A2" id="i226"/>
+            <item name="Shield Cell Bank B2" id="i227"/>
+            <item name="Shield Cell Bank C2" id="i228"/>
+            <item name="Shield Cell Bank D2" id="i229"/>
+            <item name="Shield Cell Bank A3" id="i230"/>
+            <item name="Shield Cell Bank B3" id="i231"/>
+            <item name="Shield Cell Bank C3" id="i232"/>
+            <item name="Shield Cell Bank D3" id="i233"/>
+            <item name="Shield Cell Bank A4" id="i234"/>
+            <item name="Shield Cell Bank B4" id="i235"/>
+            <item name="Shield Cell Bank C4" id="i236"/>
+            <item name="Shield Cell Bank D4" id="i237"/>
+            <item name="Shield Cell Bank A5" id="i238"/>
+            <item name="Shield Cell Bank B5" id="i239"/>
+            <item name="Shield Cell Bank C5" id="i240"/>
+            <item name="Shield Cell Bank D5" id="i241"/>
+        </group>
+    </items>
+    <places>
+        <place name="Bonde" x="-17.433511916351563" y="-12.95195642787803" z="-59.37289077883179">
+            <vendor name="Aksyonov Platform" distance="144.0">
+                <services>
+                    <service type="MARKET"/>
+                    <service type="BLACK_MARKET"/>
+                    <service type="MUNITION"/>
+                    <service type="OUTFIT"/>
+                    <service type="MEDIUM_LANDPAD"/>
+                </services>
+                <offer type="SELL" item="i43" price="5756.0" count="-1"/>
+                <offer type="SELL" item="i19" price="6556.0" count="-1"/>
+                <offer type="SELL" item="i39" price="604.0" count="1769"/>
+                <offer type="SELL" item="i41" price="5001.0" count="-1"/>
+                <offer type="SELL" item="i49" price="907.0" count="-1"/>
+                <offer type="SELL" item="i73" price="114.0" count="-1"/>
+                <offer type="SELL" item="i38" price="8096.0" count="250"/>
+                <offer type="SELL" item="i50" price="2496.0" count="599"/>
+                <offer type="SELL" item="i185" price="1.0" count="0"/>
+                <offer type="SELL" item="i81" price="32000.0" count="0"/>
+                <offer type="SELL" item="i110" price="1.0" count="0"/>
+                <offer type="SELL" item="i42" price="9289.0" count="306"/>
+                <offer type="SELL" item="i48" price="3783.0" count="446"/>
+                <offer type="SELL" item="i47" price="4640.0" count="381"/>
+                <offer type="SELL" item="i74" price="20.0" count="422"/>
+                <offer type="SELL" item="i17" price="76.0" count="-1"/>
+                <offer type="SELL" item="i18" price="788.0" count="-1"/>
+                <offer type="SELL" item="i165" price="1.0" count="0"/>
+                <offer type="SELL" item="i1" price="112.0" count="-1"/>
+                <offer type="SELL" item="i190" price="1.0" count="0"/>
+                <offer type="SELL" item="i37" price="252.0" count="-1"/>
+                <offer type="SELL" item="i44" price="1448.0" count="905"/>
+                <offer type="SELL" item="i40" price="389.0" count="-1"/>
+                <offer type="SELL" item="i0" price="224.0" count="-1"/>
+                <offer type="BUY" item="i50" price="2467.0" count="0"/>
+                <offer type="BUY" item="i33" price="319.0" count="175"/>
+                <offer type="BUY" item="i24" price="255.0" count="211"/>
+                <offer type="BUY" item="i58" price="1177.0" count="-1"/>
+                <offer type="BUY" item="i4" price="319.0" count="426"/>
+                <offer type="BUY" item="i5" price="6871.0" count="32"/>
+                <offer type="BUY" item="i17" price="60.0" count="0"/>
+                <offer type="BUY" item="i18" price="767.0" count="0"/>
+                <offer type="BUY" item="i8" price="1388.0" count="49"/>
+                <offer type="BUY" item="i12" price="143.0" count="229"/>
+                <offer type="BUY" item="i44" price="1413.0" count="0"/>
+                <offer type="BUY" item="i80" price="2145.0" count="39"/>
+                <offer type="BUY" item="i43" price="5693.0" count="0"/>
+                <offer type="BUY" item="i67" price="278.0" count="995"/>
+                <offer type="BUY" item="i49" price="884.0" count="0"/>
+                <offer type="BUY" item="i73" price="101.0" count="0"/>
+                <offer type="BUY" item="i38" price="8010.0" count="0"/>
+                <offer type="BUY" item="i21" price="862.0" count="393"/>
+                <offer type="BUY" item="i47" price="4859.0" count="0"/>
+                <offer type="BUY" item="i2" price="195.0" count="-1"/>
+                <offer type="BUY" item="i76" price="71.0" count="736"/>
+                <offer type="BUY" item="i23" price="4758.0" count="131"/>
+                <offer type="BUY" item="i69" price="5807.0" count="219"/>
+                <offer type="BUY" item="i35" price="6871.0" count="75"/>
+                <offer type="BUY" item="i78" price="1891.0" count="52"/>
+                <offer type="BUY" item="i54" price="2127.0" count="-1"/>
+                <offer type="BUY" item="i40" price="373.0" count="0"/>
+                <offer type="BUY" item="i9" price="1388.0" count="72"/>
+                <offer type="BUY" item="i19" price="6485.0" count="0"/>
+                <offer type="BUY" item="i53" price="1708.0" count="-1"/>
+                <offer type="BUY" item="i42" price="9289.0" count="0"/>
+                <offer type="BUY" item="i56" price="622.0" count="-1"/>
+                <offer type="BUY" item="i13" price="319.0" count="261"/>
+                <offer type="BUY" item="i48" price="3740.0" count="0"/>
+                <offer type="BUY" item="i74" price="15.0" count="0"/>
+                <offer type="BUY" item="i55" price="2634.0" count="-1"/>
+                <offer type="BUY" item="i6" price="533.0" count="223"/>
+                <offer type="BUY" item="i14" price="210.0" count="712"/>
+                <offer type="BUY" item="i52" price="2467.0" count="424"/>
+                <offer type="BUY" item="i37" price="236.0" count="0"/>
+                <offer type="BUY" item="i11" price="408.0" count="225"/>
+                <offer type="BUY" item="i51" price="268.0" count="-1"/>
+                <offer type="BUY" item="i0" price="209.0" count="0"/>
+                <offer type="BUY" item="i39" price="580.0" count="0"/>
+                <offer type="BUY" item="i31" price="304.0" count="180"/>
+                <offer type="BUY" item="i41" price="4947.0" count="0"/>
+                <offer type="BUY" item="i75" price="109.0" count="-1"/>
+                <offer type="BUY" item="i16" price="1570.0" count="54"/>
+                <offer type="BUY" item="i36" price="6871.0" count="9"/>
+                <offer type="BUY" item="i30" price="533.0" count="1019"/>
+                <offer type="BUY" item="i57" price="493.0" count="-1"/>
+                <offer type="BUY" item="i1" price="107.0" count="0"/>
+                <offer type="BUY" item="i20" price="177.0" count="675"/>
+                <offer type="BUY" item="i61" price="2809.0" count="-1"/>
+                <offer type="BUY" item="i15" price="255.0" count="168"/>
+                <offer type="BUY" item="i28" price="202.0" count="-1"/>
+            </vendor>
+        </place>
+        <place name="LHS 21" x="-18.218352740132104" y="-12.803117952353205" z="-55.37033677101135">
+            <vendor name="Quimper Ring" distance="605.0">
+                <services>
+                    <service type="MARKET"/>
+                    <service type="REPAIR"/>
+                    <service type="MUNITION"/>
+                    <service type="OUTFIT"/>
+                    <service type="SHIPYARD"/>
+                    <service type="MEDIUM_LANDPAD"/>
+                    <service type="LARGE_LANDPAD"/>
+                </services>
+                <offer type="SELL" item="i120" price="1.0" count="0"/>
+                <offer type="SELL" item="i116" price="1.0" count="0"/>
+                <offer type="SELL" item="i90" price="6661153.0" count="0"/>
+                <offer type="SELL" item="i110" price="1.0" count="0"/>
+                <offer type="SELL" item="i33" price="249.0" count="-1"/>
+                <offer type="SELL" item="i65" price="841.0" count="-1"/>
+                <offer type="SELL" item="i5" price="6616.0" count="-1"/>
+                <offer type="SELL" item="i168" price="1.0" count="0"/>
+                <offer type="SELL" item="i17" price="76.0" count="-1"/>
+                <offer type="SELL" item="i68" price="4312.0" count="-1"/>
+                <offer type="SELL" item="i18" price="784.0" count="-1"/>
+                <offer type="SELL" item="i64" price="3531.0" count="-1"/>
+                <offer type="SELL" item="i203" price="1.0" count="0"/>
+                <offer type="SELL" item="i169" price="1.0" count="0"/>
+                <offer type="SELL" item="i3" price="117.0" count="-1"/>
+                <offer type="SELL" item="i87" price="1045945.0" count="0"/>
+                <offer type="SELL" item="i145" price="1.0" count="0"/>
+                <offer type="SELL" item="i190" price="1.0" count="0"/>
+                <offer type="SELL" item="i126" price="1.0" count="0"/>
+                <offer type="SELL" item="i118" price="1.0" count="0"/>
+                <offer type="SELL" item="i121" price="1.0" count="0"/>
+                <offer type="SELL" item="i32" price="903.0" count="-1"/>
+                <offer type="SELL" item="i80" price="1893.0" count="-1"/>
+                <offer type="SELL" item="i67" price="219.0" count="-1"/>
+                <offer type="SELL" item="i73" price="113.0" count="-1"/>
+                <offer type="SELL" item="i49" price="903.0" count="-1"/>
+                <offer type="SELL" item="i209" price="1.0" count="0"/>
+                <offer type="SELL" item="i185" price="1.0" count="0"/>
+                <offer type="SELL" item="i205" price="1.0" count="0"/>
+                <offer type="SELL" item="i216" price="1.0" count="0"/>
+                <offer type="SELL" item="i63" price="199.0" count="-1"/>
+                <offer type="SELL" item="i62" price="211.0" count="-1"/>
+                <offer type="SELL" item="i76" price="40.0" count="-1"/>
+                <offer type="SELL" item="i69" price="5846.0" count="-1"/>
+                <offer type="SELL" item="i123" price="1.0" count="0"/>
+                <offer type="SELL" item="i78" price="1651.0" count="-1"/>
+                <offer type="SELL" item="i86" price="379718.0" count="0"/>
+                <offer type="SELL" item="i81" price="32000.0" count="0"/>
+                <offer type="SELL" item="i40" price="388.0" count="-1"/>
+                <offer type="SELL" item="i218" price="1.0" count="0"/>
+                <offer type="SELL" item="i144" price="1.0" count="0"/>
+                <offer type="SELL" item="i211" price="1.0" count="0"/>
+                <offer type="SELL" item="i146" price="1.0" count="0"/>
+                <offer type="SELL" item="i201" price="1.0" count="0"/>
+                <offer type="SELL" item="i124" price="1.0" count="0"/>
+                <offer type="SELL" item="i109" price="1.0" count="0"/>
+                <offer type="SELL" item="i74" price="20.0" count="-1"/>
+                <offer type="SELL" item="i125" price="1.0" count="0"/>
+                <offer type="SELL" item="i127" price="1.0" count="0"/>
+                <offer type="SELL" item="i160" price="1.0" count="0"/>
+                <offer type="SELL" item="i188" price="1.0" count="0"/>
+                <offer type="SELL" item="i206" price="1.0" count="0"/>
+                <offer type="SELL" item="i37" price="251.0" count="-1"/>
+                <offer type="SELL" item="i147" price="1.0" count="0"/>
+                <offer type="SELL" item="i191" price="1.0" count="0"/>
+                <offer type="SELL" item="i108" price="1610080.0" count="0"/>
+                <offer type="SELL" item="i0" price="223.0" count="1512"/>
+                <offer type="SELL" item="i170" price="1.0" count="0"/>
+                <offer type="SELL" item="i164" price="1.0" count="0"/>
+                <offer type="SELL" item="i85" price="142931.0" count="0"/>
+                <offer type="SELL" item="i91" price="5.6978179E7" count="0"/>
+                <offer type="SELL" item="i36" price="6682.0" count="1204"/>
+                <offer type="SELL" item="i122" price="1.0" count="0"/>
+                <offer type="SELL" item="i94" price="3.7814205E7" count="0"/>
+                <offer type="SELL" item="i117" price="1.0" count="0"/>
+                <offer type="SELL" item="i208" price="1.0" count="0"/>
+                <offer type="SELL" item="i79" price="4056.0" count="3715"/>
+                <offer type="SELL" item="i61" price="2689.0" count="-1"/>
+                <offer type="SELL" item="i1" price="111.0" count="-1"/>
+                <offer type="SELL" item="i28" price="134.0" count="-1"/>
+                <offer type="SELL" item="i15" price="192.0" count="-1"/>
+                <offer type="SELL" item="i217" price="1.0" count="0"/>
+                <offer type="SELL" item="i210" price="1.0" count="0"/>
+                <offer type="SELL" item="i219" price="1.0" count="0"/>
+                <offer type="SELL" item="i184" price="1.0" count="0"/>
+                <offer type="SELL" item="i70" price="1649.0" count="-1"/>
+                <offer type="SELL" item="i180" price="1.0" count="0"/>
+                <offer type="SELL" item="i200" price="1.0" count="0"/>
+                <offer type="BUY" item="i50" price="3117.0" count="-1"/>
+                <offer type="BUY" item="i33" price="232.0" count="0"/>
+                <offer type="BUY" item="i65" price="817.0" count="0"/>
+                <offer type="BUY" item="i24" price="377.0" count="-1"/>
+                <offer type="BUY" item="i58" price="1173.0" count="-1"/>
+                <offer type="BUY" item="i4" price="317.0" count="-1"/>
+                <offer type="BUY" item="i5" price="6526.0" count="0"/>
+                <offer type="BUY" item="i17" price="63.0" count="0"/>
+                <offer type="BUY" item="i68" price="4253.0" count="0"/>
+                <offer type="BUY" item="i18" price="762.0" count="0"/>
+                <offer type="BUY" item="i64" price="3482.0" count="0"/>
+                <offer type="BUY" item="i3" price="106.0" count="0"/>
+                <offer type="BUY" item="i8" price="1619.0" count="-1"/>
+                <offer type="BUY" item="i12" price="142.0" count="-1"/>
+                <offer type="BUY" item="i44" price="1940.0" count="-1"/>
+                <offer type="BUY" item="i32" price="878.0" count="0"/>
+                <offer type="BUY" item="i80" price="1865.0" count="0"/>
+                <offer type="BUY" item="i43" price="6243.0" count="-1"/>
+                <offer type="BUY" item="i67" price="203.0" count="0"/>
+                <offer type="BUY" item="i73" price="101.0" count="0"/>
+                <offer type="BUY" item="i49" price="878.0" count="0"/>
+                <offer type="BUY" item="i38" price="9055.0" count="-1"/>
+                <offer type="BUY" item="i63" price="185.0" count="0"/>
+                <offer type="BUY" item="i21" price="850.0" count="-1"/>
+                <offer type="BUY" item="i62" price="196.0" count="0"/>
+                <offer type="BUY" item="i47" price="5465.0" count="-1"/>
+                <offer type="BUY" item="i2" price="319.0" count="-1"/>
+                <offer type="BUY" item="i76" price="34.0" count="0"/>
+                <offer type="BUY" item="i69" price="5767.0" count="0"/>
+                <offer type="BUY" item="i35" price="6589.0" count="427"/>
+                <offer type="BUY" item="i78" price="1607.0" count="0"/>
+                <offer type="BUY" item="i54" price="2329.0" count="-1"/>
+                <offer type="BUY" item="i40" price="370.0" count="0"/>
+                <offer type="BUY" item="i9" price="1292.0" count="1255"/>
+                <offer type="BUY" item="i19" price="7242.0" count="-1"/>
+                <offer type="BUY" item="i53" price="1737.0" count="-1"/>
+                <offer type="BUY" item="i46" price="19774.0" count="-1"/>
+                <offer type="BUY" item="i42" price="10273.0" count="-1"/>
+                <offer type="BUY" item="i56" price="810.0" count="-1"/>
+                <offer type="BUY" item="i13" price="317.0" count="-1"/>
+                <offer type="BUY" item="i48" price="4472.0" count="-1"/>
+                <offer type="BUY" item="i74" price="15.0" count="0"/>
+                <offer type="BUY" item="i55" price="2623.0" count="-1"/>
+                <offer type="BUY" item="i6" price="530.0" count="-1"/>
+                <offer type="BUY" item="i14" price="208.0" count="-1"/>
+                <offer type="BUY" item="i52" price="2959.0" count="-1"/>
+                <offer type="BUY" item="i37" price="234.0" count="0"/>
+                <offer type="BUY" item="i11" price="537.0" count="-1"/>
+                <offer type="BUY" item="i51" price="278.0" count="-1"/>
+                <offer type="BUY" item="i0" price="207.0" count="0"/>
+                <offer type="BUY" item="i39" price="941.0" count="-1"/>
+                <offer type="BUY" item="i31" price="302.0" count="-1"/>
+                <offer type="BUY" item="i41" price="5786.0" count="-1"/>
+                <offer type="BUY" item="i75" price="108.0" count="-1"/>
+                <offer type="BUY" item="i16" price="1466.0" count="-1"/>
+                <offer type="BUY" item="i36" price="6592.0" count="0"/>
+                <offer type="BUY" item="i66" price="646.0" count="-1"/>
+                <offer type="BUY" item="i45" price="14298.0" count="-1"/>
+                <offer type="BUY" item="i30" price="530.0" count="-1"/>
+                <offer type="BUY" item="i79" price="3999.0" count="0"/>
+                <offer type="BUY" item="i57" price="495.0" count="-1"/>
+                <offer type="BUY" item="i61" price="2651.0" count="0"/>
+                <offer type="BUY" item="i1" price="106.0" count="0"/>
+                <offer type="BUY" item="i20" price="274.0" count="-1"/>
+                <offer type="BUY" item="i28" price="120.0" count="0"/>
+                <offer type="BUY" item="i15" price="178.0" count="0"/>
+                <offer type="BUY" item="i70" price="1605.0" count="0"/>
+            </vendor>
+            <vendor name="Crook Orbital" distance="799.0">
+                <services>
+                    <service type="MARKET"/>
+                    <service type="REPAIR"/>
+                    <service type="MUNITION"/>
+                    <service type="MEDIUM_LANDPAD"/>
+                </services>
+                <offer type="SELL" item="i33" price="257.0" count="-1"/>
+                <offer type="SELL" item="i65" price="840.0" count="-1"/>
+                <offer type="SELL" item="i74" price="20.0" count="-1"/>
+                <offer type="SELL" item="i5" price="6565.0" count="-1"/>
+                <offer type="SELL" item="i17" price="76.0" count="-1"/>
+                <offer type="SELL" item="i68" price="4309.0" count="-1"/>
+                <offer type="SELL" item="i18" price="784.0" count="-1"/>
+                <offer type="SELL" item="i64" price="3528.0" count="-1"/>
+                <offer type="SELL" item="i3" price="117.0" count="-1"/>
+                <offer type="SELL" item="i37" price="251.0" count="-1"/>
+                <offer type="SELL" item="i32" price="902.0" count="-1"/>
+                <offer type="SELL" item="i80" price="1895.0" count="-1"/>
+                <offer type="SELL" item="i0" price="182.0" count="-1"/>
+                <offer type="SELL" item="i67" price="218.0" count="-1"/>
+                <offer type="SELL" item="i49" price="902.0" count="-1"/>
+                <offer type="SELL" item="i73" price="113.0" count="-1"/>
+                <offer type="SELL" item="i36" price="6757.0" count="1005"/>
+                <offer type="SELL" item="i63" price="199.0" count="-1"/>
+                <offer type="SELL" item="i62" price="223.0" count="-1"/>
+                <offer type="SELL" item="i79" price="4078.0" count="-1"/>
+                <offer type="SELL" item="i69" price="5909.0" count="-1"/>
+                <offer type="SELL" item="i1" price="111.0" count="-1"/>
+                <offer type="SELL" item="i61" price="2784.0" count="-1"/>
+                <offer type="SELL" item="i15" price="199.0" count="-1"/>
+                <offer type="SELL" item="i28" price="139.0" count="-1"/>
+                <offer type="SELL" item="i78" price="1651.0" count="-1"/>
+                <offer type="SELL" item="i40" price="388.0" count="-1"/>
+                <offer type="SELL" item="i70" price="1648.0" count="-1"/>
+                <offer type="BUY" item="i50" price="2933.0" count="-1"/>
+                <offer type="BUY" item="i33" price="240.0" count="0"/>
+                <offer type="BUY" item="i65" price="817.0" count="0"/>
+                <offer type="BUY" item="i24" price="373.0" count="-1"/>
+                <offer type="BUY" item="i58" price="1173.0" count="-1"/>
+                <offer type="BUY" item="i4" price="317.0" count="-1"/>
+                <offer type="BUY" item="i5" price="6481.0" count="0"/>
+                <offer type="BUY" item="i17" price="63.0" count="0"/>
+                <offer type="BUY" item="i68" price="4253.0" count="0"/>
+                <offer type="BUY" item="i18" price="762.0" count="0"/>
+                <offer type="BUY" item="i64" price="3482.0" count="0"/>
+                <offer type="BUY" item="i3" price="106.0" count="0"/>
+                <offer type="BUY" item="i8" price="1616.0" count="-1"/>
+                <offer type="BUY" item="i12" price="142.0" count="-1"/>
+                <offer type="BUY" item="i44" price="1930.0" count="-1"/>
+                <offer type="BUY" item="i32" price="878.0" count="0"/>
+                <offer type="BUY" item="i80" price="1869.0" count="0"/>
+                <offer type="BUY" item="i43" price="6056.0" count="-1"/>
+                <offer type="BUY" item="i67" price="203.0" count="0"/>
+                <offer type="BUY" item="i49" price="878.0" count="0"/>
+                <offer type="BUY" item="i73" price="101.0" count="0"/>
+                <offer type="BUY" item="i38" price="9003.0" count="-1"/>
+                <offer type="BUY" item="i63" price="185.0" count="0"/>
+                <offer type="BUY" item="i21" price="849.0" count="-1"/>
+                <offer type="BUY" item="i62" price="207.0" count="0"/>
+                <offer type="BUY" item="i47" price="5443.0" count="-1"/>
+                <offer type="BUY" item="i2" price="321.0" count="-1"/>
+                <offer type="BUY" item="i76" price="71.0" count="-1"/>
+                <offer type="BUY" item="i69" price="5833.0" count="0"/>
+                <offer type="BUY" item="i35" price="6589.0" count="606"/>
+                <offer type="BUY" item="i78" price="1608.0" count="0"/>
+                <offer type="BUY" item="i54" price="2329.0" count="-1"/>
+                <offer type="BUY" item="i40" price="370.0" count="0"/>
+                <offer type="BUY" item="i9" price="1292.0" count="1080"/>
+                <offer type="BUY" item="i19" price="6904.0" count="-1"/>
+                <offer type="BUY" item="i53" price="1737.0" count="-1"/>
+                <offer type="BUY" item="i46" price="19774.0" count="-1"/>
+                <offer type="BUY" item="i42" price="9792.0" count="-1"/>
+                <offer type="BUY" item="i56" price="813.0" count="-1"/>
+                <offer type="BUY" item="i13" price="317.0" count="-1"/>
+                <offer type="BUY" item="i48" price="4534.0" count="-1"/>
+                <offer type="BUY" item="i74" price="15.0" count="0"/>
+                <offer type="BUY" item="i55" price="2624.0" count="-1"/>
+                <offer type="BUY" item="i6" price="530.0" count="-1"/>
+                <offer type="BUY" item="i14" price="208.0" count="-1"/>
+                <offer type="BUY" item="i52" price="2961.0" count="-1"/>
+                <offer type="BUY" item="i37" price="234.0" count="0"/>
+                <offer type="BUY" item="i11" price="529.0" count="-1"/>
+                <offer type="BUY" item="i51" price="279.0" count="-1"/>
+                <offer type="BUY" item="i0" price="169.0" count="0"/>
+                <offer type="BUY" item="i39" price="892.0" count="-1"/>
+                <offer type="BUY" item="i31" price="302.0" count="-1"/>
+                <offer type="BUY" item="i41" price="5510.0" count="-1"/>
+                <offer type="BUY" item="i75" price="108.0" count="-1"/>
+                <offer type="BUY" item="i16" price="1466.0" count="-1"/>
+                <offer type="BUY" item="i36" price="6670.0" count="0"/>
+                <offer type="BUY" item="i66" price="610.0" count="-1"/>
+                <offer type="BUY" item="i45" price="14298.0" count="-1"/>
+                <offer type="BUY" item="i30" price="530.0" count="-1"/>
+                <offer type="BUY" item="i79" price="4025.0" count="0"/>
+                <offer type="BUY" item="i57" price="495.0" count="-1"/>
+                <offer type="BUY" item="i1" price="106.0" count="0"/>
+                <offer type="BUY" item="i20" price="269.0" count="-1"/>
+                <offer type="BUY" item="i61" price="2746.0" count="0"/>
+                <offer type="BUY" item="i15" price="184.0" count="0"/>
+                <offer type="BUY" item="i28" price="125.0" count="0"/>
+                <offer type="BUY" item="i70" price="1605.0" count="0"/>
+            </vendor>
+        </place>
+        <place name="Sui Xing" x="-16.330472124172957" y="-12.648681305108767" z="-69.58904110160802">
+            <vendor name="Morgan Terminal" distance="1602.0">
+                <services>
+                    <service type="MARKET"/>
+                    <service type="BLACK_MARKET"/>
+                    <service type="MUNITION"/>
+                    <service type="OUTFIT"/>
+                    <service type="MEDIUM_LANDPAD"/>
+                </services>
+                <offer type="SELL" item="i19" price="6549.0" count="576"/>
+                <offer type="SELL" item="i142" price="1.0" count="0"/>
+                <offer type="SELL" item="i215" price="1.0" count="0"/>
+                <offer type="SELL" item="i50" price="2508.0" count="117"/>
+                <offer type="SELL" item="i42" price="9278.0" count="353"/>
+                <offer type="SELL" item="i56" price="514.0" count="-1"/>
+                <offer type="SELL" item="i48" price="3776.0" count="870"/>
+                <offer type="SELL" item="i74" price="20.0" count="265"/>
+                <offer type="SELL" item="i17" price="76.0" count="2090"/>
+                <offer type="SELL" item="i18" price="788.0" count="281"/>
+                <offer type="SELL" item="i52" price="2442.0" count="-1"/>
+                <offer type="SELL" item="i37" price="252.0" count="711"/>
+                <offer type="SELL" item="i126" price="1.0" count="0"/>
+                <offer type="SELL" item="i44" price="1457.0" count="177"/>
+                <offer type="SELL" item="i105" price="1.0" count="0"/>
+                <offer type="SELL" item="i170" price="1.0" count="0"/>
+                <offer type="SELL" item="i43" price="5751.0" count="637"/>
+                <offer type="SELL" item="i164" price="1.0" count="0"/>
+                <offer type="SELL" item="i39" price="604.0" count="-1"/>
+                <offer type="SELL" item="i41" price="5018.0" count="71"/>
+                <offer type="SELL" item="i49" price="906.0" count="2554"/>
+                <offer type="SELL" item="i73" price="113.0" count="1460"/>
+                <offer type="SELL" item="i38" price="8091.0" count="49"/>
+                <offer type="SELL" item="i185" price="1.0" count="0"/>
+                <offer type="SELL" item="i45" price="13210.0" count="222"/>
+                <offer type="SELL" item="i47" price="4631.0" count="442"/>
+                <offer type="SELL" item="i220" price="1.0" count="0"/>
+                <offer type="SELL" item="i1" price="94.0" count="-1"/>
+                <offer type="SELL" item="i54" price="1834.0" count="-1"/>
+                <offer type="SELL" item="i40" price="389.0" count="-1"/>
+                <offer type="BUY" item="i50" price="2479.0" count="0"/>
+                <offer type="BUY" item="i33" price="319.0" count="96"/>
+                <offer type="BUY" item="i65" price="1246.0" count="-1"/>
+                <offer type="BUY" item="i24" price="255.0" count="385"/>
+                <offer type="BUY" item="i58" price="898.0" count="1263"/>
+                <offer type="BUY" item="i4" price="319.0" count="493"/>
+                <offer type="BUY" item="i5" price="7337.0" count="163"/>
+                <offer type="BUY" item="i17" price="63.0" count="0"/>
+                <offer type="BUY" item="i18" price="768.0" count="0"/>
+                <offer type="BUY" item="i8" price="1386.0" count="82"/>
+                <offer type="BUY" item="i12" price="143.0" count="159"/>
+                <offer type="BUY" item="i44" price="1422.0" count="0"/>
+                <offer type="BUY" item="i80" price="2371.0" count="73"/>
+                <offer type="BUY" item="i43" price="5689.0" count="0"/>
+                <offer type="BUY" item="i67" price="429.0" count="-1"/>
+                <offer type="BUY" item="i49" price="883.0" count="0"/>
+                <offer type="BUY" item="i73" price="101.0" count="0"/>
+                <offer type="BUY" item="i38" price="8005.0" count="0"/>
+                <offer type="BUY" item="i21" price="770.0" count="219"/>
+                <offer type="BUY" item="i47" price="4580.0" count="0"/>
+                <offer type="BUY" item="i2" price="194.0" count="-1"/>
+                <offer type="BUY" item="i76" price="71.0" count="144"/>
+                <offer type="BUY" item="i23" price="5156.0" count="201"/>
+                <offer type="BUY" item="i69" price="6672.0" count="1143"/>
+                <offer type="BUY" item="i35" price="7332.0" count="368"/>
+                <offer type="BUY" item="i78" price="2102.0" count="67"/>
+                <offer type="BUY" item="i54" price="1812.0" count="0"/>
+                <offer type="BUY" item="i40" price="372.0" count="0"/>
+                <offer type="BUY" item="i9" price="1386.0" count="65"/>
+                <offer type="BUY" item="i19" price="6478.0" count="0"/>
+                <offer type="BUY" item="i53" price="1384.0" count="882"/>
+                <offer type="BUY" item="i42" price="9278.0" count="0"/>
+                <offer type="BUY" item="i56" price="493.0" count="0"/>
+                <offer type="BUY" item="i13" price="319.0" count="233"/>
+                <offer type="BUY" item="i48" price="3734.0" count="0"/>
+                <offer type="BUY" item="i74" price="15.0" count="0"/>
+                <offer type="BUY" item="i55" price="2163.0" count="616"/>
+                <offer type="BUY" item="i6" price="533.0" count="199"/>
+                <offer type="BUY" item="i14" price="210.0" count="822"/>
+                <offer type="BUY" item="i52" price="2413.0" count="0"/>
+                <offer type="BUY" item="i37" price="236.0" count="0"/>
+                <offer type="BUY" item="i11" price="407.0" count="301"/>
+                <offer type="BUY" item="i29" price="595.0" count="-1"/>
+                <offer type="BUY" item="i51" price="154.0" count="1401"/>
+                <offer type="BUY" item="i0" price="303.0" count="-1"/>
+                <offer type="BUY" item="i39" price="579.0" count="0"/>
+                <offer type="BUY" item="i31" price="303.0" count="208"/>
+                <offer type="BUY" item="i41" price="4964.0" count="0"/>
+                <offer type="BUY" item="i75" price="94.0" count="346"/>
+                <offer type="BUY" item="i16" price="1568.0" count="82"/>
+                <offer type="BUY" item="i36" price="7337.0" count="76"/>
+                <offer type="BUY" item="i45" price="13210.0" count="0"/>
+                <offer type="BUY" item="i30" price="533.0" count="298"/>
+                <offer type="BUY" item="i57" price="334.0" count="1590"/>
+                <offer type="BUY" item="i1" price="90.0" count="0"/>
+                <offer type="BUY" item="i20" price="177.0" count="620"/>
+                <offer type="BUY" item="i61" price="3364.0" count="-1"/>
+                <offer type="BUY" item="i15" price="400.0" count="603"/>
+                <offer type="BUY" item="i28" price="337.0" count="-1"/>
+            </vendor>
+            <vendor name="Oswald Platform" distance="2779.0">
+                <services>
+                    <service type="MARKET"/>
+                    <service type="REPAIR"/>
+                    <service type="MUNITION"/>
+                    <service type="MEDIUM_LANDPAD"/>
+                </services>
+                <offer type="SELL" item="i43" price="5749.0" count="858"/>
+                <offer type="SELL" item="i19" price="6602.0" count="30"/>
+                <offer type="SELL" item="i39" price="604.0" count="-1"/>
+                <offer type="SELL" item="i41" price="4996.0" count="949"/>
+                <offer type="SELL" item="i49" price="906.0" count="-1"/>
+                <offer type="SELL" item="i73" price="116.0" count="194"/>
+                <offer type="SELL" item="i38" price="8053.0" count="664"/>
+                <offer type="SELL" item="i50" price="2491.0" count="-1"/>
+                <offer type="SELL" item="i42" price="9278.0" count="995"/>
+                <offer type="SELL" item="i45" price="13214.0" count="149"/>
+                <offer type="SELL" item="i48" price="3797.0" count="117"/>
+                <offer type="SELL" item="i47" price="4631.0" count="348"/>
+                <offer type="SELL" item="i74" price="20.0" count="209"/>
+                <offer type="SELL" item="i17" price="76.0" count="281"/>
+                <offer type="SELL" item="i18" price="792.0" count="38"/>
+                <offer type="SELL" item="i57" price="272.0" count="-1"/>
+                <offer type="SELL" item="i1" price="94.0" count="-1"/>
+                <offer type="SELL" item="i37" price="252.0" count="956"/>
+                <offer type="SELL" item="i54" price="1800.0" count="-1"/>
+                <offer type="SELL" item="i44" price="1457.0" count="238"/>
+                <offer type="SELL" item="i40" price="389.0" count="-1"/>
+                <offer type="BUY" item="i50" price="2463.0" count="0"/>
+                <offer type="BUY" item="i33" price="358.0" count="76"/>
+                <offer type="BUY" item="i65" price="1246.0" count="-1"/>
+                <offer type="BUY" item="i24" price="255.0" count="303"/>
+                <offer type="BUY" item="i58" price="898.0" count="-1"/>
+                <offer type="BUY" item="i4" price="319.0" count="388"/>
+                <offer type="BUY" item="i5" price="7337.0" count="129"/>
+                <offer type="BUY" item="i17" price="64.0" count="0"/>
+                <offer type="BUY" item="i18" price="771.0" count="0"/>
+                <offer type="BUY" item="i8" price="1386.0" count="64"/>
+                <offer type="BUY" item="i12" price="143.0" count="125"/>
+                <offer type="BUY" item="i44" price="1422.0" count="0"/>
+                <offer type="BUY" item="i80" price="2371.0" count="57"/>
+                <offer type="BUY" item="i43" price="5687.0" count="0"/>
+                <offer type="BUY" item="i67" price="429.0" count="-1"/>
+                <offer type="BUY" item="i49" price="883.0" count="0"/>
+                <offer type="BUY" item="i73" price="103.0" count="0"/>
+                <offer type="BUY" item="i38" price="7967.0" count="0"/>
+                <offer type="BUY" item="i21" price="760.0" count="159"/>
+                <offer type="BUY" item="i47" price="4580.0" count="0"/>
+                <offer type="BUY" item="i2" price="194.0" count="-1"/>
+                <offer type="BUY" item="i76" price="71.0" count="194"/>
+                <offer type="BUY" item="i23" price="5155.0" count="158"/>
+                <offer type="BUY" item="i69" price="6672.0" count="-1"/>
+                <offer type="BUY" item="i35" price="7328.0" count="289"/>
+                <offer type="BUY" item="i78" price="2102.0" count="52"/>
+                <offer type="BUY" item="i54" price="1779.0" count="0"/>
+                <offer type="BUY" item="i40" price="372.0" count="0"/>
+                <offer type="BUY" item="i9" price="1386.0" count="51"/>
+                <offer type="BUY" item="i19" price="6531.0" count="0"/>
+                <offer type="BUY" item="i53" price="1384.0" count="593"/>
+                <offer type="BUY" item="i42" price="9277.0" count="0"/>
+                <offer type="BUY" item="i56" price="595.0" count="1215"/>
+                <offer type="BUY" item="i13" price="319.0" count="183"/>
+                <offer type="BUY" item="i48" price="3755.0" count="0"/>
+                <offer type="BUY" item="i74" price="15.0" count="0"/>
+                <offer type="BUY" item="i55" price="2163.0" count="827"/>
+                <offer type="BUY" item="i6" price="533.0" count="156"/>
+                <offer type="BUY" item="i14" price="210.0" count="648"/>
+                <offer type="BUY" item="i52" price="2463.0" count="747"/>
+                <offer type="BUY" item="i37" price="236.0" count="0"/>
+                <offer type="BUY" item="i11" price="407.0" count="237"/>
+                <offer type="BUY" item="i29" price="595.0" count="-1"/>
+                <offer type="BUY" item="i51" price="154.0" count="-1"/>
+                <offer type="BUY" item="i0" price="303.0" count="-1"/>
+                <offer type="BUY" item="i39" price="579.0" count="0"/>
+                <offer type="BUY" item="i31" price="303.0" count="164"/>
+                <offer type="BUY" item="i41" price="4941.0" count="0"/>
+                <offer type="BUY" item="i75" price="109.0" count="465"/>
+                <offer type="BUY" item="i16" price="1568.0" count="64"/>
+                <offer type="BUY" item="i36" price="7337.0" count="60"/>
+                <offer type="BUY" item="i45" price="13213.0" count="0"/>
+                <offer type="BUY" item="i30" price="533.0" count="335"/>
+                <offer type="BUY" item="i57" price="255.0" count="0"/>
+                <offer type="BUY" item="i1" price="90.0" count="0"/>
+                <offer type="BUY" item="i20" price="177.0" count="488"/>
+                <offer type="BUY" item="i61" price="3364.0" count="-1"/>
+                <offer type="BUY" item="i15" price="100.0" count="475"/>
+                <offer type="BUY" item="i28" price="337.0" count="-1"/>
+            </vendor>
+        </place>
+        <place name="V491 Persei" x="-21.89994698519513" y="-11.29822095426789" z="-61.787785550677654">
+            <vendor name="Rand City" distance="60.0">
+                <services>
+                    <service type="MARKET"/>
+                    <service type="REPAIR"/>
+                    <service type="MUNITION"/>
+                    <service type="OUTFIT"/>
+                    <service type="SHIPYARD"/>
+                    <service type="MEDIUM_LANDPAD"/>
+                    <service type="LARGE_LANDPAD"/>
+                </services>
+                <offer type="SELL" item="i90" price="6661153.0" count="0"/>
+                <offer type="SELL" item="i33" price="247.0" count="-1"/>
+                <offer type="SELL" item="i83" price="44800.0" count="0"/>
+                <offer type="SELL" item="i124" price="1.0" count="0"/>
+                <offer type="SELL" item="i27" price="3749.0" count="-1"/>
+                <offer type="SELL" item="i89" price="7.6555842E7" count="0"/>
+                <offer type="SELL" item="i4" price="249.0" count="-1"/>
+                <offer type="SELL" item="i74" price="20.0" count="-1"/>
+                <offer type="SELL" item="i82" price="52720.0" count="0"/>
+                <offer type="SELL" item="i6" price="448.0" count="-1"/>
+                <offer type="SELL" item="i87" price="1045945.0" count="0"/>
+                <offer type="SELL" item="i12" price="61.0" count="-1"/>
+                <offer type="SELL" item="i29" price="499.0" count="-1"/>
+                <offer type="SELL" item="i0" price="224.0" count="-1"/>
+                <offer type="SELL" item="i104" price="1.0" count="0"/>
+                <offer type="SELL" item="i31" price="373.0" count="-1"/>
+                <offer type="SELL" item="i85" price="142931.0" count="0"/>
+                <offer type="SELL" item="i91" price="5.6978179E7" count="0"/>
+                <offer type="SELL" item="i94" price="3.7814205E7" count="0"/>
+                <offer type="SELL" item="i25" price="322.0" count="-1"/>
+                <offer type="SELL" item="i66" price="437.0" count="-1"/>
+                <offer type="SELL" item="i30" price="373.0" count="-1"/>
+                <offer type="SELL" item="i22" price="77.0" count="-1"/>
+                <offer type="SELL" item="i76" price="31.0" count="-1"/>
+                <offer type="SELL" item="i26" price="2040.0" count="-1"/>
+                <offer type="SELL" item="i88" price="1.7472252E7" count="0"/>
+                <offer type="SELL" item="i84" price="87808.0" count="0"/>
+                <offer type="SELL" item="i1" price="112.0" count="-1"/>
+                <offer type="SELL" item="i86" price="379718.0" count="0"/>
+                <offer type="SELL" item="i77" price="6165.0" count="2893"/>
+                <offer type="SELL" item="i81" price="32000.0" count="0"/>
+                <offer type="SELL" item="i95" price="1.46969451E8" count="0"/>
+                <offer type="SELL" item="i140" price="1.0" count="0"/>
+                <offer type="BUY" item="i50" price="3124.0" count="-1"/>
+                <offer type="BUY" item="i33" price="229.0" count="0"/>
+                <offer type="BUY" item="i27" price="3670.0" count="0"/>
+                <offer type="BUY" item="i24" price="395.0" count="-1"/>
+                <offer type="BUY" item="i58" price="890.0" count="-1"/>
+                <offer type="BUY" item="i4" price="230.0" count="0"/>
+                <offer type="BUY" item="i5" price="6576.0" count="-1"/>
+                <offer type="BUY" item="i17" price="264.0" count="-1"/>
+                <offer type="BUY" item="i18" price="1160.0" count="-1"/>
+                <offer type="BUY" item="i64" price="3614.0" count="-1"/>
+                <offer type="BUY" item="i34" price="3031.0" count="396"/>
+                <offer type="BUY" item="i8" price="1603.0" count="-1"/>
+                <offer type="BUY" item="i12" price="47.0" count="0"/>
+                <offer type="BUY" item="i44" price="1799.0" count="-1"/>
+                <offer type="BUY" item="i80" price="2009.0" count="641"/>
+                <offer type="BUY" item="i43" price="6077.0" count="-1"/>
+                <offer type="BUY" item="i67" price="415.0" count="-1"/>
+                <offer type="BUY" item="i49" price="1063.0" count="-1"/>
+                <offer type="BUY" item="i59" price="17298.0" count="-1"/>
+                <offer type="BUY" item="i73" price="283.0" count="-1"/>
+                <offer type="BUY" item="i38" price="8977.0" count="-1"/>
+                <offer type="BUY" item="i21" price="827.0" count="-1"/>
+                <offer type="BUY" item="i47" price="5334.0" count="-1"/>
+                <offer type="BUY" item="i2" price="316.0" count="-1"/>
+                <offer type="BUY" item="i76" price="26.0" count="0"/>
+                <offer type="BUY" item="i23" price="5415.0" count="-1"/>
+                <offer type="BUY" item="i69" price="6036.0" count="-1"/>
+                <offer type="BUY" item="i35" price="7503.0" count="-1"/>
+                <offer type="BUY" item="i78" price="1767.0" count="424"/>
+                <offer type="BUY" item="i54" price="2300.0" count="-1"/>
+                <offer type="BUY" item="i77" price="6038.0" count="0"/>
+                <offer type="BUY" item="i40" price="591.0" count="-1"/>
+                <offer type="BUY" item="i9" price="1287.0" count="-1"/>
+                <offer type="BUY" item="i19" price="7136.0" count="-1"/>
+                <offer type="BUY" item="i53" price="1712.0" count="-1"/>
+                <offer type="BUY" item="i46" price="19697.0" count="-1"/>
+                <offer type="BUY" item="i42" price="10272.0" count="-1"/>
+                <offer type="BUY" item="i56" price="803.0" count="-1"/>
+                <offer type="BUY" item="i13" price="470.0" count="-1"/>
+                <offer type="BUY" item="i48" price="4432.0" count="-1"/>
+                <offer type="BUY" item="i74" price="15.0" count="0"/>
+                <offer type="BUY" item="i55" price="2574.0" count="-1"/>
+                <offer type="BUY" item="i6" price="425.0" count="0"/>
+                <offer type="BUY" item="i14" price="288.0" count="-1"/>
+                <offer type="BUY" item="i72" price="584.0" count="-1"/>
+                <offer type="BUY" item="i52" price="2933.0" count="-1"/>
+                <offer type="BUY" item="i37" price="470.0" count="-1"/>
+                <offer type="BUY" item="i11" price="568.0" count="-1"/>
+                <offer type="BUY" item="i7" price="264.0" count="-1"/>
+                <offer type="BUY" item="i29" price="474.0" count="0"/>
+                <offer type="BUY" item="i51" price="212.0" count="-1"/>
+                <offer type="BUY" item="i0" price="207.0" count="0"/>
+                <offer type="BUY" item="i39" price="752.0" count="-1"/>
+                <offer type="BUY" item="i31" price="354.0" count="0"/>
+                <offer type="BUY" item="i41" price="5806.0" count="-1"/>
+                <offer type="BUY" item="i75" price="108.0" count="-1"/>
+                <offer type="BUY" item="i16" price="1670.0" count="-1"/>
+                <offer type="BUY" item="i36" price="7426.0" count="-1"/>
+                <offer type="BUY" item="i25" price="304.0" count="0"/>
+                <offer type="BUY" item="i66" price="414.0" count="0"/>
+                <offer type="BUY" item="i71" price="305.0" count="-1"/>
+                <offer type="BUY" item="i45" price="14241.0" count="-1"/>
+                <offer type="BUY" item="i30" price="354.0" count="0"/>
+                <offer type="BUY" item="i79" price="4124.0" count="358"/>
+                <offer type="BUY" item="i22" price="65.0" count="0"/>
+                <offer type="BUY" item="i26" price="1996.0" count="0"/>
+                <offer type="BUY" item="i57" price="415.0" count="-1"/>
+                <offer type="BUY" item="i1" price="106.0" count="0"/>
+                <offer type="BUY" item="i20" price="303.0" count="-1"/>
+                <offer type="BUY" item="i61" price="2966.0" count="-1"/>
+                <offer type="BUY" item="i15" price="380.0" count="-1"/>
+                <offer type="BUY" item="i28" price="245.0" count="-1"/>
+                <offer type="BUY" item="i70" price="1767.0" count="-1"/>
+            </vendor>
+        </place>
+    </places>
+</market>
