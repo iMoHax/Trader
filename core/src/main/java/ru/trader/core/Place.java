@@ -18,7 +18,7 @@ public interface Place extends Connectable<Place> {
 
     Collection<Vendor> get();
     default Vendor get(String name){
-        Optional<Vendor> vendor = get().stream().filter(p -> name.equals(p.getName())).findFirst();
+        Optional<Vendor> vendor = get().stream().filter(p -> name.equalsIgnoreCase(p.getName())).findFirst();
         return vendor.isPresent() ? vendor.get() : null;
     }
     void add(Vendor vendor);

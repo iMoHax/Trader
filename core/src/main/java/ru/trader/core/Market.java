@@ -11,7 +11,7 @@ public interface Market {
     Place addPlace(String name, double x, double y, double z);
     void remove(Place place);
     default Place get(String name){
-        Optional<Place> place = get().stream().filter(p -> name.equals(p.getName())).findFirst();
+        Optional<Place> place = get().stream().filter(p -> name.equalsIgnoreCase(p.getName())).findFirst();
         return place.isPresent() ? place.get() : null;
     }
 
