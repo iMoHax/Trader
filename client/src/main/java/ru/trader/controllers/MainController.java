@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import ru.trader.Main;
 import ru.trader.World;
+import ru.trader.maddavo.Parser;
 import ru.trader.model.*;
 import ru.trader.view.support.Localization;
 
@@ -27,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 public class MainController {
     private final static Logger LOG = LoggerFactory.getLogger(MainController.class);
@@ -254,6 +256,51 @@ public class MainController {
     public void editFilter(){
         Screeners.showFilter(market.getAnalyzer().getFilter());
     }
+
+    public void impMadSystems(ActionEvent actionEvent) {
+        chooseFile(new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv"), file -> {
+            try {
+                Parser.parseSystems(file, World.getMarket());
+                reload();
+            } catch (IOException e) {
+                LOG.error("Error on import file", e);
+            }
+        });
+    }
+
+    public void impMadStations(ActionEvent actionEvent) {
+        chooseFile(new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv"), file -> {
+            try {
+                Parser.parseStations(file, World.getMarket());
+                reload();
+            } catch (IOException e) {
+                LOG.error("Error on import file", e);
+            }
+        });
+    }
+
+    public void impMadOffers(ActionEvent actionEvent) {
+        chooseFile(new FileChooser.ExtensionFilter("Prices files (*.prices)", "*.prices"), file -> {
+            try {
+                Parser.parsePrices(file, World.getMarket());
+                reload();
+            } catch (IOException e) {
+                LOG.error("Error on import file", e);
+            }
+        });
+    }
+
+    private void chooseFile(FileChooser.ExtensionFilter filter, Consumer<File> action) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(filter);
+        fileChooser.setInitialDirectory(new File("."));
+        File file = fileChooser.showOpenDialog(null);
+        if (file !=null) {
+            action.accept(file);
+        }
+    }
+
+
 
     private void reload(){
         if (world != null) world.getModeler().clear();

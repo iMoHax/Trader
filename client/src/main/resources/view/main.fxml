@@ -11,7 +11,14 @@
        <MenuBar>
            <Menu text="%main.menu.file">
                <MenuItem text="%main.menu.file.save" onAction="#save"/>
-               <MenuItem text="%main.menu.file.import" onAction="#importWorld"/>
+               <Menu text="%main.menu.file.import">
+                   <Menu text="Maddavo's Market Share">
+                       <MenuItem text="%market.systems" onAction="#impMadSystems"/>
+                       <MenuItem text="%market.stations" onAction="#impMadStations"/>
+                       <MenuItem text="%market.offers" onAction="#impMadOffers"/>
+                   </Menu>
+                   <MenuItem text="XML" onAction="#importWorld"/>
+               </Menu>
                <MenuItem text="%main.menu.file.export" onAction="#exportWorld"/>
            </Menu>
            <Menu text="%main.menu.edit">
