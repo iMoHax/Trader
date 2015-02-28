@@ -74,7 +74,7 @@ public class ItemConverter {
         IDS.put("Advanced Catalysers", "advancedcatalysers");
         IDS.put("Animal Monitors", "animalmonitors");
         IDS.put("Aquaponic Systems", "aquaponicsystems");
-        IDS.put("Auto-Fabricatos", "autofabricators");
+        IDS.put("Auto-Fabricators", "autofabricators");
         IDS.put("Bioreducing Lichen", "bioreducinglichen");
         IDS.put("Computer Components", "computercomponents");
         IDS.put("H.E. Suits", "hazardousenvironmentsuits");
