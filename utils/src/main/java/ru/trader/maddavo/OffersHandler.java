@@ -118,11 +118,11 @@ public class OffersHandler implements ParseHandler {
         }
     }
 
-    private final static String NAME_REGEXP = "(.+\\S)";
+    private final static String NAME_REGEXP = "(\\S.+\\S)";
     private final static String BUY_SELL_REGEXP = "([\\d]+|[\\?-])";
     private final static String SUPPLY_DEMAND_REGEXP = "([\\d]+|[\\?-])([LMH\\?])?";
     private final static String DATE_REGEXP = "(\\d+(?:[- :]+\\d+)+)";
-    private final static Pattern PRICE_REGEXP = Pattern.compile("\\s+" + NAME_REGEXP + "\\s+" + BUY_SELL_REGEXP + "\\s+" + BUY_SELL_REGEXP + "\\s+"+ SUPPLY_DEMAND_REGEXP + "\\s+"+ SUPPLY_DEMAND_REGEXP + "\\s+"+ DATE_REGEXP +"\\s*(:?#.+)?");
+    private final static Pattern PRICE_REGEXP = Pattern.compile("\\s*" + NAME_REGEXP + "\\s+" + BUY_SELL_REGEXP + "\\s+" + BUY_SELL_REGEXP + "\\s+"+ SUPPLY_DEMAND_REGEXP + "\\s+"+ SUPPLY_DEMAND_REGEXP + "\\s+"+ DATE_REGEXP +"\\s*(:?#.+)?");
 
 
     private void parseLine(String str){
