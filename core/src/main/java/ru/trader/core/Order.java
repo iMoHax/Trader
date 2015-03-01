@@ -110,7 +110,8 @@ public class Order implements Comparable<Order> {
     }
 
     public void setMax(double balance, long limit) {
-        setCount(getMaxCount(sell, balance, limit));
+        this.count = getMaxCount(sell, buy, balance, limit);
+        this.profit = (buy.getPrice() - sell.getPrice()) * count;
     }
 
     public static long getMaxCount(Offer sell, double balance, long limit){
