@@ -16,9 +16,13 @@ public class Order implements Comparable<Order> {
         this.profit = Double.NaN;
     }
 
+    public Order(Offer sell, Offer buy, double balance, long limit) {
+        this(sell, buy);
+        setMax(balance, limit);
+    }
+
     public Order(Offer sell, Offer buy, long count) {
-        this.sell = sell;
-        this.buy = buy;
+        this(sell, buy);
         this.count = getMaxCount(sell, buy, count);
         this.profit = (buy.getPrice() - sell.getPrice()) * count;
     }

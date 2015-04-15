@@ -84,6 +84,11 @@ public class MarketFilter {
     }
 
     public boolean isFiltered(Vendor vendor){
+        return isFiltered(vendor, false);
+    }
+
+    public boolean isFiltered(Vendor vendor, boolean checkPlace){
+        if (checkPlace && isFiltered(vendor.getPlace())) return true;
         if (distance > 0 && vendor.getDistance() > distance) return true;
         if (excludes.contains(vendor)) return true;
         for (SERVICE_TYPE service : services) {

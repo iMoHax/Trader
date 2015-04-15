@@ -13,6 +13,12 @@ public class VendorsIterator implements Iterator<Vendor> {
     private Iterator<Vendor> vendors;
     private Vendor next;
 
+    public VendorsIterator(Iterator<Place> places, boolean includeTransit) {
+        this.places = places;
+        this.includeTransit = includeTransit;
+        nextPlace();
+    }
+
     public VendorsIterator(Collection<Place> places, boolean includeTransit) {
         this.places = places.iterator();
         this.includeTransit = includeTransit;

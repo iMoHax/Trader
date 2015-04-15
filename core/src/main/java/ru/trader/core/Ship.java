@@ -2,35 +2,23 @@ package ru.trader.core;
 
 public class Ship {
 
-    private double balance;
-    private long cargo;
+    private int cargo;
     private double engine;
-    private int jumps;
 
-    public Ship(double balance, long cargo, double engine, int jumps) {
-        this.balance = balance;
+    public Ship(int cargo, double engine) {
         this.cargo = cargo;
         this.engine = engine;
-        this.jumps = jumps;
     }
 
     public static Ship copyOf(Ship other){
-        return new Ship(other.balance, other.cargo, other.engine, other.jumps);
+        return new Ship(other.cargo, other.engine);
     }
 
-    public double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
-    public long getCargo() {
+    public int getCargo() {
         return cargo;
     }
 
-    public void setCargo(long cargo) {
+    public void setCargo(int cargo) {
         this.cargo = cargo;
     }
 
@@ -42,11 +30,4 @@ public class Ship {
         this.engine = engine;
     }
 
-    public int getJumps() {
-        return jumps;
-    }
-
-    public void setJumps(int jumps) {
-        this.jumps = jumps;
-    }
 }
