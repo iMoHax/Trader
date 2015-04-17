@@ -91,8 +91,6 @@ public class Main extends Application {
     private static void loadResources() throws IOException {
         Screeners.loadItemDescStage(getUrl(("itemDesc.fxml")));
         Screeners.loadVEditorStage(getUrl(("vEditor.fxml")));
-        Screeners.loadAddOfferStage(getUrl(("oEditor.fxml")));
-        Screeners.loadOrdersStage(getUrl(("orders.fxml")));
         Screeners.loadTopOrdersStage(getUrl(("topOrders.fxml")));
         Screeners.loadPathsStage(getUrl(("paths.fxml")));
         Screeners.loadSettingsStage(getUrl(("settings.fxml")));
