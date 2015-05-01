@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialogs;
 import ru.trader.EMDNUpdater;
-import ru.trader.Main;
 import ru.trader.core.MarketFilter;
 import ru.trader.model.*;
 import ru.trader.view.support.CustomBuilderFactory;
@@ -17,7 +16,6 @@ import ru.trader.view.support.Localization;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Optional;
 
 public class Screeners {
@@ -25,8 +23,6 @@ public class Screeners {
     private static Parent mainScreen;
     private static Parent itemDescScreen;
     private static Parent vEditorScreen;
-    private static Parent editOffersScreen;
-    private static Parent ordersScreen;
     private static Parent topOrdersScreen;
     private static Parent pathsScreen;
     private static Parent settingsScreen;
@@ -38,8 +34,6 @@ public class Screeners {
     private static MainController mainController;
     private static ItemDescController itemDescController;
     private static StationEditorController vEditorController;
-    private static OffersEditorController oEditorController;
-    private static OrdersController ordersController;
     private static TopOrdersController topOrdersController;
     private static PathsController pathsController;
     private static SettingsController settingsController;
@@ -81,24 +75,6 @@ public class Screeners {
         vEditorController = loader.getController();
         Stage stage = new Stage();
         stage.setScene(new Scene(vEditorScreen));
-    }
-
-    public static void loadAddOfferStage(URL fxml) throws IOException {
-        FXMLLoader loader =  initLoader(fxml);
-        editOffersScreen = loader.load();
-        addStylesheet(editOffersScreen);
-        oEditorController = loader.getController();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(editOffersScreen));
-    }
-
-    public static void loadOrdersStage(URL fxml) throws IOException {
-        FXMLLoader loader =  initLoader(fxml);
-        ordersScreen = loader.load();
-        addStylesheet(ordersScreen);
-        ordersController = loader.getController();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(ordersScreen));
     }
 
     public static void loadTopOrdersStage(URL fxml) throws IOException {
@@ -169,11 +145,11 @@ public class Screeners {
         return Dialogs.create().owner(mainScreen).message(text).showConfirm();
     }
 
-    public static GroupModel showAddGroup(MarketModel market){
+    public static Optional<GroupModel> showAddGroup(MarketModel market){
         return groupAddController.showDialog(mainScreen, groupAddScreen, market);
     }
 
-    public static ItemModel showAddItem(MarketModel market){
+    public static Optional<ItemModel> showAddItem(MarketModel market){
         return itemAddController.showDialog(mainScreen, itemAddScreen, market);
     }
 
@@ -191,15 +167,6 @@ public class Screeners {
 
     public static Parent getMainScreen(){
         return mainScreen;
-    }
-
-    public static Optional<OffersEditorController.DialogResult> showEditOffers(ItemModel item, Number sell, Number buy) {
-        return oEditorController.showDialog(vEditorScreen, editOffersScreen, item, sell, buy);
-    }
-
-
-    public static Collection<OrderModel> showOrders(Collection<OfferModel> offers, double balance, long cargo) {
-        return ordersController.showDialog(mainScreen, ordersScreen, offers, balance, cargo);
     }
 
     public static void changeItemDesc(ItemModel item){
@@ -222,11 +189,11 @@ public class Screeners {
         itemDescController.close();
     }
 
-    public static OrderModel showOrders(ObservableList<OrderModel> orders) {
+    public static Optional<OrderModel> showOrders(ObservableList<OrderModel> orders) {
         return topOrdersController.showDialog(mainScreen, topOrdersScreen, orders);
     }
 
-    public static PathRouteModel showRouters(ObservableList<PathRouteModel> routers) {
+    public static Optional<PathRouteModel> showRouters(ObservableList<PathRouteModel> routers) {
         return pathsController.showDialog(mainScreen, pathsScreen, routers);
     }
 
@@ -234,16 +201,12 @@ public class Screeners {
         settingsController.showDialog(mainScreen, settingsScreen);
     }
 
-    public static MarketFilter showFilter() {
-        Action res = filterController.showDialog(mainScreen, filterScreen);
-        return res == filterController.actSave ? filterController.getFilter() : null;
+    public static Optional<MarketFilter> showFilter() {
+        return filterController.showDialog(mainScreen, filterScreen);
     }
 
-    public static void showFilter(MarketFilter filter) {
-        Action res = filterController.showDialog(mainScreen, filterScreen, filter);
-        if (res == filterController.actSave){
-            Main.SETTINGS.setFilter(filter);
-        }
+    public static Optional<MarketFilter> showFilter(MarketFilter filter) {
+        return filterController.showDialog(mainScreen, filterScreen, filter);
     }
 
     public static void reinitAll() {

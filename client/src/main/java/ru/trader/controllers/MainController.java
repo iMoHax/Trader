@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import ru.trader.Main;
 import ru.trader.World;
+import ru.trader.core.MarketFilter;
 import ru.trader.maddavo.Parser;
 import ru.trader.model.*;
 import ru.trader.view.support.Localization;
@@ -194,13 +195,11 @@ public class MainController {
     }
 
     public Optional<GroupModel> addGroup(){
-        GroupModel group = Screeners.showAddGroup(market);
-        return Optional.ofNullable(group);
+        return Screeners.showAddGroup(market);
     }
 
     public Optional<ItemModel> addItem(){
-        ItemModel item = Screeners.showAddItem(market);
-        return Optional.ofNullable(item);
+        return Screeners.showAddItem(market);
     }
 
 
@@ -254,7 +253,10 @@ public class MainController {
     }
 
     public void editFilter(){
-        Screeners.showFilter(market.getAnalyzer().getFilter());
+        Optional<MarketFilter> res = Screeners.showFilter(market.getAnalyzer().getFilter());
+        if (res.isPresent()){
+            Main.SETTINGS.setFilter(res.get());
+        }
     }
 
     public void impMadSystems(ActionEvent actionEvent) {

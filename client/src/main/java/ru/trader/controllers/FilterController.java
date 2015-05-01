@@ -3,13 +3,7 @@ package ru.trader.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import org.controlsfx.control.ButtonBar;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.DialogAction;
+import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.MarketFilter;
@@ -22,7 +16,7 @@ import ru.trader.model.support.BindingsHelper;
 import ru.trader.view.support.Localization;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.cells.CustomListCell;
-
+import java.util.Optional;
 
 public class FilterController {
     private final static Logger LOG = LoggerFactory.getLogger(FilterController.class);
@@ -56,10 +50,9 @@ public class FilterController {
     @FXML
     private ListView<StationModel> excludes;
 
-    public final Action actSave = new DialogAction(Localization.getString("dialog.button.save"), ButtonBar.ButtonType.OK_DONE, false, true, false, (e) -> save());
-
     private MarketModel market;
     private MarketFilter filter;
+    private Dialog<MarketFilter> dlg;
 
     @FXML
     private void initialize(){
@@ -72,6 +65,23 @@ public class FilterController {
         market = MainController.getMarket();
         center.setItems(market.systemsListProperty());
         system.setItems(market.systemsProperty());
+    }
+
+    private void createDialog(Parent owner, Parent content){
+        dlg = new Dialog<>();
+        if (owner != null) dlg.initOwner(owner.getScene().getWindow());
+        dlg.setTitle(Localization.getString("filter.title"));
+        ButtonType saveButton = new ButtonType(Localization.getString("dialog.button.save"), ButtonBar.ButtonData.OK_DONE);
+        dlg.getDialogPane().setContent(content);
+        dlg.getDialogPane().getButtonTypes().addAll(saveButton, ButtonType.CANCEL);
+        dlg.setResultConverter(dialogButton -> {
+            if (dialogButton == saveButton) {
+                save();
+                return this.filter;
+            }
+            return null;
+        });
+        dlg.setResizable(false);
     }
 
     private void fill(MarketFilter filter){
@@ -88,6 +98,14 @@ public class FilterController {
         cbMediumLandpad.setSelected(filter.has(SERVICE_TYPE.MEDIUM_LANDPAD));
         cbLargeLandpad.setSelected(filter.has(SERVICE_TYPE.LARGE_LANDPAD));
         excludes.setItems(BindingsHelper.observableList(filter.getExcludes(), market.getModeler()::get));
+    }
+
+    private void clear(){
+        this.filter = null;
+        center.getSelectionModel().clearSelection();
+        radius.clear();
+        distance.clear();
+        excludes.getItems().clear();
     }
 
     private void save() {
@@ -109,17 +127,18 @@ public class FilterController {
         LOG.trace("New filter", filter);
     }
 
-    public Action showDialog(Parent parent, Parent content){
+    public Optional<MarketFilter> showDialog(Parent parent, Parent content){
         return showDialog(parent, content, new MarketFilter());
     }
 
-    public Action showDialog(Parent parent, Parent content, MarketFilter filter){
-        Dialog dlg = new Dialog(parent, Localization.getString("filter.title"));
-        dlg.setContent(content);
-        dlg.getActions().addAll(actSave, Dialog.ACTION_CANCEL);
-        dlg.setResizable(false);
+    public Optional<MarketFilter> showDialog(Parent parent, Parent content, MarketFilter filter){
+        if (dlg == null){
+            createDialog(parent, content);
+        }
         fill(filter);
-        return dlg.show();
+        Optional<MarketFilter> result = dlg.showAndWait();
+        clear();
+        return result;
     }
 
     public void add(ActionEvent actionEvent) {

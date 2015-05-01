@@ -2,15 +2,8 @@ package ru.trader.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.util.converter.LongStringConverter;
-import org.controlsfx.control.ButtonBar;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.DialogAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.EMDNUpdater;
@@ -65,16 +58,7 @@ public class StationEditorController {
 
     private StationUpdater updater;
 
-    private final Action actSave = new DialogAction(Localization.getString("dialog.button.save"), ButtonBar.ButtonType.OK_DONE, false, true, false, (e) -> {
-        items.getSelectionModel().selectFirst();
-        updater.commit();
-        items.getSelectionModel().clearSelection();
-    });
-
-    private final Action actCancel = new DialogAction(impl.org.controlsfx.i18n.Localization.asKey("dlg.cancel.button"), ButtonBar.ButtonType.CANCEL_CLOSE, true, true, true, (e) -> {
-        items.getSelectionModel().selectFirst();
-        items.getSelectionModel().clearSelection();
-    });
+    private Dialog<ButtonType> dlg;
 
     @FXML
     private void initialize() {
@@ -83,7 +67,6 @@ public class StationEditorController {
         sell.setCellFactory(EditOfferCell.forTable(new PriceStringConverter(), true));
         demand.setCellFactory(TextFieldCell.forTableColumn(new LongStringConverter()));
         supply.setCellFactory(TextFieldCell.forTableColumn(new LongStringConverter()));
-        actSave.disabledProperty().bind(distance.wrongProperty());
         name.setOnAction((v)->distance.requestFocus());
         distance.setOnAction((v) -> {
             items.requestFocus();
@@ -111,17 +94,54 @@ public class StationEditorController {
         items.setItems(updater.getOffers());
     }
 
+
+    private void createDialog(Parent owner, Parent content){
+        dlg = new Dialog<>();
+        if (owner != null) dlg.initOwner(owner.getScene().getWindow());
+
+        ButtonType saveButton = new ButtonType(Localization.getString("dialog.button.save"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType(Localization.getString("dialog.button.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        dlg.getDialogPane().setContent(content);
+        dlg.getDialogPane().getButtonTypes().addAll(saveButton, cancelButton);
+
+        Button bSave = (Button) dlg.getDialogPane().lookupButton(saveButton);
+        bSave.disableProperty().bind(distance.wrongProperty());
+
+        dlg.setResultConverter(dialogButton -> {
+            if (dialogButton == saveButton) {
+                save();
+            }
+            if (dialogButton == cancelButton) {
+                cancel();
+            }
+            return dialogButton;
+        });
+        dlg.setResizable(false);
+    }
+
+    private void save(){
+        items.getSelectionModel().selectFirst();
+        updater.commit();
+        items.getSelectionModel().clearSelection();
+    }
+
+    private void cancel(){
+        items.getSelectionModel().selectFirst();
+        items.getSelectionModel().clearSelection();
+    }
+
     public void showDialog(Parent parent, Parent content, StationModel station){
         showDialog(parent, content, station.getSystem(), station);
     }
 
     public void showDialog(Parent parent, Parent content, SystemModel system, StationModel station){
+        if (dlg == null){
+            createDialog(parent, content);
+        }
+        dlg.setTitle(Localization.getString(station == null ? "vEditor.title.add" : "vEditor.title.edit"));
         updater.init(system, station);
-        Dialog dlg = new Dialog(parent, Localization.getString(station == null ? "vEditor.title.add" : "vEditor.title.edit"));
-        dlg.setContent(content);
-        dlg.getActions().addAll(actSave, actCancel);
-        dlg.setResizable(false);
-        dlg.show();
+        dlg.showAndWait();
         updater.reset();
     }
 

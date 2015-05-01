@@ -1,15 +1,12 @@
 package ru.trader.controllers;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
-import org.controlsfx.control.ButtonBar;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.DialogAction;
 import ru.trader.model.GroupModel;
 import ru.trader.model.ItemModel;
 import ru.trader.model.MarketModel;
@@ -19,31 +16,54 @@ import java.util.Optional;
 
 
 public class ItemAddController {
-    private final Action OK = new DialogAction("OK", ButtonBar.ButtonType.OK_DONE, false, true, false);
 
     @FXML
     private ComboBox<GroupModel> group;
     @FXML
     private TextField name;
 
+    private Dialog<ItemModel> dlg;
+    private MarketModel market;
+
     @FXML
     private void initialize() {
-
     }
 
-    private void init(MarketModel market) {
-        group.setItems(market.getGroups());
-        group.getSelectionModel().selectFirst();
-        name.clear();
-    }
 
-    public ItemModel showDialog(Parent parent, Parent content, MarketModel market) {
-        init(market);
-        Dialog dlg = new Dialog(parent, Localization.getString("dialog.item.title"));
-        dlg.setContent(content);
-        dlg.getActions().addAll(OK, Dialog.ACTION_CANCEL);
+    private void createDialog(Parent owner, Parent content){
+        dlg = new Dialog<>();
+        if (owner != null) dlg.initOwner(owner.getScene().getWindow());
+        dlg.setTitle(Localization.getString("dialog.item.title"));
+        dlg.getDialogPane().setContent(content);
+        dlg.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        dlg.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                return add(market);
+            }
+            return null;
+        });
         dlg.setResizable(false);
-        ItemModel res = dlg.show() == OK ? add(market) : null;
+    }
+
+    private void fill(MarketModel market) {
+        this.market = market;
+        group.setItems(market.getGroups());
+    }
+
+    private void clear(){
+        this.market = null;
+        name.clear();
+        group.getSelectionModel().clearSelection();
+        group.getItems().clear();
+    }
+
+    public Optional<ItemModel> showDialog(Parent parent, Parent content, MarketModel market) {
+        if (dlg == null){
+            createDialog(parent, content);
+        }
+        fill(market);
+        Optional<ItemModel> res = dlg.showAndWait();
+        clear();
         return res;
     }
 
@@ -56,7 +76,6 @@ public class ItemAddController {
         }
         return res;
     }
-
 
     public void add(ActionEvent actionEvent) {
         Optional<GroupModel> _group = Screeners.showAddGroup();
