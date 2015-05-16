@@ -3,6 +3,7 @@ package ru.trader.analysis;
 import ru.trader.core.*;
 
 import java.util.Collection;
+import java.util.NavigableSet;
 import java.util.stream.Stream;
 
 public class FilteredMarket {
@@ -37,8 +38,13 @@ public class FilteredMarket {
     }
 
     public Stream<Offer> getOffers(OFFER_TYPE offerType, Item item){
-        return market.getStat(offerType, item).getOffers().stream()
-                .filter(o -> !filter.isFiltered(o.getVendor(), true));
+        NavigableSet<Offer> offers = market.getStat(offerType, item).getOffers();
+        Stream<Offer> res;
+        if (offerType.getOrder() > 0)
+            res = offers.stream();
+        else
+            res = offers.descendingSet().stream();
+        return res.filter(o -> !filter.isFiltered(o.getVendor(), true));
     }
 
 

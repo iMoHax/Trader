@@ -1,8 +1,10 @@
 package ru.trader.analysis;
 
+import org.jetbrains.annotations.NotNull;
 import ru.trader.core.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Scorer {
@@ -11,9 +13,11 @@ public class Scorer {
     private final FilteredMarket market;
     private final Profile profile;
 
-    private int ordersCount = 5;
+    private final double avgProfit;
+    private final double avgDistance;
 
-    private double avgProfit;
+    private int ordersCount = 5;
+    private double distanceRate = 1;
 
     public Scorer(FilteredMarket market, Profile profile) {
         this.market = market;
@@ -22,6 +26,7 @@ public class Scorer {
         buyOffers = new HashMap<>(100, 0.9f);
         market.getItems().parallelStream().forEach(this::fillOffers);
         avgProfit = computeAvgProfit();
+        avgDistance = computeAvgDistance();
     }
 
     private void fillOffers(Item item){
@@ -35,22 +40,33 @@ public class Scorer {
         }
     }
 
-    public void setOrdersCount(int ordersCount) {
-        this.ordersCount = ordersCount;
-    }
-
     private double computeAvgProfit(){
         OptionalDouble avg = sellOffers.values().stream()
                 .flatMap(this::mapToOrder)
-                .mapToDouble(Order::getProfit)
+                .mapToDouble(o -> o.getProfit() / profile.getShip().getCargo())
                 .average();
         return avg.orElse(0);
     }
 
+    private double computeAvgDistance(){
+        OptionalDouble res = market.getVendors().mapToDouble(Vendor::getDistance).average();
+        return res.orElse(0);
+    }
+
+    public void setOrdersCount(int ordersCount) {
+        this.ordersCount = ordersCount;
+    }
+
+    public void setDistanceRate(double distanceRate) {
+        this.distanceRate = distanceRate;
+    }
+
+    public double getAvgProfit() {
+        return avgProfit;
+    }
+
     public Score getScore(Vendor vendor){
-        Stream<Order> sellOrders = vendor.getAllSellOffers().stream().flatMap(this::mapToOrder);
-        Stream<Order> buyOrders = vendor.getAllBuyOffers().stream().flatMap(this::mapToOrder);
-        return new Score(sellOrders, buyOrders);
+        return new Score(vendor);
     }
 
     private Stream<Order> mapToOrder(Offer offer) {
@@ -69,33 +85,59 @@ public class Scorer {
         return Stream.of(order);
     }
 
-    public class Score {
-        private double sellProfit;
-        private double buyProfit;
+    public class Score implements Comparable<Score> {
+        private final Vendor vendor;
+        private final DoubleSummaryStatistics sellStat;
+        private final DoubleSummaryStatistics buyStat;
         private double score;
 
-        public Score(Stream<Order> sell, Stream<Order> buy) {
-            sellProfit = computeProfits(sell);
-            buyProfit = computeProfits(buy);
+        public Score(Vendor vendor) {
+            this.vendor = vendor;
+            Stream<Order> sell = vendor.getAllSellOffers().stream().flatMap(Scorer.this::mapToOrder);
+            Stream<Order> buy = vendor.getAllBuyOffers().stream().flatMap(Scorer.this::mapToOrder);
 
-            long count = sell.limit(ordersCount).count();
-            computeScore(count);
+            sellStat = computeProfits(sell);
+            buyStat = computeProfits(buy);
+
+            computeScore();
         }
 
-        private double computeProfits(Stream<Order> orders) {
-            OptionalDouble profit = orders.sorted(Comparator.<Order>reverseOrder())
-                    .limit(ordersCount)
-                    .mapToDouble(Order::getProfit)
-                    .average();
-            return profit.orElse(0);
+        public double getSellProfit() {
+            return sellStat.getAverage();
         }
 
-        private void computeScore(long sellOrdersCount){
-            score = (sellProfit + buyProfit)/2;
-            if (sellOrdersCount < ordersCount){
-                score =- Math.abs(avgProfit-sellProfit) * (ordersCount - sellOrdersCount) / score;
-            }
+        public double getBuyProfit() {
+            return buyStat.getAverage();
+        }
 
+        public double getScore() {
+            return score;
+        }
+
+        private DoubleSummaryStatistics computeProfits(Stream<Order> orders) {
+            return orders.sorted(Comparator.<Order>reverseOrder())
+                   .limit(ordersCount)
+                   .collect(Collectors.summarizingDouble(o -> o.getProfit() / profile.getShip().getCargo()));
+        }
+
+        private void computeScore(){
+            score = (getSellProfit() + getBuyProfit())/2;
+            score -= distanceRate * avgProfit * (vendor.getDistance() - avgDistance) / avgDistance;
+        }
+
+        @Override
+        public String toString() {
+            return "Score{" +
+                    "vendor=" + vendor.getPlace()+"("+vendor+")"+
+                    ", sellStat=" + sellStat +
+                    ", buyStat=" + buyStat +
+                    ", score=" + score +
+                    '}';
+        }
+
+        @Override
+        public int compareTo(@NotNull Score other) {
+            return Double.compare(score, other.score);
         }
     }
 
