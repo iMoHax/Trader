@@ -1,6 +1,7 @@
-package ru.trader.graph;
+package ru.trader.analysis.graph;
 
 import org.jetbrains.annotations.NotNull;
+import ru.trader.graph.Connectable;
 
 import java.util.Objects;
 
