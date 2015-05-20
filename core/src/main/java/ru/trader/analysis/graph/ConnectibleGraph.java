@@ -9,10 +9,10 @@ import ru.trader.graph.Connectable;
 import java.util.Collection;
 import java.util.function.Predicate;
 
-public class ConnectibleGraph<T extends Connectable<T>> extends Graph<T> {
+public class ConnectibleGraph<T extends Connectable<T>> extends AbstractGraph<T> {
     private final static Logger LOG = LoggerFactory.getLogger(ConnectibleGraph.class);
 
-    private final Profile profile;
+    protected final Profile profile;
 
     public ConnectibleGraph(Profile profile) {
         super();
@@ -22,6 +22,10 @@ public class ConnectibleGraph<T extends Connectable<T>> extends Graph<T> {
     public ConnectibleGraph(Profile profile, AnalysisCallBack callback) {
         super(callback);
         this.profile = profile;
+    }
+
+    public Profile getProfile() {
+        return profile;
     }
 
     @Override
@@ -48,11 +52,12 @@ public class ConnectibleGraph<T extends Connectable<T>> extends Graph<T> {
         }
     }
 
-    private class ConnectibleGraphBuilder extends GraphBuilder {
+    protected class ConnectibleGraphBuilder extends GraphBuilder {
         private final DistanceFilter distanceFilter;
         protected boolean refill;
+        protected double fuelCost;
 
-        private ConnectibleGraphBuilder(Vertex<T> vertex, Collection<T> set, int deep, double limit) {
+        protected ConnectibleGraphBuilder(Vertex<T> vertex, Collection<T> set, int deep, double limit) {
             super(vertex, set, deep, limit);
             distanceFilter = new DistanceFilter(limit, vertex.getEntry());
         }
@@ -64,12 +69,13 @@ public class ConnectibleGraph<T extends Connectable<T>> extends Graph<T> {
                 LOG.trace("Vertex {} is far away, {}", entry, distance);
                 return -1;
             }
-            double costFuel = profile.getShip().getFuelCost(limit, distance);
-            double nextLimit = profile.withRefill() ? limit - costFuel : profile.getShip().getTank();
+            fuelCost = profile.getShip().getFuelCost(limit, distance);
+            double nextLimit = profile.withRefill() ? limit - fuelCost : profile.getShip().getTank();
             if (nextLimit < 0) {
                 LOG.trace("Refill");
                 refill = true;
-                nextLimit = profile.getShip().getTank() - profile.getShip().getFuelCost(distance);
+                fuelCost = profile.getShip().getFuelCost(distance);
+                nextLimit = profile.getShip().getTank() - fuelCost;
             } else {
                 refill = false;
             }
@@ -77,35 +83,9 @@ public class ConnectibleGraph<T extends Connectable<T>> extends Graph<T> {
         }
 
         @Override
-        protected ConnectibleEdge createEdge(Vertex<T> target) {
-            return new ConnectibleEdge(vertex, target, refill);
+        protected ConnectibleEdge<T> createEdge(Vertex<T> target) {
+            return new ConnectibleEdge<>(vertex, target, refill, fuelCost);
         }
     }
 
-    protected class ConnectibleEdge extends Edge<T> {
-        private final boolean refill;
-
-        protected ConnectibleEdge(Vertex<T> source, Vertex<T> target, boolean refill) {
-            super(source, target);
-            this.refill = refill;
-        }
-
-        public boolean isRefill() {
-            return refill;
-        }
-
-        @Override
-        protected double computeWeight() {
-            T s = source.getEntry();
-            T t = target.getEntry();
-            return s.getDistance(t);
-        }
-
-        @Override
-        public String toString() {
-            return source.getEntry().toString() + " - "+ weight
-                   + (refill ? "R" : "")
-                   +" -> " + target.getEntry().toString();
-        }
-    }
 }

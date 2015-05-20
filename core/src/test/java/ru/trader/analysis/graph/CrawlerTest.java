@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CrawlerTest extends Assert {
     private final static Logger LOG = LoggerFactory.getLogger(CrawlerTest.class);
@@ -89,7 +90,7 @@ public class CrawlerTest extends Assert {
         // x5 <-> x4, x5 <-> x6
 
         SimpleCollector paths = new SimpleCollector();
-        Crawler<Point> crawler = new Crawler<>(graph, paths::add);
+        Crawler<Point> crawler = new CCrawler<>(graph, paths::add);
         crawler.findMin(x4, 10);
         assertPaths(paths.get(), PPath.of(x5, x4));
         paths.clear();
@@ -118,7 +119,7 @@ public class CrawlerTest extends Assert {
         //  x5 <-> x4 <-> x3 <-> x2, x5 <-> x6 <-> x7 <-> x8
         //  x5 <-> x3,  x4 <-> x2,  x3 <-> x6, x4 <-> x6
         SimpleCollector paths = new SimpleCollector();
-        Crawler<Point> crawler = new Crawler<>(graph, paths::add);
+        Crawler<Point> crawler = new CCrawler<>(graph, paths::add);
 
         crawler.findMin(x8, 10);
         assertPaths(paths.get(), PPath.of(x5, x6, x7, x8));
@@ -135,11 +136,16 @@ public class CrawlerTest extends Assert {
 
         crawler.findMin(x4, 20);
         assertPaths(true, paths.get(), PPath.of(x5, x4), PPath.of(x5, x3, x4), PPath.of(x5, x6, x4),
-                PPath.of(x5, x6, x5, x4), PPath.of(x5, x4, x3, x4), PPath.of(x5, x4, x5, x4),
-                PPath.of(x5, x6, x3, x4), PPath.of(x5, x4, x6, x4),
-                PPath.of(x5, x3, x5, x4), PPath.of(x5, x3, x2, x4),
-                PPath.of(x5, x4, x2, x4), PPath.of(x5, x3, x6, x4)
+                PPath.of(x5, x6, x5, x4), PPath.of(x5, x4, x5, x4), PPath.of(x5, x4, x3, x4),
+                PPath.of(x5, x4, x6, x4), PPath.of(x5, x6, x3, x4),
+                PPath.of(x5, x3, x5, x4), PPath.of(x5, x4, x2, x4),
+                PPath.of(x5, x3, x2, x4), PPath.of(x5, x3, x6, x4)
                 );
+        TestUtil.assertCollectionEquals(paths.getWeights(), 5.0, 15.0, 15.0,
+                15.0, 15.0, 15.0,
+                25.0, 25.0,
+                25.0, 35.0,
+                35.0, 35.0);
         paths.clear();
 
         crawler.findMin(x5, 20);
@@ -177,7 +183,7 @@ public class CrawlerTest extends Assert {
         //  x5 <-> x4 <- refill -> x3 <- refill -> x2, x5 <-> x6
         //  x5 <-> x3 <- refill -> x2,  x5 <-> x4 <- refill -> x6
         SimpleCollector paths = new SimpleCollector();
-        Crawler<Point> crawler = new Crawler<>(graph, paths::add);
+        Crawler<Point> crawler = new CCrawler<>(graph, paths::add);
 
         crawler.findMin(x1, 10);
         assertTrue(paths.get().isEmpty());
@@ -188,10 +194,14 @@ public class CrawlerTest extends Assert {
         paths.clear();
 
         crawler.findMin(x6, 10);
-        assertPaths(true, paths.get(), PPath.of(x5, x6), PPath.of(x5, x4, x6),
-                PPath.of(x5, x6, x5, x6), PPath.of(x5, x4, x5, x6),
-                PPath.of(x5, x3, x5, x6), PPath.of(x5, x3, x4, x6),
+        assertPaths(paths.get(), PPath.of(x5, x6), PPath.of(x5, x4, x6),
+                PPath.of(x5, x4, x5, x6), PPath.of(x5, x6, x5, x6),
+                PPath.of(x5, x3, x4, x6), PPath.of(x5, x3, x5, x6),
                 PPath.of(x5, x6, x4, x6));
+        TestUtil.assertCollectionEquals(paths.getWeights(), 5.0, 15.0,
+                15.0, 15.0,
+                25.0, 25.0,
+                25.0);
         paths.clear();
 
         crawler.findFast(x2);
@@ -216,7 +226,7 @@ public class CrawlerTest extends Assert {
         // x5 <-> x3 <- refill -> x2
         // x5 <-> x4 <- refill -> x6
         SimpleCollector paths = new SimpleCollector();
-        Crawler<Point> crawler = new Crawler<>(graph, paths::add);
+        Crawler<Point> crawler = new CCrawler<>(graph, paths::add);
 
         crawler.findMin(x1, 10);
         assertTrue(paths.get().isEmpty());
@@ -227,7 +237,7 @@ public class CrawlerTest extends Assert {
                 PPath.of(x5, x4, x3, x2), PPath.of(x5, x4, x2), PPath.of(x5, x3, x5, x4, x2),
                 PPath.of(x5, x6, x4, x2), PPath.of(x5, x6, x4, x3, x2), PPath.of(x5, x4, x3, x4, x2),
                 PPath.of(x5, x4, x5, x4, x2), PPath.of(x5, x6, x5, x4, x2), PPath.of(x5, x3, x4, x3, x2),
-                PPath.of(x5, x3, x4, x3, x2),  PPath.of(x5, x3, x4, x3, x2),  PPath.of(x5, x3, x4, x3, x2));
+                PPath.of(x5, x3, x4, x3, x2), PPath.of(x5, x3, x4, x3, x2), PPath.of(x5, x3, x4, x3, x2));
         paths.clear();
 
         crawler.findMin(x6, 30);
@@ -269,12 +279,21 @@ public class CrawlerTest extends Assert {
             return paths;
         }
 
-        public List<Edge<Point>> get(int indx) {
-            if (indx >= paths.size()) return Collections.emptyList();
-            return paths.get(indx);
+        public List<Edge<Point>> get(int index) {
+            if (index >= paths.size()) return Collections.emptyList();
+            return paths.get(index);
         }
         public void clear(){
             paths.clear();
+        }
+
+        public double getWeight(int index){
+            if (index >= paths.size()) return 0;
+            return paths.get(index).stream().mapToDouble(Edge::getWeight).sum();
+        }
+
+        public Collection<Double> getWeights(){
+            return paths.stream().map(p -> p.stream().mapToDouble(Edge::getWeight).sum()).collect(Collectors.toList());
         }
     }
 

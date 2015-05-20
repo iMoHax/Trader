@@ -13,19 +13,25 @@ public class Crawler<T> {
     private final static int THRESHOLD = 4;
     private final static Logger LOG = LoggerFactory.getLogger(Crawler.class);
 
-    private final Graph<T> graph;
+    protected final Graph<T> graph;
     private final Consumer<List<Edge<T>>> onFoundFunc;
+    private int maxSize;
 
     public Crawler(Graph<T> graph, Consumer<List<Edge<T>>> onFoundFunc) {
         this.graph = graph;
+        maxSize = graph.getRoot().getLevel();
         this.onFoundFunc = onFoundFunc;
     }
 
-    private List<Edge<T>> getCopyList(List<Edge<T>> head, Edge<T> tail){
+    protected List<Edge<T>> getCopyList(List<Edge<T>> head, Edge<T> tail){
         List<Edge<T>> res = new ArrayList<>(20);
         res.addAll(head);
         res.add(tail);
         return res;
+    }
+
+    public void setMaxSize(int maxSize) {
+        this.maxSize = maxSize;
     }
 
     public void findFast(T target){
@@ -37,9 +43,11 @@ public class Crawler<T> {
         int found = 0;
         if (t != null) {
             if (count > 1) {
-                found = bfs(new ArrayList<>(), graph.root, target, 0, count);
+                Vertex<T> s = graph.getRoot();
+                s.sortEdges();
+                found = bfs(start(s), target, 0, count);
             } else {
-                found = dfs(new ArrayList<>(), graph.root, target, t.getLevel() + 1, count);
+                found = dfs(start(graph.getRoot()), target, t.getLevel() + 1, count);
             }
         }
         LOG.debug("Found {} paths", found);
@@ -53,31 +61,53 @@ public class Crawler<T> {
         Vertex<T> t = graph.getVertex(target);
         int found = 0;
         if (t != null) {
-            found = ucs(new ArrayList<>(), graph.root, target, 0, count);
+            found = ucs(costStart(graph.getRoot()), target, 0, count);
         }
         LOG.debug("Found {} paths", found);
     }
 
-    private int dfs(List<Edge<T>> head, Vertex<T> source, T target, int deep, int count) {
-        LOG.trace("DFS from {} to {}, deep {}, count {}, head {}", source, target, deep, count, head);
+    protected TraversalEntry start(Vertex<T> vertex){
+        return new TraversalEntry(new ArrayList<>(), vertex);
+    }
+
+    protected CostTraversalEntry costStart(Vertex<T> vertex){
+        return new CostTraversalEntry(new ArrayList<>(), vertex);
+    }
+
+    protected TraversalEntry travers(TraversalEntry entry, Edge<T> edge){
+        return new TraversalEntry(getCopyList(entry.head, edge), edge.getTarget());
+    }
+
+    private CostTraversalEntry costTravers(CostTraversalEntry entry, Edge<T> edge){
+        return costTravers(entry, getCopyList(entry.head, edge), edge);
+    }
+
+    protected CostTraversalEntry costTravers(CostTraversalEntry entry, List<Edge<T>> head, Edge<T> edge){
+        return new CostTraversalEntry(head, edge, entry.getWeight());
+    }
+
+    private int dfs(TraversalEntry entry, T target, int deep, int count) {
         int found = 0;
+        List<Edge<T>> head = entry.head;
+        Vertex<T> source = entry.vertex;
+        LOG.trace("DFS from {} to {}, deep {}, count {}, head {}", source, target, deep, count, head);
         if (deep == source.getLevel()){
-            Optional<Edge<T>> last = source.getEdges().parallelStream()
-                    .filter(next -> next.isConnect(target))
-                    .findFirst();
-            if (last.isPresent()){
-                List<Edge<T>> res = getCopyList(head, last.get());
-                LOG.debug("Last edge find, path {}", res);
-                onFoundFunc.accept(res);
-                found++;
+            for (Edge<T> next : entry.getEdges()) {
+                if (next.isConnect(target)){
+                    List<Edge<T>> res = getCopyList(head, next);
+                    LOG.debug("Last edge find, path {}", res);
+                    onFoundFunc.accept(res);
+                    found++;
+                    break;
+                }
             }
         }
         if (found < count){
-            if (deep < source.getLevel()) {
+            if (deep < source.getLevel() && head.size() < maxSize-1) {
                 LOG.trace("Search around");
-                for (Edge<T> edge : source.getEdges()) {
+                for (Edge<T> edge : entry.getEdges()) {
                     if (edge.getTarget().isSingle()) continue;
-                    found += dfs(getCopyList(head, edge), edge.getTarget(), target, deep, count-found);
+                    found += dfs(travers(entry, edge), target, deep, count-found);
                     if (found >= count) break;
                 }
             }
@@ -85,18 +115,23 @@ public class Crawler<T> {
         return found;
     }
 
-    private int bfs(List<Edge<T>> head, Vertex<T> source, T target, int deep, int count) {
-        LOG.trace("BFS from {} to {}, deep {}, count {}", source, target, deep, count);
+    private int bfs(TraversalEntry root, T target, int deep, int count) {
+        LOG.trace("BFS from {} to {}, deep {}, count {}", root.vertex, target, deep, count);
         int found = 0;
         LinkedList<TraversalEntry> queue = new LinkedList<>();
-        queue.add(new TraversalEntry(head, source));
+        queue.add(root);
         while (!queue.isEmpty() && count > found){
             TraversalEntry entry = queue.poll();
-            head = entry.head;
-            source = entry.vertex;
+            List<Edge<T>> head = entry.head;
+            Vertex<T> source = entry.vertex;
+            if (head.size() >= maxSize){
+                LOG.trace("Is limit deep");
+                continue;
+            }
             LOG.trace("Search from {} to {}, head {}", source, target, head);
-            source.sortEdges();
-            for (Edge<T> edge : source.getEdges()) {
+            Iterator<Edge<T>> iterator = entry.iterator();
+            while (iterator.hasNext()){
+                Edge<T> edge = iterator.next();
                 if (edge.isConnect(target)){
                     List<Edge<T>> res = getCopyList(head, edge);
                     LOG.debug("Last edge find, path {}", res);
@@ -106,25 +141,26 @@ public class Crawler<T> {
                 if (found >= count) break;
                 if (edge.getTarget().isSingle()) continue;
                 if (deep < source.getLevel()) {
-                    queue.add(new TraversalEntry(getCopyList(head, edge), edge.getTarget()));
+                    edge.getTarget().sortEdges();
+                    queue.add(travers(entry, edge));
                 }
             }
         }
         return found;
     }
 
-    private int ucs(List<Edge<T>> head, Vertex<T> source, T target, int deep, int count) {
-        LOG.trace("UCS from {} to {}, deep {}, count {}", source, target, deep, count);
+    private int ucs(CostTraversalEntry root, T target, int deep, int count) {
+        LOG.trace("UCS from {} to {}, deep {}, count {}", root.vertex, target, deep, count);
         int found = 0;
         PriorityQueue<CostTraversalEntry> queue = new PriorityQueue<>();
-        queue.add(new CostTraversalEntry(head, source));
+        queue.add(root);
         while (!queue.isEmpty() && count > found){
             CostTraversalEntry entry = queue.poll();
-            LOG.trace("Check path head {}, edge {}, cost {}", entry.head, entry.edge, entry.cost);
-            head = entry.head;
+            LOG.trace("Check path head {}, edge {}, weight {}", entry.head, entry.edge, entry.weight);
+            List<Edge<T>> head = entry.head;
+            Vertex<T> source = entry.vertex;
             Edge<T> edge = entry.edge;
             if (edge != null) {
-                source = edge.getSource();
                 if (edge.isConnect(target)) {
                     List<Edge<T>> res = getCopyList(head, edge);
                     LOG.debug("Path found {}", res);
@@ -137,13 +173,17 @@ public class Crawler<T> {
                 }
                 head = getCopyList(entry.head, edge);
             }
-            Iterator<Edge<T>> iterator = entry.iterator;
+            if (head.size() >= maxSize){
+                LOG.trace("Is limit deep");
+                continue;
+            }
+            Iterator<Edge<T>> iterator = entry.iterator();
             //put only 2 entry for iterate
             while (iterator.hasNext()){
                 edge = iterator.next();
                 if (deep < source.getLevel() && !edge.getTarget().isSingle() || edge.isConnect(target)) {
                     LOG.trace("Add edge {} to queue", edge);
-                    queue.add(new CostTraversalEntry(head, edge, entry.cost));
+                    queue.add(costTravers(entry, head, edge));
                 }
             }
         }
@@ -151,17 +191,17 @@ public class Crawler<T> {
     }
 
     //last edge don't compare
-    private int ucs2(List<Edge<T>> head, Vertex<T> source, T target, int deep, int count) {
-        LOG.trace("UCS2 from {} to {}, deep {}, count {}", source, target, deep, count);
+    private int ucs2(CostTraversalEntry root, T target, int deep, int count) {
+        LOG.trace("UCS2 from {} to {}, deep {}, count {}", root.vertex, target, deep, count);
         int found = 0;
         PriorityQueue<CostTraversalEntry> queue = new PriorityQueue<>();
-        source.sortEdges();
-        queue.add(new CostTraversalEntry(head, source));
+        queue.add(root);
         while (!queue.isEmpty() && count > found){
             CostTraversalEntry entry = queue.peek();
-            head = entry.edge != null ? getCopyList(entry.head, entry.edge) : entry.head;
-            Iterator<Edge<T>> iterator = entry.iterator;
-            LOG.trace("Check path head {}, cost {}", head, entry.cost);
+            List<Edge<T>> head = entry.edge != null ? getCopyList(entry.head, entry.edge) : entry.head;
+            Vertex<T> source = entry.vertex;
+            Iterator<Edge<T>> iterator = entry.iterator();
+            LOG.trace("Check path head {}, weight {}", head, entry.weight);
             int i = 0;
             //put only 2 entry for iterate
             while (iterator.hasNext() && i < 2){
@@ -175,9 +215,9 @@ public class Crawler<T> {
                 }
                 if (found >= count) break;
                 if (edge.getTarget().isSingle()) continue;
-                if (deep < source.getLevel()) {
+                if (deep < source.getLevel() && head.size() < maxSize-1) {
                     edge.getTarget().sortEdges();
-                    queue.add(new CostTraversalEntry(head, edge, entry.cost));
+                    queue.add(costTravers(entry, head, edge));
                     i++;
                 }
             }
@@ -186,39 +226,59 @@ public class Crawler<T> {
         return found;
     }
 
-    private class TraversalEntry {
-        private final List<Edge<T>> head;
-        private final Vertex<T> vertex;
+    protected class TraversalEntry {
+        protected final List<Edge<T>> head;
+        protected final Vertex<T> vertex;
+        private Iterator<Edge<T>> iterator;
 
-        private TraversalEntry(List<Edge<T>> head, Vertex<T> vertex) {
+        protected TraversalEntry(List<Edge<T>> head, Vertex<T> vertex) {
             this.head = head;
             this.vertex = vertex;
         }
+
+        public Iterator<Edge<T>> iterator(){
+            if (iterator == null){
+                iterator = getIteratorInstance();
+            }
+            return iterator;
+        }
+
+        protected Iterator<Edge<T>> getIteratorInstance(){
+            return vertex.getEdges().iterator();
+        }
+
+        private Iterable<Edge<T>> getEdges(){
+            return this::iterator;
+        }
     }
 
-    private class CostTraversalEntry implements Comparable<CostTraversalEntry>{
-        private final List<Edge<T>> head;
+    protected class CostTraversalEntry extends TraversalEntry implements Comparable<CostTraversalEntry>{
         private final Edge<T> edge;
-        private final Iterator<Edge<T>> iterator;
         private final double cost;
+        private Double weight;
 
-        private CostTraversalEntry(List<Edge<T>> head, Vertex<T> vertex) {
-            this.head = head;
-            this.iterator = vertex.getEdges().iterator();
+        protected CostTraversalEntry(List<Edge<T>> head, Vertex<T> vertex) {
+            super(head, vertex);
             this.edge = null;
             this.cost = 0;
         }
 
-        private CostTraversalEntry(List<Edge<T>> head, Edge<T> edge, double cost) {
-            this.head = head;
+        protected CostTraversalEntry(List<Edge<T>> head, Edge<T> edge, double cost) {
+            super(head, edge.getTarget());
             this.edge = edge;
-            this.iterator = edge.getTarget().getEdges().iterator();
-            this.cost = cost + edge.getWeight();
+            this.cost = cost;
+        }
+
+        protected double getWeight(){
+            if (weight == null){
+                weight = cost + (edge !=null ? edge.getWeight() : 0);
+            }
+            return weight;
         }
 
         @Override
         public int compareTo(@NotNull CostTraversalEntry other) {
-            int cmp = Double.compare(cost, other.cost);
+            int cmp = Double.compare(getWeight(), other.getWeight());
             if (cmp != 0) return cmp;
             return Integer.compare(head.size(), other.head.size());
         }

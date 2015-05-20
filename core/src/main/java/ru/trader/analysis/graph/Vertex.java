@@ -22,7 +22,7 @@ public class Vertex<T> {
         return this.entry.equals(entry);
     }
 
-    void setLevel(int level) {
+    public void setLevel(int level) {
         this.level = level;
     }
 
