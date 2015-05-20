@@ -1,6 +1,8 @@
 package ru.trader.analysis;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
 
 import java.util.*;
@@ -8,16 +10,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Scorer {
+    private final static Logger LOG = LoggerFactory.getLogger(Scorer.class);
+
     private final Map<Item, Offer> sellOffers;
     private final Map<Item, Offer> buyOffers;
     private final FilteredMarket market;
     private final Profile profile;
 
     private final double avgProfit;
+    private final double maxScore;
     private final double avgDistance;
-
-    private int ordersCount = 5;
-    private double distanceRate = 1;
 
     public Scorer(FilteredMarket market, Profile profile) {
         this.market = market;
@@ -25,8 +27,14 @@ public class Scorer {
         sellOffers = new HashMap<>(100, 0.9f);
         buyOffers = new HashMap<>(100, 0.9f);
         market.getItems().parallelStream().forEach(this::fillOffers);
-        avgProfit = computeAvgProfit();
+        DoubleSummaryStatistics statProfit = computeProfit();
+        avgProfit = statProfit.getAverage()/profile.getShip().getCargo();
         avgDistance = computeAvgDistance();
+        maxScore = getScore(0, statProfit.getMax()*2, 0,0,0);
+    }
+
+    public Profile getProfile() {
+        return profile;
     }
 
     private void fillOffers(Item item){
@@ -40,12 +48,10 @@ public class Scorer {
         }
     }
 
-    private double computeAvgProfit(){
-        OptionalDouble avg = sellOffers.values().stream()
-                .flatMap(this::mapToOrder)
-                .mapToDouble(o -> o.getProfit() / profile.getShip().getCargo())
-                .average();
-        return avg.orElse(0);
+    private DoubleSummaryStatistics computeProfit(){
+        return sellOffers.values().stream()
+               .flatMap(this::mapToOrder)
+               .collect(Collectors.summarizingDouble(Order::getProfit));
     }
 
     private double computeAvgDistance(){
@@ -53,16 +59,33 @@ public class Scorer {
         return res.orElse(0);
     }
 
-    public void setOrdersCount(int ordersCount) {
-        this.ordersCount = ordersCount;
-    }
-
-    public void setDistanceRate(double distanceRate) {
-        this.distanceRate = distanceRate;
-    }
-
     public double getAvgProfit() {
         return avgProfit;
+    }
+
+    public double getMaxScore() {
+        return maxScore;
+    }
+
+    public double getFuel(double distance){
+        return profile.getShip().getFuelCost(distance);
+    }
+
+    public double getScore(Vendor vendor, double profit, int jumps, int lands, double fuel) {
+        return getScore(vendor.getDistance(), profit, jumps, lands, fuel);
+    }
+
+    public double getScore(double distance, double profit, int jumps, int lands, double fuel){
+        LOG.trace("Compute score distance={}, profit={}, jumps={}, lands={}, fuel={}", distance, profit, jumps, lands, fuel);
+        double score = profit/profile.getShip().getCargo();
+        if (avgDistance > 0) {
+            score -= profile.getDistanceMult() * getAvgProfit() * (distance - avgDistance) / avgDistance;
+        }
+        score -= profile.getLandMult() * lands * getAvgProfit();
+        score -= profile.getFuelPrice() * fuel;
+        score -= profile.getJumpMult() * jumps * getAvgProfit();
+        LOG.trace("score={}", score);
+        return score;
     }
 
     public Score getScore(Vendor vendor){
@@ -116,13 +139,13 @@ public class Scorer {
 
         private DoubleSummaryStatistics computeProfits(Stream<Order> orders) {
             return orders.sorted(Comparator.<Order>reverseOrder())
-                   .limit(ordersCount)
-                   .collect(Collectors.summarizingDouble(o -> o.getProfit() / profile.getShip().getCargo()));
+                   .limit(profile.getScoreOrdersCount())
+                   .collect(Collectors.summarizingDouble(Order::getProfit));
         }
 
         private void computeScore(){
             score = (getSellProfit() + getBuyProfit())/2;
-            score -= distanceRate * avgProfit * (vendor.getDistance() - avgDistance) / avgDistance;
+            score = Scorer.this.getScore(vendor, score, 0, 0, 0);
         }
 
         @Override

@@ -35,6 +35,10 @@ public class Ship {
         return engine;
     }
 
+    public void setEngine(int clazz, char rating) {
+        this.engine = new Engine(clazz, rating);
+    }
+
     public void setEngine(Engine engine) {
         this.engine = engine;
     }

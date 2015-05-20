@@ -41,5 +41,12 @@ public abstract class AbstractOffer implements Offer {
         }
     }
 
-
+    @Override
+    public String toString() {
+        return "{" + getVendor() +
+                ","+ getType() +
+                "," + getCount()+
+                "," + getItem() +
+                "," +getPrice()+"}";
+    }
 }
