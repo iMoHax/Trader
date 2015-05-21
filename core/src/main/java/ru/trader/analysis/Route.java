@@ -13,6 +13,8 @@ public class Route {
     private double profit = 0;
     private double balance = 0;
     private double distance = 0;
+    private double score = 0;
+    private double fuel = 0;
     private int lands = 0;
 
     public Route(RouteEntry root) {
@@ -20,14 +22,9 @@ public class Route {
         entries.add(root);
     }
 
-    public Route(List<VendorsGraph.VendorsEdge> edges) {
-        //TODO: move to RouteCrawler
-        entries = new ArrayList<>(edges.size()+1);
-        for (int i = 0; i < edges.size(); i++) {
-            VendorsGraph.VendorsEdge edge = edges.get(i);
-            if (i==0) entries.add(new RouteEntry(edge.getSource().getEntry(), false, 0));
-            entries.add(new RouteEntry(edge.getTarget().getEntry(), edge.isRefill(), edge.getFuel()));
-        }
+    public Route(List<RouteEntry> entries) {
+        this.entries = new ArrayList<>(entries);
+        updateStats();
     }
 
     public List<RouteEntry> getEntries() {
@@ -100,7 +97,7 @@ public class Route {
     }
 
     void updateStats(){
-        LOG.trace("Update stats, old: profit={}, distance={}, lands={}", profit, distance, lands);
+        LOG.trace("Update stats, old: profit={}, distance={}, lands={}, fuel={}, score={}", profit, distance, lands, fuel, score);
         profit = 0; distance = 0; lands = 0;
         if (entries.isEmpty()) return;
         RouteEntry entry = entries.get(0);
@@ -108,13 +105,26 @@ public class Route {
             RouteEntry next = entries.get(i);
             distance += entry.getVendor().getDistance(next.getVendor());
             profit += entry.getProfit();
+            score += entry.getScore();
+            fuel += entry.getFuel();
             if (entry.isLand()){
                 lands++;
             }
             entry = next;
         }
-        LOG.trace("new stats profit={}, distance={}, lands={}", profit, distance, lands);
+        LOG.trace("new stats profit={}, distance={}, lands={}, fuel={}, score={}", profit, distance, lands, fuel, score);
     }
 
-
+    @Override
+    public String toString() {
+        return "Route{" +
+                "entries=" + entries +
+                ", profit=" + profit +
+                ", balance=" + balance +
+                ", distance=" + distance +
+                ", score=" + score +
+                ", fuel=" + fuel +
+                ", lands=" + lands +
+                '}';
+    }
 }

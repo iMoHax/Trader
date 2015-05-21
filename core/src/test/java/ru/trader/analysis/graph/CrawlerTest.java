@@ -12,9 +12,7 @@ import ru.trader.core.Ship;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CrawlerTest extends Assert {
     private final static Logger LOG = LoggerFactory.getLogger(CrawlerTest.class);
@@ -89,7 +87,7 @@ public class CrawlerTest extends Assert {
         graph.build(x5, entrys);
         // x5 <-> x4, x5 <-> x6
 
-        SimpleCollector paths = new SimpleCollector();
+        SimpleCollector<Point> paths = new SimpleCollector<>();
         Crawler<Point> crawler = new CCrawler<>(graph, paths::add);
         crawler.findMin(x4, 10);
         assertPaths(paths.get(), PPath.of(x5, x4));
@@ -118,7 +116,7 @@ public class CrawlerTest extends Assert {
         graph.build(x5, entrys);
         //  x5 <-> x4 <-> x3 <-> x2, x5 <-> x6 <-> x7 <-> x8
         //  x5 <-> x3,  x4 <-> x2,  x3 <-> x6, x4 <-> x6
-        SimpleCollector paths = new SimpleCollector();
+        SimpleCollector<Point> paths = new SimpleCollector<>();
         Crawler<Point> crawler = new CCrawler<>(graph, paths::add);
 
         crawler.findMin(x8, 10);
@@ -140,7 +138,7 @@ public class CrawlerTest extends Assert {
                 PPath.of(x5, x4, x6, x4), PPath.of(x5, x6, x3, x4),
                 PPath.of(x5, x3, x5, x4), PPath.of(x5, x4, x2, x4),
                 PPath.of(x5, x3, x2, x4), PPath.of(x5, x3, x6, x4)
-                );
+        );
         TestUtil.assertCollectionEquals(paths.getWeights(), 5.0, 15.0, 15.0,
                 15.0, 15.0, 15.0,
                 25.0, 25.0,
@@ -182,7 +180,7 @@ public class CrawlerTest extends Assert {
         graph.build(x5, entrys);
         //  x5 <-> x4 <- refill -> x3 <- refill -> x2, x5 <-> x6
         //  x5 <-> x3 <- refill -> x2,  x5 <-> x4 <- refill -> x6
-        SimpleCollector paths = new SimpleCollector();
+        SimpleCollector<Point> paths = new SimpleCollector<>();
         Crawler<Point> crawler = new CCrawler<>(graph, paths::add);
 
         crawler.findMin(x1, 10);
@@ -225,7 +223,7 @@ public class CrawlerTest extends Assert {
         // x5 <-> x6 <-> x4 <-refill -> x2
         // x5 <-> x3 <- refill -> x2
         // x5 <-> x4 <- refill -> x6
-        SimpleCollector paths = new SimpleCollector();
+        SimpleCollector<Point> paths = new SimpleCollector<>();
         Crawler<Point> crawler = new CCrawler<>(graph, paths::add);
 
         crawler.findMin(x1, 10);
@@ -266,35 +264,6 @@ public class CrawlerTest extends Assert {
     @After
     public void tearDown() throws Exception {
         entrys.clear();
-    }
-
-    private class SimpleCollector {
-        private List<List<Edge<Point>>> paths = new ArrayList<>();
-
-        public void add(List<Edge<Point>> path){
-            paths.add(path);
-        }
-
-        public List<List<Edge<Point>>> get() {
-            return paths;
-        }
-
-        public List<Edge<Point>> get(int index) {
-            if (index >= paths.size()) return Collections.emptyList();
-            return paths.get(index);
-        }
-        public void clear(){
-            paths.clear();
-        }
-
-        public double getWeight(int index){
-            if (index >= paths.size()) return 0;
-            return paths.get(index).stream().mapToDouble(Edge::getWeight).sum();
-        }
-
-        public Collection<Double> getWeights(){
-            return paths.stream().map(p -> p.stream().mapToDouble(Edge::getWeight).sum()).collect(Collectors.toList());
-        }
     }
 
 }

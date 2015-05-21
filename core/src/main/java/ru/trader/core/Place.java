@@ -17,6 +17,17 @@ public interface Place extends Connectable<Place> {
     void setPosition(double x, double y, double z);
 
     Collection<Vendor> get();
+    default Collection<Vendor> get(boolean withTransit){
+        if (withTransit){
+            Collection<Vendor> vendors = new ArrayList<>();
+            vendors.add(new TransitVendor(this));
+            vendors.addAll(get());
+            return vendors;
+        } else {
+            return get();
+        }
+    }
+
     default Vendor get(String name){
         Optional<Vendor> vendor = get().stream().filter(p -> name.equalsIgnoreCase(p.getName())).findFirst();
         return vendor.isPresent() ? vendor.get() : null;

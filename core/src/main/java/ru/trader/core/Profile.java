@@ -6,6 +6,7 @@ public class Profile {
     private int jumps;
     private Ship ship;
     private boolean refill;
+    private int routesCount;
     //Scorer multipliers
     private int scoreOrdersCount;
     private double distanceMult;
@@ -53,6 +54,14 @@ public class Profile {
 
     public void setRefill(boolean refill) {
         this.refill = refill;
+    }
+
+    public int getRoutesCount() {
+        return routesCount;
+    }
+
+    public void setRoutesCount(int routesCount) {
+        this.routesCount = routesCount;
     }
 
     public int getScoreOrdersCount() {

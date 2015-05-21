@@ -27,35 +27,13 @@ public class CCrawler<T extends Connectable<T>> extends Crawler<T> {
     }
 
     @Override
-    protected Crawler<T>.TraversalEntry start(Vertex<T> vertex) {
-        double fuel = getShip().getTank();
-        return new CTraversalEntry(new ArrayList<>(), vertex, fuel);
-    }
-
-    @Override
-    protected Crawler<T>.CostTraversalEntry costStart(Vertex<T> vertex) {
+    protected CostTraversalEntry start(Vertex<T> vertex) {
         double fuel = getShip().getTank();
         return new CCostTraversalEntry(new ArrayList<>(), vertex, fuel);
     }
 
     @Override
-    protected Crawler<T>.TraversalEntry travers(TraversalEntry entry, Edge<T> edge) {
-        T source = entry.vertex.getEntry();
-        double distance = source.getDistance(edge.target.getEntry());
-        double fuelCost = getShip().getFuelCost(((CTraversalEntry)entry).fuel, distance);
-        double nextLimit = getProfile().withRefill() ? ((CTraversalEntry)entry).fuel - fuelCost : getShip().getTank();
-        boolean refill = nextLimit < 0 && source.canRefill();
-        if (refill) {
-            LOG.trace("Refill");
-            refill = true;
-            nextLimit = getShip().getTank() - getShip().getFuelCost(distance);
-        }
-        edge = new ConnectibleEdge<>(edge.getSource(), edge.getTarget(), refill, fuelCost);
-        return new CTraversalEntry(getCopyList(entry.head, edge), edge.getTarget(), nextLimit);
-    }
-
-    @Override
-    protected Crawler<T>.CostTraversalEntry costTravers(Crawler<T>.CostTraversalEntry entry, List<Edge<T>> head, Edge<T> edge) {
+    protected CostTraversalEntry travers(CostTraversalEntry entry, List<Edge<T>> head, Edge<T> edge, T target) {
         T source = entry.vertex.getEntry();
         double distance = source.getDistance(edge.target.getEntry());
         double fuelCost = getShip().getFuelCost(((CCostTraversalEntry)entry).fuel, distance);
@@ -71,23 +49,6 @@ public class CCrawler<T extends Connectable<T>> extends Crawler<T> {
         return new CCostTraversalEntry(head, edge, entry.getWeight(), nextLimit);
     }
 
-    protected class CTraversalEntry extends TraversalEntry {
-        private final double fuel;
-
-        protected CTraversalEntry(List<Edge<T>> head, Vertex<T> vertex, double fuel) {
-            super(head, vertex);
-            this.fuel = fuel;
-        }
-
-        @Override
-        protected Iterator<Edge<T>> getIteratorInstance() {
-            return vertex.getEdges().stream().filter(e -> {
-                ConnectibleEdge<T> edge = (ConnectibleEdge<T>) e;
-                return edge.getFuel() <= fuel || e.getSource().getEntry().canRefill();
-            }).iterator();
-        }
-    }
-
     protected class CCostTraversalEntry extends CostTraversalEntry {
         private final double fuel;
 
@@ -99,6 +60,10 @@ public class CCrawler<T extends Connectable<T>> extends Crawler<T> {
         protected CCostTraversalEntry(List<Edge<T>> head, Edge<T> edge, double cost, double fuel) {
             super(head, edge, cost);
             this.fuel = fuel;
+        }
+
+        public double getFuel() {
+            return fuel;
         }
 
         @Override

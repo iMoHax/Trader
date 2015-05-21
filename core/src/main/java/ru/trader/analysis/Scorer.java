@@ -28,7 +28,7 @@ public class Scorer {
         buyOffers = new HashMap<>(100, 0.9f);
         market.getItems().parallelStream().forEach(this::fillOffers);
         DoubleSummaryStatistics statProfit = computeProfit();
-        avgProfit = statProfit.getAverage()/profile.getShip().getCargo();
+        avgProfit = statProfit.getAverage();
         avgDistance = computeAvgDistance();
         maxScore = getScore(0, statProfit.getMax()*2, 0,0,0);
     }
@@ -77,8 +77,8 @@ public class Scorer {
 
     public double getScore(double distance, double profit, int jumps, int lands, double fuel){
         LOG.trace("Compute score distance={}, profit={}, jumps={}, lands={}, fuel={}", distance, profit, jumps, lands, fuel);
-        double score = profit/profile.getShip().getCargo();
-        if (avgDistance > 0) {
+        double score = profit;
+        if (avgDistance > 0 && profit > 0) {
             score -= profile.getDistanceMult() * getAvgProfit() * (distance - avgDistance) / avgDistance;
         }
         score -= profile.getLandMult() * lands * getAvgProfit();

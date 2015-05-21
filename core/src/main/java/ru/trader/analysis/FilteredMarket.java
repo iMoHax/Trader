@@ -25,6 +25,15 @@ public class FilteredMarket {
                 .filter(v -> !filter.isFiltered(v));
     }
 
+    public Stream<Vendor> getMarkets(boolean withTransit){
+        return get().flatMap(p -> p.get(true).stream())
+                .filter(v -> {
+                    if (withTransit && v instanceof TransitVendor) return true;
+                    if (!v.has(SERVICE_TYPE.MARKET) && !v.has(SERVICE_TYPE.BLACK_MARKET)) return false;
+                    return !filter.isFiltered(v);
+                });
+    }
+
     public Collection<Item> getItems(){
         return market.getItems();
     }

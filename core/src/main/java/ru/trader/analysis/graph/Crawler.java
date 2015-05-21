@@ -5,12 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.ForkJoinPool;
 import java.util.function.Consumer;
 
 public class Crawler<T> {
-    private final static ForkJoinPool POOL = new ForkJoinPool();
-    private final static int THRESHOLD = 4;
     private final static Logger LOG = LoggerFactory.getLogger(Crawler.class);
 
     protected final Graph<T> graph;
@@ -61,32 +58,20 @@ public class Crawler<T> {
         Vertex<T> t = graph.getVertex(target);
         int found = 0;
         if (t != null) {
-            found = ucs(costStart(graph.getRoot()), target, 0, count);
+            found = ucs(start(graph.getRoot()), target, 0, count);
         }
         LOG.debug("Found {} paths", found);
     }
 
-    protected TraversalEntry start(Vertex<T> vertex){
-        return new TraversalEntry(new ArrayList<>(), vertex);
-    }
-
-    protected CostTraversalEntry costStart(Vertex<T> vertex){
+    protected CostTraversalEntry start(Vertex<T> vertex){
         return new CostTraversalEntry(new ArrayList<>(), vertex);
     }
 
-    protected TraversalEntry travers(TraversalEntry entry, Edge<T> edge){
-        return new TraversalEntry(getCopyList(entry.head, edge), edge.getTarget());
-    }
-
-    private CostTraversalEntry costTravers(CostTraversalEntry entry, Edge<T> edge){
-        return costTravers(entry, getCopyList(entry.head, edge), edge);
-    }
-
-    protected CostTraversalEntry costTravers(CostTraversalEntry entry, List<Edge<T>> head, Edge<T> edge){
+    protected CostTraversalEntry travers(CostTraversalEntry entry, List<Edge<T>> head, Edge<T> edge, T target){
         return new CostTraversalEntry(head, edge, entry.getWeight());
     }
 
-    private int dfs(TraversalEntry entry, T target, int deep, int count) {
+    private int dfs(CostTraversalEntry entry, T target, int deep, int count) {
         int found = 0;
         List<Edge<T>> head = entry.head;
         Vertex<T> source = entry.vertex;
@@ -107,7 +92,7 @@ public class Crawler<T> {
                 LOG.trace("Search around");
                 for (Edge<T> edge : entry.getEdges()) {
                     if (edge.getTarget().isSingle()) continue;
-                    found += dfs(travers(entry, edge), target, deep, count-found);
+                    found += dfs(travers(entry, getCopyList(head, edge), edge, target), target, deep, count-found);
                     if (found >= count) break;
                 }
             }
@@ -115,13 +100,13 @@ public class Crawler<T> {
         return found;
     }
 
-    private int bfs(TraversalEntry root, T target, int deep, int count) {
+    private int bfs(CostTraversalEntry root, T target, int deep, int count) {
         LOG.trace("BFS from {} to {}, deep {}, count {}", root.vertex, target, deep, count);
         int found = 0;
-        LinkedList<TraversalEntry> queue = new LinkedList<>();
+        LinkedList<CostTraversalEntry> queue = new LinkedList<>();
         queue.add(root);
         while (!queue.isEmpty() && count > found){
-            TraversalEntry entry = queue.poll();
+            CostTraversalEntry entry = queue.poll();
             List<Edge<T>> head = entry.head;
             Vertex<T> source = entry.vertex;
             if (head.size() >= maxSize){
@@ -142,7 +127,7 @@ public class Crawler<T> {
                 if (edge.getTarget().isSingle()) continue;
                 if (deep < source.getLevel()) {
                     edge.getTarget().sortEdges();
-                    queue.add(travers(entry, edge));
+                    queue.add(travers(entry, getCopyList(head, edge), edge, target));
                 }
             }
         }
@@ -183,7 +168,7 @@ public class Crawler<T> {
                 edge = iterator.next();
                 if (deep < source.getLevel() && !edge.getTarget().isSingle() || edge.isConnect(target)) {
                     LOG.trace("Add edge {} to queue", edge);
-                    queue.add(costTravers(entry, head, edge));
+                    queue.add(travers(entry, head, edge, target));
                 }
             }
         }
@@ -217,7 +202,7 @@ public class Crawler<T> {
                 if (edge.getTarget().isSingle()) continue;
                 if (deep < source.getLevel() && head.size() < maxSize-1) {
                     edge.getTarget().sortEdges();
-                    queue.add(costTravers(entry, head, edge));
+                    queue.add(travers(entry, head, edge, target));
                     i++;
                 }
             }
@@ -236,6 +221,14 @@ public class Crawler<T> {
             this.vertex = vertex;
         }
 
+        public List<Edge<T>> getHead() {
+            return head;
+        }
+
+        public Vertex<T> getVertex() {
+            return vertex;
+        }
+
         public Iterator<Edge<T>> iterator(){
             if (iterator == null){
                 iterator = getIteratorInstance();
@@ -247,7 +240,7 @@ public class Crawler<T> {
             return vertex.getEdges().iterator();
         }
 
-        private Iterable<Edge<T>> getEdges(){
+        protected Iterable<Edge<T>> getEdges(){
             return this::iterator;
         }
     }
@@ -269,11 +262,15 @@ public class Crawler<T> {
             this.cost = cost;
         }
 
-        protected double getWeight(){
+        public double getWeight(){
             if (weight == null){
                 weight = cost + (edge !=null ? edge.getWeight() : 0);
             }
             return weight;
+        }
+
+        public Edge<T> getEdge() {
+            return edge;
         }
 
         @Override
@@ -283,69 +280,4 @@ public class Crawler<T> {
             return Integer.compare(head.size(), other.head.size());
         }
     }
-/*
-    private class PathFinder extends RecursiveAction {
-        private final TopList<Path<T>> paths;
-        private final Path<T> head;
-        private final Vertex<T> target;
-
-        private PathFinder(TopList<Path<T>> paths, Path<T> head, Vertex<T> target) {
-            this.paths = paths;
-            this.head = head;
-            this.target = target;
-        }
-
-        @Override
-        protected void compute() {
-            if (target == null || isCancelled()) return;
-            Vertex<T> source = head.getTarget();
-            LOG.trace("Find path to deep from {} to {}, head {}", source, target, head);
-            Edge<T> edge = source.getEdge(target);
-            if (edge != null){
-                Path<T> path = head.connectTo(edge.getTarget(), limit < edge.getLength());
-                path.finish();
-                LOG.trace("Last edge find, add path {}", path);
-                synchronized (paths){
-                    if (!paths.add(path)) complete(null);
-                }
-                callback.onFound();
-            }
-            if (!source.isSingle()){
-                LOG.trace("Search around");
-                ArrayList<PathFinder> subTasks = new ArrayList<>(source.getEdges().size());
-                Iterator<Edge<T>> iterator = source.getEdges().iterator();
-                while (iterator.hasNext()) {
-                    Edge<T> next = iterator.next();
-                    if (isDone() || callback.isCancel()) break;
-                    // target already added if source consist edge
-                    if (next.isConnect(target)) continue;
-                    Path<T> path = head.connectTo(next.getTarget(), limit < next.getLength());
-                    //Recursive search
-                    PathFinder task = new PathFinder(paths, path, target);
-                    task.fork();
-                    subTasks.add(task);
-                    if (subTasks.size() == THRESHOLD || !iterator.hasNext()){
-                        for (PathFinder subTask : subTasks) {
-                            if (isDone() || callback.isCancel()) {
-                                subTask.cancel(callback.isCancel());
-                            } else {
-                                subTask.join();
-                            }
-                        }
-                        subTasks.clear();
-                    }
-                }
-                if (!subTasks.isEmpty()){
-                    for (PathFinder subTask : subTasks) {
-                        if (isDone() || callback.isCancel()) {
-                            subTask.cancel(callback.isCancel());
-                        } else {
-                            subTask.join();
-                        }
-                    }
-                    subTasks.clear();
-                }
-            }
-        }
-    }*/
 }

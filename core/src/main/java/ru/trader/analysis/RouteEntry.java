@@ -10,16 +10,18 @@ import java.util.List;
 public class RouteEntry {
     private final Vendor vendor;
     private final double fuel;
+    private final double score;
     private final List<Order> orders;
     private boolean land;
     private boolean refill;
 
 
-    public RouteEntry(Vendor vendor, boolean refill, double fuel) {
+    public RouteEntry(Vendor vendor, boolean refill, double fuel, double score) {
         orders = new ArrayList<>();
         this.vendor = vendor;
         this.refill = refill;
         this.fuel = fuel;
+        this.score = score;
     }
 
     public Vendor getVendor() {
@@ -40,6 +42,10 @@ public class RouteEntry {
 
     public double getFuel() {
         return fuel;
+    }
+
+    public double getScore() {
+        return score;
     }
 
     public void add(Order order){
@@ -74,4 +80,8 @@ public class RouteEntry {
         return !isLand();
     }
 
+    @Override
+    public String toString() {
+        return vendor + (isRefill() ? " (R)":"");
+    }
 }

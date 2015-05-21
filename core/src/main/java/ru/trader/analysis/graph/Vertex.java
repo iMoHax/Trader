@@ -33,7 +33,9 @@ public class Vertex<T> {
     public void connect(Edge<T> edge){
         assert this == edge.getSource();
         synchronized (edges){
-            edges.add(edge);
+            if (!edges.contains(edge)){
+                edges.add(edge);
+            }
         }
     }
 
