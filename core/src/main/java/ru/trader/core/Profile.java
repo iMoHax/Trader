@@ -18,10 +18,10 @@ public class Profile {
         this.ship = ship;
         refill = true;
         scoreOrdersCount = 5;
-        distanceMult = 1;
-        landMult = 1;
-        fuelPrice = 1;
-        jumpMult = 0.01;
+        distanceMult = 0.08;
+        landMult = 0.95;
+        fuelPrice = 100;
+        jumpMult = 0.008;
     }
 
     public double getBalance() {

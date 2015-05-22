@@ -42,7 +42,7 @@ public class Crawler<T> {
             if (count > 1) {
                 Vertex<T> s = graph.getRoot();
                 s.sortEdges();
-                found = bfs(start(s), target, 0, count);
+                found = bfs(start(s), target, graph.getMinLevel(), count);
             } else {
                 found = dfs(start(graph.getRoot()), target, t.getLevel() + 1, count);
             }
@@ -58,7 +58,7 @@ public class Crawler<T> {
         Vertex<T> t = graph.getVertex(target);
         int found = 0;
         if (t != null) {
-            found = ucs(start(graph.getRoot()), target, 0, count);
+            found = ucs(start(graph.getRoot()), target, graph.getMinLevel(), count);
         }
         LOG.debug("Found {} paths", found);
     }
@@ -153,7 +153,7 @@ public class Crawler<T> {
                     found++;
                     if (found >= count) break;
                 }
-                if (edge.getTarget().isSingle() || deep >= source.getLevel()){
+                if (edge.getTarget().isSingle()){
                     continue;
                 }
                 head = getCopyList(entry.head, edge);
@@ -166,7 +166,7 @@ public class Crawler<T> {
             //put only 2 entry for iterate
             while (iterator.hasNext()){
                 edge = iterator.next();
-                if (deep < source.getLevel() && !edge.getTarget().isSingle() || edge.isConnect(target)) {
+                if (deep <= source.getLevel() && !edge.getTarget().isSingle() || edge.isConnect(target)) {
                     LOG.trace("Add edge {} to queue", edge);
                     queue.add(travers(entry, head, edge, target));
                 }

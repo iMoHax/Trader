@@ -42,9 +42,13 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         }
 
         @Override
-        protected double onConnect(Vendor entry) {
-            double nextlimit = super.onConnect(entry);
-            if (entry instanceof TransitVendor && vertex.getEntry().getPlace().equals(entry.getPlace())) nextlimit = -1;
+        protected double onConnect(Vendor buyer) {
+            double nextlimit = super.onConnect(buyer);
+            Vendor seller = vertex.getEntry();
+            if (nextlimit > 0){
+                if (buyer instanceof TransitVendor && seller.getPlace().equals(buyer.getPlace())) nextlimit = -1;
+                if (seller instanceof TransitVendor && seller.getPlace().equals(buyer.getPlace())) nextlimit = -1;
+            }
             return nextlimit;
         }
 
@@ -83,9 +87,15 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         @Override
         protected double computeWeight() {
             int jumps = source.getEntry().getPlace().equals(target.getEntry().getPlace())? 0 : 1;
-            int lands = refill && orders.isEmpty() || isTarget ? 1 : 0;
-            double score = scorer.getScore(target.getEntry(), getProfit(), jumps, lands, fuel);
-            return scorer.getMaxScore() - score;
+            int lands = refill || !orders.isEmpty() || isTarget ? 1 : 0;
+            boolean transit = lands == 0 && source.getEntry() instanceof TransitVendor || target.getEntry() instanceof TransitVendor;
+            double profit = getProfit();
+            double score = transit ? scorer.getTransitScore(fuel) :
+                           scorer.getScore(target.getEntry(), profit, jumps, lands, fuel);
+            score = scorer.getMaxScore() - score;
+            if (score < 0)
+                score = 0;
+            return score;
         }
     }
 
@@ -101,7 +111,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         }
 
         @Override
-        protected CostTraversalEntry travers(CostTraversalEntry entry, List<Edge<Vendor>> head, Edge<Vendor> edge, Vendor target) {
+        protected CostTraversalEntry travers(final CostTraversalEntry entry, final List<Edge<Vendor>> head, final Edge<Vendor> edge, final Vendor target) {
             VendorsTraversalEntry ve = (VendorsTraversalEntry)entry;
             double balance = ve.balance;
             Vendor buyer = edge.getTarget().getEntry();
@@ -123,7 +133,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             ConnectibleEdge<Vendor> cedge = (ConnectibleEdge<Vendor>) ce.getEdge();
             VendorsEdge addingEdge = new VendorsEdge(cedge.getSource(), cedge.getTarget(), cedge.isRefill(), cedge.getFuel(), target.equals(buyer));
             addingEdge.setOrders(orders);
-            return new VendorsTraversalEntry(ce, head, addingEdge, balance+addingEdge.getProfit());
+            return new VendorsTraversalEntry(head, addingEdge, entry.getWeight(), ce.getFuel(), balance+addingEdge.getProfit());
         }
 
         protected class VendorsTraversalEntry extends CCostTraversalEntry {
@@ -134,8 +144,8 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
                 this.balance = balance;
             }
 
-            protected VendorsTraversalEntry(CCostTraversalEntry entry, List<Edge<Vendor>> head, Edge<Vendor> edge, double balance) {
-                super(head, edge, entry.getWeight(), entry.getFuel());
+            protected VendorsTraversalEntry(List<Edge<Vendor>> head, Edge<Vendor> edge, double cost, double fuel, double balance) {
+                super(head, edge, cost, fuel);
                 this.balance = balance;
             }
 

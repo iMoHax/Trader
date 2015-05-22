@@ -8,4 +8,6 @@ public interface Graph<T> {
     Vertex<T> getRoot();
 
     int getMinJumps();
+
+    int getMinLevel();
 }

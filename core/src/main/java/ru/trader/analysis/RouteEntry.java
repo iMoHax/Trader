@@ -10,11 +10,10 @@ import java.util.List;
 public class RouteEntry {
     private final Vendor vendor;
     private final double fuel;
-    private final double score;
     private final List<Order> orders;
     private boolean land;
     private boolean refill;
-
+    private double score;
 
     public RouteEntry(Vendor vendor, boolean refill, double fuel, double score) {
         orders = new ArrayList<>();
@@ -46,6 +45,10 @@ public class RouteEntry {
 
     public double getScore() {
         return score;
+    }
+
+    void setScore(double score) {
+        this.score = score;
     }
 
     public void add(Order order){

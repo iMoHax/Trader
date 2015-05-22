@@ -178,6 +178,8 @@ public class RouteFiller {
                 if (best != TRANSIT)
                     entry.addAll(best.bestOrders);
             }
+            int jumps = i==0 || entries.get(i-1).getVendor().getPlace().equals(entry.getVendor().getPlace())? 0 : 1;
+            entry.setScore(i==0 ? 0 : scorer.getScore(entry, jumps));
         }
     }
 

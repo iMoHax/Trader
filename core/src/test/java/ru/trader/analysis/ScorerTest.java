@@ -108,6 +108,87 @@ public class ScorerTest extends Assert {
 
     }
 
+    @Test
+    public void testScore2() throws Exception {
+        Ship ship = new Ship();
+        ship.setCargo(100);
+        Profile profile = new Profile(ship);
+        LOG.info("Start score test, balance 10000000");
+        profile.setBalance(1000000);
+        Scorer scorer = new Scorer(fWorld, profile);
+
+        double transitScore = scorer.getTransitScore(4);
+        double transitScore2 = scorer.getTransitScore(6);
+        double transitScore3 = scorer.getTransitScore(2);
+
+        assertTrue(transitScore > transitScore2);
+        assertTrue(transitScore3 > transitScore);
+
+        double score = scorer.getScore(scorer.getAvgDistance(), 0, 1, 1, 4);
+        double score1 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()/2, 1, 1, 4);
+        double score2 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()*10, 1, 1, 4);
+        double score3 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 1, 1, 4);
+
+        assertTrue(score < score1);
+        assertTrue(score1 < score3);
+        assertTrue(score3 < score2);
+        assertTrue(score3 < score2);
+
+        assertTrue(Math.abs(score2/score1) >= 20);
+        assertTrue(Math.abs(score3/score1) >= 2);
+        assertTrue(Math.abs(score2/score3) >= 10);
+
+
+        score1 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 0, 1, 4);
+        score2 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 1, 1, 4);
+        score3 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 2, 1, 4);
+        assertTrue(score1 > score2);
+        assertTrue(score2 > score3);
+
+        score1 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 1, 0, 4);
+        score2 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 1, 1, 4);
+        score3 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 1, 2, 4);
+        assertTrue(score1 > score2);
+        assertTrue(score2 > score3);
+
+        score1 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 1, 1, 3);
+        score2 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 1, 1, 4);
+        score3 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 1, 1, 5);
+        assertTrue(score1 > score2);
+        assertTrue(score2 > score3);
+
+        score = scorer.getScore(0, scorer.getAvgProfit(), 1, 1, 4);
+        score1 = scorer.getScore(scorer.getAvgDistance()/2, scorer.getAvgProfit(), 1, 1, 4);
+        score2 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 1, 1, 4);
+        score3 = scorer.getScore(scorer.getAvgDistance()*2, scorer.getAvgProfit(), 1, 1, 4);
+        assertTrue(score > score1);
+        assertTrue(score1 > score2);
+        assertTrue(score2 > score3);
+
+        score1 = scorer.getScore(scorer.getAvgDistance()/2, scorer.getAvgProfit(), 1, 1, 4);
+        score2 = scorer.getScore(scorer.getAvgDistance()*2, scorer.getAvgProfit()*2, 1, 1, 4);
+        score3 = scorer.getScore(scorer.getAvgDistance()*2, scorer.getAvgProfit()*4, 1, 1, 4);
+        assertTrue(score1 > score2);
+        assertTrue(score3 > score1);
+
+        score1 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()/2, 0, 1, 4);
+        score2 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()*2, 1, 1, 4);
+        score3 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()*4, 0, 1, 4);
+        assertTrue(score2 > score1);
+        assertTrue(score3 > score2);
+
+        transitScore = scorer.getTransitScore(4);
+        score = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 1, 1, 4);
+        score1 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()/2, 1, 1, 4);
+        score2 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()*10, 1, 1, 4);
+        score3 = scorer.getScore(scorer.getAvgDistance(), 0, 1, 1, 4);
+        assertTrue(transitScore > score);
+        assertTrue(transitScore > score1);
+        assertTrue(transitScore < score2);
+        assertTrue(transitScore > score3);
+
+    }
+
     @After
     public void tearDown() throws Exception {
         world = null;

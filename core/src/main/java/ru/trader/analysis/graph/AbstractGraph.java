@@ -82,6 +82,11 @@ public abstract class AbstractGraph<T> implements Graph<T> {
         return minJumps;
     }
 
+    @Override
+    public int getMinLevel() {
+        return root.getLevel() - minJumps;
+    }
+
     protected abstract class GraphBuilder extends RecursiveAction {
         protected final Vertex<T> vertex;
         protected final Collection<T> set;

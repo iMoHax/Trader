@@ -63,18 +63,10 @@ public class RouteSearcher {
         private Route toRoute(List<Edge<Vendor>> edges){
             List<RouteEntry> entries = new ArrayList<>(edges.size()+1);
             Vendor buyer = null;
+            VendorsGraph.VendorsEdge edge = null;
             for (int i = 0; i < edges.size(); i++) {
-                VendorsGraph.VendorsEdge edge = (VendorsGraph.VendorsEdge) edges.get(i);
-                if (i==0){
-                    RouteEntry entry = new RouteEntry(edge.getSource().getEntry(), false, 0, 0);
-                    List<Order> orders = edge.getOrders();
-                    if (!orders.isEmpty()){
-                        buyer = orders.get(0).getBuyer();
-                    }
-                    entry.addAll(orders);
-                    entries.add(entry);
-                }
-                Vendor vendor = edge.getTarget().getEntry();
+                edge = (VendorsGraph.VendorsEdge) edges.get(i);
+                Vendor vendor = edge.getSource().getEntry();
                 RouteEntry entry = new RouteEntry(vendor, edge.isRefill(), edge.getFuel(), edge.getWeight());
                 if (buyer != null && vendor.equals(buyer)){
                     entry.setLand(true);
@@ -84,7 +76,7 @@ public class RouteSearcher {
                     buyer = orders.get(0).getBuyer();
                     if (vendor instanceof TransitVendor){
                         Vendor seller = orders.get(0).getSell().getVendor();
-                        for (int j = i-1; j <= 0; j--) {
+                        for (int j = i-1; j >= 0; j--) {
                             RouteEntry sEntry = entries.get(j);
                             if (sEntry.is(seller)){
                                 sEntry.addAll(orders);
@@ -95,6 +87,11 @@ public class RouteSearcher {
                         entry.addAll(orders);
                     }
                 }
+                entries.add(entry);
+            }
+            if (edge != null) {
+                RouteEntry entry = new RouteEntry(edge.getTarget().getEntry(), false, 0, 0);
+                if (buyer != null) entry.setLand(true);
                 entries.add(entry);
             }
             return new Route(entries);

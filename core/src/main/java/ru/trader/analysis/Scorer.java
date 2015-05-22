@@ -18,6 +18,8 @@ public class Scorer {
     private final Profile profile;
 
     private final double avgProfit;
+    private final double minProfit;
+    private final double maxProfit;
     private final double maxScore;
     private final double avgDistance;
 
@@ -28,9 +30,12 @@ public class Scorer {
         buyOffers = new HashMap<>(100, 0.9f);
         market.getItems().parallelStream().forEach(this::fillOffers);
         DoubleSummaryStatistics statProfit = computeProfit();
-        avgProfit = statProfit.getAverage();
+        minProfit = statProfit.getMin() / profile.getShip().getCargo();
+        avgProfit = statProfit.getAverage() / profile.getShip().getCargo();
+        maxProfit = statProfit.getMax() / profile.getShip().getCargo();
+
         avgDistance = computeAvgDistance();
-        maxScore = getScore(0, statProfit.getMax()*2, 0,0,0);
+        maxScore = getScore(1, statProfit.getMax(), 0, 1, 0);
     }
 
     public Profile getProfile() {
@@ -60,30 +65,64 @@ public class Scorer {
     }
 
     public double getAvgProfit() {
-        return avgProfit;
+        return avgProfit * profile.getShip().getCargo();
     }
 
     public double getMaxScore() {
         return maxScore;
     }
 
+    public double getAvgDistance() {
+        return avgDistance;
+    }
+
     public double getFuel(double distance){
         return profile.getShip().getFuelCost(distance);
+    }
+
+    public double getScore(RouteEntry entry, int jumps) {
+        int lands = entry.isLand() ? 1 : 0;
+        return getScore(entry.getVendor(), entry.getProfit(), jumps, lands, entry.getFuel());
     }
 
     public double getScore(Vendor vendor, double profit, int jumps, int lands, double fuel) {
         return getScore(vendor.getDistance(), profit, jumps, lands, fuel);
     }
 
+    public double getTransitScore(double fuel){
+        LOG.trace("Compute transit score fuel={}", fuel);
+        double profit = maxProfit;
+        profit -= profile.getFuelPrice() * fuel / profile.getShip().getCargo();
+        double score = 1;
+        score -= profile.getLandMult();
+        score -= profile.getJumpMult();
+        score = score * profit;
+        if (avgDistance > 0) {
+            score -= - avgProfit * profile.getDistanceMult();
+        }
+        LOG.trace("score={}", score);
+        return score;
+    }
+
     public double getScore(double distance, double profit, int jumps, int lands, double fuel){
         LOG.trace("Compute score distance={}, profit={}, jumps={}, lands={}, fuel={}", distance, profit, jumps, lands, fuel);
-        double score = profit;
-        if (avgDistance > 0 && profit > 0) {
-            score -= profile.getDistanceMult() * getAvgProfit() * (distance - avgDistance) / avgDistance;
+        profit -= profile.getFuelPrice() * fuel;
+        profit = profit / profile.getShip().getCargo();
+        double score = 1;
+        if (profit > 0) {
+            score -= profile.getJumpMult() * (jumps - 1);
+            score -= profile.getLandMult() * lands;
+            if (score == 0) {
+                score = profit;
+            } else {
+                score = score * profit;
+            }
+            if (avgDistance > 0) {
+                score -= avgProfit * profile.getDistanceMult() * (distance - avgDistance) / avgDistance;
+            }
+        } else {
+            score = profit;
         }
-        score -= profile.getLandMult() * lands * getAvgProfit();
-        score -= profile.getFuelPrice() * fuel;
-        score -= profile.getJumpMult() * jumps * getAvgProfit();
         LOG.trace("score={}", score);
         return score;
     }

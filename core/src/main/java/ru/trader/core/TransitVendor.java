@@ -94,6 +94,11 @@ public class TransitVendor implements Vendor {
     }
 
     @Override
+    public boolean canRefill() {
+        return false;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof TransitVendor)) return false;
@@ -108,6 +113,6 @@ public class TransitVendor implements Vendor {
 
     @Override
     public String toString() {
-        return "Transit - "+place;
+        return "Transit "+place;
     }
 }
