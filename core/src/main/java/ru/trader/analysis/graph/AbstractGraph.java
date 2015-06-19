@@ -4,11 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.analysis.AnalysisCallBack;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 
@@ -19,7 +16,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     private final static Logger LOG = LoggerFactory.getLogger(AbstractGraph.class);
 
     protected Vertex<T> root;
-    protected final Map<T, Vertex<T>> vertexes;
+    protected final List<Vertex<T>> vertexes;
     private final GraphCallBack callback;
 
     protected int minJumps;
@@ -30,7 +27,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
 
     protected AbstractGraph(AnalysisCallBack callback) {
         this.callback = new GraphCallBack(callback);
-        vertexes = new ConcurrentHashMap<>(50, 0.9f, THRESHOLD);
+        vertexes = new CopyOnWriteArrayList<>();
     }
 
     protected abstract GraphBuilder createGraphBuilder(Vertex<T> vertex, Collection<T> set, int deep, double limit);
@@ -43,7 +40,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
             minJumps = maxDeep;
         } else {
             minJumps = 1;
-            for (Vertex<T> vertex : vertexes.values()) {
+            for (Vertex<T> vertex : vertexes) {
                 int jumps = maxDeep - vertex.getLevel();
                 if (jumps > minJumps) minJumps = jumps;
             }
@@ -52,24 +49,29 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     }
 
     private Vertex<T> getInstance(T entry, int deep){
-        Vertex<T> vertex = vertexes.get(entry);
+        Vertex<T> vertex = getVertex(entry).orElse(null);
         if (vertex == null) {
-            LOG.trace("Is new vertex");
-            vertex = new Vertex<>(entry);
-            vertex.setLevel(deep);
-            vertexes.put(entry, vertex);
+            synchronized (vertexes){
+                vertex = getVertex(entry).orElse(null);
+                if (vertex == null){
+                    LOG.trace("Is new vertex");
+                    vertex = new Vertex<>(entry, vertexes.size());
+                    vertex.setLevel(deep);
+                    vertexes.add(vertex);
+                }
+            }
         }
         return vertex;
     }
 
     @Override
     public boolean isAccessible(T entry){
-        return vertexes.containsKey(entry);
+        return getVertex(entry).isPresent();
     }
 
     @Override
-    public Vertex<T> getVertex(T entry){
-        return vertexes.get(entry);
+    public Optional<Vertex<T>> getVertex(T entry){
+        return vertexes.stream().filter(v -> v.isEntry(entry)).findFirst();
     }
 
     @Override
@@ -85,6 +87,11 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     @Override
     public int getMinLevel() {
         return root.getLevel() - minJumps;
+    }
+
+    @Override
+    public int getSize() {
+        return vertexes.size();
     }
 
     protected abstract class GraphBuilder extends RecursiveAction {

@@ -10,6 +10,7 @@ import ru.trader.core.Profile;
 import ru.trader.core.Ship;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class GraphTest extends Assert {
     private final static Logger LOG = LoggerFactory.getLogger(GraphTest.class);
@@ -89,7 +90,7 @@ public class GraphTest extends Assert {
         assertFalse(graph.isAccessible(x9));
         assertFalse(graph.isAccessible(x10));
 
-        Vertex<Point> x = graph.getVertex(x5);
+        Optional<Vertex<Point>> x = graph.getVertex(x5);
         // x5 -> x4, x5 -> x6
         checkEdges(x, new Point[]{x4, x6}, new Point[]{x1, x2, x3, x7, x8, x9, x10});
         // x4 -> x5
@@ -101,7 +102,8 @@ public class GraphTest extends Assert {
 
     }
 
-    private void checkEdges(Vertex<Point> vertex, Point[] trueEdge, Point[] falseEdge){
+    private void checkEdges(Optional<Vertex<Point>> v, Point[] trueEdge, Point[] falseEdge){
+        Vertex<Point> vertex = v.get();
         for (Point point : trueEdge) {
             assertTrue(String.format("%s must have edge to %s", vertex, point), vertex.isConnected(point));
         }
@@ -133,7 +135,7 @@ public class GraphTest extends Assert {
         assertFalse(graph.isAccessible(x9));
         assertFalse(graph.isAccessible(x10));
 
-        Vertex<Point> x = graph.getVertex(x5);
+        Optional<Vertex<Point>> x = graph.getVertex(x5);
         // x5 -> x4, x5 -> x6
         checkEdges(x, new Point[]{x4, x6}, new Point[]{x1, x2, x3, x7, x8, x9, x10});
         // x3 -> x4
@@ -171,7 +173,7 @@ public class GraphTest extends Assert {
         assertFalse(graph.isAccessible(x9));
         assertFalse(graph.isAccessible(x10));
 
-        Vertex<Point> x = graph.getVertex(x5);
+        Optional<Vertex<Point>> x = graph.getVertex(x5);
         // x5 -> x4, x5 -> x3, x5 -> x6
         checkEdges(x, new Point[]{x3, x4, x6}, new Point[]{x1, x2, x7, x8, x9, x10});
         // x2 -> x3, x2 -> x4

@@ -8,10 +8,12 @@ import java.util.Optional;
 public class Vertex<T> {
     private final ArrayList<Edge<T>> edges = new ArrayList<>();
     private final T entry;
+    private final int index;
     private volatile int level = -1;
 
-    public Vertex(T entry) {
+    public Vertex(T entry, int index) {
         this.entry = entry;
+        this.index = index;
     }
 
     public T getEntry() {
@@ -20,6 +22,10 @@ public class Vertex<T> {
 
     public boolean isEntry(T entry){
         return this.entry.equals(entry);
+    }
+
+    public int getIndex() {
+        return index;
     }
 
     public void setLevel(int level) {
@@ -49,10 +55,6 @@ public class Vertex<T> {
 
     public Optional<Edge<T>> getEdge(T target) {
         return edges.stream().filter((e) -> e.isConnect(target)).findFirst();
-    }
-
-    public void sortEdges(){
-        edges.sort(Comparator.<Edge<T>>naturalOrder());
     }
 
     public boolean isConnected(T other){
