@@ -98,7 +98,7 @@ public class Route {
 
     void updateStats(){
         LOG.trace("Update stats, old: profit={}, distance={}, lands={}, fuel={}, score={}", profit, distance, lands, fuel, score);
-        profit = 0; distance = 0; lands = 0;
+        profit = 0; distance = 0; lands = 0; fuel = 0;
         if (entries.isEmpty()) return;
         RouteEntry entry = entries.get(0);
         for (int i = 1; i < entries.size(); i++) {
@@ -113,6 +113,19 @@ public class Route {
             entry = next;
         }
         LOG.trace("new stats profit={}, distance={}, lands={}, fuel={}, score={}", profit, distance, lands, fuel, score);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Route)) return false;
+        Route route = (Route) o;
+        return entries.equals(route.entries);
+    }
+
+    @Override
+    public int hashCode() {
+        return entries.hashCode();
     }
 
     @Override
