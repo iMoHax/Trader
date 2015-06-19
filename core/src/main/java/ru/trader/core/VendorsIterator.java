@@ -31,7 +31,7 @@ public class VendorsIterator implements Iterator<Vendor> {
                 nextVendor();
             } else {
                 if (includeTransit)
-                    next = new TransitVendor(place);
+                    next = place.asTransit();
                 else
                     nextPlace();
             }

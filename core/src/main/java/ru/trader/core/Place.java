@@ -70,4 +70,8 @@ public interface Place extends Connectable<Place> {
             vendor.clear();
         }
     }
+
+    default Vendor asTransit(){
+        return new TransitVendor(this);
+    }
 }
