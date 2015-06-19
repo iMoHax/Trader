@@ -28,7 +28,7 @@ public class Scorer {
         this.profile = profile;
         sellOffers = new HashMap<>(100, 0.9f);
         buyOffers = new HashMap<>(100, 0.9f);
-        market.getItems().parallelStream().forEach(this::fillOffers);
+        market.getItems().forEach(this::fillOffers);
         DoubleSummaryStatistics statProfit = computeProfit();
         minProfit = statProfit.getMin() / profile.getShip().getCargo();
         avgProfit = statProfit.getAverage() / profile.getShip().getCargo();
