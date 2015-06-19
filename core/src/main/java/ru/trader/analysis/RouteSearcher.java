@@ -51,9 +51,8 @@ public class RouteSearcher {
 
         public void add(List<Edge<Vendor>> edges){
             Route route = toRoute(edges);
-            if (route.getProfit() > 0) {
-                routes.add(route);
-            }
+            route.setBalance(vGraph.getProfile().getBalance());
+            routes.add(route);
         }
 
         public List<Route> get() {
