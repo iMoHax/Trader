@@ -84,6 +84,33 @@ public class RouteEntry {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RouteEntry)) return false;
+
+        RouteEntry that = (RouteEntry) o;
+        if (land != that.land) return false;
+        if (refill != that.refill) return false;
+        if (Double.compare(that.fuel, fuel) != 0) return false;
+        if (orders.size() != that.orders.size()) return false;
+        return vendor.equals(that.vendor);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = vendor.hashCode();
+        temp = Double.doubleToLongBits(fuel);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (land ? 1 : 0);
+        result = 31 * result + (refill ? 1 : 0);
+        temp = Double.doubleToLongBits(score);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    @Override
     public String toString() {
         return vendor + (isRefill() ? " (R)":"");
     }

@@ -120,7 +120,7 @@ public class Route {
         if (this == o) return true;
         if (!(o instanceof Route)) return false;
         Route route = (Route) o;
-        return entries.equals(route.entries);
+        return Double.compare(route.profit, profit) == 0 && entries.equals(route.entries);
     }
 
     @Override
