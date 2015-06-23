@@ -74,12 +74,10 @@ public class RouteFiller {
         LOG.trace("Start backward sort");
         for (int i = oList.size() - 1; i >= 0; i--) {
             OEntry entry = oList.get(i);
-            OrderStack best = entry.getBest();
             final int nextIndex = i+1;
-            entry.setLands(getLands(best, nextIndex) + (best != TRANSIT || entry.refill ? 1 : 0));
             BackwardComparator comparator = new BackwardComparator(nextIndex);
             entry.sort(comparator);
-            best = entry.getBest();
+            OrderStack best = entry.getBest();
             entry.setFullScore(comparator.getScore(best));
             entry.setLands(getLands(best, nextIndex) + (best != TRANSIT || entry.refill ? 1 : 0));
         }
@@ -148,7 +146,7 @@ public class RouteFiller {
         if (order == TRANSIT) return oList.get(startIndex).score;
         int index = getIndex(order.getBuyer(), startIndex);
         if (index > 0) {
-            return oList.get(index).score + getScore(order, index);
+            return oList.get(index).score + getScore(order, startIndex);
         }
         return 0;
     }
