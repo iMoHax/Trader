@@ -93,13 +93,13 @@ public class Scorer {
         LOG.trace("Compute transit score fuel={}", fuel);
         double profit = maxProfit;
         profit -= profile.getFuelPrice() * fuel / profile.getShip().getCargo();
-        double score = 1;
-        score -= profile.getLandMult();
-        score -= profile.getJumpMult();
-        score = score * profit;
         if (avgDistance > 0) {
-            score -= - avgProfit * profile.getDistanceMult();
+            profit -= - avgProfit * profile.getDistanceMult();
         }
+        if (profile.getLandMult() > 0){
+            profit = profit / profile.getLandMult();
+        }
+        double score = profit * (1 - profile.getJumpMult()/profile.getJumps());
         LOG.trace("score={}", score);
         return score;
     }
@@ -108,20 +108,15 @@ public class Scorer {
         LOG.trace("Compute score distance={}, profit={}, jumps={}, lands={}, fuel={}", distance, profit, jumps, lands, fuel);
         profit -= profile.getFuelPrice() * fuel;
         profit = profit / profile.getShip().getCargo();
-        double score = 1;
-        if (profit > 0) {
-            score -= profile.getJumpMult() * (jumps - 1);
-            score -= profile.getLandMult() * lands;
-            if (score == 0) {
-                score = profit;
-            } else {
-                score = score * profit;
+        if (avgDistance > 0) {
+            profit -= avgProfit * profile.getDistanceMult() * (distance - avgDistance) / avgDistance;
+        }
+        double score = profit;
+        if (profit > 0){
+            if (lands > 0 && profile.getLandMult() > 0){
+                score = profit / (lands * profile.getLandMult());
             }
-            if (avgDistance > 0) {
-                score -= avgProfit * profile.getDistanceMult() * (distance - avgDistance) / avgDistance;
-            }
-        } else {
-            score = profit;
+            score -= profile.getJumpMult()/profile.getJumps() * score * jumps;
         }
         LOG.trace("score={}", score);
         return score;
@@ -184,7 +179,7 @@ public class Scorer {
 
         private void computeScore(){
             score = (getSellProfit() + getBuyProfit())/2;
-            score = Scorer.this.getScore(vendor, score, 0, 0, 0);
+            score = Scorer.this.getScore(vendor, score, 0, 1, 0);
         }
 
         @Override
