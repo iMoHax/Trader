@@ -137,7 +137,7 @@ public class CrawlerTest extends Assert {
                 PPath.of(x5, x6, x5, x4), PPath.of(x5, x4, x5, x4), PPath.of(x5, x4, x3, x4),
                 PPath.of(x5, x4, x6, x4), PPath.of(x5, x6, x3, x4),
                 PPath.of(x5, x3, x5, x4), PPath.of(x5, x4, x2, x4),
-                PPath.of(x5, x3, x2, x4), PPath.of(x5, x3, x6, x4)
+                PPath.of(x5, x3, x6, x4), PPath.of(x5, x3, x2, x4)
         );
         TestUtil.assertCollectionEquals(paths.getWeights(), 5.0, 15.0, 15.0,
                 15.0, 15.0, 15.0,

@@ -22,6 +22,9 @@ public class RouteSearcherTest extends Assert{
     private Place lhs3262;
     private Place morgor;
     private Place lhs3006;
+    private Place bd47;
+    private Place aulin;
+    private Place iBootis;
 
     @Before
     public void setUp() throws Exception {
@@ -31,6 +34,9 @@ public class RouteSearcherTest extends Assert{
         lhs3262 = world.get("LHS 3262");
         morgor = world.get("Morgor");
         lhs3006 = world.get("LHS 3006");
+        bd47 = world.get("BD+47 2112");
+        aulin = world.get("Aulin");
+        iBootis = world.get("i Bootis");
 
         MarketFilter filter = new MarketFilter();
         fWorld = new FilteredMarket(world, filter);
@@ -45,6 +51,7 @@ public class RouteSearcherTest extends Assert{
         Vendor lhs3262_st = lhs3262.get().iterator().next();
         Vendor morgor_st = morgor.get().iterator().next();
         Vendor lhs3006_st = lhs3006.get().iterator().next();
+        Vendor aulin_st = aulin.get().iterator().next();
         Ship ship = new Ship();
         ship.setCargo(440); ship.setTank(15);
         ship.setEngine(5, 'A'); ship.setMass(466);
@@ -57,50 +64,22 @@ public class RouteSearcherTest extends Assert{
         RouteSearcher searcher = new RouteSearcher(scorer);
 
         Route route = new Route(new RouteEntry(ithaca_st, false, 3.3789702637348586d, 0));
-        route.add(new RouteEntry(morgor_st, false, 4.137765020523591d, 0));
-        route.add(new RouteEntry(lhs3006_st, false, 4.0674474942172765d, 0));
+        route.add(new RouteEntry(morgor.asTransit(), false, 4.137765020523591d, 0));
+        route.add(new RouteEntry(lhs3006.asTransit(), false, 4.0674474942172765d, 0));
         route.add(new RouteEntry(lhs3262_st, true, 4.149937831634785d, 0));
-        route.add(new RouteEntry(lhs3006_st, false, 4.1292528548103d, 0));
-        route.add(new RouteEntry(morgor_st, false, 3.3050364899848566, 0));
-        route.add(new RouteEntry(ithaca_st, false, 3.3483447506734136, 0));
+        route.add(new RouteEntry(lhs3006.asTransit(), false, 4.1292528548103d, 0));
+        route.add(new RouteEntry(morgor.asTransit(), false, 3.3050364899848566, 0));
+        route.add(new RouteEntry(ithaca_st, false, 0, 0));
         RouteFiller filler = new RouteFiller(scorer);
         filler.fill(route);
 
+        assertEquals(route.getProfit(), 981200, 0);
+        assertEquals(route.getLands(), 2);
+        assertEquals(route.getDistance(), 72.42, 0.01);
+
         List<Route> apaths = searcher.getRoutes(ithaca_st, ithaca_st, fWorld.getMarkets(true).collect(Collectors.toList()));
         Route actual = apaths.stream().findFirst().get();
-        //assertTrue("Routes is different",expect.isRoute(actual));
+        assertEquals("Routes is different", route, actual);
 
     }
-/*
-    @Test
-    public void testRoutes2() throws Exception {
-        // Balance: 6000000, cargo: 440, tank: 40, distance: 13.6, jumps: 6
-        // Ithaca (Palladium to LHS 3262) -> Morgor -> LHS 3006 -> LHS 3262 (Consumer Technology to Ithaca) -> LHS 3006 -> Morgor -> Ithaca
-        // Profit: 981200, avg: 490600, distance: 67.5, lands: 2
-        Vendor ithaca = market.get().stream().filter((v)->v.getName().equals("Ithaca")).findFirst().get().get().iterator().next();
-        Vendor lhs3262 = market.get().stream().filter((v)->v.getName().equals("LHS 3262")).findFirst().get().get().iterator().next();
-
-        RouteSearcher searcher = new RouteSearcher(13.6, 40);
-        RouteGraph graph = new RouteGraph(ithaca, market.getVendors(true), 40, 13.6, true, 6);
-        graph.setCargo(440);
-        graph.setBalance(6000000);
-
-        List<Path<Vendor>> epaths = graph.getPathsTo(ithaca, 10);
-        PathRoute expect = epaths.stream().map(p -> (PathRoute) p).findFirst().get();
-
-        List<PathRoute> apaths = searcher.getPaths(ithaca, ithaca, market.getVendors(true), 6, 6000000, 440, 10);
-        PathRoute actual = apaths.stream().findFirst().get();
-        assertTrue("Routes is different",expect.isRoute(actual));
-
-        graph = new RouteGraph(lhs3262, market.getVendors(true), 40, 13.6, true, 6);
-        graph.setCargo(440);
-        graph.setBalance(6000000);
-
-        expect = graph.getPathsTo(lhs3262, 10).stream().map(p -> (PathRoute)p).findFirst().get();
-        apaths = searcher.getPaths(lhs3262, lhs3262, market.getVendors(true), 6, 6000000, 440, 10);
-        actual = apaths.stream().findFirst().get();
-        assertEquals("Routes is different",expect.getAvgProfit(), actual.getAvgProfit(), 0.00001);
-
-    }
-*/
 }

@@ -7,8 +7,10 @@ import ru.trader.core.Order;
 import ru.trader.core.TransitVendor;
 import ru.trader.core.Vendor;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 
@@ -54,17 +56,15 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
 
         @Override
         protected ConnectibleEdge<Vendor> createEdge(Vertex<Vendor> target) {
-            return new VendorsEdge(vertex, target, refill, fuelCost, false);
+            return new VendorsEdge(vertex, target, refill, fuelCost);
         }
     }
 
     public class VendorsEdge extends ConnectibleEdge<Vendor> {
         private List<Order> orders;
-        private boolean isTarget;
 
-        protected VendorsEdge(Vertex<Vendor> source, Vertex<Vendor> target, boolean refill, double fuel, boolean isTarget) {
+        protected VendorsEdge(Vertex<Vendor> source, Vertex<Vendor> target, boolean refill, double fuel) {
             super(source, target, refill, fuel);
-            this.isTarget = isTarget;
         }
 
         protected void setOrders(List<Order> orders){
@@ -87,7 +87,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         @Override
         protected double computeWeight() {
             int jumps = source.getEntry().getPlace().equals(target.getEntry().getPlace())? 0 : 1;
-            int lands = refill || !orders.isEmpty() || isTarget ? 1 : 0;
+            int lands = !(target.getEntry() instanceof TransitVendor) ? 1 : 0;
             boolean transit = lands == 0 && source.getEntry() instanceof TransitVendor || target.getEntry() instanceof TransitVendor;
             double profit = getProfit();
             double score = transit ? scorer.getTransitScore(fuel) :
@@ -105,50 +105,79 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         }
 
         @Override
-        protected CostTraversalEntry start(Vertex<Vendor> vertex) {
-            double balance = scorer.getProfile().getBalance();
-            return new VendorsTraversalEntry((CCostTraversalEntry) super.start(vertex), balance);
+        protected VendorsTraversalEntry start(Vertex<Vendor> vertex) {
+            double balance = getProfile().getBalance();
+            return new VendorsTraversalEntry(super.start(vertex), balance);
         }
 
         @Override
-        protected CostTraversalEntry travers(final CostTraversalEntry entry, final List<Edge<Vendor>> head, final Edge<Vendor> edge, final Vendor target) {
-            VendorsTraversalEntry ve = (VendorsTraversalEntry)entry;
-            double balance = ve.balance;
-            Vendor buyer = edge.getTarget().getEntry();
-            List<Order> orders = ((VendorsEdge) edge).getOrders();
-            if (edge.getSource().getEntry() instanceof TransitVendor &&
-                !(buyer instanceof TransitVendor)){
-                LOG.trace("{} is transit, search seller", edge.getSource().getEntry());
-                for (int i = head.size() - 1; i >= 0; i--) {
-                    Vendor seller = head.get(i).getSource().getEntry();
-                    if (!(seller instanceof TransitVendor)){
-                        orders = MarketUtils.getOrders(seller, buyer);
-                        break;
-                    }
-                }
-            }
-            orders = MarketUtils.getStack(orders, balance, scorer.getProfile().getShip().getCargo());
-
-            CCostTraversalEntry ce = (CCostTraversalEntry) super.travers(entry, head, edge, target);
-            ConnectibleEdge<Vendor> cedge = (ConnectibleEdge<Vendor>) ce.getEdge();
-            VendorsEdge addingEdge = new VendorsEdge(cedge.getSource(), cedge.getTarget(), cedge.isRefill(), cedge.getFuel(), target.equals(buyer));
-            addingEdge.setOrders(orders);
-            return new VendorsTraversalEntry(head, addingEdge, entry.getWeight(), ce.getFuel(), balance+addingEdge.getProfit());
+        protected VendorsTraversalEntry travers(final CostTraversalEntry entry, final Edge<Vendor> edge, final Vendor target) {
+            VendorsEdge vEdge = (VendorsEdge) edge;
+            CCostTraversalEntry ce = super.travers(entry, edge, target);
+            return new VendorsTraversalEntry((VendorsTraversalEntry) entry, edge, ce.getFuel(), ((VendorsTraversalEntry)entry).balance + vEdge.getProfit());
         }
 
         protected class VendorsTraversalEntry extends CCostTraversalEntry {
             private final double balance;
 
             protected VendorsTraversalEntry(CCostTraversalEntry entry, double balance) {
-                super(entry.getHead(), entry.getVertex(), entry.getFuel());
+                super(entry.getTarget(), entry.getFuel());
                 this.balance = balance;
             }
 
-            protected VendorsTraversalEntry(List<Edge<Vendor>> head, Edge<Vendor> edge, double cost, double fuel, double balance) {
-                super(head, edge, cost, fuel);
+            protected VendorsTraversalEntry(VendorsTraversalEntry head, Edge<Vendor> edge, double fuel, double balance) {
+                super(head, edge, fuel);
                 this.balance = balance;
             }
 
+            @Override
+            protected boolean check(Edge<Vendor> e) {
+                boolean good = super.check(e);
+                // remove transit cicles
+                if (good && e.getSource().getEntry() instanceof TransitVendor && !(e.getTarget().getEntry() instanceof TransitVendor)){
+                    Optional<Vendor> seller = getSeller();
+                    good = seller.isPresent() && !e.getTarget().isEntry(seller.get());
+                }
+                return good;
+            }
+
+            @Override
+            protected VendorsEdge wrap(Edge<Vendor> edge) {
+                ConnectibleEdge<Vendor> cEdge = super.wrap(edge);
+                Vendor buyer = edge.getTarget().getEntry();
+                List<Order> orders = new ArrayList<>();
+                orders.addAll(((VendorsEdge) edge).getOrders());
+                if (edge.getSource().getEntry() instanceof TransitVendor && !(buyer instanceof TransitVendor)){
+                    LOG.trace("{} is transit, search seller", edge.getSource().getEntry());
+                    Optional<Vendor> seller = getSeller();
+                    if (seller.isPresent()){
+                        orders = MarketUtils.getOrders(seller.get(), buyer);
+                    }
+                }
+                orders = MarketUtils.getStack(orders, balance, getShip().getCargo());
+                VendorsEdge res = new VendorsEdge(edge.getSource(), edge.getTarget(), cEdge.isRefill(), cEdge.getFuel());
+                res.setOrders(orders);
+                return res;
+            }
+
+            private Optional<Vendor> getSeller(){
+                Vendor res = null;
+                Edge<Vendor> e = getEdge();
+                Vendor seller = e.getSource().getEntry();
+                if (!(seller instanceof TransitVendor)){
+                    res = seller;
+                } else {
+                    for (int i = head.size() - 1; i >= 0; i--) {
+                        e = head.getEdge();
+                        seller = e.getSource().getEntry();
+                        if (!(seller instanceof TransitVendor)){
+                            res = seller;
+                            break;
+                        }
+                    }
+                }
+                return Optional.ofNullable(res);
+            }
         }
 
 

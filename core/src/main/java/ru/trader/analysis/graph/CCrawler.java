@@ -6,10 +6,10 @@ import ru.trader.core.Profile;
 import ru.trader.core.Ship;
 import ru.trader.graph.Connectable;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class CCrawler<T extends Connectable<T>> extends Crawler<T> {
     private final static Logger LOG = LoggerFactory.getLogger(CCrawler.class);
@@ -18,47 +18,45 @@ public class CCrawler<T extends Connectable<T>> extends Crawler<T> {
         super(graph, onFoundFunc);
     }
 
-    private Ship getShip(){
+    protected Ship getShip(){
         return ((ConnectibleGraph<T>)graph).getProfile().getShip();
     }
 
-    private Profile getProfile(){
+    protected Profile getProfile(){
         return ((ConnectibleGraph<T>)graph).getProfile();
     }
 
     @Override
-    protected CostTraversalEntry start(Vertex<T> vertex) {
+    protected CCostTraversalEntry start(Vertex<T> vertex) {
         double fuel = getShip().getTank();
-        return new CCostTraversalEntry(new ArrayList<>(), vertex, fuel);
+        return new CCostTraversalEntry(vertex, fuel);
     }
 
     @Override
-    protected CostTraversalEntry travers(CostTraversalEntry entry, List<Edge<T>> head, Edge<T> edge, T target) {
-        T source = entry.vertex.getEntry();
-        double distance = source.getDistance(edge.target.getEntry());
-        double fuelCost = getShip().getFuelCost(((CCostTraversalEntry)entry).fuel, distance);
-        double nextLimit = getProfile().withRefill() ? ((CCostTraversalEntry)entry).fuel - fuelCost : getShip().getTank();
-        boolean refill = nextLimit < 0 && source.canRefill();
-        if (refill) {
+    protected CCostTraversalEntry travers(CostTraversalEntry entry, Edge<T> edge, T target) {
+        @SuppressWarnings("unchecked")
+        CCostTraversalEntry cEntry = (CCostTraversalEntry)entry;
+        ConnectibleEdge<T> cEdge = (ConnectibleEdge<T>) edge;
+        double nextLimit;
+        if (cEdge.isRefill()) {
             LOG.trace("Refill");
-            refill = true;
-            fuelCost = getShip().getFuelCost(distance);
-            nextLimit = getShip().getTank() - fuelCost;
+            nextLimit = getShip().getTank() - cEdge.getFuel();
+        } else {
+            nextLimit = getProfile().withRefill() ? cEntry.getFuel() - cEdge.getFuel() : getShip().getTank();
         }
-        edge = new ConnectibleEdge<>(edge.getSource(), edge.getTarget(), refill, fuelCost);
-        return new CCostTraversalEntry(head, edge, entry.getWeight(), nextLimit);
+        return new CCostTraversalEntry(cEntry, edge, nextLimit);
     }
 
     protected class CCostTraversalEntry extends CostTraversalEntry {
         private final double fuel;
 
-        protected CCostTraversalEntry(List<Edge<T>> head, Vertex<T> vertex, double fuel) {
-            super(head, vertex);
+        protected CCostTraversalEntry(Vertex<T> vertex, double fuel) {
+            super(vertex);
             this.fuel = fuel;
         }
 
-        protected CCostTraversalEntry(List<Edge<T>> head, Edge<T> edge, double cost, double fuel) {
-            super(head, edge, cost);
+        protected CCostTraversalEntry(CCostTraversalEntry head, Edge<T> edge, double fuel) {
+            super(head, edge);
             this.fuel = fuel;
         }
 
@@ -67,11 +65,26 @@ public class CCrawler<T extends Connectable<T>> extends Crawler<T> {
         }
 
         @Override
-        protected Iterator<Edge<T>> getIteratorInstance() {
-            return vertex.getEdges().stream().filter(e -> {
-                ConnectibleEdge<T> edge = (ConnectibleEdge<T>) e;
-                return edge.getFuel() <= fuel || e.getSource().getEntry().canRefill();
-            }).iterator();
+        public List<Edge<T>> collect(Collection<Edge<T>> src) {
+            return src.stream().filter(this::check).map(this::wrap).collect(Collectors.toList());
+        }
+
+        protected boolean check(Edge<T> e){
+            ConnectibleEdge<T> edge = (ConnectibleEdge<T>) e;
+            return edge.getFuel() <= fuel || edge.getSource().getEntry().canRefill();
+        }
+
+        protected ConnectibleEdge<T> wrap(Edge<T> edge){
+            T source = edge.source.getEntry();
+            double distance = source.getDistance(edge.target.getEntry());
+            double fuelCost = getShip().getFuelCost(fuel, distance);
+            double nextLimit = getProfile().withRefill() ? fuel - fuelCost : getShip().getTank();
+            boolean refill = nextLimit < 0 && source.canRefill();
+            if (refill) {
+                refill = true;
+                fuelCost = getShip().getFuelCost(distance);
+            }
+            return new ConnectibleEdge<>(edge.getSource(), edge.getTarget(), refill, fuelCost);
         }
     }
 }
