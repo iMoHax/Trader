@@ -3,6 +3,7 @@ package ru.trader.analysis.graph;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.analysis.LimitedQueue;
 
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
@@ -187,26 +188,34 @@ public class Crawler<T> {
         LOG.trace("UCS2 from {} to {}, deep {}, count {}", root.vertex, target, deep, count);
         int found = 0;
         double limit = Double.MAX_VALUE;
-        PriorityQueue<Double> limitQueue = new PriorityQueue<>();
-        PriorityQueue<CTEntrySupport> queue = new PriorityQueue<>();
+        LimitedQueue<CTEntrySupport> targetsQueue = new LimitedQueue<>(count, Comparator.<CTEntrySupport>naturalOrder());
+        LimitedQueue<CTEntrySupport> queue = new LimitedQueue<>(count, Comparator.<CTEntrySupport>naturalOrder());
         root.sort();
         queue.add(new CTEntrySupport(root));
-        while (!queue.isEmpty() && count > found){
-            CTEntrySupport curr = queue.poll();
+        while (!(queue.isEmpty() && targetsQueue.isEmpty()) && count > found){
+            int alreadyFound = targetsQueue.size();
+            CTEntrySupport curr = targetsQueue.peek();
+            boolean isTarget = curr != null && (queue.isEmpty() || alreadyFound + found >= count || Comparator.<CTEntrySupport>naturalOrder().compare(curr, queue.peek()) <= 0);
+            if (isTarget){
+                targetsQueue.poll();
+            } else {
+                curr = queue.poll();
+            }
             CostTraversalEntry entry = curr.entry;
             LOG.trace("Check path entry {}, weight {}", entry, entry.weight);
-            if (entry.isConnect(target)) {
+            if (isTarget) {
                 List<Edge<T>> res = entry.toEdges();
                 LOG.trace("Path found {}", res);
                 onFoundFunc.accept(res);
                 found++;
                 if (found >= count) break;
-                limit = limitQueue.poll();
+                CTEntrySupport next = targetsQueue.peek();
+                limit = next != null ? next.entry.getWeight() :  Double.MAX_VALUE;
             }
-            if (limitQueue.size() + found < count){
+            if (alreadyFound + found < count){
                 LOG.trace("Continue search, limit {}", limit);
             } else {
-                LOG.trace("Already {} found, extracting", limitQueue.size());
+                LOG.trace("Already {} found, extracting", alreadyFound);
                 continue;
             }
             if (deep >= entry.getTarget().getLevel() || entry.size() >= maxSize){
@@ -215,8 +224,8 @@ public class Crawler<T> {
             }
             DFS task = new DFS(curr, target, deep, count - found, limit);
             POOL.invoke(task);
-            limitQueue.addAll(task.getLimits());
-            queue.addAll(task.getResult());
+            targetsQueue.addAll(task.getTargets());
+            queue.addAll(task.getQueue());
         }
         return found;
     }
@@ -284,8 +293,8 @@ public class Crawler<T> {
         private final int count;
         private final int deep;
         private final T target;
-        private final Collection<CTEntrySupport> res;
-        private final Collection<Double> limits;
+        private final Collection<CTEntrySupport> queue;
+        private final Collection<CTEntrySupport> targets;
         private final ArrayList<DFS> subTasks;
         private final boolean isSubTask;
         private double limit;
@@ -300,8 +309,8 @@ public class Crawler<T> {
             this.deep = deep;
             this.count = count;
             this.limit = limit;
-            res = new ArrayList<>(count);
-            limits = new ArrayList<>(count);
+            queue = new LimitedQueue<>(count, Comparator.<CTEntrySupport>naturalOrder());
+            targets = new LimitedQueue<>(count, Comparator.<CTEntrySupport>naturalOrder());
             subTasks = new ArrayList<>(THRESHOLD);
             isSubTask = subtask;
         }
@@ -310,16 +319,16 @@ public class Crawler<T> {
             return entry.parent == null || isSubTask && entry == root;
         }
 
-        private Collection<Double> getLimits() {
+        private Collection<CTEntrySupport> getTargets() {
             if (!isDone())
                 throw new IllegalStateException();
-            return limits;
+            return targets;
         }
 
-        private Collection<CTEntrySupport> getResult() {
+        private Collection<CTEntrySupport> getQueue() {
             if (!isDone())
                 throw new IllegalStateException();
-            return res;
+            return queue;
         }
 
         private void search(){
@@ -337,15 +346,14 @@ public class Crawler<T> {
                     curr = new CTEntrySupport(curr, nextEntry);
                     if (isTarget){
                         LOG.trace("Found, add entry {} to queue", nextEntry);
-                        res.add(curr);
-                        limits.add(limit);
+                        targets.add(curr);
                         limit = nextEntry.getWeight();
                         curr = curr.parent;
                     } else {
-                        if (nextEntry.getWeight() >= limit && limits.size() > 0){
-                            if (limits.size() < count){
+                        if (nextEntry.getWeight() >= limit && targets.size() > 0){
+                            if (targets.size() < count){
                                 LOG.trace("Not found, limit {}, add entry {} to queue", limit, nextEntry);
-                                res.add(curr);
+                                queue.add(curr);
                             } else {
                                 LOG.trace("Not found, limit {}, don't add entry {} to queue", limit, nextEntry);
                             }
@@ -395,8 +403,8 @@ public class Crawler<T> {
 
         private void fill(DFS subTask){
             LOG.trace("Sub task is done");
-            limits.addAll(subTask.getLimits());
-            res.addAll(subTask.getResult());
+            targets.addAll(subTask.getTargets());
+            queue.addAll(subTask.getQueue());
             limit = Math.min(limit, subTask.limit);
         }
 
