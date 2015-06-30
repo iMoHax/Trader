@@ -30,7 +30,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
         vertexes = new CopyOnWriteArrayList<>();
     }
 
-    protected abstract GraphBuilder createGraphBuilder(Vertex<T> vertex, Collection<T> set, int deep, double limit);
+    protected abstract RecursiveAction createGraphBuilder(Vertex<T> vertex, Collection<T> set, int deep, double limit);
 
     public void build(T start, Collection<T> set, int maxDeep, double limit) {
         callback.startBuild(start);
@@ -109,14 +109,14 @@ public abstract class AbstractGraph<T> implements Graph<T> {
 
         protected abstract double onConnect(T entry);
         protected abstract Edge<T> createEdge(Vertex<T> target);
-        protected GraphBuilder createSubTask(Vertex<T> vertex, Collection<T> set, int deep, double limit){
+        protected RecursiveAction createSubTask(Vertex<T> vertex, Collection<T> set, int deep, double limit){
             return createGraphBuilder(vertex, set, deep, limit);
         }
 
         @Override
         protected void compute() {
             LOG.trace("Build graph from {}, limit {}, deep {}", vertex, limit, deep);
-            ArrayList<GraphBuilder> subTasks = new ArrayList<>(THRESHOLD);
+            ArrayList<RecursiveAction> subTasks = new ArrayList<>(THRESHOLD);
             Iterator<T> iterator = set.iterator();
             while (iterator.hasNext()) {
                 if (callback.isCancel()) break;
@@ -132,7 +132,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
                         next.setLevel(vertex.getLevel() - 1);
                         if (deep > 0) {
                             //Recursive build
-                            GraphBuilder task = createSubTask(next, set, deep - 1, nextLimit);
+                            RecursiveAction task = createSubTask(next, set, deep - 1, nextLimit);
                             task.fork();
                             subTasks.add(task);
                         }
@@ -141,7 +141,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
                     LOG.trace("Vertex {} is far away", entry);
                 }
                 if (subTasks.size() == THRESHOLD || !iterator.hasNext()){
-                    for (GraphBuilder subTask : subTasks) {
+                    for (RecursiveAction subTask : subTasks) {
                         if (callback.isCancel()){
                             subTask.cancel(true);
                         } else {
@@ -152,7 +152,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
                 }
             }
             if (!subTasks.isEmpty()){
-                for (GraphBuilder subTask : subTasks) {
+                for (RecursiveAction subTask : subTasks) {
                     if (callback.isCancel()){
                         subTask.cancel(true);
                     } else {
