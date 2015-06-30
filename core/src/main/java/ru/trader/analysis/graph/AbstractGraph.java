@@ -34,21 +34,13 @@ public abstract class AbstractGraph<T> implements Graph<T> {
 
     public void build(T start, Collection<T> set, int maxDeep, double limit) {
         callback.startBuild(start);
-        root = getInstance(start, maxDeep);
+        minJumps = 1;
+        root = getInstance(start, maxDeep, maxDeep);
         POOL.invoke(createGraphBuilder(root, set, maxDeep - 1, limit));
-        if (set.size() > vertexes.size()){
-            minJumps = maxDeep;
-        } else {
-            minJumps = 1;
-            for (Vertex<T> vertex : vertexes) {
-                int jumps = maxDeep - vertex.getLevel();
-                if (jumps > minJumps) minJumps = jumps;
-            }
-        }
         callback.endBuild();
     }
 
-    private Vertex<T> getInstance(T entry, int deep){
+    private Vertex<T> getInstance(T entry, int level, int deep){
         Vertex<T> vertex = getVertex(entry).orElse(null);
         if (vertex == null) {
             synchronized (vertexes){
@@ -56,8 +48,11 @@ public abstract class AbstractGraph<T> implements Graph<T> {
                 if (vertex == null){
                     LOG.trace("Is new vertex");
                     vertex = new Vertex<>(entry, vertexes.size());
-                    vertex.setLevel(deep);
+                    vertex.setLevel(level);
                     vertexes.add(vertex);
+                    int jumps = root != null ? root.getLevel() - deep : 0;
+                    if (jumps > minJumps)
+                        minJumps = jumps;
                 }
             }
         }
@@ -125,7 +120,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
                 double nextLimit = onConnect(entry);
                 if (nextLimit >= 0) {
                     LOG.trace("Connect {} to {}", vertex, entry);
-                    Vertex<T> next = getInstance(entry, 0);
+                    Vertex<T> next = getInstance(entry, 0, deep);
                     vertex.connect(createEdge(next));
                     // If level > deep when vertex already added on upper deep
                     if (next.getLevel() < deep) {
