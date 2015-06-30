@@ -13,22 +13,28 @@ import java.util.stream.Collectors;
 
 public class CCrawler<T extends Connectable<T>> extends Crawler<T> {
     private final static Logger LOG = LoggerFactory.getLogger(CCrawler.class);
+    private double startFuel;
 
     public CCrawler(ConnectibleGraph<T> graph, Consumer<List<Edge<T>>> onFoundFunc) {
         super(graph, onFoundFunc);
+        startFuel = getShip().getTank();
     }
 
     protected Ship getShip(){
-        return ((ConnectibleGraph<T>)graph).getProfile().getShip();
+        return ((ConnectibleGraph<T>)graph).getShip();
     }
 
     protected Profile getProfile(){
         return ((ConnectibleGraph<T>)graph).getProfile();
     }
 
+    public void setStartFuel(double startFuel) {
+        this.startFuel = startFuel;
+    }
+
     @Override
     protected CCostTraversalEntry start(Vertex<T> vertex) {
-        double fuel = getShip().getTank();
+        double fuel = startFuel;
         return new CCostTraversalEntry(vertex, fuel);
     }
 

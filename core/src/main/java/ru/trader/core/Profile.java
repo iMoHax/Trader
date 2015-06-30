@@ -4,6 +4,7 @@ public class Profile {
 
     private double balance;
     private int jumps;
+    private int lands;
     private Ship ship;
     private boolean refill;
     private int routesCount;
@@ -18,6 +19,7 @@ public class Profile {
         this.ship = ship;
         refill = true;
         jumps = 6;
+        lands = 4;
         scoreOrdersCount = 5;
         distanceMult = 0.8;
         landMult = 0.95;
@@ -39,6 +41,14 @@ public class Profile {
 
     public void setJumps(int jumps) {
         this.jumps = jumps;
+    }
+
+    public int getLands() {
+        return lands;
+    }
+
+    public void setLands(int lands) {
+        this.lands = lands;
     }
 
     public Ship getShip() {

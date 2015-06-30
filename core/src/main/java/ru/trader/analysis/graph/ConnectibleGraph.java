@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.analysis.AnalysisCallBack;
 import ru.trader.core.Profile;
+import ru.trader.core.Ship;
 import ru.trader.graph.Connectable;
 
 import java.util.Collection;
@@ -27,6 +28,10 @@ public class ConnectibleGraph<T extends Connectable<T>> extends AbstractGraph<T>
     public Profile getProfile() {
         return profile;
     }
+    
+    protected Ship getShip(){
+        return profile.getShip();
+    }
 
     @Override
     protected GraphBuilder createGraphBuilder(Vertex<T> vertex, Collection<T> set, int deep, double limit) {
@@ -34,7 +39,7 @@ public class ConnectibleGraph<T extends Connectable<T>> extends AbstractGraph<T>
     }
 
     public void build(T start, Collection<T> set){
-        super.build(start, set, profile.getJumps(), profile.getShip().getTank());
+        super.build(start, set, profile.getJumps(), getShip().getTank());
     }
 
     private class DistanceFilter implements Predicate<Double> {
@@ -48,7 +53,7 @@ public class ConnectibleGraph<T extends Connectable<T>> extends AbstractGraph<T>
 
         @Override
         public boolean test(Double distance) {
-            return distance <= profile.getShip().getJumpRange(limit) || (profile.withRefill() && distance <= profile.getShip().getJumpRange() && source.canRefill());
+            return distance <= getShip().getJumpRange(limit) || (profile.withRefill() && distance <= getShip().getJumpRange() && source.canRefill());
         }
     }
 
@@ -69,13 +74,13 @@ public class ConnectibleGraph<T extends Connectable<T>> extends AbstractGraph<T>
                 LOG.trace("Vertex {} is far away, {}", entry, distance);
                 return -1;
             }
-            fuelCost = profile.getShip().getFuelCost(limit, distance);
-            double nextLimit = profile.withRefill() ? limit - fuelCost : profile.getShip().getTank();
+            fuelCost = getShip().getFuelCost(limit, distance);
+            double nextLimit = profile.withRefill() ? limit - fuelCost : getShip().getTank();
             if (nextLimit < 0) {
                 LOG.trace("Refill");
                 refill = true;
-                fuelCost = profile.getShip().getFuelCost(distance);
-                nextLimit = profile.getShip().getTank() - fuelCost;
+                fuelCost = getShip().getFuelCost(distance);
+                nextLimit = getShip().getTank() - fuelCost;
             } else {
                 refill = false;
             }

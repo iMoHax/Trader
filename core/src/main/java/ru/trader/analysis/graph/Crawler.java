@@ -42,14 +42,29 @@ public class Crawler<T> {
     }
 
     public void findFast(T target, int count){
+        findFast(graph.getRoot(), target, count);
+    }
+
+    public void findFast(T source, T target){
+        findFast(source, target, 1);
+    }
+
+    public void findFast(T source, T target, int count){
+        Optional<Vertex<T>> s = graph.getVertex(source);
+        if (s.isPresent()){
+            findFast(s.get(), target, count);
+        }
+    }
+
+    private void findFast(Vertex<T> s, T target, int count){
         Optional<Vertex<T>> t = graph.getVertex(target);
         int found = 0;
         if (t.isPresent()) {
             if (count > 1) {
-                int maxDeep = maxSize - (graph.getRoot().isEntry(target) ? graph.getMinJumps() * 2 : graph.getMinJumps());
-                found = bfs(start(graph.getRoot()), target, maxDeep, count);
+                int maxDeep = maxSize - (s.isEntry(target) ? graph.getMinJumps() * 2 : graph.getMinJumps());
+                found = bfs(start(s), target, maxDeep, count);
             } else {
-                found = dfs(start(graph.getRoot()), target, t.get().getLevel() + 1, count);
+                found = dfs(start(s), target, t.get().getLevel() + 1, count);
             }
         }
         LOG.debug("Found {} paths", found);
@@ -60,15 +75,30 @@ public class Crawler<T> {
     }
 
     public void findMin(T target, int count){
+        findMin(graph.getRoot(), target, count);
+    }
+
+    public void findMin(T source, T target){
+        findMin(source, target, 1);
+    }
+
+    public void findMin(T source, T target, int count){
+        Optional<Vertex<T>> s = graph.getVertex(source);
+        if (s.isPresent()){
+            findMin(s.get(), target, count);
+        }
+    }
+
+    public void findMin(Vertex<T> s, T target, int count){
         Optional<Vertex<T>> t = graph.getVertex(target);
         int found = 0;
         if (t.isPresent()) {
-            int maxDeep = graph.getRoot().isEntry(target) ? maxSize - graph.getMinJumps() * 2 : graph.getMinLevel();
+            int maxDeep = s.isEntry(target) ? maxSize - graph.getMinJumps() * 2 : graph.getMinLevel();
             if (maxDeep < 0) maxDeep = 0;
             if (maxSize - maxDeep <= SPLIT_SIZE){
-                found = ucs(start(graph.getRoot()), target, maxDeep, count);
+                found = ucs(start(s), target, maxDeep, count);
             } else {
-                found = ucs2(start(graph.getRoot()), target, maxDeep, count);
+                found = ucs2(start(s), target, maxDeep, count);
             }
         }
         LOG.debug("Found {} paths", found);
