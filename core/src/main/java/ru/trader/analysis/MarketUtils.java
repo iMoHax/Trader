@@ -14,15 +14,16 @@ public class MarketUtils {
     private final static Logger LOG = LoggerFactory.getLogger(MarketUtils.class);
 
     public static List<Order> getStack(List<Order> orders, double balance, long cargo){
-        LOG.trace("Fill stack orders {}, balance {}", orders, balance);
-        orders.forEach(o -> o.setMax(balance, cargo));
+        List<Order> o = new ArrayList<>(orders);
+        LOG.trace("Fill stack orders {}, balance {}", o, balance);
+        o.forEach(or -> or.setMax(balance, cargo));
         LOG.trace("Simple sort");
-        orders.sort(Comparator.<Order>reverseOrder());
-        LOG.trace("New order of orders {}", orders);
+        o.sort(Comparator.<Order>reverseOrder());
+        LOG.trace("New order of orders {}", o);
         List<Order> stack = new ArrayList<>();
         long count = cargo;
         double remain = balance;
-        for (Order order : orders) {
+        for (Order order : o) {
             order = new Order(order.getSell(), order.getBuy(), remain, count);
             LOG.trace("Next best order {}", order);
             if (order.getProfit() > 0) {
@@ -49,7 +50,9 @@ public class MarketUtils {
             Offer buy = buyer.getBuy(sell.getItem());
             if (buy != null) {
                 Order order = new Order(sell, buy, 1);
-                orders.add(order);
+                if (order.getProfit() > 0){
+                    orders.add(order);
+                }
             }
         }
         return orders;
