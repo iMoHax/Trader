@@ -12,8 +12,9 @@ import java.util.stream.Collectors;
 public class SimpleCollector<T> {
     private List<List<Edge<T>>> paths = new ArrayList<>();
 
-    public void add(List<Edge<T>> path){
+    public boolean add(List<Edge<T>> path){
         paths.add(path);
+        return true;
     }
 
     public List<List<Edge<T>>> get() {

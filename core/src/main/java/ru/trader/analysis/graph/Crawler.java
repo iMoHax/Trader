@@ -8,7 +8,7 @@ import ru.trader.analysis.LimitedQueue;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class Crawler<T> {
     private final static Logger LOG = LoggerFactory.getLogger(Crawler.class);
@@ -17,13 +17,23 @@ public class Crawler<T> {
     private final static int SPLIT_SIZE = 3;
 
     protected final Graph<T> graph;
-    private final Consumer<List<Edge<T>>> onFoundFunc;
+    private final Function<List<Edge<T>>,Boolean> onFoundFunc;
+    private final Function<Edge<T>,Boolean> isFound;
+    private T target;
     private int maxSize;
 
-    public Crawler(Graph<T> graph, Consumer<List<Edge<T>>> onFoundFunc) {
+    public Crawler(Graph<T> graph, Function<List<Edge<T>>, Boolean> onFoundFunc) {
         this.graph = graph;
         maxSize = graph.getRoot().getLevel();
         this.onFoundFunc = onFoundFunc;
+        this.isFound = this::isTarget;
+    }
+
+    public Crawler(Graph<T> graph, Function<Edge<T>,Boolean> isFoundFunc, Function<List<Edge<T>>,Boolean> onFoundFunc) {
+        this.graph = graph;
+        maxSize = graph.getRoot().getLevel();
+        this.onFoundFunc = onFoundFunc;
+        this.isFound = isFoundFunc;
     }
 
     protected List<Edge<T>> getCopyList(Traversal<T> head, Edge<T> tail){
@@ -31,6 +41,29 @@ public class Crawler<T> {
         res.addAll(head.toEdges());
         res.add(tail);
         return res;
+    }
+
+    public T getTarget() {
+        return target;
+    }
+
+    private void setTarget(T target) {
+        if (this.target != null && target != null){
+            throw new IllegalStateException("Crawler is busy");
+        }
+        this.target = target;
+    }
+
+    private boolean isTarget(Edge<T> edge){
+        return edge.isConnect(this.target);
+    }
+
+    protected boolean isFound(Edge<T> edge){
+        return isFound.apply(edge);
+    }
+
+    public int getMaxSize() {
+        return maxSize;
     }
 
     public void setMaxSize(int maxSize) {
@@ -60,14 +93,16 @@ public class Crawler<T> {
         Optional<Vertex<T>> t = graph.getVertex(target);
         int found = 0;
         if (t.isPresent()) {
-            if (count > 1) {
+            setTarget(target);
+            if (count > 1 || s.isEntry(target)) {
                 int maxDeep = maxSize - (s.isEntry(target) ? graph.getMinJumps() * 2 : graph.getMinJumps());
-                found = bfs(start(s), target, maxDeep, count);
+                found = bfs(start(s), maxDeep, count);
             } else {
-                found = dfs(start(s), target, t.get().getLevel() + 1, count);
+                found = dfs(start(s), t.get().getLevel() + 1, count);
             }
         }
         LOG.debug("Found {} paths", found);
+        setTarget(null);
     }
 
     public void findMin(T target){
@@ -93,46 +128,51 @@ public class Crawler<T> {
         Optional<Vertex<T>> t = graph.getVertex(target);
         int found = 0;
         if (t.isPresent()) {
+            setTarget(target);
             int maxDeep = s.isEntry(target) ? maxSize - graph.getMinJumps() * 2 : graph.getMinLevel();
             if (maxDeep < 0) maxDeep = 0;
             if (maxSize - maxDeep <= SPLIT_SIZE){
-                found = ucs(start(s), target, maxDeep, count);
+                found = ucs(start(s), maxDeep, count);
             } else {
-                found = ucs2(start(s), target, maxDeep, count);
+                found = ucs2(start(s), maxDeep, count);
             }
         }
         LOG.debug("Found {} paths", found);
+        setTarget(null);
     }
 
     protected CostTraversalEntry start(Vertex<T> vertex){
         return new CostTraversalEntry(vertex);
     }
 
-    protected CostTraversalEntry travers(CostTraversalEntry entry, Edge<T> edge, T target){
+    protected CostTraversalEntry travers(CostTraversalEntry entry, Edge<T> edge){
         return new CostTraversalEntry(entry, edge);
     }
 
-    private int dfs(CostTraversalEntry entry, T target, int deep, int count) {
+    private int dfs(CostTraversalEntry entry, int deep, int count) {
         int found = 0;
         Vertex<T> source = entry.vertex;
         LOG.trace("DFS from {} to {}, deep {}, count {}, entry {}", source, target, deep, count, entry);
+        boolean stop = false;
         if (deep == source.getLevel()){
             for (Edge<T> next : entry.getEdges()) {
-                if (next.isConnect(target)){
+                if (isFound(next)){
                     List<Edge<T>> res = getCopyList(entry, next);
-                    LOG.debug("Last edge find, path {}", res);
-                    onFoundFunc.accept(res);
+                    LOG.debug("Last edge found, path {}", res);
                     found++;
+                    if (!onFoundFunc.apply(res)){
+                        stop = true;
+                    }
                     break;
                 }
             }
         }
-        if (found < count){
+        if (!stop && found < count){
             if (deep < source.getLevel() && entry.size() < maxSize-1) {
                 LOG.trace("Search around");
                 for (Edge<T> edge : entry.getEdges()) {
                     if (edge.getTarget().isSingle()) continue;
-                    found += dfs(travers(entry, edge, target), target, deep, count-found);
+                    found += dfs(travers(entry, edge), deep, count-found);
                     if (found >= count) break;
                 }
             }
@@ -140,7 +180,7 @@ public class Crawler<T> {
         return found;
     }
 
-    private int bfs(CostTraversalEntry root, T target, int deep, int count) {
+    private int bfs(CostTraversalEntry root, int deep, int count) {
         LOG.trace("BFS from {} to {}, deep {}, count {}", root.vertex, target, deep, count);
         int found = 0;
         LinkedList<CostTraversalEntry> queue = new LinkedList<>();
@@ -157,16 +197,18 @@ public class Crawler<T> {
             Iterator<Edge<T>> iterator = entry.iterator();
             while (iterator.hasNext()){
                 Edge<T> edge = iterator.next();
-                if (edge.isConnect(target)){
+                if (isFound(edge)){
                     List<Edge<T>> res = getCopyList(entry, edge);
-                    LOG.debug("Last edge find, path {}", res);
-                    onFoundFunc.accept(res);
+                    LOG.debug("Last edge found, path {}", res);
                     found++;
+                    if (!onFoundFunc.apply(res)){
+                        break;
+                    }
                 }
                 if (found >= count) break;
                 if (edge.getTarget().isSingle()) continue;
                 if (deep < source.getLevel()) {
-                    CostTraversalEntry nextEntry = travers(entry, edge, target);
+                    CostTraversalEntry nextEntry = travers(entry, edge);
                     nextEntry.sort();
                     queue.add(nextEntry);
                 }
@@ -175,7 +217,7 @@ public class Crawler<T> {
         return found;
     }
 
-    private int ucs(CostTraversalEntry root, T target, int deep, int count) {
+    private int ucs(CostTraversalEntry root, int deep, int count) {
         LOG.trace("UCS from {} to {}, deep {}, count {}", root.vertex, target, deep, count);
         int found = 0;
         PriorityQueue<CostTraversalEntry> queue = new PriorityQueue<>();
@@ -185,11 +227,13 @@ public class Crawler<T> {
             LOG.trace("Check path entry {}, weight {}", entry, entry.weight);
             Edge<T> edge = entry.getEdge();
             if (edge != null) {
-                if (edge.isConnect(target)) {
+                if (isFound(edge)) {
                     List<Edge<T>> res = entry.toEdges();
                     LOG.debug("Path found {}", res);
-                    onFoundFunc.accept(res);
                     found++;
+                    if (!onFoundFunc.apply(res)){
+                        break;
+                    }
                     if (found >= count) break;
                 }
                 if (edge.getTarget().isSingle()){
@@ -207,14 +251,14 @@ public class Crawler<T> {
                 boolean canDeep = !entry.getTarget().isSingle() && deep < entry.getTarget().getLevel();
                 if (canDeep || isTarget){
                     LOG.trace("Add edge {} to queue", edge);
-                    queue.add(travers(entry, edge, target));
+                    queue.add(travers(entry, edge));
                 }
             }
         }
         return found;
     }
 
-    private int ucs2(CostTraversalEntry root, T target, int deep, int count) {
+    private int ucs2(CostTraversalEntry root, int deep, int count) {
         LOG.trace("UCS2 from {} to {}, deep {}, count {}", root.vertex, target, deep, count);
         int found = 0;
         double limit = Double.MAX_VALUE;
@@ -236,8 +280,10 @@ public class Crawler<T> {
             if (isTarget) {
                 List<Edge<T>> res = entry.toEdges();
                 LOG.trace("Path found {}", res);
-                onFoundFunc.accept(res);
                 found++;
+                if (!onFoundFunc.apply(res)){
+                    break;
+                }
                 if (found >= count) break;
                 CTEntrySupport next = targetsQueue.peek();
                 limit = next != null ? next.entry.getWeight() :  Double.MAX_VALUE;
@@ -252,7 +298,7 @@ public class Crawler<T> {
                 LOG.trace("Is limit deep");
                 continue;
             }
-            DFS task = new DFS(curr, target, deep, count - found, limit);
+            DFS task = new DFS(curr, deep, count - found, limit);
             POOL.invoke(task);
             targetsQueue.addAll(task.getTargets());
             queue.addAll(task.getQueue());
@@ -322,20 +368,18 @@ public class Crawler<T> {
         private final CTEntrySupport root;
         private final int count;
         private final int deep;
-        private final T target;
         private final Collection<CTEntrySupport> queue;
         private final Collection<CTEntrySupport> targets;
         private final ArrayList<DFS> subTasks;
         private final boolean isSubTask;
         private double limit;
 
-        private DFS(CTEntrySupport root, T target, int deep, int count, double limit) {
-            this(root, target, deep, count, limit, false);
+        private DFS(CTEntrySupport root, int deep, int count, double limit) {
+            this(root, deep, count, limit, false);
         }
 
-        private DFS(CTEntrySupport root, T target, int deep, int count, double limit, boolean subtask) {
+        private DFS(CTEntrySupport root, int deep, int count, double limit, boolean subtask) {
             this.root = root;
-            this.target = target;
             this.deep = deep;
             this.count = count;
             this.limit = limit;
@@ -368,10 +412,10 @@ public class Crawler<T> {
                 Edge<T> edge = curr.next();
                 CostTraversalEntry entry = curr.entry;
                 LOG.trace("Check edge {}, entry {}, weight {}", edge, entry, entry.weight);
-                boolean isTarget = edge.isConnect(target);
+                boolean isTarget = isFound(edge);
                 boolean canDeep = !entry.getTarget().isSingle() && deep < entry.getTarget().getLevel() && entry.size() < maxSize-1;
                 if (canDeep || isTarget){
-                    CostTraversalEntry nextEntry = travers(entry, edge, target);
+                    CostTraversalEntry nextEntry = travers(entry, edge);
                     nextEntry.sort();
                     curr = new CTEntrySupport(curr, nextEntry);
                     if (isTarget){
@@ -413,7 +457,7 @@ public class Crawler<T> {
 
         private boolean addSubTask(CTEntrySupport entry){
             if (subTasks.size() < THRESHOLD){
-                DFS subTask = new DFS(entry, target, deep, count, limit, true);
+                DFS subTask = new DFS(entry, deep, count, limit, true);
                 subTask.fork();
                 subTasks.add(subTask);
                 return true;

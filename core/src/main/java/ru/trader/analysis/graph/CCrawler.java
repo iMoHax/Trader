@@ -8,17 +8,23 @@ import ru.trader.graph.Connectable;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class CCrawler<T extends Connectable<T>> extends Crawler<T> {
     private final static Logger LOG = LoggerFactory.getLogger(CCrawler.class);
     private double startFuel;
 
-    public CCrawler(ConnectibleGraph<T> graph, Consumer<List<Edge<T>>> onFoundFunc) {
+    public CCrawler(Graph<T> graph, Function<List<Edge<T>>, Boolean> onFoundFunc) {
         super(graph, onFoundFunc);
         startFuel = getShip().getTank();
     }
+
+    public CCrawler(Graph<T> graph, Function<Edge<T>, Boolean> isFoundFunc, Function<List<Edge<T>>, Boolean> onFoundFunc) {
+        super(graph, isFoundFunc, onFoundFunc);
+        startFuel = getShip().getTank();
+    }
+
 
     protected Ship getShip(){
         return ((ConnectibleGraph<T>)graph).getShip();
@@ -39,7 +45,7 @@ public class CCrawler<T extends Connectable<T>> extends Crawler<T> {
     }
 
     @Override
-    protected CCostTraversalEntry travers(CostTraversalEntry entry, Edge<T> edge, T target) {
+    protected CCostTraversalEntry travers(CostTraversalEntry entry, Edge<T> edge) {
         @SuppressWarnings("unchecked")
         CCostTraversalEntry cEntry = (CCostTraversalEntry)entry;
         ConnectibleEdge<T> cEdge = (ConnectibleEdge<T>) edge;
