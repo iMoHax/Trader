@@ -260,6 +260,42 @@ public class CrawlerTest extends Assert {
 
     }
 
+    @Test
+    public void testGetCustomPaths() throws Exception {
+        LOG.info("Start get custom paths");
+        //max distance 15.6, 1 jump tank
+        Ship ship = new Ship();
+        ship.setMass(18);ship.setTank(0.6);
+        Profile profile = new Profile(ship);
+        profile.setJumps(4);
+        LOG.info("Ship = {}, Jumps = {}", profile.getShip(), profile.getJumps());
+        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile);
+        graph.build(x5, entrys);
+        // x5 <-> x4 <-> x3 - refill -> x2,
+        // x5 <-> x6 <-> x4 <-refill -> x2
+        // x5 <-> x3 <- refill -> x2
+        // x5 <-> x4 <- refill -> x6
+        SimpleCollector<Point> paths = new SimpleCollector<>();
+        CCrawler<Point> crawler = new CCrawler<>(graph, paths::add);
+
+        crawler.setStartFuel(0.3);
+        crawler.findMin(x3, x2);
+        assertPaths(paths.get(), PPath.of(x3, x2));
+        paths.clear();
+
+        crawler.findFast(x3, x2);
+        assertPaths(paths.get(), PPath.of(x3, x2));
+        paths.clear();
+
+        crawler.setStartFuel(0.6);
+        crawler.findMin(x6, x2);
+        assertPaths(paths.get(), PPath.of(x6, x4, x2));
+        paths.clear();
+
+        crawler.findFast(x6, x2);
+        assertPaths(paths.get(), PPath.of(x6, x4, x2));
+        paths.clear();
+    }
 
     @After
     public void tearDown() throws Exception {
