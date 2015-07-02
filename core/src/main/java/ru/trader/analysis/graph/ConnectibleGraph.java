@@ -89,7 +89,10 @@ public class ConnectibleGraph<T extends Connectable<T>> extends AbstractGraph<T>
 
         @Override
         protected ConnectibleEdge<T> createEdge(Vertex<T> target) {
-            return new ConnectibleEdge<>(vertex, target, refill, fuelCost);
+            ConnectibleEdge<T> res = new ConnectibleEdge<>(vertex, target);
+            res.setRefill(refill);
+            res.setFuelCost(fuelCost);
+            return res;
         }
     }
 

@@ -17,7 +17,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
 
     protected Vertex<T> root;
     protected final List<Vertex<T>> vertexes;
-    private final GraphCallBack callback;
+    protected final GraphCallBack callback;
 
     protected int minJumps;
 

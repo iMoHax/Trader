@@ -3,21 +3,27 @@ package ru.trader.analysis.graph;
 import ru.trader.graph.Connectable;
 
 public class ConnectibleEdge<T extends Connectable<T>> extends Edge<T> {
-    protected final boolean refill;
-    protected final double fuel;
+    protected boolean refill;
+    protected double fuelCost;
 
-    public ConnectibleEdge(Vertex<T> source, Vertex<T> target, boolean refill, double fuel) {
+    public ConnectibleEdge(Vertex<T> source, Vertex<T> target) {
         super(source, target);
-        this.refill = refill;
-        this.fuel = fuel;
     }
 
     public boolean isRefill() {
         return refill;
     }
 
-    public double getFuel() {
-        return fuel;
+    protected void setRefill(boolean refill) {
+        this.refill = refill;
+    }
+
+    public double getFuelCost() {
+        return fuelCost;
+    }
+
+    public void setFuelCost(double fuel) {
+        this.fuelCost = fuel;
     }
 
     @Override
