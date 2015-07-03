@@ -3,7 +3,7 @@ package ru.trader.analysis.graph;
 import ru.trader.graph.Connectable;
 
 public class ConnectibleEdge<T extends Connectable<T>> extends Edge<T> {
-    protected boolean refill;
+    protected double refill;
     protected double fuelCost;
 
     public ConnectibleEdge(Vertex<T> source, Vertex<T> target) {
@@ -11,10 +11,14 @@ public class ConnectibleEdge<T extends Connectable<T>> extends Edge<T> {
     }
 
     public boolean isRefill() {
+        return refill != 0;
+    }
+
+    public double getRefill() {
         return refill;
     }
 
-    protected void setRefill(boolean refill) {
+    public void setRefill(double refill) {
         this.refill = refill;
     }
 
@@ -36,7 +40,7 @@ public class ConnectibleEdge<T extends Connectable<T>> extends Edge<T> {
     @Override
     public String toString() {
         return source.getEntry().toString() + " - "+ weight
-               + (refill ? "R" : "")
+               + (isRefill() ? "R" : "")
                +" -> " + target.getEntry().toString();
     }
 }

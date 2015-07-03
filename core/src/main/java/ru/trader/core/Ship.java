@@ -1,6 +1,8 @@
 package ru.trader.core;
 
 public class Ship {
+    private final static int REFILL_FUEL_STEP = 10;
+
     private int cargo;
     private Engine engine;
     private double tank;
@@ -69,11 +71,34 @@ public class Ship {
 
     //Laden fuel cost
     public double getFuelCost(double distance){
-        return engine.getFuelCost(distance, getLadenMass());
+        return engine.getFuelCost(distance, getLadenMass(getRoundMaxFuel(distance)));
     }
 
     public double getFuelCost(double fuel, double distance){
         return engine.getFuelCost(distance, getLadenMass(fuel));
+    }
+
+    public double getRoundMaxFuel(double distance){
+        return getRoundMaxFuel(distance, REFILL_FUEL_STEP);
+    }
+
+    private double getRoundMaxFuel(double distance, int step){
+        double fuel = getMaxFuel(distance);
+        if (fuel == 0 || fuel == tank) return fuel;
+        double minFuel = engine.getFuelCost(distance, getLadenMass(0));
+        fuel = Math.floor(fuel*step/tank) * tank / step;
+        return fuel < minFuel ? 0 : fuel;
+    }
+
+    public double getMaxFuel(double distance){
+        double fuel = engine.getMaxFuel(distance, getLadenMass(0));
+        if (fuel >= tank) return tank;
+        return fuel;
+
+    }
+
+    public double getMaxJumpRange(){
+        return getJumpRange(Math.min(engine.getMaxFuel(), tank));
     }
 
     //Jump range with full fuel tank
@@ -105,7 +130,7 @@ public class Ship {
                 ", engine=" + engine +
                 ", tank=" + tank +
                 ", mass=" + mass +
-                ", maxDist=" + getJumpRange() +
+                ", maxDist=" + getMaxJumpRange() +
                 ", fullTankDist=" + getFullTankJumpRange() +
                 '}';
     }
@@ -181,6 +206,11 @@ public class Ship {
         //Fuel Cost = Coefficient * (Distance * (Mass / Optimised Mass))^Power
         public double getFuelCost(double distance, double mass){
             return getMultiplier() * Math.pow(distance * (mass / getOptMass()), getPowMultiplier());
+        }
+
+        public double getMaxFuel(double distance, double emptyTankMass){
+            double f = Math.pow(getMaxFuel()/getMultiplier(), 1/getPowMultiplier())*getOptMass()/distance - emptyTankMass;
+            return f < getMaxFuel() ? 0 : f;
         }
 
         public double getJumpRange(double fuel, double  mass){

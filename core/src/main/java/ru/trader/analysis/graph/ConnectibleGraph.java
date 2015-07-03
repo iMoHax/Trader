@@ -53,13 +53,13 @@ public class ConnectibleGraph<T extends Connectable<T>> extends AbstractGraph<T>
 
         @Override
         public boolean test(Double distance) {
-            return distance <= getShip().getJumpRange(limit) || (profile.withRefill() && distance <= getShip().getJumpRange() && source.canRefill());
+            return distance <= getShip().getJumpRange(limit) || (profile.withRefill() && distance <= getShip().getMaxJumpRange() && source.canRefill());
         }
     }
 
     protected class ConnectibleGraphBuilder extends GraphBuilder {
         private final DistanceFilter distanceFilter;
-        protected boolean refill;
+        protected double refill;
         protected double fuelCost;
 
         protected ConnectibleGraphBuilder(Vertex<T> vertex, Collection<T> set, int deep, double limit) {
@@ -76,13 +76,13 @@ public class ConnectibleGraph<T extends Connectable<T>> extends AbstractGraph<T>
             }
             fuelCost = getShip().getFuelCost(limit, distance);
             double nextLimit = profile.withRefill() ? limit - fuelCost : getShip().getTank();
-            if (nextLimit < 0) {
+            if (nextLimit < 0 && vertex.getEntry().canRefill()) {
                 LOG.trace("Refill");
-                refill = true;
-                fuelCost = getShip().getFuelCost(distance);
-                nextLimit = getShip().getTank() - fuelCost;
+                refill = getShip().getRoundMaxFuel(distance);
+                fuelCost = getShip().getFuelCost(refill, distance);
+                nextLimit = refill - fuelCost;
             } else {
-                refill = false;
+                refill = 0;
             }
             return nextLimit;
         }

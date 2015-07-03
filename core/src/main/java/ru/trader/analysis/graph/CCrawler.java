@@ -52,7 +52,7 @@ public class CCrawler<T extends Connectable<T>> extends Crawler<T> {
         double nextLimit;
         if (cEdge.isRefill()) {
             LOG.trace("Refill");
-            nextLimit = getShip().getTank() - cEdge.getFuelCost();
+            nextLimit = cEdge.getRefill() - cEdge.getFuelCost();
         } else {
             nextLimit = getProfile().withRefill() ? cEntry.getFuel() - cEdge.getFuelCost() : getShip().getTank();
         }
@@ -91,10 +91,9 @@ public class CCrawler<T extends Connectable<T>> extends Crawler<T> {
             double distance = source.getDistance(edge.target.getEntry());
             double fuelCost = getShip().getFuelCost(fuel, distance);
             double nextLimit = getProfile().withRefill() ? fuel - fuelCost : getShip().getTank();
-            boolean refill = nextLimit < 0 && source.canRefill();
-            if (refill) {
-                refill = true;
-                fuelCost = getShip().getFuelCost(distance);
+            double refill = nextLimit < 0 && source.canRefill() ? getShip().getRoundMaxFuel(distance) : 0;
+            if (refill > 0) {
+                fuelCost = getShip().getFuelCost(refill, distance);
             }
             ConnectibleEdge<T> cEdge = new ConnectibleEdge<>(edge.getSource(), edge.getTarget());
             cEdge.setRefill(refill);
