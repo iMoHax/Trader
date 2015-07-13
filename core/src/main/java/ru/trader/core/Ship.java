@@ -31,6 +31,7 @@ public class Ship {
 
     public void setCargo(int cargo) {
         this.cargo = cargo;
+        fuelTable = null;
     }
 
     public Engine getEngine() {
@@ -38,11 +39,12 @@ public class Ship {
     }
 
     public void setEngine(int clazz, char rating) {
-        this.engine = new Engine(clazz, rating);
+        setEngine(new Engine(clazz, rating));
     }
 
     public void setEngine(Engine engine) {
         this.engine = engine;
+        fuelTable = null;
     }
 
     public double getTank() {
@@ -59,6 +61,7 @@ public class Ship {
 
     public void setMass(double mass) {
         this.mass = mass;
+        fuelTable = null;
     }
 
     public double getLadenMass(){
@@ -69,41 +72,49 @@ public class Ship {
         return mass+fuel+cargo;
     }
 
-    //Laden fuel cost
-    public double getFuelCost(double distance){
-        return engine.getFuelCost(distance, getLadenMass(getRoundMaxFuel(distance)));
-    }
-
     public double getFuelCost(double fuel, double distance){
         return engine.getFuelCost(distance, getLadenMass(fuel));
+    }
+
+    public double getMaxFuelCost(double distance){
+        return engine.getMaxFuel(distance, getLadenMass(engine.getMaxFuel()));
     }
 
     public double getRoundMaxFuel(double distance){
         return getRoundMaxFuel(distance, REFILL_FUEL_STEP);
     }
 
+    public double getRoundFuel(double fuel){
+        return getRoundFuel(fuel, REFILL_FUEL_STEP);
+    }
+
+    public double getRoundFuel(double fuel, int step){
+        fuel = Math.floor(fuel*step/tank) * tank / step;
+        return fuel < 0 ? 0 : fuel;
+
+    }
+
     private double getRoundMaxFuel(double distance, int step){
         double fuel = getMaxFuel(distance);
         if (fuel == 0 || fuel == tank) return fuel;
-        double minFuel = engine.getFuelCost(distance, getLadenMass(0));
+        double minFuel = getMinFuel(distance);
         fuel = Math.floor(fuel*step/tank) * tank / step;
         return fuel < minFuel ? 0 : fuel;
     }
 
-    public double getMaxFuel(double distance){
-        double fuel = engine.getMaxFuel(distance, getLadenMass(0));
-        if (fuel >= tank) return tank;
-        return fuel;
-
-    }
-
     public double getMaxJumpRange(){
-        return getJumpRange(Math.min(engine.getMaxFuel(), tank));
+        if (Double.isNaN(maxJumpRange)){
+            maxJumpRange = getJumpRange(Math.min(engine.getMaxFuel(), tank));
+        }
+        return maxJumpRange;
     }
 
     //Jump range with full fuel tank
     public double getJumpRange(){
-        return getJumpRange(tank);
+        if (Double.isNaN(ladenJumpRange)){
+            ladenJumpRange = getJumpRange(tank);
+        }
+        return ladenJumpRange;
     }
 
     //Laden jump range
@@ -208,6 +219,7 @@ public class Ship {
             return getMultiplier() * Math.pow(distance * (mass / getOptMass()), getPowMultiplier());
         }
 
+        //return max fuel for jump to distance
         public double getMaxFuel(double distance, double emptyTankMass){
             double f = Math.pow(getMaxFuel()/getMultiplier(), 1/getPowMultiplier())*getOptMass()/distance - emptyTankMass;
             return f < getMaxFuel() ? 0 : f;
@@ -224,4 +236,49 @@ public class Ship {
                     ", fuelPJ="+getMaxFuel()+"}";
         }
     }
+
+    private final static float FUEL_TABLE_STEP = 0.01f;
+    private FuelHelper[] fuelTable;
+    private double maxJumpRange = Double.NaN;
+    private double ladenJumpRange = Double.NaN;
+    private void fillFuelTable(){
+        double fuel = getEngine().getMaxFuel();
+        fuelTable = new FuelHelper[(int) (fuel/FUEL_TABLE_STEP)];
+        maxJumpRange = Double.NaN; ladenJumpRange = Double.NaN;
+        for (int i = fuelTable.length - 1; i >= 0; i--) {
+            double distance = getJumpRange(fuel);
+            fuelTable[i] = new FuelHelper(distance, fuel);
+            fuel = fuel - FUEL_TABLE_STEP;
+        }
+    }
+
+    public double getMaxFuel(double distance){
+        if (distance > getMaxJumpRange()) return 0;
+        if (distance <= getJumpRange()) return tank;
+        return engine.getMaxFuel(distance, getLadenMass(0));
+    }
+
+    public double getMinFuel(double distance){
+        if (fuelTable == null) fillFuelTable();
+        if (distance > getMaxJumpRange()) return 0;
+        for (int i = 0; i < fuelTable.length; i++) {
+            FuelHelper h = fuelTable[i];
+            if (distance <= h.distance) {
+                return i == 0 ? 0 : h.fuel <= tank ? h.fuel : 0;
+            }
+        }
+        return 0;
+    }
+
+    private class FuelHelper {
+        private final double distance;
+        private final double fuel;
+
+        private FuelHelper(double distance, double fuel) {
+            this.distance = distance;
+            this.fuel = fuel;
+        }
+    }
+
+
 }
