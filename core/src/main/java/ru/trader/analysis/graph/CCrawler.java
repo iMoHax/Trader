@@ -15,12 +15,12 @@ public class CCrawler<T extends Connectable<T>> extends Crawler<T> {
     private final static Logger LOG = LoggerFactory.getLogger(CCrawler.class);
     private double startFuel;
 
-    public CCrawler(Graph<T> graph, Function<List<Edge<T>>, Boolean> onFoundFunc) {
+    public CCrawler(ConnectibleGraph<T> graph, Function<List<Edge<T>>, Boolean> onFoundFunc) {
         super(graph, onFoundFunc);
         startFuel = getShip().getTank();
     }
 
-    public CCrawler(Graph<T> graph, Function<Edge<T>, Boolean> isFoundFunc, Function<List<Edge<T>>, Boolean> onFoundFunc) {
+    public CCrawler(ConnectibleGraph<T> graph, Function<Edge<T>, Boolean> isFoundFunc, Function<List<Edge<T>>, Boolean> onFoundFunc) {
         super(graph, isFoundFunc, onFoundFunc);
         startFuel = getShip().getTank();
     }
@@ -78,22 +78,23 @@ public class CCrawler<T extends Connectable<T>> extends Crawler<T> {
 
         @Override
         public List<Edge<T>> collect(Collection<Edge<T>> src) {
-            return src.stream().filter(this::check).map(this::wrap).collect(Collectors.toList());
+            return src.stream().filter(this::check).map(this::wrap).filter(e -> e != null).collect(Collectors.toList());
         }
 
         protected boolean check(Edge<T> e){
-            ConnectibleEdge<T> edge = (ConnectibleEdge<T>) e;
-            return edge.getFuelCost() <= fuel || edge.getSource().getEntry().canRefill();
+            ConnectibleGraph<T>.BuildEdge edge = (ConnectibleGraph<T>.BuildEdge) e;
+            return fuel <= edge.getMaxFuel() && (fuel >= edge.getMinFuel() || edge.getSource().getEntry().canRefill());
         }
 
-        protected ConnectibleEdge<T> wrap(Edge<T> edge){
+        protected ConnectibleEdge<T> wrap(Edge<T> e){
+            ConnectibleGraph<T>.BuildEdge edge = (ConnectibleGraph<T>.BuildEdge) e;
             T source = edge.source.getEntry();
-            double distance = source.getDistance(edge.target.getEntry());
-            double fuelCost = getShip().getFuelCost(fuel, distance);
-            double nextLimit = getProfile().withRefill() ? fuel - fuelCost : getShip().getTank();
-            double refill = nextLimit < 0 && source.canRefill() ? getShip().getRoundMaxFuel(distance) : 0;
+            double fuelCost = edge.getFuelCost(fuel);
+            double nextLimit = fuel - fuelCost;
+            if (nextLimit < 0 && !source.canRefill()) return null;
+            double refill = nextLimit < 0 ? edge.getRefill() : 0;
             if (refill > 0) {
-                fuelCost = getShip().getFuelCost(refill, distance);
+                fuelCost = edge.getFuelCost(refill);
             }
             ConnectibleEdge<T> cEdge = new ConnectibleEdge<>(edge.getSource(), edge.getTarget());
             cEdge.setRefill(refill);

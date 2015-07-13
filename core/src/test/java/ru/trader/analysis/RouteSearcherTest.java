@@ -78,6 +78,10 @@ public class RouteSearcherTest extends Assert{
         assertEquals(route.getDistance(), 72.42, 0.01);
 
         List<Route> apaths = searcher.getRoutes(ithaca_st, ithaca_st, fWorld.getMarkets(true).collect(Collectors.toList()));
+/*        List<Route> apaths = searcher.getRoutes(ithaca_st, ithaca_st, Arrays.asList(ithaca_st, lhs3262_st,
+                morgor_st, lhs3006_st, ithaca.asTransit(), lhs3262.asTransit(),
+                morgor.asTransit(), lhs3006.asTransit()));
+*/
         Route actual = apaths.stream().findFirst().get();
         assertEquals("Routes is different", route, actual);
 

@@ -18,7 +18,6 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     protected Vertex<T> root;
     protected final List<Vertex<T>> vertexes;
     protected final GraphCallBack callback;
-
     protected int minJumps;
 
     protected AbstractGraph() {
@@ -37,17 +36,26 @@ public abstract class AbstractGraph<T> implements Graph<T> {
         minJumps = 1;
         root = getInstance(start, maxDeep, maxDeep);
         POOL.invoke(createGraphBuilder(root, set, maxDeep - 1, limit));
+        onEnd();
         callback.endBuild();
     }
 
-    private Vertex<T> getInstance(T entry, int level, int deep){
+    protected void onEnd(){
+
+    }
+
+    protected Vertex<T> newInstance(T entry, int index){
+        return new Vertex<>(entry, index);
+    }
+
+    protected Vertex<T> getInstance(T entry, int level, int deep){
         Vertex<T> vertex = getVertex(entry).orElse(null);
         if (vertex == null) {
             synchronized (vertexes){
                 vertex = getVertex(entry).orElse(null);
                 if (vertex == null){
                     LOG.trace("Is new vertex");
-                    vertex = new Vertex<>(entry, vertexes.size());
+                    vertex = newInstance(entry, vertexes.size());
                     vertex.setLevel(level);
                     vertexes.add(vertex);
                     int jumps = root != null ? root.getLevel() - deep : 0;

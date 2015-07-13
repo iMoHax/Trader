@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.analysis.graph.ConnectibleGraph;
 import ru.trader.analysis.graph.Crawler;
 import ru.trader.analysis.graph.SimpleCollector;
 import ru.trader.analysis.graph.Vertex;
@@ -58,10 +59,10 @@ public class VendorsGraphTest extends Assert {
         LOG.info("Build vendors graph");
         VendorsGraph vGraph = new VendorsGraph(scorer);
         vGraph.build(cabreraDock, fWorld.getMarkets(true).collect(Collectors.toList()));
-
+        LOG.info("Search");
         SimpleCollector<Vendor> paths = new SimpleCollector<>();
         Crawler<Vendor> crawler = vGraph.crawler(paths::add);
-
+        // Cabrera Dock -> Transit Wolf 1323 -> Transit Wolf 1325 -> Quimper Ring -> Transit Bhadaba -> Transit Wolf 1325 -> Cabrera Dock]
         crawler.findMin(cabreraDock, 100);
         assertEquals(100, paths.get().size());
         paths.clear();

@@ -76,10 +76,6 @@ public class Scorer {
         return avgDistance;
     }
 
-    public double getFuel(double distance){
-        return profile.getShip().getFuelCost(distance);
-    }
-
     public double getScore(RouteEntry entry, int jumps) {
         int lands = entry.isLand() ? 1 : 0;
         return getScore(entry.getVendor(), entry.getProfit(), jumps, lands, entry.getFuel());

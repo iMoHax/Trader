@@ -1,6 +1,7 @@
 package ru.trader.core;
 
 public class Profile {
+    public static enum PATH_PRIORITY {FAST, ECO}
 
     private double balance;
     private int jumps;
@@ -14,6 +15,7 @@ public class Profile {
     private double jumpMult;
     private double landMult;
     private double fuelPrice;
+    private PATH_PRIORITY pathPriority;
 
     public Profile(Ship ship) {
         this.ship = ship;
@@ -25,6 +27,7 @@ public class Profile {
         landMult = 0.95;
         fuelPrice = 100;
         jumpMult = 0.5;
+        pathPriority = PATH_PRIORITY.ECO;
     }
 
     public double getBalance() {
@@ -113,5 +116,13 @@ public class Profile {
 
     public void setFuelPrice(double fuelPrice) {
         this.fuelPrice = fuelPrice;
+    }
+
+    public PATH_PRIORITY getPathPriority() {
+        return pathPriority;
+    }
+
+    public void setPathPriority(PATH_PRIORITY pathPriority) {
+        this.pathPriority = pathPriority;
     }
 }

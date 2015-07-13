@@ -8,7 +8,6 @@ import ru.trader.core.Ship;
 import ru.trader.graph.Connectable;
 
 import java.util.Collection;
-import java.util.function.Predicate;
 
 public class ConnectibleGraph<T extends Connectable<T>> extends AbstractGraph<T> {
     private final static Logger LOG = LoggerFactory.getLogger(ConnectibleGraph.class);
@@ -42,58 +41,95 @@ public class ConnectibleGraph<T extends Connectable<T>> extends AbstractGraph<T>
         super.build(start, set, profile.getJumps(), getShip().getTank());
     }
 
-    private class DistanceFilter implements Predicate<Double> {
-        private final double limit;
-        private final T source;
-
-        private DistanceFilter(double limit, T source) {
-            this.limit = limit;
-            this.source = source;
-        }
-
-        @Override
-        public boolean test(Double distance) {
-            return distance <= getShip().getJumpRange(limit) || (profile.withRefill() && distance <= getShip().getMaxJumpRange() && source.canRefill());
-        }
-    }
-
     protected class ConnectibleGraphBuilder extends GraphBuilder {
-        private final DistanceFilter distanceFilter;
-        protected double refill;
-        protected double fuelCost;
+        protected double minFuel;
+        protected double maxFuel;
+        protected double distance;
 
         protected ConnectibleGraphBuilder(Vertex<T> vertex, Collection<T> set, int deep, double limit) {
             super(vertex, set, deep, limit);
-            distanceFilter = new DistanceFilter(limit, vertex.getEntry());
         }
 
         @Override
         protected double onConnect(T entry) {
-            double distance = vertex.getEntry().getDistance(entry);
-            if (!distanceFilter.test(distance)){
+            distance = vertex.getEntry().getDistance(entry);
+            if (distance > getShip().getMaxJumpRange()){
                 LOG.trace("Vertex {} is far away, {}", entry, distance);
                 return -1;
             }
-            fuelCost = getShip().getFuelCost(limit, distance);
-            double nextLimit = profile.withRefill() ? limit - fuelCost : getShip().getTank();
-            if (nextLimit < 0 && vertex.getEntry().canRefill()) {
-                LOG.trace("Refill");
-                refill = getShip().getRoundMaxFuel(distance);
-                fuelCost = getShip().getFuelCost(refill, distance);
-                nextLimit = refill - fuelCost;
-            } else {
-                refill = 0;
-            }
-            return nextLimit;
+            maxFuel = getShip().getMaxFuel(distance);
+            minFuel = getShip().getMinFuel(distance);
+            double fuel = getProfile().withRefill() ? vertex.getEntry().canRefill() ? getShip().getRoundMaxFuel(distance) : limit : getShip().getTank();
+            double fuelCost = getShip().getFuelCost(fuel, distance);
+            return fuel - fuelCost;
         }
 
         @Override
-        protected ConnectibleEdge<T> createEdge(Vertex<T> target) {
-            ConnectibleEdge<T> res = new ConnectibleEdge<>(vertex, target);
-            res.setRefill(refill);
-            res.setFuelCost(fuelCost);
+        protected BuildEdge createEdge(Vertex<T> target) {
+            BuildEdge res = new BuildEdge(vertex, target);
+            res.setFuel(minFuel, maxFuel);
+            res.setDistance(distance);
             return res;
         }
     }
 
+    public class BuildEdge extends Edge<T> {
+        private double distance;
+        private double minFuel;
+        private double maxFuel;
+
+        public BuildEdge(Vertex<T> source, Vertex<T> target) {
+            super(source, target);
+        }
+
+        public double getMinFuel() {
+            return minFuel;
+        }
+
+        public double getMaxFuel() {
+            return maxFuel;
+        }
+
+        public double getRoundMaxFuel() {
+            return getShip().getRoundFuel(maxFuel);
+        }
+
+        public void setFuel(double minFuel, double maxFuel) {
+            this.minFuel = minFuel;
+            this.maxFuel = maxFuel;
+        }
+
+        public void setDistance(double distance) {
+            this.distance = distance;
+        }
+
+        public double getDistance() {
+            return distance;
+        }
+
+        public double getFuelCost(double fuel){
+            return getProfile().withRefill() ? getShip().getFuelCost(fuel, distance) : 0;
+        }
+
+        public double getRefill(){
+            return getShip().getRoundMaxFuel(distance);
+        }
+
+        public Ship getShip(){
+            return ConnectibleGraph.this.getShip();
+        }
+
+        @Override
+        protected double computeWeight() {
+            return distance;
+        }
+
+        @Override
+        public String toString() {
+            return source.getEntry().toString() + " - "+ weight
+                    +"("+minFuel + " - " + maxFuel + ")"
+                    +" -> " + target.getEntry().toString();
+        }
+
+    }
 }
