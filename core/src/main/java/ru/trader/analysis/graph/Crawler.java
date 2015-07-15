@@ -248,9 +248,8 @@ public class Crawler<T> {
             Iterator<Edge<T>> iterator = entry.iterator();
             while (iterator.hasNext()){
                 edge = iterator.next();
-                boolean isTarget = edge.isConnect(target);
                 boolean canDeep = !entry.getTarget().isSingle() && deep < entry.getTarget().getLevel();
-                if (canDeep || isTarget){
+                if (canDeep || isFound(edge)){
                     LOG.trace("Add edge {} to queue", edge);
                     queue.add(travers(entry, edge));
                 }
