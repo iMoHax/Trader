@@ -2,9 +2,13 @@ package ru.trader;
 
 
 import org.junit.Assert;
+import ru.trader.analysis.graph.Edge;
+import ru.trader.analysis.graph.PPath;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 public class TestUtil {
 
@@ -111,6 +115,20 @@ public class TestUtil {
     @SafeVarargs
     public static <T> void assertIterableContainAll(Iterable<T> collection,  T... items){
         checkContains(collection, true, items);
+    }
+
+    public static <T> void assertPaths(Collection<List<Edge<T>>> paths, PPath... points) {
+        assertPaths(false, paths, points);
+    }
+
+    public static <T> void assertPaths(boolean saveOrder, Collection<List<Edge<T>>> paths, PPath... points){
+        Collection<PPath> actual = new ArrayList<>(paths.size());
+        paths.forEach(p -> actual.add(PPath.of(p)));
+        if (saveOrder) {
+            TestUtil.assertCollectionEquals(actual, points);
+        } else {
+            TestUtil.assertCollectionContainAll(actual, points);
+        }
     }
 
 }
