@@ -39,6 +39,8 @@ public class TransitPath {
                 } else {
                     fuel = refill(edges, entries.size()-1);
                 }
+                if (fuel < 0)
+                    throw new IllegalStateException("Is not exists path");
                 refillCount++;
             } else {
                 fuel -= fuelCost;
@@ -62,14 +64,14 @@ public class TransitPath {
                 }
                 double remain = max != -1 ? Math.min(max, e.getRefill()) : e.getRefill();
                 double fuelCost = e.getFuelCost(remain);
+                double fuel = updateFuelCost(edges, i+1, startIndex, remain-fuelCost);
+                if (fuel < 0){
+                    continue;
+                }
                 this.fuelCost += fuelCost - ce.getFuelCost();
                 ce.setFuelCost(fuelCost);
                 ce.setRefill(remain);
-                remain = updateFuelCost(edges, i+1, startIndex, remain-fuelCost);
-                if (remain < 0){
-                    continue;
-                }
-                return remain;
+                return fuel;
             }
             if (max == -1 || e.getMaxFuel() < max){
                 max = e.getMaxFuel();

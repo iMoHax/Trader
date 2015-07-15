@@ -186,6 +186,10 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
                     break;
                 }
                 path = path.add(cEdge);
+                if (path.getMinFuel() > path.getMaxFuel()){
+                    LOG.trace("Path inaccessible");
+                    break;
+                }
                 if (!source.equals(target)){
                     addEdge(source, target, path);
                 }
@@ -235,6 +239,10 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
                             break;
                         }
                         path = path.add(cEdge);
+                        if (path.getMinFuel() > path.getMaxFuel()){
+                            LOG.trace("Path inaccessible");
+                            break;
+                        }
                         if (!source.equals(target)){
                             addEdge(source, target, path);
                         }
@@ -430,7 +438,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             int jumps = source.getEntry().getPlace().equals(target.getEntry().getPlace())? 0 : 1;
             int lands = 1; double fuel = fuelCost;
             if (path != null){
-                jumps = path.size(); fuel = getFuelCost();
+                jumps = path.size()-1; fuel = getFuelCost();
                 lands += path.getRefillCount();
             }
             double profit = getProfit();
