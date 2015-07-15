@@ -112,6 +112,9 @@ public class Scorer {
             if (lands > 0 && profile.getLandMult() > 0){
                 score = profit / (lands * profile.getLandMult());
             }
+            if (profile.getPathPriority() == Profile.PATH_PRIORITY.ECO){
+                jumps = 1;
+            }
             score -= profile.getJumpMult()/profile.getJumps() * score * jumps;
         }
         LOG.trace("score={}", score);
