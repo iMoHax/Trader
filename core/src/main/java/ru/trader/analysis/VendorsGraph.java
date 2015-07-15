@@ -533,6 +533,18 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
                 return edge.getInstance(fuel, balance);
             }
 
+            @Override
+            public double getWeight() {
+                if (weight == null){
+                    Edge<Vendor> edge = getEdge();
+                    Optional<Traversal<Vendor>> head = getHead();
+                    weight = (head.isPresent() ? ((VendorsTraversalEntry)head.get()).getWeight() : 0)  + (edge != null ? edge.getWeight() : 0);
+                    if (edge != null){
+                        weight = weight / (1+Math.floorDiv(profile.getLands() - this.size(),this.size()));
+                    }
+                }
+                return weight;
+            }
         }
 
 

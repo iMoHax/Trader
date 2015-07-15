@@ -334,7 +334,7 @@ public class Crawler<T> {
             while (!cur.isRoot()){
                 Edge<T> edge = cur.getEdge();
                 Edge<T> oEdge = oCur.getEdge();
-                cmp = Double.compare(oEdge.weight, edge.weight);
+                cmp = oEdge.compareTo(edge);
                 if (cmp != 0) return cmp;
                 cur = (CostTraversal<T>) cur.getHead().get();
                 oCur = (CostTraversal<T>) oCur.getHead().get();
@@ -568,7 +568,7 @@ public class Crawler<T> {
     }
 
     protected class CostTraversalEntry extends TraversalEntry implements CostTraversal<T>, Comparable<CostTraversalEntry>{
-        private Double weight;
+        protected Double weight;
 
         protected CostTraversalEntry(Vertex<T> vertex) {
             super(vertex);
