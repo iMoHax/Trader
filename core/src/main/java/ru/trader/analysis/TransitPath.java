@@ -31,8 +31,15 @@ public class TransitPath {
             cEdge.setFuelCost(fuelCost);
             entries.add(cEdge);
             if (fuel < 0 || fuel < edge.getMinFuel()){
+                if (refillCount == 0){
+                    fuel = refill(edges, 0);
+                    if (fuel < 0){
+                        fuel = refill(edges, entries.size()-1);
+                    }
+                } else {
+                    fuel = refill(edges, entries.size()-1);
+                }
                 refillCount++;
-                fuel = refill(edges, entries.size()-1);
             } else {
                 fuel -= fuelCost;
             }
@@ -68,7 +75,7 @@ public class TransitPath {
                 max = e.getMaxFuel();
             }
         }
-        throw new IllegalStateException("Is not exists path");
+        return -1;
     }
 
     private double updateFuelCost(List<ConnectibleGraph<Vendor>.BuildEdge> edges, int startIndex, int endIndex, double fuel){
