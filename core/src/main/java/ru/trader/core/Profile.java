@@ -27,7 +27,7 @@ public class Profile {
         landMult = 0.95;
         fuelPrice = 100;
         jumpMult = 0.5;
-        pathPriority = PATH_PRIORITY.ECO;
+        pathPriority = PATH_PRIORITY.FAST;
     }
 
     public double getBalance() {
