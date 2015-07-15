@@ -33,6 +33,10 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         return new VendorsCrawler(onFoundFunc);
     }
 
+    public VendorsCrawler crawler(Function<Edge<Vendor>, Boolean> isFoundFunc,Function<List<Edge<Vendor>>, Boolean> onFoundFunc){
+        return new VendorsCrawler(isFoundFunc, onFoundFunc);
+    }
+
     @Override
     protected Vertex<Vendor> newInstance(Vendor entry, int index) {
         return new VendorVertex(entry, index);
@@ -335,7 +339,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             for (Path<Vendor> p : paths) {
                 if (fuel >= p.getMinFuel() && fuel <= p.getMaxFuel() || getSource().getEntry().canRefill()) {
                     if (getProfile().getPathPriority().equals(Profile.PATH_PRIORITY.FAST)) {
-                        if (res == null || p.getSize() < res.getSize() && p.getRefillCount(fuel) <= res.getRefillCount(fuel)) {
+                        if (res == null || (p.getSize() < res.getSize() || p.getSize() == res.getSize() && p.getFuelCost() < res.getFuelCost()) && p.getRefillCount(fuel) <= res.getRefillCount(fuel)) {
                             res = p;
                         }
                     } else {
@@ -349,13 +353,20 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             return res;
         }
 
+        private boolean isRemove(Path<Vendor> path, Path<Vendor> best){
+            if (profile.getPathPriority() == Profile.PATH_PRIORITY.FAST){
+                return path.getSize() > best.getSize() || (path.getSize() == best.getSize() && path.getFuelCost() >= best.getFuelCost()) && path.getMinFuel() >= best.getMinFuel() && path.getRefillCount() >= best.getRefillCount();
+            }
+            return path.getMinFuel() >= best.getMinFuel() && path.getFuelCost() >= best.getFuelCost() && path.getRefillCount() >= best.getRefillCount();
+        }
+
         public void add(Path<Vendor> path) {
             for (Iterator<Path<Vendor>> iterator = paths.iterator(); iterator.hasNext(); ) {
                 Path<Vendor> p = iterator.next();
-                if (p.getSize() >= path.getSize() && p.getMinFuel() >= path.getMinFuel() && p.getRefillCount() >= path.getRefillCount()) {
+                if (isRemove(p, path)) {
                     iterator.remove();
                 } else {
-                    if (path.getSize() >= p.getSize() && path.getMinFuel() >= p.getMinFuel() && path.getRefillCount() >= p.getRefillCount()) {
+                    if (isRemove(path, p)) {
                         return;
                     }
                 }
