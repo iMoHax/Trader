@@ -131,7 +131,7 @@ public class LimitedQueue<E> extends ArrayList<E> implements Queue<E> {
             sort();
             int index = indexedBinarySearch(element, comparator);
             if (index < 0) index = -1 - index;
-            if (index == limit || element.equals(super.get(index))) return false;
+            if (index == limit || index < size && element.equals(super.get(index))) return false;
             super.add(index, element);
             if (size == limit)
                 super.remove(limit);
