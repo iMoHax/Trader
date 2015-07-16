@@ -141,6 +141,7 @@ public class Ship {
                 ", engine=" + engine +
                 ", tank=" + tank +
                 ", mass=" + mass +
+                ", jumpRange=" + getJumpRange() +
                 ", maxDist=" + getMaxJumpRange() +
                 ", fullTankDist=" + getFullTankJumpRange() +
                 '}';
