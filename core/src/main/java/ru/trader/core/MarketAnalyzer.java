@@ -35,6 +35,14 @@ public class MarketAnalyzer {
         this.callback = callback;
     }
 
+    public List<Offer> getOffers(OFFER_TYPE offerType, Item item, MarketFilter filter){
+        return market.getOffers(offerType, item).filter(o -> !filter.isFiltered(o.getVendor())).collect(Collectors.toList());
+    }
+
+    public List<Vendor> getVendors(MarketFilter filter){
+        return market.getVendors().filter(v -> !filter.isFiltered(v)).collect(Collectors.toList());
+    }
+
     public Collection<Order> getTop(int limit){
         LOG.debug("Get top {}", limit);
         Collection<Place> places = getPlaces();
