@@ -1,5 +1,9 @@
 package ru.trader.core;
 
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Ship {
     private final static int REFILL_FUEL_STEP = 10;
 
@@ -281,5 +285,24 @@ public class Ship {
         }
     }
 
+    private final static Pattern ENGINE_REGEXP = Pattern.compile("(\\d)(\\w)");
+    public static Ship readFrom(Properties values){
+        Ship ship = new Ship();
+        ship.setMass(Double.valueOf(values.getProperty("ship.mass", "44.9")));
+        ship.setCargo(Integer.valueOf(values.getProperty("ship.cargo","4")));
+        ship.setTank(Double.valueOf(values.getProperty("ship.tank", "2")));
+        String e = values.getProperty("ship.engine","2E");
+        Matcher matcher = ENGINE_REGEXP.matcher(e);
+        if (matcher.find()){
+            ship.setEngine(Integer.valueOf(matcher.group(1)), matcher.group(2).charAt(0));
+        }
+        return ship;
+    }
 
+    public void writeTo(Properties values){
+        values.setProperty("ship.mass", String.valueOf(mass));
+        values.setProperty("ship.cargo", String.valueOf(cargo));
+        values.setProperty("ship.tank", String.valueOf(tank));
+        values.setProperty("ship.engine", String.valueOf(engine.getClazz()) + engine.getRating());
+    }
 }
