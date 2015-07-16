@@ -8,7 +8,7 @@ import ru.trader.analysis.LimitedQueue;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Crawler<T> {
     private final static Logger LOG = LoggerFactory.getLogger(Crawler.class);
@@ -17,19 +17,19 @@ public class Crawler<T> {
     private final static int SPLIT_SIZE = 3;
 
     protected final Graph<T> graph;
-    private final Function<List<Edge<T>>,Boolean> onFoundFunc;
-    private final Function<Edge<T>,Boolean> isFound;
+    private final Predicate<List<Edge<T>>> onFoundFunc;
+    private final Predicate<Edge<T>> isFound;
     private T target;
     private int maxSize;
 
-    public Crawler(Graph<T> graph, Function<List<Edge<T>>, Boolean> onFoundFunc) {
+    public Crawler(Graph<T> graph, Predicate<List<Edge<T>>> onFoundFunc) {
         this.graph = graph;
         maxSize = graph.getRoot().getLevel();
         this.onFoundFunc = onFoundFunc;
         this.isFound = this::isTarget;
     }
 
-    public Crawler(Graph<T> graph, Function<Edge<T>,Boolean> isFoundFunc, Function<List<Edge<T>>,Boolean> onFoundFunc) {
+    public Crawler(Graph<T> graph, Predicate<Edge<T>> isFoundFunc, Predicate<List<Edge<T>>> onFoundFunc) {
         this.graph = graph;
         maxSize = graph.getRoot().getLevel();
         this.onFoundFunc = onFoundFunc;
@@ -59,7 +59,7 @@ public class Crawler<T> {
     }
 
     protected boolean isFound(Edge<T> edge){
-        return isFound.apply(edge);
+        return isFound.test(edge);
     }
 
     public int getMaxSize() {
@@ -161,7 +161,7 @@ public class Crawler<T> {
                     List<Edge<T>> res = getCopyList(entry, next);
                     LOG.debug("Last edge found, path {}", res);
                     found++;
-                    if (!onFoundFunc.apply(res)){
+                    if (!onFoundFunc.test(res)){
                         stop = true;
                     }
                     break;
@@ -202,7 +202,7 @@ public class Crawler<T> {
                     List<Edge<T>> res = getCopyList(entry, edge);
                     LOG.debug("Last edge found, path {}", res);
                     found++;
-                    if (!onFoundFunc.apply(res)){
+                    if (!onFoundFunc.test(res)){
                         break;
                     }
                 }
@@ -232,7 +232,7 @@ public class Crawler<T> {
                     List<Edge<T>> res = entry.toEdges();
                     LOG.debug("Path found {}", res);
                     found++;
-                    if (!onFoundFunc.apply(res)){
+                    if (!onFoundFunc.test(res)){
                         break;
                     }
                     if (found >= count) break;
@@ -281,7 +281,7 @@ public class Crawler<T> {
                 List<Edge<T>> res = entry.toEdges();
                 LOG.trace("Path found {}", res);
                 found++;
-                if (!onFoundFunc.apply(res)){
+                if (!onFoundFunc.test(res)){
                     break;
                 }
                 if (found >= count) break;

@@ -8,19 +8,19 @@ import ru.trader.graph.Connectable;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class CCrawler<T extends Connectable<T>> extends Crawler<T> {
     private final static Logger LOG = LoggerFactory.getLogger(CCrawler.class);
     private double startFuel;
 
-    public CCrawler(ConnectibleGraph<T> graph, Function<List<Edge<T>>, Boolean> onFoundFunc) {
+    public CCrawler(ConnectibleGraph<T> graph, Predicate<List<Edge<T>>> onFoundFunc) {
         super(graph, onFoundFunc);
         startFuel = getShip().getTank();
     }
 
-    public CCrawler(ConnectibleGraph<T> graph, Function<Edge<T>, Boolean> isFoundFunc, Function<List<Edge<T>>, Boolean> onFoundFunc) {
+    public CCrawler(ConnectibleGraph<T> graph, Predicate<Edge<T>> isFoundFunc, Predicate<List<Edge<T>>> onFoundFunc) {
         super(graph, isFoundFunc, onFoundFunc);
         startFuel = getShip().getTank();
     }

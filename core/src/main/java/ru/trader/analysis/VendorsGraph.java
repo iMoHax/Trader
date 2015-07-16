@@ -8,7 +8,7 @@ import ru.trader.core.*;
 import java.util.*;
 import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveAction;
-import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
@@ -29,11 +29,11 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         this.scorer = scorer;
     }
 
-    public VendorsCrawler crawler(Function<List<Edge<Vendor>>, Boolean> onFoundFunc){
+    public VendorsCrawler crawler(Predicate<List<Edge<Vendor>>> onFoundFunc){
         return new VendorsCrawler(onFoundFunc);
     }
 
-    public VendorsCrawler crawler(Function<Edge<Vendor>, Boolean> isFoundFunc,Function<List<Edge<Vendor>>, Boolean> onFoundFunc){
+    public VendorsCrawler crawler(Predicate<Edge<Vendor>> isFoundFunc,Predicate<List<Edge<Vendor>>> onFoundFunc){
         return new VendorsCrawler(isFoundFunc, onFoundFunc);
     }
 
@@ -470,13 +470,13 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         private double startFuel;
         private double startBalance;
 
-        protected VendorsCrawler(Function<List<Edge<Vendor>>, Boolean> onFoundFunc) {
+        protected VendorsCrawler(Predicate<List<Edge<Vendor>>> onFoundFunc) {
             super(VendorsGraph.this, onFoundFunc);
             startFuel = getShip().getTank();
             startBalance = getProfile().getBalance();
         }
 
-        protected VendorsCrawler(Function<Edge<Vendor>, Boolean> isFoundFunc, Function<List<Edge<Vendor>>, Boolean> onFoundFunc) {
+        protected VendorsCrawler(Predicate<Edge<Vendor>> isFoundFunc, Predicate<List<Edge<Vendor>>> onFoundFunc) {
             super(VendorsGraph.this, isFoundFunc, onFoundFunc);
             startFuel = getShip().getTank();
             startBalance = getProfile().getBalance();
