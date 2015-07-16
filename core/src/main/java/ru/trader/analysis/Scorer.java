@@ -1,6 +1,5 @@
 package ru.trader.analysis;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
@@ -121,10 +120,6 @@ public class Scorer {
         return score;
     }
 
-    public Score getScore(Vendor vendor){
-        return new Score(vendor);
-    }
-
     private Stream<Order> mapToOrder(Offer offer) {
         Offer sell;
         Offer buy;
@@ -140,61 +135,4 @@ public class Scorer {
         if (order.getProfit() <= 0) return Stream.empty();
         return Stream.of(order);
     }
-
-    public class Score implements Comparable<Score> {
-        private final Vendor vendor;
-        private final DoubleSummaryStatistics sellStat;
-        private final DoubleSummaryStatistics buyStat;
-        private double score;
-
-        public Score(Vendor vendor) {
-            this.vendor = vendor;
-            Stream<Order> sell = vendor.getAllSellOffers().stream().flatMap(Scorer.this::mapToOrder);
-            Stream<Order> buy = vendor.getAllBuyOffers().stream().flatMap(Scorer.this::mapToOrder);
-
-            sellStat = computeProfits(sell);
-            buyStat = computeProfits(buy);
-
-            computeScore();
-        }
-
-        public double getSellProfit() {
-            return sellStat.getAverage();
-        }
-
-        public double getBuyProfit() {
-            return buyStat.getAverage();
-        }
-
-        public double getScore() {
-            return score;
-        }
-
-        private DoubleSummaryStatistics computeProfits(Stream<Order> orders) {
-            return orders.sorted(Comparator.<Order>reverseOrder())
-                   .limit(profile.getScoreOrdersCount())
-                   .collect(Collectors.summarizingDouble(Order::getProfit));
-        }
-
-        private void computeScore(){
-            score = (getSellProfit() + getBuyProfit())/2;
-            score = Scorer.this.getScore(vendor, score, 0, 1, 0);
-        }
-
-        @Override
-        public String toString() {
-            return "Score{" +
-                    "vendor=" + vendor.getPlace()+"("+vendor+")"+
-                    ", sellStat=" + sellStat +
-                    ", buyStat=" + buyStat +
-                    ", score=" + score +
-                    '}';
-        }
-
-        @Override
-        public int compareTo(@NotNull Score other) {
-            return Double.compare(score, other.score);
-        }
-    }
-
 }
