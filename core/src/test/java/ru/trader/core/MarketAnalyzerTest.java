@@ -7,29 +7,32 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.TestUtil;
-import ru.trader.graph.Path;
+import ru.trader.analysis.FilteredMarket;
+import ru.trader.analysis.graph.Edge;
+import ru.trader.analysis.graph.PPath;
 import ru.trader.store.simple.*;
 
 import java.util.Collection;
+import java.util.List;
 
 public class MarketAnalyzerTest extends Assert {
     private final static Logger LOG = LoggerFactory.getLogger(MarketAnalyzerTest.class);
 
-    private static Market market = new SimpleMarket();
-    private static Place v1;
-    private static Place v2;
-    private static Place v3;
-    private static Place v4;
-    private static Place v5;
-    private static Place v6;
-    private static Place v7;
-    private static Place v8;
-    private static Place v9;
-    private static Place v10;
-    private static Place v11;
-    private static Item ITEM1 = new SimpleItem("ITEM1");
-    private static Item ITEM2 = new SimpleItem("ITEM2");
-    private static Item ITEM3 = new SimpleItem("ITEM3");
+    private FilteredMarket market;
+    private Place v1;
+    private Place v2;
+    private Place v3;
+    private Place v4;
+    private Place v5;
+    private Place v6;
+    private Place v7;
+    private Place v8;
+    private Place v9;
+    private Place v10;
+    private Place v11;
+    private Item ITEM1 = new SimpleItem("ITEM1");
+    private Item ITEM2 = new SimpleItem("ITEM2");
+    private Item ITEM3 = new SimpleItem("ITEM3");
 
     private void add(Place place, Offer offer){
         if (place.isEmpty()){
@@ -41,6 +44,8 @@ public class MarketAnalyzerTest extends Assert {
 
     @Before
     public void setUp() throws Exception {
+        Market market = new SimpleMarket();
+
         v1 = new SimplePlace("v1_x0y0z0",0,0,0);
         v2 = new SimplePlace("v2_x1y0z0",1,0,0);
         v3 = new SimplePlace("v3_x0y1z0",0,1,0);
@@ -80,29 +85,34 @@ public class MarketAnalyzerTest extends Assert {
         add(v10, new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 140, 1));
         add(v11, new SimpleOffer(OFFER_TYPE.BUY, ITEM3, 500, 1));
 
+        MarketFilter filter = new MarketFilter();
+        this.market = new FilteredMarket(market, filter);
     }
-
 
     @Test
     public void testPaths() throws Exception {
         LOG.info("Start paths test");
-        MarketAnalyzer analyzer = new MarketAnalyzer(market);
-        analyzer.setJumps(5);analyzer.setMaxDistance(1);analyzer.setTank(1);
+        // maxDist - 1, fulltank - 1
+        Ship ship = new Ship();
+        ship.setMass(340);ship.setTank(0.6);
+        Profile profile = new Profile(ship);
+        profile.setJumps(5);
+        MarketAnalyzer analyzer = new MarketAnalyzer(market, profile);
 
-        Collection<Path<Place>> paths = analyzer.getPaths(v1, v2);
-        TestUtil.assertCollectionEquals(paths, Path.toPath(v1, v2));
+        Collection<List<Edge<Place>>> paths = analyzer.getPaths(v1, v2);
+        TestUtil.assertPaths(paths, PPath.of(v1, v2));
 
         paths = analyzer.getPaths(v1, v3);
-        TestUtil.assertCollectionEquals(paths, Path.toPath(v1, v3));
+        TestUtil.assertPaths(paths, PPath.of(v1, v3));
 
         paths = analyzer.getPaths(v1, v4);
-        TestUtil.assertCollectionEquals(paths, Path.toPath(v1, v4));
+        TestUtil.assertPaths(paths, PPath.of(v1, v4));
 
         paths = analyzer.getPaths(v1, v5);
         assertTrue(paths.isEmpty());
 
         paths = analyzer.getPaths(v2, v5);
-        TestUtil.assertCollectionEquals(paths, Path.toPath(v2, v5));
+        TestUtil.assertPaths(paths, PPath.of(v2, v5));
 
         paths = analyzer.getPaths(v4, v3);
         assertTrue(paths.isEmpty());
@@ -111,80 +121,95 @@ public class MarketAnalyzerTest extends Assert {
     @Test
     public void testPathsWithStock() throws Exception {
         LOG.info("Start paths with stock test");
-        MarketAnalyzer analyzer = new MarketAnalyzer(market);
-        analyzer.setJumps(5);analyzer.setMaxDistance(1);analyzer.setTank(2);
+        // jumpRange - 1, fulltank - 2
+        Ship ship = new Ship();
+        ship.setMass(340);ship.setTank(1.17);
+        Profile profile = new Profile(ship);
+        profile.setJumps(5);
+        MarketAnalyzer analyzer = new MarketAnalyzer(market, profile);
 
-        Collection<Path<Place>> paths = analyzer.getPaths(v1, v2);
-        TestUtil.assertCollectionContainAll(paths, Path.toPath(v1, v2));
+        Collection<List<Edge<Place>>> paths = analyzer.getPaths(v1, v2);
+        TestUtil.assertPaths(paths, PPath.of(v1, v2));
 
         paths = analyzer.getPaths(v1, v3);
-        TestUtil.assertCollectionContainAll(paths, Path.toPath(v1, v3));
+        TestUtil.assertPaths(paths, PPath.of(v1, v3));
 
         paths = analyzer.getPaths(v1, v4);
-        TestUtil.assertCollectionContainAll(paths, Path.toPath(v1, v4));
+        TestUtil.assertPaths(paths, PPath.of(v1, v4));
 
         paths = analyzer.getPaths(v1, v5);
-        TestUtil.assertCollectionContainAll(paths, Path.toPath(v1, v2, v5), Path.toPath(v1, v3, v5));
+        TestUtil.assertPaths(paths, PPath.of(v1, v2, v5), PPath.of(v1, v3, v5));
 
         paths = analyzer.getPaths(v2, v5);
-        TestUtil.assertCollectionContainAll(paths, Path.toPath(v2, v5));
+        TestUtil.assertPaths(paths, PPath.of(v2, v5));
 
         paths = analyzer.getPaths(v4, v3);
-        TestUtil.assertCollectionContainAll(paths, Path.toPath(v4, v1, v3));
+        TestUtil.assertPaths(paths, PPath.of(v4, v1, v3));
     }
 
 
     @Test
     public void testPathsWithStockAndRefill() throws Exception {
         LOG.info("Start paths with stock and refill test");
-        MarketAnalyzer analyzer = new MarketAnalyzer(market);
-        analyzer.setJumps(2);analyzer.setMaxDistance(10);analyzer.setTank(15);
+        // jumpRange - 10, fulltank - 15
+        Ship ship = new Ship();
+        ship.setMass(30);ship.setTank(0.7);
+        Profile profile = new Profile(ship);
+        profile.setJumps(2);
+        MarketAnalyzer analyzer = new MarketAnalyzer(market, profile);
 
-        Collection<Path<Place>> paths = analyzer.getPaths(v10, v6);
-        TestUtil.assertCollectionContainAll(paths, Path.toPath(v10, v6), Path.toPath(v10, v11, v6),
-                Path.toPath(v10, v8, v6));
+        Collection<List<Edge<Place>>> paths = analyzer.getPaths(v10, v6);
+        TestUtil.assertPaths(paths, PPath.of(v10, v6), PPath.of(v10, v11, v6),
+                PPath.of(v10, v8, v6));
 
         paths = analyzer.getPaths(v1, v3);
-        TestUtil.assertCollectionContainAll(paths, Path.toPath(v1, v3), Path.toPath(v1, v2, v3),
-                Path.toPath(v1, v4, v3), Path.toPath(v1, v5, v3)
+        TestUtil.assertPaths(paths, PPath.of(v1, v3), PPath.of(v1, v2, v3),
+                PPath.of(v1, v4, v3), PPath.of(v1, v5, v3)
         );
     }
 
     @Test
     public void testPathsWithStockAndRefill2() throws Exception {
         LOG.info("Start paths with stock and refill test 2");
-        MarketAnalyzer analyzer = new MarketAnalyzer(market);
-        analyzer.setJumps(3);analyzer.setMaxDistance(10);analyzer.setTank(15);
+        // jumpRange - 10, fulltank - 15
+        Ship ship = new Ship();
+        ship.setMass(30);ship.setTank(0.7);
+        Profile profile = new Profile(ship);
+        profile.setJumps(3);
+        MarketAnalyzer analyzer = new MarketAnalyzer(market, profile);
 
-        Collection<Path<Place>> paths = analyzer.getPaths(v10, v6);
-        TestUtil.assertCollectionContainAll(paths, Path.toPath(v10, v6), Path.toPath(v10, v11, v6), Path.toPath(v10, v11, v10, v6),
-                Path.toPath(v10, v8, v6), Path.toPath(v10, v8, v10, v6), Path.toPath(v10, v8, v11, v6));
+        Collection<List<Edge<Place>>> paths = analyzer.getPaths(v10, v6);
+        TestUtil.assertPaths(paths, PPath.of(v10, v6), PPath.of(v10, v8, v6), PPath.of(v10, v11, v6),
+                PPath.of(v10, v8, v11, v6), PPath.of(v10, v8, v10, v6), PPath.of(v10, v11, v10, v6),
+                PPath.of(v10, v6, v7, v6), PPath.of(v10, v6, v8, v6), PPath.of(v10, v6, v11, v6),
+                PPath.of(v10, v6, v10, v6));
 
         paths = analyzer.getPaths(v10, v7);
-        TestUtil.assertCollectionContainAll(paths, Path.toPath(v10, v6, v7), Path.toPath(v10, v11, v6, v7),
-                Path.toPath(v10, v8, v6, v7)
+        TestUtil.assertPaths(paths, PPath.of(v10, v6, v7), PPath.of(v10, v11, v6, v7),
+                PPath.of(v10, v8, v6, v7)
         );
 
         paths = analyzer.getPaths(v10, v8);
-        TestUtil.assertCollectionContainAll(paths, Path.toPath(v10, v8), Path.toPath(v10, v11, v8),
-                Path.toPath(v10, v11, v6, v8), Path.toPath(v10, v6, v8), Path.toPath(v10, v6, v11, v8),
-                Path.toPath(v10, v11, v10, v8), Path.toPath(v10, v6, v10, v8));
+        TestUtil.assertPaths(paths, PPath.of(v10, v8), PPath.of(v10, v11, v8), PPath.of(v10, v6, v8),
+                PPath.of(v10, v8, v11, v8), PPath.of(v10, v8, v10, v8), PPath.of(v10, v8, v6, v8),
+                PPath.of(v10, v11, v10, v8), PPath.of(v10, v11, v6, v8), PPath.of(v10, v6, v11, v8),
+                PPath.of(v10, v6, v10, v8));
 
         paths = analyzer.getPaths(v10, v9);
         assertTrue(paths.isEmpty());
 
         paths = analyzer.getPaths(v10, v10);
-        TestUtil.assertCollectionContainAll(paths, Path.toPath(v10, v11, v10), Path.toPath(v10, v6, v10),
-                Path.toPath(v10, v11, v6, v10), Path.toPath(v10, v6, v11, v10),
-                Path.toPath(v10, v8, v10), Path.toPath(v10, v8, v11, v10),
-                Path.toPath(v10, v8, v6, v10), Path.toPath(v10, v8, v6, v10));
+        TestUtil.assertPaths(paths, PPath.of(v10, v11, v10), PPath.of(v10, v6, v10),
+                PPath.of(v10, v11, v6, v10), PPath.of(v10, v6, v11, v10),
+                PPath.of(v10, v8, v10), PPath.of(v10, v8, v11, v10),
+                PPath.of(v10, v8, v6, v10), PPath.of(v10, v8, v6, v10));
     }
 
 
 
     @After
     public void tearDown() throws Exception {
-        market = new SimpleMarket();
+        market = null;
 
     }
 }

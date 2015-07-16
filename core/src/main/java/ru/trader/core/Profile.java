@@ -22,6 +22,7 @@ public class Profile {
         refill = true;
         jumps = 6;
         lands = 4;
+        routesCount = 30;
         scoreOrdersCount = 5;
         distanceMult = 0.8;
         landMult = 0.95;

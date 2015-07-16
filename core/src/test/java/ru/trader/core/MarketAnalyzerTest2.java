@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import ru.trader.TestUtil;
-import ru.trader.graph.PathRoute;
+import ru.trader.analysis.*;
 import ru.trader.store.simple.Store;
 import java.io.InputStream;
 import java.util.Collection;
@@ -16,25 +16,40 @@ public class MarketAnalyzerTest2 extends Assert {
     public void testRoutes() throws Exception {
         InputStream is = getClass().getResourceAsStream("/world.xml");
         Market market = Store.loadFromFile(is);
-        MarketAnalyzer analyzer = new MarketAnalyzer(market);
+        MarketFilter filter = new MarketFilter();
+        FilteredMarket fWorld = new FilteredMarket(market, filter);
         // Balance: 6000000, cargo: 440, tank: 40, distance: 13.4, jumps: 6
         // Ithaca (Palladium to LHS 3262) -> Morgor -> LHS 3006 -> LHS 3262 (Consumer Technology to Ithaca) -> LHS 3006 -> Morgor -> Ithaca
         // Profit: 981200, avg: 490600, distance: 67.5, lands: 2
-        Vendor ithaca = market.get().stream().filter((v)->v.getName().equals("Ithaca")).findFirst().get().get().iterator().next();
-        Vendor morgor = market.get().stream().filter((v)->v.getName().equals("Morgor")).findFirst().get().get().iterator().next();
-        Vendor lhs3006 = market.get().stream().filter((v)->v.getName().equals("LHS 3006")).findFirst().get().get().iterator().next();
-        Vendor lhs3262 = market.get().stream().filter((v)->v.getName().equals("LHS 3262")).findFirst().get().get().iterator().next();
-        analyzer.setCargo(440);analyzer.setTank(40);analyzer.setMaxDistance(13.4);analyzer.setJumps(6);
-        Collection<PathRoute> paths = analyzer.getPaths(ithaca, ithaca, 6000000);
-        PathRoute expect = PathRoute.toPathRoute(ithaca, morgor, lhs3006, lhs3262, lhs3006, morgor, ithaca);
-        Optional<PathRoute> path = paths.stream().filter((p)->p.equals(expect)).findFirst();
+        Ship ship = new Ship();
+        ship.setCargo(440); ship.setTank(15);
+        ship.setEngine(5, 'A'); ship.setMass(466);
+        Profile profile = new Profile(ship);
+        profile.setBalance(6000000); profile.setJumps(6);
+        profile.setRoutesCount(100);
+        MarketAnalyzer analyzer = new MarketAnalyzer(fWorld, profile);
+        Vendor ithaca = market.get("Ithaca").get().iterator().next();
+        Vendor morgor = market.get("Morgor").asTransit();
+        Vendor lhs3006 = market.get("LHS 3006").asTransit();
+        Vendor lhs3262 = market.get("LHS 3262").get().iterator().next();
+        Collection<Route> paths = analyzer.getRoutes(ithaca, ithaca);
+        Route expect = new Route(new RouteEntry(ithaca, false, 3.3789702637348586d, 0));
+        expect.add(new RouteEntry(morgor, false, 4.137765020523591d, 0));
+        expect.add(new RouteEntry(lhs3006, false, 4.0674474942172765d, 0));
+        expect.add(new RouteEntry(lhs3262, true, 4.149937831634785d, 0));
+        expect.add(new RouteEntry(lhs3006, false, 4.1292528548103d, 0));
+        expect.add(new RouteEntry(morgor, false, 3.3050364899848566, 0));
+        expect.add(new RouteEntry(ithaca, false, 0, 0));
+        RouteFiller filler = new RouteFiller(new Scorer(fWorld, profile));
+        filler.fill(expect);
+
+        Optional<Route> path = paths.stream().findFirst();
         assertTrue(path.isPresent());
-        PathRoute actual = path.get().getRoot();
-        TestUtil.assertCollectionContain(paths, expect);
+        Route actual = path.get();
+        assertEquals(expect, actual);
         assertEquals(981200, actual.getProfit(), 0.00001);
         assertEquals(72.42, actual.getDistance(), 0.01);
-        assertEquals(2, actual.getLandsCount());
-        assertEquals(490600, actual.getAvgProfit() , 0.00001);
+        assertEquals(2, actual.getLands());
     }
 
     //test best avg profit
@@ -42,27 +57,51 @@ public class MarketAnalyzerTest2 extends Assert {
     public void testRoutes2() throws Exception {
         InputStream is = getClass().getResourceAsStream("/test2.xml");
         Market market = Store.loadFromFile(is);
-        MarketAnalyzer analyzer = new MarketAnalyzer(market);
+        MarketFilter filter = new MarketFilter();
+        FilteredMarket fWorld = new FilteredMarket(market, filter);
         // Balance: 6000000, cargo: 104 tank: 150, distance: 12.6, jumps: 4
-        // LHS 21 (Resonatic Separator to Sui Xing) -> Bonde -> Sui Xing (Palladium to LHS 21) -> Bonde -> LHS 21
-        // Profit: 981200, avg: 490600, distance: 67.5, lands: 2
-        Place lhs21 = market.get().stream().filter((v)->v.getName().equals("LHS 21")).findFirst().get();
-        Place suiXing = market.get().stream().filter((v)->v.getName().equals("Sui Xing")).findFirst().get();
-        analyzer.setCargo(104);analyzer.setTank(150);analyzer.setMaxDistance(12.6);analyzer.setJumps(4);analyzer.setPathsCount(100);
-        Collection<PathRoute> paths = analyzer.getPaths(lhs21, lhs21, 6000000);
-        Optional<PathRoute> path = paths.stream().findFirst();
+        // LHS 21 -> Bonde -> LHS 21
+        // Profit: 114816, distance: 8.16, lands: 2
+        Ship ship = new Ship();
+        ship.setCargo(104); ship.setTank(150);
+        ship.setEngine(5, 'A'); ship.setMass(865);
+        Profile profile = new Profile(ship);
+        profile.setBalance(6000000); profile.setJumps(4);
+        profile.setRoutesCount(100);
+        MarketAnalyzer analyzer = new MarketAnalyzer(fWorld, profile);
+        Place lhs21 = market.get("LHS 21");
+        Place bonde = market.get("Bonde");
+        Place suiXing = market.get("Sui Xing");
+        Collection<Route> paths = analyzer.getRoutes(lhs21, lhs21);
+        Optional<Route> path = paths.stream().findFirst();
         assertTrue(path.isPresent());
-        PathRoute actual = path.get().getRoot();
+        Route actual = path.get();
+        assertEquals(114816, actual.getProfit(), 0.00001);
+        assertEquals(8.16, actual.getDistance(), 0.01);
+        assertEquals(2, actual.getLands());
+
+        Place aPlace = actual.get(0).getVendor().getPlace();
+        assertEquals(lhs21, aPlace);
+        aPlace = actual.get(1).getVendor().getPlace();
+        assertEquals(bonde, aPlace);
+
+        // If distance to station has small mult
+        // LHS 21 (Resonatic Separator to Sui Xing) -> Bonde -> Sui Xing (Palladium to LHS 21) -> Bonde -> LHS 21
+        // Profit: 199056, distance: 28.72, lands: 2
+
+        profile.setDistanceMult(0.1);
+        paths = analyzer.getRoutes(lhs21, lhs21);
+        path = paths.stream().findFirst();
+        assertTrue(path.isPresent());
+        actual = path.get();
 
         assertEquals(199056, actual.getProfit(), 0.00001);
         assertEquals(28.72, actual.getDistance(), 0.01);
-        assertEquals(2, actual.getLandsCount());
-        assertEquals(99528, actual.getAvgProfit() , 0.00001);
+        assertEquals(2, actual.getLands());
 
-        Place aPlace = actual.get().getPlace();
+        aPlace = actual.get(0).getVendor().getPlace();
         assertEquals(lhs21, aPlace);
-        actual = actual.getNext().getNext();
-        aPlace = actual.get().getPlace();
+        aPlace = actual.get(2).getVendor().getPlace();
         assertEquals(suiXing, aPlace);
     }
 

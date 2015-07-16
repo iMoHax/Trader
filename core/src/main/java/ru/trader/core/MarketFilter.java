@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 public class MarketFilter {
     private final static Logger LOG = LoggerFactory.getLogger(MarketFilter.class);
@@ -96,15 +95,6 @@ public class MarketFilter {
         }
         return false;
     }
-
-    public Collection<Place> filtered(Collection<Place> places){
-        return places.parallelStream().filter(p -> !isFiltered(p)).collect(Collectors.toList());
-    }
-
-    public Collection<Vendor> filteredVendors(Collection<Vendor> vendors){
-        return vendors.parallelStream().filter(v -> !isFiltered(v)).collect(Collectors.toList());
-    }
-
 
     public static MarketFilter buildFilter(Properties values, Market market){
         MarketFilter filter = new MarketFilter();

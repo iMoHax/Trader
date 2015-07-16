@@ -6,7 +6,7 @@ import ru.trader.core.Vendor;
 
 import java.util.*;
 
-public class Route {
+public class Route implements Comparable<Route> {
     private final static Logger LOG = LoggerFactory.getLogger(Route.class);
 
     private final List<RouteEntry> entries;
@@ -29,6 +29,10 @@ public class Route {
 
     public List<RouteEntry> getEntries() {
         return entries;
+    }
+
+    public RouteEntry get(int index) {
+        return entries.get(index);
     }
 
     void setBalance(double balance){
@@ -113,6 +117,11 @@ public class Route {
             entry = next;
         }
         LOG.trace("new stats profit={}, distance={}, lands={}, fuel={}, score={}", profit, distance, lands, fuel, score);
+    }
+
+    @Override
+    public int compareTo(Route o) {
+        return Double.compare(score, o.score);
     }
 
     @Override
