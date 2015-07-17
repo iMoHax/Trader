@@ -51,11 +51,11 @@ public class RouteEntry {
         this.score = score;
     }
 
-    public void add(Order order){
+    void add(Order order){
         orders.add(order);
     }
 
-    public void addAll(Collection<Order> orders){
+    void addAll(Collection<Order> orders){
         this.orders.addAll(orders);
     }
 
@@ -63,7 +63,7 @@ public class RouteEntry {
         return orders;
     }
 
-    public void clearOrders(){
+    void clearOrders(){
         orders.clear();
     }
 
@@ -75,7 +75,7 @@ public class RouteEntry {
         return land || refill || !orders.isEmpty();
     }
 
-    public void setLand(boolean land) {
+    void setLand(boolean land) {
         this.land = land;
     }
 

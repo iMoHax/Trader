@@ -106,40 +106,63 @@ public class RouteSearcher {
         public List<Route> get() {
             return routes;
         }
+    }
 
-        private Route toRoute(List<Edge<Vendor>> edges){
-            List<RouteEntry> entries = new ArrayList<>(edges.size()+1);
-            Vendor buyer = null;
-            VendorsGraph.VendorsEdge vEdge = null;
-            for (Edge<Vendor> e : edges) {
-                vEdge = (VendorsGraph.VendorsEdge) e;
-                List<ConnectibleEdge<Vendor>> transitEdges = vEdge.getPath().getEntries();
-                for (int k = 0; k < transitEdges.size(); k++) {
-                    ConnectibleEdge<Vendor> edge = transitEdges.get(k);
-                    Vendor vendor = edge.getSource().getEntry();
-                    RouteEntry entry = new RouteEntry(vendor, edge.isRefill(), edge.getFuelCost(), 0);
-                    if (buyer != null && vendor.equals(buyer)) {
-                        entry.setLand(true);
-                        buyer = null;
-                    }
-                    if (k == 0) {
-                        entry.setScore(vEdge.getWeight());
-                        List<Order> orders = vEdge.getOrders();
-                        if (!orders.isEmpty()) {
-                            buyer = orders.get(0).getBuyer();
-                            entry.addAll(orders);
-                        }
-                    }
-                    entries.add(entry);
+    public static Route toRoute(List<Edge<Vendor>> edges){
+        List<RouteEntry> entries = new ArrayList<>(edges.size()+1);
+        Vendor buyer = null;
+        VendorsGraph.VendorsEdge vEdge = null;
+        for (Edge<Vendor> e : edges) {
+            vEdge = (VendorsGraph.VendorsEdge) e;
+            List<ConnectibleEdge<Vendor>> transitEdges = vEdge.getPath().getEntries();
+            for (int k = 0; k < transitEdges.size(); k++) {
+                ConnectibleEdge<Vendor> edge = transitEdges.get(k);
+                Vendor vendor = edge.getSource().getEntry();
+                RouteEntry entry = new RouteEntry(vendor, edge.isRefill(), edge.getFuelCost(), 0);
+                if (buyer != null && vendor.equals(buyer)) {
+                    entry.setLand(true);
+                    buyer = null;
                 }
-            }
-            if (vEdge != null) {
-                RouteEntry entry = new RouteEntry(vEdge.getTarget().getEntry(), false, 0, 0);
-                if (buyer != null) entry.setLand(true);
+                if (k == 0) {
+                    entry.setScore(vEdge.getWeight());
+                    List<Order> orders = vEdge.getOrders();
+                    if (!orders.isEmpty()) {
+                        buyer = orders.get(0).getBuyer();
+                        entry.addAll(orders);
+                    }
+                }
                 entries.add(entry);
             }
-            return new Route(entries);
         }
+        if (vEdge != null) {
+            RouteEntry entry = new RouteEntry(vEdge.getTarget().getEntry(), false, 0, 0);
+            if (buyer != null) entry.setLand(true);
+            entries.add(entry);
+        }
+        return new Route(entries);
+    }
 
+    public static Route toRoute(Order order, List<Edge<Place>> edges){
+        Route route = toRoute(order.getSeller(), order.getBuyer(), edges);
+        if (route.isEmpty()) return route;
+        route.get(0).add(order);
+        route.updateStats();
+        return route;
+    }
+
+    public static Route toRoute(Vendor from, Vendor to, List<Edge<Place>> edges){
+        List<RouteEntry> entries = new ArrayList<>(edges.size()+1);
+        for (int i = 0; i < edges.size(); i++) {
+            ConnectibleEdge<Place> edge = (ConnectibleEdge<Place>) edges.get(i);
+            Vendor vendor = i == 0 ? from : edge.getSource().getEntry().asTransit();
+            RouteEntry entry = new RouteEntry(vendor, edge.isRefill(), edge.getFuelCost(), 0);
+            entries.add(entry);
+            if (i == edges.size()-1){
+                entry = new RouteEntry(to, false, 0, 0);
+                entry.setLand(true);
+                entries.add(entry);
+            }
+        }
+        return new Route(entries);
     }
 }

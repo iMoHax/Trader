@@ -35,6 +35,10 @@ public class MarketAnalyzer {
         this.callback = callback;
     }
 
+    public Profile getProfile() {
+        return profile;
+    }
+
     public List<Offer> getOffers(OFFER_TYPE offerType, Item item, MarketFilter filter){
         return market.getOffers(offerType, item).filter(o -> !filter.isFiltered(o.getVendor())).collect(Collectors.toList());
     }
@@ -173,8 +177,12 @@ public class MarketAnalyzer {
         return searcher.getPaths(from, to, getPlaces());
     }
 
-    public List<Edge<Place>> getPath(Place from, Place to){
-        return searcher.getPath(from, to, getPlaces());
+    public Route getPath(Vendor from, Vendor to){
+        return RouteSearcher.toRoute(from, to, searcher.getPath(from.getPlace(), to.getPlace(), getPlaces()));
+    }
+
+    public Route getPath(Order order){
+        return RouteSearcher.toRoute(order, searcher.getPath(order.getSeller().getPlace(), order.getBuyer().getPlace(), getPlaces()));
     }
 
     public Collection<Route> getTopRoutes(int limit){
@@ -182,7 +190,9 @@ public class MarketAnalyzer {
         LimitedQueue<Route> top = new LimitedQueue<>(limit);
         Collection<Vendor> vendors = getVendors();
         callback.setMax(vendors.size());
-        for (Vendor vendor : vendors) {
+        Iterator<Vendor> iterator = market.getMarkets(false).iterator();
+        while (iterator.hasNext()){
+            Vendor vendor = iterator.next();
             if (callback.isCancel()) break;
             Collection<Route> paths = searcher.getRoutes(vendor, vendor, vendors, 3);
             top.addAll(paths);

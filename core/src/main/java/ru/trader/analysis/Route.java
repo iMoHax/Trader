@@ -16,6 +16,7 @@ public class Route implements Comparable<Route> {
     private double score = 0;
     private double fuel = 0;
     private int lands = 0;
+    private int refills = 0;
 
     public Route(RouteEntry root) {
         entries = new ArrayList<>();
@@ -33,6 +34,10 @@ public class Route implements Comparable<Route> {
 
     public RouteEntry get(int index) {
         return entries.get(index);
+    }
+
+    public boolean isEmpty(){
+        return entries.isEmpty();
     }
 
     void setBalance(double balance){
@@ -53,6 +58,10 @@ public class Route implements Comparable<Route> {
 
     public int getLands() {
         return lands;
+    }
+
+    public int getRefills() {
+        return refills;
     }
 
     public void add(RouteEntry entry){
@@ -100,9 +109,19 @@ public class Route implements Comparable<Route> {
         updateStats();
     }
 
+    public void dropTo(Vendor vendor){
+        for (ListIterator<RouteEntry> iterator = entries.listIterator(entries.size()); iterator.hasPrevious(); ) {
+            RouteEntry entry = iterator.previous();
+            if (entry.is(vendor)){
+                break;
+            }
+            iterator.remove();
+        }
+    }
+
     void updateStats(){
-        LOG.trace("Update stats, old: profit={}, distance={}, lands={}, fuel={}, score={}", profit, distance, lands, fuel, score);
-        profit = 0; distance = 0; lands = 0; fuel = 0;
+        LOG.trace("Update stats, old: profit={}, distance={}, lands={}, fuel={}, refills={}, score={}", profit, distance, lands, fuel, refills, score);
+        profit = 0; distance = 0; lands = 0; fuel = 0; refills = 0;
         if (entries.isEmpty()) return;
         RouteEntry entry = entries.get(0);
         for (int i = 1; i < entries.size(); i++) {
@@ -113,6 +132,9 @@ public class Route implements Comparable<Route> {
             fuel += entry.getFuel();
             if (entry.isLand()){
                 lands++;
+            }
+            if (entry.isRefill()){
+                refills++;
             }
             entry = next;
         }
