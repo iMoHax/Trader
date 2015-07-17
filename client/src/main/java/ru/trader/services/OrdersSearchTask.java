@@ -28,25 +28,25 @@ public class OrdersSearchTask extends AnalyzerTask<Collection<Order>>{
         Collection<Order> orders;
         if (stationFrom != null){
             if (stationTo != null){
-                orders = analyzer.getOrders(stationFrom, stationTo, balance);
+                orders = analyzer.getOrders(stationFrom, stationTo);
             } else {
                 if (to != null){
-                    orders = analyzer.getOrders(stationFrom, to, balance);
+                    orders = analyzer.getOrders(stationFrom, to);
                 } else {
-                    orders = analyzer.getOrders(stationFrom, balance);
+                    orders = analyzer.getOrders(stationFrom);
                 }
             }
         } else {
             if (stationTo != null){
-                orders = analyzer.getOrders(from, stationTo, balance);
+                orders = analyzer.getOrders(from, stationTo);
             } else {
                 if (to != null){
-                    orders = analyzer.getOrders(from, to, balance);
+                    orders = analyzer.getOrders(from, to);
                 } else {
                     if (from != null){
-                        orders = analyzer.getOrders(from, balance);
+                        orders = analyzer.getOrders(from);
                     } else {
-                        orders = analyzer.getTop(balance);
+                        orders = analyzer.getTop(100);
                     }
                 }
             }

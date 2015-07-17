@@ -6,10 +6,10 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import org.controlsfx.glyphfont.Glyph;
-import ru.trader.core.Order;
+import ru.trader.analysis.Route;
+import ru.trader.analysis.RouteEntry;
 import ru.trader.core.Vendor;
-import ru.trader.graph.PathRoute;
-import ru.trader.model.PathRouteModel;
+import ru.trader.model.RouteModel;
 import ru.trader.view.support.cells.DistanceCell;
 
 public class RouteNode {
@@ -22,67 +22,51 @@ public class RouteNode {
     private final static String CSS_SYSTEM_TEXT = "path-system-text";
     private final static String CSS_STATION_TEXT = "path-station-text";
 
-    private final PathRoute path;
+    private final Route route;
     private final HBox node = new HBox();
 
-    public RouteNode(PathRouteModel path) {
-        this.path = path.getPath();
+    public RouteNode(RouteModel route) {
+        this.route = route.getRoute();
         node.getStyleClass().add(CSS_PATH);
         build();
     }
 
     private void build(){
-        HBox v = new HBox();
-        VBox icons = new VBox();
-        VBox track = new VBox();
-        VBox.setVgrow(track, Priority.ALWAYS);
-        VBox.setVgrow(icons, Priority.ALWAYS);
+        Vendor prev = null;
+        for (RouteEntry entry : route.getEntries()) {
+            if (prev != null){
+                VBox track = new VBox();
+                VBox.setVgrow(track, Priority.ALWAYS);
+                track.getStyleClass().add(CSS_TRACK);
 
-        v.getStyleClass().add(CSS_SYSTEM);
-        icons.getStyleClass().add(CSS_ICONS);
-        track.getStyleClass().add(CSS_TRACK);
+                Text t = new Text(DistanceCell.distanceToString(entry.getVendor().getDistance(prev)));
+                t.getStyleClass().add(CSS_TRACK_TEXT);
+                track.getChildren().addAll(t, Glyph.create("FontAwesome|LONG_ARROW_RIGHT"));
 
-        PathRoute p = path.getRoot();
-
-        v.getChildren().add(buildText(p.get()));
-        Order cargo = null;
-        while (p.hasNext()){
-            p = p.getNext();
-            if (cargo == null && p.getBest() != null){
-                cargo = p.getBest();
-                icons.getChildren().add(Glyph.create("FontAwesome|UPLOAD"));
+                node.getChildren().addAll(track);
             }
-            if (p.isRefill()) icons.getChildren().add(Glyph.create("FontAwesome|REFRESH"));
-
-            node.getChildren().addAll(v, icons);
-
-            Text t = new Text(DistanceCell.distanceToString(p.getDistance()));
-            t.getStyleClass().add(CSS_TRACK_TEXT);
-
-            track.getChildren().addAll(t, Glyph.create("FontAwesome|LONG_ARROW_RIGHT"));
-
-            node.getChildren().addAll(track);
-
-            v = new HBox();
-            icons = new VBox();
-            track = new VBox(0);
-            VBox.setVgrow(track, Priority.ALWAYS);
+            HBox v = new HBox();
+            VBox icons = new VBox();
             VBox.setVgrow(icons, Priority.ALWAYS);
 
             v.getStyleClass().add(CSS_SYSTEM);
             icons.getStyleClass().add(CSS_ICONS);
-            track.getStyleClass().add(CSS_TRACK);
 
+            v.getChildren().add(buildText(entry.getVendor()));
 
-            v.getChildren().add(buildText(p.get()));
-            v.getChildren().add(icons);
-            if (cargo != null && cargo.isBuyer(p.get())){
-                v.getChildren().add(new Text(String.format(" (%+.0f) ", cargo.getProfit())));
-                cargo = null;
+            if (!entry.getOrders().isEmpty()){
+                v.getChildren().add(new Text(String.format(" (%+.0f) ", entry.getProfit())));
+                icons.getChildren().add(Glyph.create("FontAwesome|UPLOAD"));
+            }
+            if (entry.isRefill()){
+                icons.getChildren().add(Glyph.create("FontAwesome|REFRESH"));
+            }
+            if (!entry.isRefill() && entry.isLand()){
                 icons.getChildren().add(Glyph.create("FontAwesome|DOWNLOAD"));
             }
+            node.getChildren().addAll(v, icons);
+            prev = entry.getVendor();
         }
-        node.getChildren().addAll(v, icons);
     }
 
     private VBox buildText(Vendor vendor){

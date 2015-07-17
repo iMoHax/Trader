@@ -17,6 +17,10 @@ public class FilteredMarket {
         this.filter = filter;
     }
 
+    public MarketFilter getFilter() {
+        return filter;
+    }
+
     public void disableFilter(boolean disableFilter) {
         this.disableFilter = disableFilter;
     }

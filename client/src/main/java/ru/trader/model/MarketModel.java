@@ -10,10 +10,10 @@ import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.World;
+import ru.trader.analysis.Route;
 import ru.trader.controllers.ProgressController;
 import ru.trader.controllers.Screeners;
 import ru.trader.core.*;
-import ru.trader.graph.PathRoute;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.model.support.Notificator;
 import ru.trader.services.OrdersSearchTask;
@@ -45,7 +45,7 @@ public class MarketModel {
         notificator = new Notificator();
         groups = new SimpleListProperty<>(BindingsHelper.observableList(market.getGroups(), modeler::get));
         items = new SimpleListProperty<>(BindingsHelper.observableList(market.getItems(), modeler::get));
-        items.sort((i1, i2) -> i1.compareTo(i2));
+        items.sort(ItemModel::compareTo);
         systems = new SimpleListProperty<>(BindingsHelper.observableList(market.get(), modeler::get));
         systemsList = new SimpleListProperty<>(FXCollections.observableArrayList(ModelFabric.NONE_SYSTEM));
         systemsList.addAll(systems);
@@ -168,15 +168,15 @@ public class MarketModel {
         getOrders(ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, balance, result);
     }
 
-    public void getRoutes(SystemModel from, double balance, Consumer<ObservableList<PathRouteModel>> result){
+    public void getRoutes(SystemModel from, double balance, Consumer<ObservableList<RouteModel>> result){
         getRoutes(from, ModelFabric.NONE_STATION, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, balance, result);
     }
 
-    public void getRoutes(SystemModel from, SystemModel to, double balance, Consumer<ObservableList<PathRouteModel>> result){
+    public void getRoutes(SystemModel from, SystemModel to, double balance, Consumer<ObservableList<RouteModel>> result){
         getRoutes(from, ModelFabric.NONE_STATION, to, ModelFabric.NONE_STATION, balance, result);
     }
 
-    public void getRoutes(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo, double balance, Consumer<ObservableList<PathRouteModel>> result) {
+    public void getRoutes(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo, double balance, Consumer<ObservableList<RouteModel>> result) {
         ProgressController progress = new ProgressController(Screeners.getMainScreen(), Localization.getString("analyzer.routes.title"));
         RoutesSearchTask task = new RoutesSearchTask(this,
                 from == null || from == ModelFabric.NONE_SYSTEM ? null : from.getSystem(),
@@ -187,7 +187,7 @@ public class MarketModel {
         );
 
         progress.run(task, route -> {
-            ObservableList<PathRouteModel> res = BindingsHelper.observableList(route, modeler::get);
+            ObservableList<RouteModel> res = BindingsHelper.observableList(route, modeler::get);
             if (Platform.isFxApplicationThread()){
                 result.accept(res);
             } else {
@@ -196,30 +196,29 @@ public class MarketModel {
         });
     }
 
-    public void getTopRoutes(double balance, Consumer<ObservableList<PathRouteModel>> result){
+    public void getTopRoutes(double balance, Consumer<ObservableList<RouteModel>> result){
         getRoutes(ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, balance, result);
     }
 
-    public PathRouteModel getRoute(PathRouteModel path, double balance) {
-        PathRoute p = analyzer.getPath(path.getPath().getEntries(), balance);
-        if (p == null) return null;
+    public RouteModel getRoute(RouteModel path, double balance) {
+        //TODO: implement
+        /*Route r = analyzer.getRoute(path.getRoute());
+        if (r == null) return null;
+        return modeler.get(r);*/
+        return null;
+    }
+
+    Route _getPath(OrderModel order) {
+        return analyzer.getPath(order.getOrder());
+    }
+
+    public RouteModel getPath(StationModel from, StationModel to) {
+        Route p = analyzer.getPath(from.getStation(), to.getStation());
         return modeler.get(p);
     }
 
-    PathRoute _getPath(StationModel from, StationModel to) {
-        return analyzer.getPath(from.getStation(), to.getStation());
-    }
-
-    public PathRouteModel getPath(StationModel from, StationModel to) {
-        PathRoute p = analyzer.getPath(from.getStation(), to.getStation());
-        if (p == null) return null;
-        return modeler.get(p);
-    }
-
-    public PathRouteModel getPath(OrderModel order) {
-        PathRoute p = analyzer.getPath(order.getStation().getStation(), order.getBuyer().getStation());
-        if (p == null) return null;
-        p.getRoot().getNext().setOrder(new Order(order.getOffer().getOffer(), order.getBuyOffer().getOffer(), order.getCount()));
+    public RouteModel getPath(OrderModel order) {
+        Route p = analyzer.getPath(order.getOrder());
         return modeler.get(p);
     }
 

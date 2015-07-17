@@ -3,6 +3,7 @@ package ru.trader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
+import ru.trader.analysis.FilteredMarket;
 import ru.trader.core.Market;
 import ru.trader.core.MarketAnalyzer;
 import ru.trader.store.simple.SimpleMarket;
@@ -59,14 +60,7 @@ public class World {
     }
 
     public static MarketAnalyzer buildAnalyzer(Market market){
-        MarketAnalyzer analyzer = new MarketAnalyzer(market);
-        analyzer.setSegmentSize(Main.SETTINGS.getSegmentSize());
-        analyzer.setPathsCount(Main.SETTINGS.getPathsCount());
-        analyzer.setFilter(Main.SETTINGS.getFilter(market));
-        analyzer.setCargo(Main.SETTINGS.getCargo());
-        analyzer.setTank(Main.SETTINGS.getTank());
-        analyzer.setMaxDistance(Main.SETTINGS.getDistance());
-        analyzer.setJumps(Main.SETTINGS.getJumps());
-        return analyzer;
+        FilteredMarket fMarket = new FilteredMarket(market, Main.SETTINGS.getFilter(market));
+        return new MarketAnalyzer(fMarket, Main.SETTINGS.getProfile());
     }
 }

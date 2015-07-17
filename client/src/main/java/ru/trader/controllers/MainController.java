@@ -254,7 +254,8 @@ public class MainController {
     }
 
     public void editFilter(){
-        Screeners.showFilter(market.getAnalyzer().getFilter());
+        //TODO: implement
+        //Screeners.showFilter(market.getFilter());
     }
 
     public void impMadSystems(ActionEvent actionEvent) {

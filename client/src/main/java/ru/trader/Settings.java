@@ -13,13 +13,17 @@ public class Settings {
 
     private final Properties values = new Properties();
     private final File file;
+    private Profile profile;
+
 
     public Settings() {
         this.file = null;
+        profile = new Profile(new Ship());
     }
 
     public Settings(File file) {
         this.file = file;
+        profile = new Profile(new Ship());
     }
 
     public void load() {
@@ -30,10 +34,12 @@ public class Settings {
         } catch (IOException e) {
             LOG.error("Error on load settings", e);
         }
+        profile = Profile.readFrom(values);
     }
 
     public void save(){
         try (OutputStream os = new FileOutputStream(file)) {
+            profile.writeTo(values);
             values.store(os,"settings");
         } catch (IOException e) {
             LOG.error("Error on load settings", e);
@@ -82,59 +88,43 @@ public class Settings {
     }
 
     public void setBalance(double balance){
-        values.setProperty("ship.balance", String.valueOf(balance));
+        profile.setBalance(balance);
     }
 
     public double getBalance(){
-        return Double.valueOf(values.getProperty("ship.balance","1000"));
+        return profile.getBalance();
     }
 
     public void setCargo(int cargo){
-        values.setProperty("ship.cargo", String.valueOf(cargo));
+        profile.getShip().setCargo(cargo);
     }
 
     public int getCargo(){
-        return Integer.valueOf(values.getProperty("ship.cargo","4"));
+        return profile.getShip().getCargo();
     }
 
     public void setTank(double tank){
-        values.setProperty("ship.tank", String.valueOf(tank));
+        profile.getShip().setTank(tank);
     }
 
     public double getTank(){
-        return Double.valueOf(values.getProperty("ship.tank","20"));
-    }
-
-    public void setDistance(double distance){
-        values.setProperty("ship.distance", String.valueOf(distance));
-    }
-
-    public double getDistance(){
-        return Double.valueOf(values.getProperty("ship.distance","7"));
+        return profile.getShip().getTank();
     }
 
     public void setJumps(int jumps){
-        values.setProperty("ship.jumps", String.valueOf(jumps));
+        profile.setJumps(jumps);
     }
 
     public int getJumps(){
-        return Integer.valueOf(values.getProperty("ship.jumps","3"));
+        return profile.getJumps();
     }
 
-    public void setSegmentSize(int segmentSize){
-        values.setProperty("performance.segment", String.valueOf(segmentSize));
+    public void setRoutesCount(int routesCount){
+        profile.setRoutesCount(routesCount);
     }
 
-    public int getSegmentSize(){
-        return Integer.valueOf(values.getProperty("performance.segment","0"));
-    }
-
-    public void setPathsCount(int pathsCount){
-        values.setProperty("performance.limit", String.valueOf(pathsCount));
-    }
-
-    public int getPathsCount(){
-        return Integer.valueOf(values.getProperty("performance.limit","100"));
+    public int getRoutesCount(){
+        return profile.getRoutesCount();
     }
 
     public MarketFilter getFilter(Market market){
@@ -143,5 +133,9 @@ public class Settings {
 
     public void setFilter(MarketFilter filter){
         filter.writeTo(values);
+    }
+
+    public Profile getProfile() {
+        return profile;
     }
 }

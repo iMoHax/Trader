@@ -65,7 +65,7 @@ public class RouterController {
     private NumberField totalBalance;
 
     private MarketModel market;
-    private PathRouteModel route;
+    private RouteModel route;
     private final ObservableList<OrderModel> orders = FXCollections.observableArrayList();
 
     @FXML
@@ -75,22 +75,9 @@ public class RouterController {
             totalBalance.setValue(n);
             Main.SETTINGS.setBalance(n.doubleValue());
         });
-        cargo.numberProperty().addListener((ov, o, n) -> {
-            market.getAnalyzer().setCargo(n.intValue());
-            Main.SETTINGS.setCargo(n.intValue());
-        });
-        tank.numberProperty().addListener((ov, o, n) -> {
-            market.getAnalyzer().setTank(n.doubleValue());
-            Main.SETTINGS.setTank(n.doubleValue());
-        });
-        distance.numberProperty().addListener((ov, o, n) -> {
-            market.getAnalyzer().setMaxDistance(n.doubleValue());
-            Main.SETTINGS.setDistance(n.doubleValue());
-        });
-        jumps.numberProperty().addListener((ov, o, n) -> {
-            market.getAnalyzer().setJumps(n.intValue());
-            Main.SETTINGS.setJumps(n.intValue());
-        });
+        cargo.numberProperty().addListener((ov, o, n) -> Main.SETTINGS.setCargo(n.intValue()));
+        tank.numberProperty().addListener((ov, o, n) -> Main.SETTINGS.setTank(n.doubleValue()));
+        jumps.numberProperty().addListener((ov, o, n) -> Main.SETTINGS.setJumps(n.intValue()));
         source.valueProperty().addListener((ov, o, n) -> {
             if (n != null) {
                 sStation.setItems(n.getStationsList());
@@ -116,7 +103,6 @@ public class RouterController {
         balance.setValue(Main.SETTINGS.getBalance());
         cargo.setValue(Main.SETTINGS.getCargo());
         tank.setValue(Main.SETTINGS.getTank());
-        distance.setValue(Main.SETTINGS.getDistance());
         jumps.setValue(Main.SETTINGS.getJumps());
 
         addBtn.disableProperty().bind(Bindings.createBooleanBinding(()-> {
@@ -181,10 +167,10 @@ public class RouterController {
     public void addStationToRoute(){
         StationModel sS = sStation.getValue();
         StationModel tS = tStation.getValue();
-        PathRouteModel r = market.getPath(sS, tS);
+        RouteModel r = market.getPath(sS, tS);
         if (r == null) return;
         if (route != null){
-            route = route.add(r);
+            route.add(r);
         } else {
             route = r;
         }
@@ -196,13 +182,14 @@ public class RouterController {
     public void editOrders(){
         OrderModel sel = tblOrders.getSelectionModel().getSelectedItem();
         int index = tblOrders.getSelectionModel().getSelectedIndex();
-        market.getOrders(sel.getStation(), sel.getBuyer(), sel.getBalance(), result -> {
+        //TODO: implement
+/*        market.getOrders(sel.getStation(), sel.getBuyer(), sel.getBalance(), result -> {
             OrderModel order = Screeners.showOrders(result);
             if (order!=null){
                 orders.set(index, order);
             }
 
-        });
+        });*/
     }
 
     public void removeSelected(){
@@ -210,7 +197,7 @@ public class RouterController {
         if (!select.isEmpty()){
             int index = select.getSelectedIndex();
             if (index > 0){
-                route = route.remove(select.getSelectedItem());
+                route.remove(select.getSelectedItem());
             } else {
                 route = null;
             }
@@ -221,7 +208,8 @@ public class RouterController {
 
     public void recompute(){
         if (route != null){
-            route.recompute(balance.getValue().doubleValue(), cargo.getValue().longValue());
+            //TODO: implement
+///            route.recompute(balance.getValue().doubleValue(), cargo.getValue().longValue());
             orders.clear();
             orders.addAll(route.getOrders());
             refreshPath();
@@ -230,7 +218,7 @@ public class RouterController {
 
     public void rebuild(){
         if (route != null){
-            PathRouteModel r = market.getRoute(route, balance.getValue().doubleValue());
+            RouteModel r = market.getRoute(route, balance.getValue().doubleValue());
             if (r != null){
                 route = r;
                 orders.clear();
@@ -281,7 +269,7 @@ public class RouterController {
         StationModel sS = sStation.getValue();
         StationModel tS = tStation.getValue();
         market.getRoutes(s, sS, t, tS, totalBalance.getValue().doubleValue(), routes -> {
-            PathRouteModel path = Screeners.showRouters(routes);
+            RouteModel path = Screeners.showRouters(routes);
             if (path!=null){
                 orders.addAll(path.getOrders());
                 addRouteToPath(path);
@@ -291,7 +279,7 @@ public class RouterController {
 
     public void showTopRoutes(){
         market.getTopRoutes(totalBalance.getValue().doubleValue(), routes -> {
-            PathRouteModel path = Screeners.showRouters(routes);
+            RouteModel path = Screeners.showRouters(routes);
             if (path!=null){
                 orders.addAll(path.getOrders());
                 addRouteToPath(path);
@@ -299,18 +287,18 @@ public class RouterController {
         });
     }
 
-    private void addRouteToPath(PathRouteModel route){
+    private void addRouteToPath(RouteModel route){
         if (this.route == null){
             this.route = route;
         } else {
-            this.route = this.route.add(route);
+            this.route.add(route);
         }
         refreshPath();
     }
 
     private void addOrderToPath(OrderModel order){
         if (route != null){
-            route = route.add(order);
+            route.add(order);
         } else {
             route = market.getPath(order);
         }

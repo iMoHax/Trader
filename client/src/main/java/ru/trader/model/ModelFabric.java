@@ -5,8 +5,8 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import ru.trader.analysis.Route;
 import ru.trader.core.*;
-import ru.trader.graph.PathRoute;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
@@ -29,8 +29,8 @@ public class ModelFabric {
         return new OrderModel(get(order.getSell()), get(order.getBuy()), order.getCount());
     }
 
-    public PathRouteModel get(PathRoute path) {
-        return new PathRouteModel(path, market);
+    public RouteModel get(Route route) {
+        return new RouteModel(route, market);
     }
 
     public SystemModel get(Place system){

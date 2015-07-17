@@ -1,18 +1,17 @@
 package ru.trader.services;
 
+import ru.trader.analysis.Route;
 import ru.trader.core.Place;
 import ru.trader.core.Vendor;
-import ru.trader.graph.PathRoute;
 import ru.trader.model.MarketModel;
 
 import java.util.Collection;
 
-public class RoutesSearchTask extends AnalyzerTask<Collection<PathRoute>>{
+public class RoutesSearchTask extends AnalyzerTask<Collection<Route>>{
     private final Place from;
     private final Vendor stationFrom;
     private final Place to;
     private final Vendor stationTo;
-    private final double balance;
 
     public RoutesSearchTask(MarketModel market, Place from, Vendor stationFrom, Place to, Vendor stationTo, double balance) {
         super(market);
@@ -20,34 +19,34 @@ public class RoutesSearchTask extends AnalyzerTask<Collection<PathRoute>>{
         this.stationFrom = stationFrom;
         this.to = to;
         this.stationTo = stationTo;
-        this.balance = balance;
+        market.getAnalyzer().getProfile().setBalance(balance);
     }
 
     @Override
-    protected Collection<PathRoute> call() throws Exception {
-        Collection<PathRoute> routes;
+    protected Collection<Route> call() throws Exception {
+        Collection<Route> routes;
 
         if (stationFrom != null) {
             if (stationTo != null) {
-                routes = analyzer.getPaths(stationFrom, stationTo, balance);
+                routes = analyzer.getRoutes(stationFrom, stationTo);
             } else {
                 if (to != null) {
-                    routes = analyzer.getPaths(stationFrom, to, balance);
+                    routes = analyzer.getRoutes(stationFrom, to);
                 } else {
-                    routes = analyzer.getPaths(stationFrom, balance);
+                    routes = analyzer.getRoutes(stationFrom);
                 }
             }
         } else {
             if (stationTo != null) {
-                routes = analyzer.getPaths(from, stationTo, balance);
+                routes = analyzer.getRoutes(from, stationTo);
             } else {
                 if (to != null) {
-                    routes = analyzer.getPaths(from, to, balance);
+                    routes = analyzer.getRoutes(from, to);
                 } else {
                     if (from != null){
-                        routes = analyzer.getPaths(from, balance);
+                        routes = analyzer.getRoutes(from);
                     } else {
-                        routes = analyzer.getTopPaths(balance);
+                        routes = analyzer.getTopRoutes(100);
                     }
                 }
             }

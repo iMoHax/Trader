@@ -4,7 +4,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import ru.trader.core.Order;
-import ru.trader.graph.PathRoute;
 import ru.trader.model.support.ModelBindings;
 
 import java.util.List;
@@ -19,7 +18,6 @@ public class OrderModel {
     private DoubleProperty profit;
     private DoubleProperty distance;
     private DoubleProperty bestProfit;
-    private PathRoute path;
 
     public OrderModel(OfferModel offer) {
         this.offer = offer;
@@ -49,14 +47,9 @@ public class OrderModel {
         this.max.setValue(Order.getMaxCount(offer.getOffer(), balance, limit));
     }
 
-    PathRoute getPath() {
-        return path;
+    Order getOrder(){
+        return new Order(getOffer().getOffer(), getBuyOffer().getOffer(), getCount());
     }
-
-    void setPath(PathRoute path) {
-        this.path = path;
-    }
-
 
     public OfferModel getOffer() {
         return offer;
@@ -160,9 +153,4 @@ public class OrderModel {
         }
         return distance;
     }
-
-    public double getBalance(){
-        return path != null ? path.getRoot().getBalance() : getMax() * offer.getPrice();
-    }
-
 }

@@ -12,8 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.EMDNUpdater;
 import ru.trader.Main;
-import ru.trader.core.MarketAnalyzer;
-import ru.trader.model.MarketModel;
 import ru.trader.view.support.Localization;
 import ru.trader.view.support.NumberField;
 
@@ -47,8 +45,7 @@ public class SettingsController {
         emdnOn.setSelected(Main.SETTINGS.getEMDNActive());
         emdnUpdateOnly.setSelected(Main.SETTINGS.getEMDNUpdateOnly());
         emdnUpdateTime.setValue(Main.SETTINGS.getEMDNAutoUpdate());
-        segmentSize.setValue(Main.SETTINGS.getSegmentSize());
-        pathsCount.setValue(Main.SETTINGS.getPathsCount());
+        pathsCount.setValue(Main.SETTINGS.getRoutesCount());
     }
 
     private void save() {
@@ -60,12 +57,6 @@ public class SettingsController {
         EMDNUpdater.setUpdateOnly(emdnUpdateOnly.isSelected());
         Main.SETTINGS.setEMDNAutoUpdate(emdnUpdateTime.getValue().longValue());
         EMDNUpdater.setInterval(emdnUpdateTime.getValue().longValue());
-        MarketAnalyzer analyzer = MainController.getMarket().getAnalyzer();
-        Main.SETTINGS.setSegmentSize(segmentSize.getValue().intValue());
-        analyzer.setSegmentSize(segmentSize.getValue().intValue());
-        Main.SETTINGS.setPathsCount(pathsCount.getValue().intValue());
-        analyzer.setPathsCount(pathsCount.getValue().intValue());
-
     }
 
     public Action showDialog(Parent parent, Parent content){

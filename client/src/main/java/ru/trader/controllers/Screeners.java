@@ -226,7 +226,7 @@ public class Screeners {
         return topOrdersController.showDialog(mainScreen, topOrdersScreen, orders);
     }
 
-    public static PathRouteModel showRouters(ObservableList<PathRouteModel> routers) {
+    public static RouteModel showRouters(ObservableList<RouteModel> routers) {
         return pathsController.showDialog(mainScreen, pathsScreen, routers);
     }
 
