@@ -1,5 +1,7 @@
 package ru.trader.graph;
 
+import ru.trader.analysis.graph.Vertex;
+
 public class GraphCallBack<T extends Connectable<T>> {
 
     private volatile boolean cancel = false;

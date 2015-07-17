@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.concurrent.Task;
+import ru.trader.analysis.graph.Vertex;
 import ru.trader.core.MarketAnalyzer;
 import ru.trader.core.MarketAnalyzerCallBack;
 import ru.trader.core.Place;
@@ -11,7 +12,6 @@ import ru.trader.core.Vendor;
 import ru.trader.graph.Connectable;
 import ru.trader.graph.GraphCallBack;
 import ru.trader.graph.RouteSearcherCallBack;
-import ru.trader.graph.Vertex;
 import ru.trader.model.MarketModel;
 import ru.trader.view.support.Localization;
 
