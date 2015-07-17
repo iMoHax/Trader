@@ -60,6 +60,10 @@ public class Order implements Comparable<Order> {
         return buy.getVendor().equals(buyer);
     }
 
+    public Vendor getSeller(){
+        return sell.getVendor();
+    }
+
     public Vendor getBuyer(){
         return buy.getVendor();
     }
