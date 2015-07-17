@@ -81,16 +81,16 @@ public class TransitPath {
     }
 
     private double updateFuelCost(List<ConnectibleGraph<Vendor>.BuildEdge> edges, int startIndex, int endIndex, double fuel){
-        for (int i = startIndex+1; i <= endIndex; i++) {
+        for (int i = startIndex; i <= endIndex; i++) {
             ConnectibleGraph<Vendor>.BuildEdge e = edges.get(edges.size()-1-i);
-            ConnectibleEdge<Vendor> ce = entries.get(i);
-            double fuelCost = e.getFuelCost(fuel);
-            this.fuelCost = fuelCost - ce.getFuelCost();
-            ce.setFuelCost(fuelCost);
-            fuel -= fuelCost;
             if (fuel < 0 || fuel < e.getMinFuel()){
                 return -1;
             }
+            ConnectibleEdge<Vendor> ce = entries.get(i);
+            double fuelCost = e.getFuelCost(fuel);
+            this.fuelCost += fuelCost - ce.getFuelCost();
+            ce.setFuelCost(fuelCost);
+            fuel -= fuelCost;
         }
         return fuel;
     }
