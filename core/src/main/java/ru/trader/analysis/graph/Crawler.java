@@ -261,7 +261,7 @@ public class Crawler<T> {
     private int ucs2(CostTraversalEntry root, int deep, int count) {
         LOG.trace("UCS2 from {} to {}, deep {}, count {}", root.vertex, target, deep, count);
         int found = 0;
-        double limit = Double.MAX_VALUE;
+        double limit = Double.NaN;
         LimitedQueue<CTEntrySupport> targetsQueue = new LimitedQueue<>(count, Comparator.<CTEntrySupport>naturalOrder());
         LimitedQueue<CTEntrySupport> queue = new LimitedQueue<>(count, Comparator.<CTEntrySupport>naturalOrder());
         root.sort();
@@ -286,7 +286,7 @@ public class Crawler<T> {
                 }
                 if (found >= count) break;
                 CTEntrySupport next = targetsQueue.peek();
-                limit = next != null ? next.entry.getWeight() :  Double.MAX_VALUE;
+                limit = next != null ? next.entry.getWeight() :  Double.NaN;
             }
             if (alreadyFound + found < count){
                 LOG.trace("Continue search, limit {}", limit);
@@ -308,7 +308,7 @@ public class Crawler<T> {
 
     private class CTEntrySupport implements Comparable<CTEntrySupport>, Iterator<Edge<T>>{
         private final CTEntrySupport parent;
-        private final Iterator<Edge<T>> iterator;
+        private Iterator<Edge<T>> iterator;
         private final CostTraversalEntry entry;
         private Edge<T> next;
 
@@ -318,9 +318,14 @@ public class Crawler<T> {
 
         private CTEntrySupport(CTEntrySupport parent, CostTraversalEntry entry) {
             this.parent = parent;
-            this.iterator = entry.iterator();
             this.entry = entry;
-            next = iterator.hasNext() ? next = iterator.next() : null;
+        }
+
+        private void checkIterator(){
+            if (iterator == null){
+                this.iterator = entry.iterator();
+                next = iterator.hasNext() ? next = iterator.next() : null;
+            }
         }
 
         @Override
@@ -344,11 +349,13 @@ public class Crawler<T> {
 
         @Override
         public boolean hasNext() {
+            checkIterator();
             return next != null;
         }
 
         @Override
         public Edge<T> next(){
+            checkIterator();
             Edge<T> res = next;
             next = iterator.hasNext() ? next = iterator.next() : null;
             return res;
@@ -416,15 +423,17 @@ public class Crawler<T> {
                 boolean canDeep = !entry.getTarget().isSingle() && deep < entry.getTarget().getLevel() && entry.size() < maxSize-1;
                 if (canDeep || isTarget){
                     CostTraversalEntry nextEntry = travers(entry, edge);
-                    nextEntry.sort();
+                    if (canDeep){
+                        nextEntry.sort();
+                    }
                     curr = new CTEntrySupport(curr, nextEntry);
                     if (isTarget){
                         LOG.trace("Found, add entry {} to queue", nextEntry);
                         targets.add(curr);
-                        limit = nextEntry.getWeight();
+                        limit = Double.isNaN(limit) ? nextEntry.getWeight() : Math.min(limit, nextEntry.getWeight());
                         curr = curr.parent;
                     } else {
-                        if (nextEntry.getWeight() >= limit && targets.size() > 0){
+                        if (!Double.isNaN(limit) && nextEntry.getWeight() >= limit){
                             if (targets.size() < count){
                                 LOG.trace("Not found, limit {}, add entry {} to queue", limit, nextEntry);
                                 queue.add(curr);
@@ -479,7 +488,7 @@ public class Crawler<T> {
             LOG.trace("Sub task is done");
             targets.addAll(subTask.getTargets());
             queue.addAll(subTask.getQueue());
-            limit = Math.min(limit, subTask.limit);
+            limit = Double.isNaN(limit) ? subTask.limit : Math.min(limit, subTask.limit);
         }
 
         @Override
