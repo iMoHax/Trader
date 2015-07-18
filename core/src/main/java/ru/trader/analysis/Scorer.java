@@ -8,6 +8,23 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/*TODO: change to compute profit for seocnd
+* times:
+*   26810 - 7:15
+*   1980 - 3:46
+*   1330 - 2:47
+*   1380 - 2:32
+*   780 - 2:10
+*   430 - 2:04
+*   306 - 1:54
+*   88 - 1:25
+*
+*  launch_to_start_jmp - 0:40, 0:43, 0:40
+*  jmp - 0:33, 0:33, 0:30, 0:32, 0:32, 0:32
+*  recharge - 0:12, 0:14, 0:12, 0:12, 0:12
+*  lading - 1:04, 1:08, 1:28
+*
+* */
 public class Scorer {
     private final static Logger LOG = LoggerFactory.getLogger(Scorer.class);
 
