@@ -1,0 +1,5 @@
+package ru.trader.edce;
+
+public enum ED_SESSION_STATUS {
+    OK, VERIFICATION_REQUIRED, LOGIN_FAILED, ERROR, LOGIN_REQUIRED
+}
