@@ -32,15 +32,11 @@ public class EDSession {
     private final static String USER_AGENT = "Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_2 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Mobile/11D257";
     private final static String COOKIE_FILE = "edce.tmp";
 
-    private final String login;
-    private final String password;
     private CookieStore cookieStore;
     private CloseableHttpClient httpClient;
     private ED_SESSION_STATUS lastStatus;
 
-    public EDSession(String login, String password) throws IOException, ClassNotFoundException {
-        this.login = login;
-        this.password = password;
+    public EDSession() throws IOException, ClassNotFoundException {
         this.lastStatus = ED_SESSION_STATUS.LOGIN_REQUIRED;
         initClient();
     }
@@ -55,7 +51,7 @@ public class EDSession {
                 .build();
     }
 
-    public void login(){
+    public void login(String login, String password){
         LOG.info("Login to {}, email {}", COMPANION_DOMAIN, login);
         HttpUriRequest loginRequest = RequestBuilder.post(LOGIN_URL)
                 .addParameter("email", login)

@@ -22,18 +22,20 @@ public class EDSessionDemo {
 
     public static void main(String args[]) throws Exception {
         LOG.info("Test ED Companion connect");
-        EDSession edSession = new EDSession("frontier@mail.ru","elite");
+        EDSession edSession = new EDSession();
         if (edSession.getLastStatus() == ED_SESSION_STATUS.OK){
             LOG.info("Check get profile");
             edSession.readProfile(s ->{});
         }
         if (edSession.getLastStatus() == ED_SESSION_STATUS.LOGIN_REQUIRED) {
-            edSession.login();
+            String login = readLine("Login:");
+            String pass = readLine("Password:");
+            edSession.login(login, pass);
             if (edSession.getLastStatus() == ED_SESSION_STATUS.VERIFICATION_REQUIRED) {
                 LOG.info("Check verification");
                 String code = readLine("Verify code:");
                 edSession.submitVerifyCode(code);
-                edSession.login();
+                edSession.login(login, pass);
             }
             if (edSession.getLastStatus() == ED_SESSION_STATUS.OK) {
                 LOG.info("Check get profile");
