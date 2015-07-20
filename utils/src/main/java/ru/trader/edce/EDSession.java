@@ -1,16 +1,14 @@
 package ru.trader.edce;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.apache.http.impl.client.*;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,18 +35,29 @@ public class EDSession {
     private ED_SESSION_STATUS lastStatus;
 
     public EDSession() throws IOException, ClassNotFoundException {
-        this.lastStatus = ED_SESSION_STATUS.LOGIN_REQUIRED;
-        initClient();
+        this(null);
     }
 
-    private void initClient() throws IOException, ClassNotFoundException {
+    public EDSession(String proxyServer, int port) throws IOException, ClassNotFoundException {
+        this(new HttpHost(proxyServer,port));
+    }
+
+    public EDSession(HttpHost proxy) throws IOException, ClassNotFoundException {
+        this.lastStatus = ED_SESSION_STATUS.LOGIN_REQUIRED;
+        initClient(proxy);
+    }
+
+    private void initClient(HttpHost proxy) throws IOException, ClassNotFoundException {
         cookieStore = readCookieStore();
         checkCookie();
-        httpClient = HttpClients.custom()
+        HttpClientBuilder builder = HttpClients.custom()
                 .setDefaultCookieStore(cookieStore)
                 .setUserAgent(USER_AGENT)
-                .setRedirectStrategy(new LaxRedirectStrategy())
-                .build();
+                .setRedirectStrategy(new LaxRedirectStrategy());
+        if (proxy != null){
+            builder.setProxy(proxy);
+        }
+        httpClient = builder.build();
     }
 
     public void login(String login, String password){

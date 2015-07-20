@@ -22,7 +22,8 @@ public class EDSessionDemo {
 
     public static void main(String args[]) throws Exception {
         LOG.info("Test ED Companion connect");
-        EDSession edSession = new EDSession();
+        EDSession edSession = new EDSession("192.168.32.90",3128);
+        //EDSession edSession = new EDSession();
         if (edSession.getLastStatus() == ED_SESSION_STATUS.OK){
             LOG.info("Check get profile");
             edSession.readProfile(s ->{});
