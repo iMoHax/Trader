@@ -1,9 +1,7 @@
 package ru.trader.core;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import ru.trader.TestUtil;
 import ru.trader.analysis.*;
 import ru.trader.store.simple.Store;
 import java.io.InputStream;
@@ -26,7 +24,7 @@ public class MarketAnalyzerTest2 extends Assert {
         ship.setEngine(5, 'A'); ship.setMass(466);
         Profile profile = new Profile(ship);
         profile.setBalance(6000000); profile.setJumps(6);
-        profile.setRoutesCount(100);
+        profile.setRoutesCount(100); profile.setLands(3);
         MarketAnalyzer analyzer = new MarketAnalyzer(fWorld, profile);
         Vendor ithaca = market.get("Ithaca").get().iterator().next();
         Vendor morgor = market.get("Morgor").asTransit();
@@ -72,34 +70,19 @@ public class MarketAnalyzerTest2 extends Assert {
         Place lhs21 = market.get("LHS 21");
         Place bonde = market.get("Bonde");
         Place suiXing = market.get("Sui Xing");
+        // LHS 21 (Resonatic Separator to Sui Xing) -> Bonde -> Sui Xing (Palladium to LHS 21) -> Bonde -> LHS 21
+        // Profit: 199056, distance: 28.72, lands: 2
+
         Collection<Route> paths = analyzer.getRoutes(lhs21, lhs21);
         Optional<Route> path = paths.stream().findFirst();
         assertTrue(path.isPresent());
         Route actual = path.get();
-        assertEquals(114816, actual.getProfit(), 0.00001);
-        assertEquals(8.16, actual.getDistance(), 0.01);
-        assertEquals(2, actual.getLands());
-
-        Place aPlace = actual.get(0).getVendor().getPlace();
-        assertEquals(lhs21, aPlace);
-        aPlace = actual.get(1).getVendor().getPlace();
-        assertEquals(bonde, aPlace);
-
-        // If distance to station has small mult
-        // LHS 21 (Resonatic Separator to Sui Xing) -> Bonde -> Sui Xing (Palladium to LHS 21) -> Bonde -> LHS 21
-        // Profit: 199056, distance: 28.72, lands: 2
-
-        profile.setDistanceMult(0.1);
-        paths = analyzer.getRoutes(lhs21, lhs21);
-        path = paths.stream().findFirst();
-        assertTrue(path.isPresent());
-        actual = path.get();
 
         assertEquals(199056, actual.getProfit(), 0.00001);
         assertEquals(28.72, actual.getDistance(), 0.01);
         assertEquals(2, actual.getLands());
 
-        aPlace = actual.get(0).getVendor().getPlace();
+        Place aPlace = actual.get(0).getVendor().getPlace();
         assertEquals(lhs21, aPlace);
         aPlace = actual.get(2).getVendor().getPlace();
         assertEquals(suiXing, aPlace);

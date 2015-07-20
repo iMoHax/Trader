@@ -12,9 +12,11 @@ public class Profile {
     private boolean refill;
     private int routesCount;
     //Scorer multipliers
-    private double distanceMult;
-    private double jumpMult;
-    private double landMult;
+    private double distanceTime;
+    private double jumpTime;
+    private double landingTime;
+    private double takeoffTime;
+    private double rechargeTime;
     private double fuelPrice;
     private PATH_PRIORITY pathPriority;
 
@@ -24,10 +26,12 @@ public class Profile {
         jumps = 6;
         lands = 4;
         routesCount = 30;
-        distanceMult = 0.8;
-        landMult = 0.95;
+        distanceTime = 0.3;
         fuelPrice = 100;
-        jumpMult = 0.5;
+        landingTime = 80;
+        takeoffTime = 40;
+        jumpTime = 32;
+        rechargeTime = 12;
         pathPriority = PATH_PRIORITY.FAST;
     }
 
@@ -79,28 +83,44 @@ public class Profile {
         this.routesCount = routesCount;
     }
 
-    public double getDistanceMult() {
-        return distanceMult;
+    public double getDistanceTime() {
+        return distanceTime;
     }
 
-    public void setDistanceMult(double distanceMult) {
-        this.distanceMult = distanceMult;
+    public void setDistanceTime(double distanceTime) {
+        this.distanceTime = distanceTime;
     }
 
-    public double getJumpMult() {
-        return jumpMult;
+    public double getJumpTime() {
+        return jumpTime;
     }
 
-    public void setJumpMult(double jumpMult) {
-        this.jumpMult = jumpMult;
+    public void setJumpTime(double jumpTime) {
+        this.jumpTime = jumpTime;
     }
 
-    public double getLandMult() {
-        return landMult;
+    public double getLandingTime() {
+        return landingTime;
     }
 
-    public void setLandMult(double landMult) {
-        this.landMult = landMult;
+    public void setLandingTime(double landingTime) {
+        this.landingTime = landingTime;
+    }
+
+    public double getTakeoffTime() {
+        return takeoffTime;
+    }
+
+    public void setTakeoffTime(double takeoffTime) {
+        this.takeoffTime = takeoffTime;
+    }
+
+    public double getRechargeTime() {
+        return rechargeTime;
+    }
+
+    public void setRechargeTime(double rechargeTime) {
+        this.rechargeTime = rechargeTime;
     }
 
     public double getFuelPrice() {
@@ -124,13 +144,15 @@ public class Profile {
         Profile profile = new Profile(ship);
         profile.setBalance(Double.valueOf(values.getProperty("profile.balance","1000")));
         profile.setJumps(Integer.valueOf(values.getProperty("profile.jumps", "6")));
-        profile.setLands(Integer.valueOf(values.getProperty("profile.lands","4")));
-        profile.setPathPriority(PATH_PRIORITY.valueOf(values.getProperty("profile.search.priority","FAST")));
-        profile.setRoutesCount(Integer.valueOf(values.getProperty("profile.search.routes","100")));
-        profile.setFuelPrice(Double.valueOf(values.getProperty("profile.search.fuel.price","100")));
-        profile.setDistanceMult(Double.valueOf(values.getProperty("profile.search.mult.distance","0.8")));
-        profile.setLandMult(Double.valueOf(values.getProperty("profile.search.mult.land","0.95")));
-        profile.setJumpMult(Double.valueOf(values.getProperty("profile.search.mult.jump","0.5")));
+        profile.setLands(Integer.valueOf(values.getProperty("profile.lands", "4")));
+        profile.setPathPriority(PATH_PRIORITY.valueOf(values.getProperty("profile.search.priority", "FAST")));
+        profile.setRoutesCount(Integer.valueOf(values.getProperty("profile.search.routes", "100")));
+        profile.setFuelPrice(Double.valueOf(values.getProperty("profile.search.fuel.price", "100")));
+        profile.setDistanceTime(Double.valueOf(values.getProperty("profile.search.times.distance", "0.3")));
+        profile.setLandingTime(Double.valueOf(values.getProperty("profile.search.times.landing", "80")));
+        profile.setTakeoffTime(Double.valueOf(values.getProperty("profile.search.times.takeoff", "40")));
+        profile.setJumpTime(Double.valueOf(values.getProperty("profile.search.times.jump", "32")));
+        profile.setRechargeTime(Double.valueOf(values.getProperty("profile.search.times.recharge", "12")));
         return profile;
     }
 
@@ -141,9 +163,11 @@ public class Profile {
         values.setProperty("profile.search.priority", String.valueOf(pathPriority));
         values.setProperty("profile.search.routes", String.valueOf(routesCount));
         values.setProperty("profile.search.fuel.price", String.valueOf(fuelPrice));
-        values.setProperty("profile.search.mult.distance", String.valueOf(distanceMult));
-        values.setProperty("profile.search.mult.land", String.valueOf(landMult));
-        values.setProperty("profile.search.mult.jump", String.valueOf(jumpMult));
+        values.setProperty("profile.search.times.distance", String.valueOf(distanceTime));
+        values.setProperty("profile.search.times.landing", String.valueOf(landingTime));
+        values.setProperty("profile.search.times.takeoff", String.valueOf(takeoffTime));
+        values.setProperty("profile.search.times.jump", String.valueOf(jumpTime));
+        values.setProperty("profile.search.times.recharge", String.valueOf(rechargeTime));
         ship.writeTo(values);
     }
 

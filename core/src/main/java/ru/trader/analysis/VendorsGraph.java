@@ -1,5 +1,6 @@
 package ru.trader.analysis;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.analysis.graph.*;
@@ -397,6 +398,8 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
     public class VendorsEdge extends ConnectibleEdge<Vendor> {
         private TransitPath  path;
         private List<Order> orders;
+        private Double profitByTonne;
+        private Double time;
 
         protected VendorsEdge(Vertex<Vendor> source, Vertex<Vendor> target, TransitPath path) {
             super(source, target);
@@ -433,19 +436,54 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             return path;
         }
 
+        public double getProfitByTonne() {
+            if (profitByTonne == null){
+                profitByTonne = computeProfit();
+            }
+            return profitByTonne;
+        }
+
+        public double getTime() {
+            if (time == null){
+                time = computeTime();
+            }
+            return time;
+        }
+
+        @Override
+        public int compareTo(@NotNull Edge other) {
+            double w = getWeight();
+            double ow = other.getWeight();
+            if (ow >= 0 && w >= 0) return super.compareTo(other);
+            if (w < 0 && ow < 0) return Double.compare(Math.abs(w), Math.abs(ow));
+            return w < 0 ? 1 : -1;
+        }
+
+        protected double computeProfit(){
+            double fuel = fuelCost;
+            if (path != null){
+                fuel = path.getFuelCost();
+            }
+            return scorer.getProfit(getProfit(), fuel);
+        }
+
+        protected double computeTime(){
+            int jumps = source.getEntry().getPlace().equals(target.getEntry().getPlace())? 0 : 1;
+            int lands = 1;
+            if (path != null){
+                jumps = path.size()-1;
+                lands += path.getRefillCount();
+                //not lands if refuel on this station
+                if (path.isRefill()) lands--;
+            } else {
+                lands += isRefill() ? 1 :0;
+            }
+            return scorer.getTime(target.getEntry().getDistance(), jumps, lands);
+        }
+
         @Override
         protected double computeWeight() {
-            int jumps = source.getEntry().getPlace().equals(target.getEntry().getPlace())? 0 : 1;
-            int lands = 1; double fuel = fuelCost;
-            if (path != null){
-                jumps = path.size()-1; fuel = getFuelCost();
-                lands += path.getRefillCount();
-            }
-            double profit = getProfit();
-            double score = scorer.getScore(target.getEntry(), profit, jumps, lands, fuel);
-            score = scorer.getMaxScore() - score;
-            if (score < 0) score = 0;
-            return score;
+            return getTime()/getProfitByTonne();
         }
 
         @Override
@@ -536,12 +574,23 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             @Override
             public double getWeight() {
                 if (weight == null){
-                    Edge<Vendor> edge = getEdge();
+                    VendorsEdge edge = (VendorsEdge) getEdge();
                     Optional<Traversal<Vendor>> head = getHead();
-                    weight = (head.isPresent() ? ((VendorsTraversalEntry)head.get()).getWeight() : 0)  + (edge != null ? edge.getWeight() : 0);
+                    double profit = 0; double time = 0;
                     if (edge != null){
-                        weight = weight / (1+Math.floorDiv(profile.getLands() - this.size(),this.size()));
+                        profit = edge.getProfitByTonne();
+                        time = edge.getTime();
                     }
+                    while (head.isPresent()){
+                        VendorsTraversalEntry hEntry = (VendorsTraversalEntry) head.get();
+                        edge = (VendorsEdge) hEntry.getEdge();
+                        if (edge != null){
+                            profit += edge.getProfitByTonne();
+                            time += edge.getTime();
+                        }
+                        head = hEntry.getHead();
+                    }
+                    weight = profit > 1 ? time / profit : time;
                 }
                 return weight;
             }

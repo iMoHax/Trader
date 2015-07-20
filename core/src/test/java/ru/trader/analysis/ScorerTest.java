@@ -36,13 +36,6 @@ public class ScorerTest extends Assert {
         profile.setBalance(1000000);
         Scorer scorer = new Scorer(fWorld, profile);
 
-        double transitScore = scorer.getTransitScore(4);
-        double transitScore2 = scorer.getTransitScore(6);
-        double transitScore3 = scorer.getTransitScore(2);
-
-        assertTrue(transitScore > transitScore2);
-        assertTrue(transitScore3 > transitScore);
-
         double score = scorer.getScore(scorer.getAvgDistance(), 0, 1, 1, 4);
         double score1 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()/2, 1, 1, 4);
         double score2 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()*10, 1, 1, 4);
@@ -84,9 +77,9 @@ public class ScorerTest extends Assert {
         assertTrue(score1 > score2);
         assertTrue(score2 > score3);
 
-        score1 = scorer.getScore(scorer.getAvgDistance()/2, scorer.getAvgProfit(), 1, 1, 4);
-        score2 = scorer.getScore(scorer.getAvgDistance()*2, scorer.getAvgProfit()*2, 1, 1, 4);
-        score3 = scorer.getScore(scorer.getAvgDistance()*2, scorer.getAvgProfit()*4, 1, 1, 4);
+        score1 = scorer.getScore(700, scorer.getAvgProfit(), 1, 1, 4);
+        score2 = scorer.getScore(2800, scorer.getAvgProfit()*1.2, 1, 1, 4);
+        score3 = scorer.getScore(2800, scorer.getAvgProfit()*1.5, 1, 1, 4);
         assertTrue(score1 > score2);
         assertTrue(score3 > score1);
 
@@ -96,26 +89,16 @@ public class ScorerTest extends Assert {
         assertTrue(score2 > score1);
         assertTrue(score3 > score2);
 
-        transitScore = scorer.getTransitScore(4);
-        score = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 1, 1, 4);
-        score1 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()/2, 1, 1, 4);
-        score2 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()*10, 1, 1, 4);
-        score3 = scorer.getScore(scorer.getAvgDistance(), 0, 1, 1, 4);
-        assertTrue(transitScore > score);
-        assertTrue(transitScore > score1);
-        assertTrue(transitScore < score2);
-        assertTrue(transitScore > score3);
-
-        score = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 4, 2, 4);
-        score1 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()*1.2, 6, 2, 4);
-        score2 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 6, 2, 4);
-        score3 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()*1.4, 6, 2, 4);
+        score = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 2, 2, 4);
+        score1 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()*1.2, 8, 2, 4);
+        score2 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 8, 2, 4);
+        score3 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()*1.4, 8, 2, 4);
         assertTrue(score > score1);
         assertTrue(score > score2);
         assertTrue(score < score3);
 
         score = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 4, 2, 4);
-        score1 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()*1.9, 4, 4, 4);
+        score1 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()*1.8, 4, 4, 4);
         score2 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit(), 4, 4, 4);
         score3 = scorer.getScore(scorer.getAvgDistance(), scorer.getAvgProfit()*2.1, 4, 4, 4);
         assertTrue(score >= score1);

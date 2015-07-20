@@ -8,16 +8,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/*TODO: change to compute profit for seocnd
-* times:
-*   26810 - 7:15
-*   1980 - 3:46
-*   1330 - 2:47
-*   1380 - 2:32
-*   780 - 2:10
-*   430 - 2:04
-*   306 - 1:54
-*   88 - 1:25
+/* times:
+*   26810 - 7:15  - 435
+*   1980 - 3:46 - 226
+*   1330 - 2:47 - 167
+*   1380 - 2:32 - 152
+*   780 - 2:10 - 130
+*   430 - 2:04 - 124
+*   306 - 1:54 - 116
+*   88 - 1:25 - 85
 *
 *  launch_to_start_jmp - 0:40, 0:43, 0:40
 *  jmp - 0:33, 0:33, 0:30, 0:32, 0:32, 0:32
@@ -84,6 +83,10 @@ public class Scorer {
         return avgProfit * profile.getShip().getCargo();
     }
 
+    public double getMaxProfit() {
+        return maxProfit;
+    }
+
     public double getMaxScore() {
         return maxScore;
     }
@@ -101,38 +104,33 @@ public class Scorer {
         return getScore(vendor.getDistance(), profit, jumps, lands, fuel);
     }
 
-    public double getTransitScore(double fuel){
-        LOG.trace("Compute transit score fuel={}", fuel);
-        double profit = maxProfit;
-        profit -= profile.getFuelPrice() * fuel / profile.getShip().getCargo();
-        if (avgDistance > 0) {
-            profit -= - avgProfit * profile.getDistanceMult();
+    private double getTime(double distance){
+        double a = 6000;
+        double b = 673;
+        double c = 1670;
+        return Math.log(distance + a)*b*profile.getDistanceTime() - c;
+    }
+
+    public double getProfit(double profit, double fuel){
+        profit -= profile.getFuelPrice() * fuel;
+        profit = profit / profile.getShip().getCargo();
+        return profit;
+    }
+
+    public double getTime(double distance, int jumps, int lands){
+        double time = profile.getTakeoffTime();
+        if (jumps > 0){
+            time += profile.getJumpTime() + (jumps-1) * (profile.getRechargeTime() + profile.getJumpTime());
         }
-        if (profile.getLandMult() > 0){
-            profit = profit / profile.getLandMult();
+        if (profile.getLandingTime() > 0){
+            time += (lands-1)*(getTime(avgDistance) + profile.getLandingTime() + profile.getTakeoffTime()) + getTime(distance) + profile.getLandingTime();
         }
-        double score = profit * (1 - profile.getJumpMult()/profile.getJumps());
-        LOG.trace("score={}", score);
-        return score;
+        return time;
     }
 
     public double getScore(double distance, double profit, int jumps, int lands, double fuel){
         LOG.trace("Compute score distance={}, profit={}, jumps={}, lands={}, fuel={}", distance, profit, jumps, lands, fuel);
-        profit -= profile.getFuelPrice() * fuel;
-        profit = profit / profile.getShip().getCargo();
-        if (avgDistance > 0) {
-            profit -= avgProfit * profile.getDistanceMult() * (distance - avgDistance) / avgDistance;
-        }
-        double score = profit;
-        if (profit > 0){
-            if (lands > 0 && profile.getLandMult() > 0){
-                score = profit / (lands * profile.getLandMult());
-            }
-            if (profile.getPathPriority() == Profile.PATH_PRIORITY.ECO){
-                jumps = 1;
-            }
-            score -= profile.getJumpMult()/profile.getJumps() * score * jumps;
-        }
+        double score = getProfit(profit, fuel)/getTime(distance, jumps, lands);
         LOG.trace("score={}", score);
         return score;
     }

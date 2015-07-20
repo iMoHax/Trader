@@ -24,12 +24,14 @@ public class RouteFillerTest extends Assert {
     private Vendor v4;
     private Vendor v5;
 
-    private RouteFiller getFillerInstance(double balance, int cargo, double landsMult, Market market){
+    private RouteFiller getFillerInstance(double balance, int cargo, boolean skipLandingTime, Market market){
         Ship ship = new Ship();
         ship.setCargo(cargo);
         Profile profile = new Profile(ship);
         profile.setBalance(balance);
-        profile.setLandMult(landsMult);
+        if (skipLandingTime){
+            profile.setLandingTime(0);
+        }
         Scorer scorer = new Scorer(new FilteredMarket(market, new MarketFilter()), profile);
         return new RouteFiller(scorer);
     }
@@ -60,7 +62,7 @@ public class RouteFillerTest extends Assert {
     public void testRoute1() throws Exception {
         LOG.info("Start route test 1");
         Route route = initTest1();
-        RouteFiller filler = getFillerInstance(10000, 5, 0, market);
+        RouteFiller filler = getFillerInstance(10000, 5, true, market);
         filler.fill(route);
 
         assertEquals(10000, route.getBalance(), 0.0001);
@@ -102,7 +104,7 @@ public class RouteFillerTest extends Assert {
     public void testPathRoute2() throws Exception {
         LOG.info("Start route test 2");
         Route route = initTest2();
-        RouteFiller filler = getFillerInstance(10000, 5, 0, market);
+        RouteFiller filler = getFillerInstance(10000, 5, true, market);
         filler.fill(route);
 
         assertEquals(1000, route.getProfit(), 0.0001);
@@ -152,7 +154,7 @@ public class RouteFillerTest extends Assert {
     public void testPathRoute3() throws Exception {
         LOG.info("Start route test 3");
         Route route = initTest3();
-        RouteFiller filler = getFillerInstance(10000, 5, 0, market);
+        RouteFiller filler = getFillerInstance(10000, 5, true, market);
         filler.fill(route);
 
         assertEquals(800, route.getProfit(), 0.0001);
@@ -179,7 +181,7 @@ public class RouteFillerTest extends Assert {
     public void testPathRoute3byLands() throws Exception {
         LOG.info("Start route test 3 by lands");
         Route route = initTest3();
-        RouteFiller filler = getFillerInstance(10000, 5, 1, market);
+        RouteFiller filler = getFillerInstance(10000, 5, false, market);
         filler.fill(route);
 
         assertEquals(750, route.getProfit(), 0.0001);
@@ -235,7 +237,7 @@ public class RouteFillerTest extends Assert {
     public void testPathRoute4() throws Exception {
         LOG.info("Start route test 4");
         Route route = initTest4();
-        RouteFiller filler = getFillerInstance(10000, 5, 0, market);
+        RouteFiller filler = getFillerInstance(10000, 5, true, market);
         filler.fill(route);
 
         assertEquals(1000, route.getProfit(), 0.0001);
@@ -298,7 +300,7 @@ public class RouteFillerTest extends Assert {
     public void testPathRoute5() throws Exception {
         LOG.info("Start route test 5");
         Route route = initTest5();
-        RouteFiller filler = getFillerInstance(500, 5, 0, market);
+        RouteFiller filler = getFillerInstance(500, 5, true, market);
         filler.fill(route);
 
         assertEquals(620, route.getProfit(), 0.0001);
@@ -325,7 +327,7 @@ public class RouteFillerTest extends Assert {
     public void testPathRoute5B() throws Exception {
         LOG.info("Start route test 5B");
         Route route = initTest5();
-        RouteFiller filler = getFillerInstance(700, 7, 0, market);
+        RouteFiller filler = getFillerInstance(700, 7, true, market);
         filler.fill(route);
 
         assertEquals(750, route.getProfit(), 0.0001);
@@ -397,7 +399,7 @@ public class RouteFillerTest extends Assert {
         LOG.info("Start join route test");
         Route route = initTest6A();
         Route routeB = initTest6B();
-        RouteFiller filler = getFillerInstance(500, 5, 0, market);
+        RouteFiller filler = getFillerInstance(500, 5, true, market);
         filler.fill(route);
         filler.fill(routeB);
 
@@ -435,9 +437,9 @@ public class RouteFillerTest extends Assert {
         LOG.info("Start join route test");
         Route route = initTest6A();
         Route routeB = initTest6B();
-        RouteFiller filler = getFillerInstance(500, 5, 0, market);
+        RouteFiller filler = getFillerInstance(500, 5, true, market);
         filler.fill(route);
-        filler = getFillerInstance(550, 5, 0, market);
+        filler = getFillerInstance(550, 5, true, market);
         filler.fill(routeB);
 
         route.join(routeB);
