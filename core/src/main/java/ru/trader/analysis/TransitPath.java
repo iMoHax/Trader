@@ -64,7 +64,7 @@ public class TransitPath {
                 }
                 double remain = max != -1 ? Math.min(max, e.getRefill()) : e.getRefill();
                 double fuelCost = e.getFuelCost(remain);
-                double fuel = updateFuelCost(edges, i+1, startIndex, remain-fuelCost);
+                double fuel = updateFuelCost(edges, i+1, remain-fuelCost);
                 if (fuel < 0){
                     continue;
                 }
@@ -80,8 +80,8 @@ public class TransitPath {
         return -1;
     }
 
-    private double updateFuelCost(List<ConnectibleGraph<Vendor>.BuildEdge> edges, int startIndex, int endIndex, double fuel){
-        for (int i = startIndex; i <= endIndex; i++) {
+    private double updateFuelCost(List<ConnectibleGraph<Vendor>.BuildEdge> edges, int startIndex, double fuel){
+        for (int i = startIndex; i < entries.size(); i++) {
             ConnectibleGraph<Vendor>.BuildEdge e = edges.get(edges.size()-1-i);
             if (fuel < 0 || fuel < e.getMinFuel()){
                 return -1;
