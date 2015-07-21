@@ -58,7 +58,6 @@ public class RouteSearcher {
         int count = (int) Math.ceil(scorer.getProfile().getRoutesCount() / fVendors.size());
         RouteSpecification<Vendor> specification = RouteSpecificationByTargets.any(toVendors);
         for (Vendor fromVendor : fVendors) {
-            count = count / toVendors.size();
             Collection<Route> routes = search(fromVendor, fromVendor, vendors, count, specification);
             res.addAll(routes);
         }

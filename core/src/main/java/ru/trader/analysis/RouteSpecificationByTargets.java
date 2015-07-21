@@ -10,9 +10,11 @@ import java.util.Iterator;
 public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
     protected final Collection<T> targets;
     protected final boolean all;
+    protected final boolean targetOnly;
 
-    private RouteSpecificationByTargets(Collection<T> targets, boolean all) {
+    private RouteSpecificationByTargets(Collection<T> targets, boolean all, boolean targetOnly) {
         this.all = all;
+        this.targetOnly = targetOnly;
         this.targets = new ArrayList<>(targets);
     }
 
@@ -32,6 +34,9 @@ public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
     private boolean containsAny(Edge<T> edge, Traversal<T> entry) {
         T obj = edge.getTarget().getEntry();
         if (targets.contains(obj)) return true;
+        if (targetOnly){
+            return false;
+        }
         Iterator<Edge<T>> iterator = entry.routeIterator();
         while (iterator.hasNext()){
             if (targets.contains(iterator.next().getTarget().getEntry())){
@@ -42,11 +47,14 @@ public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
     }
 
     public static <T> RouteSpecificationByTargets<T> all(Collection<T> targets){
-        return new RouteSpecificationByTargets<>(targets, true);
+        return new RouteSpecificationByTargets<>(targets, true, false);
     }
 
     public static <T> RouteSpecificationByTargets<T> any(Collection<T> targets){
-        return new RouteSpecificationByTargets<>(targets, false);
+        return new RouteSpecificationByTargets<>(targets, false, true);
     }
 
+    public static <T> RouteSpecificationByTargets<T> containAny(Collection<T> targets){
+        return new RouteSpecificationByTargets<>(targets, false, false);
+    }
 }
