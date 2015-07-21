@@ -34,8 +34,8 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         return new VendorsCrawler(onFoundFunc);
     }
 
-    public VendorsCrawler crawler(Predicate<Edge<Vendor>> isFoundFunc,Predicate<List<Edge<Vendor>>> onFoundFunc){
-        return new VendorsCrawler(isFoundFunc, onFoundFunc);
+    public VendorsCrawler crawler(RouteSpecification<Vendor> specification, Predicate<List<Edge<Vendor>>> onFoundFunc){
+        return new VendorsCrawler(specification, onFoundFunc);
     }
 
     @Override
@@ -514,8 +514,8 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             startBalance = getProfile().getBalance();
         }
 
-        protected VendorsCrawler(Predicate<Edge<Vendor>> isFoundFunc, Predicate<List<Edge<Vendor>>> onFoundFunc) {
-            super(VendorsGraph.this, isFoundFunc, onFoundFunc);
+        protected VendorsCrawler(RouteSpecification<Vendor> specification, Predicate<List<Edge<Vendor>>> onFoundFunc) {
+            super(VendorsGraph.this, specification, onFoundFunc);
             startFuel = getShip().getTank();
             startBalance = getProfile().getBalance();
         }
@@ -563,7 +563,8 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
 
             protected boolean check(Edge<Vendor> e){
                 VendorsBuildEdge edge = (VendorsBuildEdge) e;
-                return fuel <= edge.getMaxFuel() && (fuel >= edge.getMinFuel() || edge.getSource().getEntry().canRefill()) && (edge.getProfit() > 0 || isFound(edge));
+                return fuel <= edge.getMaxFuel() && (fuel >= edge.getMinFuel() || edge.getSource().getEntry().canRefill())
+                       && (edge.getProfit() > 0 || isFound(edge, this));
             }
 
             protected VendorsEdge wrap(Edge<Vendor> e) {
@@ -574,21 +575,14 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             @Override
             public double getWeight() {
                 if (weight == null){
-                    VendorsEdge edge = (VendorsEdge) getEdge();
-                    Optional<Traversal<Vendor>> head = getHead();
                     double profit = 0; double time = 0;
-                    if (edge != null){
-                        profit = edge.getProfitByTonne();
-                        time = edge.getTime();
-                    }
-                    while (head.isPresent()){
-                        VendorsTraversalEntry hEntry = (VendorsTraversalEntry) head.get();
-                        edge = (VendorsEdge) hEntry.getEdge();
+                    Iterator<Edge<Vendor>> iterator = routeIterator();
+                    while (iterator.hasNext()){
+                        VendorsEdge edge = (VendorsEdge)iterator.next();
                         if (edge != null){
                             profit += edge.getProfitByTonne();
                             time += edge.getTime();
                         }
-                        head = hEntry.getHead();
                     }
                     weight = profit > 1 ? time / profit : time;
                 }

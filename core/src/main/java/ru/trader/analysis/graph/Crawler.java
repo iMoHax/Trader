@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.analysis.LimitedQueue;
+import ru.trader.analysis.RouteSpecification;
 
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
@@ -18,7 +19,7 @@ public class Crawler<T> {
 
     protected final Graph<T> graph;
     private final Predicate<List<Edge<T>>> onFoundFunc;
-    private final Predicate<Edge<T>> isFound;
+    private final RouteSpecification<T> specification;
     private T target;
     private int maxSize;
 
@@ -26,14 +27,14 @@ public class Crawler<T> {
         this.graph = graph;
         maxSize = graph.getRoot().getLevel();
         this.onFoundFunc = onFoundFunc;
-        this.isFound = this::isTarget;
+        this.specification = (edge, entry) -> isTarget(edge);
     }
 
-    public Crawler(Graph<T> graph, Predicate<Edge<T>> isFoundFunc, Predicate<List<Edge<T>>> onFoundFunc) {
+    public Crawler(Graph<T> graph, RouteSpecification<T> specification, Predicate<List<Edge<T>>> onFoundFunc) {
         this.graph = graph;
         maxSize = graph.getRoot().getLevel();
         this.onFoundFunc = onFoundFunc;
-        this.isFound = isFoundFunc;
+        this.specification = specification;
     }
 
     protected List<Edge<T>> getCopyList(Traversal<T> head, Edge<T> tail){
@@ -58,8 +59,8 @@ public class Crawler<T> {
         return edge.isConnect(this.target);
     }
 
-    protected boolean isFound(Edge<T> edge){
-        return isFound.test(edge);
+    protected boolean isFound(Edge<T> edge, Traversal<T> head){
+        return specification.specified(edge, head);
     }
 
     public int getMaxSize() {
@@ -157,7 +158,7 @@ public class Crawler<T> {
         boolean stop = false;
         if (deep == source.getLevel()){
             for (Edge<T> next : entry.getEdges()) {
-                if (isFound(next)){
+                if (isFound(next, entry)){
                     List<Edge<T>> res = getCopyList(entry, next);
                     LOG.debug("Last edge found, path {}", res);
                     found++;
@@ -198,7 +199,7 @@ public class Crawler<T> {
             Iterator<Edge<T>> iterator = entry.iterator();
             while (iterator.hasNext()){
                 Edge<T> edge = iterator.next();
-                if (isFound(edge)){
+                if (isFound(edge, entry)){
                     List<Edge<T>> res = getCopyList(entry, edge);
                     LOG.debug("Last edge found, path {}", res);
                     found++;
@@ -228,7 +229,7 @@ public class Crawler<T> {
             LOG.trace("Check path entry {}, weight {}", entry, entry.weight);
             Edge<T> edge = entry.getEdge();
             if (edge != null) {
-                if (isFound(edge)) {
+                if (isFound(edge, entry)) {
                     List<Edge<T>> res = entry.toEdges();
                     LOG.debug("Path found {}", res);
                     found++;
@@ -249,7 +250,7 @@ public class Crawler<T> {
             while (iterator.hasNext()){
                 edge = iterator.next();
                 boolean canDeep = !entry.getTarget().isSingle() && deep < entry.getTarget().getLevel();
-                if (canDeep || isFound(edge)){
+                if (canDeep || isFound(edge, entry)){
                     LOG.trace("Add edge {} to queue", edge);
                     queue.add(travers(entry, edge));
                 }
@@ -334,15 +335,13 @@ public class Crawler<T> {
             if (cmp != 0) return cmp;
             cmp = Integer.compare(entry.size(), o.entry.size());
             if (cmp != 0) return cmp;
-            CostTraversal<T> cur = entry;
-            CostTraversal<T> oCur = o.entry;
-            while (!cur.isRoot()){
-                Edge<T> edge = cur.getEdge();
-                Edge<T> oEdge = oCur.getEdge();
+            Iterator<Edge<T>> iter1 = entry.routeIterator();
+            Iterator<Edge<T>> iter2 = o.entry.routeIterator();
+            while (iter1.hasNext()){
+                Edge<T> edge = iter1.next();
+                Edge<T> oEdge = iter2.next();
                 cmp = oEdge.compareTo(edge);
                 if (cmp != 0) return cmp;
-                cur = (CostTraversal<T>) cur.getHead().get();
-                oCur = (CostTraversal<T>) oCur.getHead().get();
             }
             return 0;
         }
@@ -419,7 +418,7 @@ public class Crawler<T> {
                 Edge<T> edge = curr.next();
                 CostTraversalEntry entry = curr.entry;
                 LOG.trace("Check edge {}, entry {}, weight {}", edge, entry, entry.weight);
-                boolean isTarget = isFound(edge);
+                boolean isTarget = isFound(edge, entry);
                 boolean canDeep = !entry.getTarget().isSingle() && deep < entry.getTarget().getLevel() && entry.size() < maxSize-1;
                 if (canDeep || isTarget){
                     CostTraversalEntry nextEntry = travers(entry, edge);

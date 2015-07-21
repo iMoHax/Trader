@@ -9,7 +9,6 @@ import ru.trader.core.Profile;
 import ru.trader.core.Vendor;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 public class RouteSearcher {
     private final static Logger LOG = LoggerFactory.getLogger(RouteSearcher.class);
@@ -25,15 +24,14 @@ public class RouteSearcher {
     }
 
     public List<List<Edge<Place>>> getPaths(Place from, Collection<Place> places){
-        Predicate<Edge<Place>> isFoundFunc = e -> places.parallelStream().filter(e::isConnect).findFirst().isPresent();
-        return search(from, from, places, scorer.getProfile().getRoutesCount(), isFoundFunc);
+        return search(from, from, places, scorer.getProfile().getRoutesCount(), RouteSpecificationByTargets.any(places));
     }
 
     public List<List<Edge<Place>>> getPaths(Place from, Place to, Collection<Place> places){
         return search(from, to, places, scorer.getProfile().getRoutesCount(), null);
     }
 
-    private List<List<Edge<Place>>> search(Place source, Place target, Collection<Place> places, int count, Predicate<Edge<Place>> isFoundFunc){
+    private List<List<Edge<Place>>> search(Place source, Place target, Collection<Place> places, int count, RouteSpecification<Place> specification){
         Profile profile = scorer.getProfile();
         LOG.trace("Start search path from {} to {} ", source, target);
         ConnectibleGraph<Place> graph = new ConnectibleGraph<>(profile);
@@ -41,7 +39,7 @@ public class RouteSearcher {
         graph.build(source, places);
         LOG.trace("Graph is builds");
         List<List<Edge<Place>>> paths = new ArrayList<>();
-        Crawler<Place> crawler = isFoundFunc != null ?  new CCrawler<>(graph, isFoundFunc, paths::add) :  new CCrawler<>(graph, paths::add);
+        Crawler<Place> crawler = specification != null ?  new CCrawler<>(graph, specification, paths::add) :  new CCrawler<>(graph, paths::add);
         crawler.setMaxSize(profile.getJumps());
         if (profile.getPathPriority() == Profile.PATH_PRIORITY.FAST){
             crawler.findFast(target, count);
@@ -58,18 +56,17 @@ public class RouteSearcher {
     public List<Route> getRoutes(Collection<Vendor> fVendors, Collection<Vendor> toVendors, Collection<Vendor> vendors){
         List<Route> res = new LimitedQueue<>(scorer.getProfile().getRoutesCount());
         int count = (int) Math.ceil(scorer.getProfile().getRoutesCount() / fVendors.size());
-        Predicate<Edge<Vendor>> isFoundFunc = e -> toVendors.parallelStream().filter(e::isConnect).findFirst().isPresent();
+        RouteSpecification<Vendor> specification = RouteSpecificationByTargets.any(toVendors);
         for (Vendor fromVendor : fVendors) {
             count = count / toVendors.size();
-            Collection<Route> routes = search(fromVendor, fromVendor, vendors, count, isFoundFunc);
+            Collection<Route> routes = search(fromVendor, fromVendor, vendors, count, specification);
             res.addAll(routes);
         }
         return res;
     }
 
     public List<Route> getRoutes(Vendor from, Collection<Vendor> vendors){
-        Predicate<Edge<Vendor>> isFoundFunc = e -> vendors.parallelStream().filter(e::isConnect).findFirst().isPresent();
-        return search(from, from, vendors, scorer.getProfile().getRoutesCount(), isFoundFunc);
+        return search(from, from, vendors, scorer.getProfile().getRoutesCount(), RouteSpecificationByTargets.any(vendors));
     }
 
     public List<Route> getRoutes(Vendor from, Vendor to, Collection<Vendor> vendors){
@@ -80,14 +77,14 @@ public class RouteSearcher {
         return search(source, target, vendors, count, null);
     }
 
-    private List<Route> search(Vendor source, Vendor target, Collection<Vendor> vendors, int count, Predicate<Edge<Vendor>> isFoundFunc){
+    private List<Route> search(Vendor source, Vendor target, Collection<Vendor> vendors, int count, RouteSpecification<Vendor> specification){
         LOG.trace("Start search route  from {} to {}", source, target);
         VendorsGraph vGraph = new VendorsGraph(scorer);
         LOG.trace("Build vendors graph");
         vGraph.build(source, vendors);
         LOG.trace("Graph is builds");
         RouteCollector collector = new RouteCollector();
-        Crawler<Vendor> crawler = isFoundFunc != null ? vGraph.crawler(isFoundFunc, collector::add) : vGraph.crawler(collector::add);
+        Crawler<Vendor> crawler = specification != null ? vGraph.crawler(specification, collector::add) : vGraph.crawler(collector::add);
         crawler.setMaxSize(scorer.getProfile().getLands());
         crawler.findMin(target, count);
         return collector.get();

@@ -44,4 +44,29 @@ public interface Traversal<T> {
         }
         return Arrays.asList(res);
     }
+
+    default Iterator<Edge<T>> routeIterator(){
+        return new Iterator<Edge<T>>() {
+            private Edge<T> next = getEdge();
+            private Traversal<T> entry = Traversal.this;
+
+            @Override
+            public boolean hasNext() {
+                return next != null;
+            }
+
+            @Override
+            public Edge<T> next() {
+                Edge<T> res = next;
+                Optional<Traversal<T>> head = entry.getHead();
+                if (head.isPresent()){
+                    entry = head.get();
+                    next = entry.getEdge();
+                } else {
+                    next = null;
+                }
+                return res;
+            }
+        };
+    }
 }

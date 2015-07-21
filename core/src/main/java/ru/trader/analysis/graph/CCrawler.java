@@ -2,6 +2,7 @@ package ru.trader.analysis.graph;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.analysis.RouteSpecification;
 import ru.trader.core.Profile;
 import ru.trader.core.Ship;
 import ru.trader.graph.Connectable;
@@ -20,8 +21,8 @@ public class CCrawler<T extends Connectable<T>> extends Crawler<T> {
         startFuel = getShip().getTank();
     }
 
-    public CCrawler(ConnectibleGraph<T> graph, Predicate<Edge<T>> isFoundFunc, Predicate<List<Edge<T>>> onFoundFunc) {
-        super(graph, isFoundFunc, onFoundFunc);
+    public CCrawler(ConnectibleGraph<T> graph, RouteSpecification<T> specification, Predicate<List<Edge<T>>> onFoundFunc) {
+        super(graph, specification, onFoundFunc);
         startFuel = getShip().getTank();
     }
 
