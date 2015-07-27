@@ -1,14 +1,15 @@
 package ru.trader.analysis.graph;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Vertex<T> {
     private final ArrayList<Edge<T>> edges = new ArrayList<>();
     private final T entry;
     private final int index;
+    private final ReentrantLock lock = new ReentrantLock();
     private volatile int level = -1;
 
     public Vertex(T entry, int index) {
@@ -34,6 +35,10 @@ public class Vertex<T> {
 
     public int getLevel() {
         return level;
+    }
+
+    public ReentrantLock locker(){
+        return lock;
     }
 
     public void connect(Edge<T> edge){

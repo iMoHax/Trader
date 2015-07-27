@@ -11,7 +11,8 @@ import java.util.concurrent.RecursiveAction;
 
 public abstract class AbstractGraph<T> implements Graph<T> {
     private final static ForkJoinPool POOL = new ForkJoinPool();
-    private final static int THRESHOLD = 4;
+    //TODO: make it worked in multi thread
+    private final static int THRESHOLD = 1;
 
     private final static Logger LOG = LoggerFactory.getLogger(AbstractGraph.class);
 
@@ -83,6 +84,11 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     }
 
     @Override
+    public Collection<Vertex<T>> vertexes() {
+        return vertexes;
+    }
+
+    @Override
     public int getMinJumps() {
         return minJumps;
     }
@@ -98,6 +104,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     }
 
     protected abstract class GraphBuilder extends RecursiveAction {
+        protected final List<RecursiveAction> subTasks = new ArrayList<>(THRESHOLD);
         protected final Vertex<T> vertex;
         protected final Collection<T> set;
         protected final int deep;
@@ -110,61 +117,70 @@ public abstract class AbstractGraph<T> implements Graph<T> {
             this.limit = limit;
         }
 
-        protected abstract double onConnect(T entry);
+        protected abstract double checkConnect(T entry);
         protected abstract Edge<T> createEdge(Vertex<T> target);
         protected RecursiveAction createSubTask(Vertex<T> vertex, Collection<T> set, int deep, double limit){
             return createGraphBuilder(vertex, set, deep, limit);
         }
 
         @Override
-        protected void compute() {
+        protected final void compute() {
+            vertex.locker().lock();
+            try {
+                if (vertex.getLevel() <= deep){
+                    vertex.setLevel(deep+1);
+                }
+            } finally {
+                vertex.locker().unlock();
+            }
+            build();
+        }
+
+        protected void build(){
             LOG.trace("Build graph from {}, limit {}, deep {}", vertex, limit, deep);
-            ArrayList<RecursiveAction> subTasks = new ArrayList<>(THRESHOLD);
-            Iterator<T> iterator = set.iterator();
-            while (iterator.hasNext()) {
+            for (T entry : set) {
                 if (callback.isCancel()) break;
-                T entry = iterator.next();
                 if (entry == vertex.getEntry()) continue;
-                double nextLimit = onConnect(entry);
+                double nextLimit = checkConnect(entry);
                 if (nextLimit >= 0) {
                     LOG.trace("Connect {} to {}", vertex, entry);
                     Vertex<T> next = getInstance(entry, 0, deep);
-                    vertex.connect(createEdge(next));
-                    // If level > deep when vertex already added on upper deep
-                    if (next.getLevel() < deep) {
-                        next.setLevel(vertex.getLevel() - 1);
-                        if (deep > 0) {
-                            //Recursive build
-                            RecursiveAction task = createSubTask(next, set, deep - 1, nextLimit);
-                            task.fork();
-                            subTasks.add(task);
-                        }
-                    }
+                    connect(next, nextLimit);
                 } else {
                     LOG.trace("Vertex {} is far away", entry);
                 }
-                if (subTasks.size() == THRESHOLD || !iterator.hasNext()){
-                    for (RecursiveAction subTask : subTasks) {
-                        if (callback.isCancel()){
-                            subTask.cancel(true);
-                        } else {
-                            subTask.join();
-                        }
-                    }
-                    subTasks.clear();
+                if (subTasks.size() >= THRESHOLD) {
+                    joinSubTasks();
                 }
             }
             if (!subTasks.isEmpty()){
-                for (RecursiveAction subTask : subTasks) {
-                    if (callback.isCancel()){
-                        subTask.cancel(true);
-                    } else {
-                        subTask.join();
-                    }
-                }
-                subTasks.clear();
+                joinSubTasks();
             }
             LOG.trace("End build graph from {} on deep {}", vertex, deep);
         }
+
+        protected void connect(Vertex<T> next, double nextLimit){
+            vertex.connect(createEdge(next));
+            if (next.getLevel() < deep) {
+                if (deep > 0) {
+                    //Recursive build
+                    RecursiveAction task = createSubTask(next, set, deep - 1, nextLimit);
+                    task.fork();
+                    subTasks.add(task);
+                }
+            }
+        }
+
+        protected void joinSubTasks(){
+            for (RecursiveAction subTask : subTasks) {
+                if (callback.isCancel()){
+                    subTask.cancel(true);
+                } else {
+                    subTask.join();
+                }
+            }
+            subTasks.clear();
+        }
+
     }
 }

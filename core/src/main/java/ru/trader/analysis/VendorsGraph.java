@@ -8,14 +8,12 @@ import ru.trader.core.*;
 
 import java.util.*;
 import java.util.concurrent.ForkJoinTask;
-import java.util.concurrent.RecursiveAction;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
 public class VendorsGraph extends ConnectibleGraph<Vendor> {
     private final static Logger LOG = LoggerFactory.getLogger(VendorsGraph.class);
-    private final static int THRESHOLD = 8;
 
     private final Scorer scorer;
     private final List<VendorsGraphBuilder> deferredTasks = new ArrayList<>();
@@ -85,7 +83,6 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
     }
 
     private class VendorsGraphBuilder extends ConnectibleGraphBuilder {
-        private final ArrayList<RecursiveAction> subTasks = new ArrayList<>(THRESHOLD);
         private final VendorsGraphBuilder head;
         private final BuildEdge edge;
         private boolean isAdding;
@@ -107,50 +104,25 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         }
 
         @Override
-        protected void compute() {
-            LOG.trace("Build graph from {}, limit {}, deep {}", vertex, limit, deep);
+        protected void build() {
             if (isAdding){
-                addAlreadyCheckedEdges();
-            } else {
-                checkVertex();
-            }
-            if (!subTasks.isEmpty()){
-                joinSubTasks();
-            }
-            LOG.trace("End build graph from {} on deep {}", vertex, deep);
-        }
-
-        private void checkVertex(){
-            Iterator<Vendor> iterator = set.iterator();
-            while (iterator.hasNext()) {
-                if (callback.isCancel()) break;
-                Vendor entry = iterator.next();
-                LOG.trace("Check {}", entry);
-                if (entry == vertex.getEntry()) continue;
-                double nextLimit = onConnect(entry);
-                if (nextLimit >= 0) {
-                    LOG.trace("Connect {} to {}", entry, vertex);
-                    Vertex<Vendor> next = getInstance(entry, 0, deep);
-                    BuildEdge e;
-                    if (entry instanceof TransitVendor){
-                        e = super.createEdge(next);
-                    } else {
-                        e = createEdge(next);
-                        vertex.connect(e);
-                    }
-                    addSubTask(e, nextLimit);
+                if (!vertex.locker().tryLock()){
+                    throw new ConcurrentModificationException("Adding must do in single thread");
                 } else {
-                    LOG.trace("Vertex {} is far away", entry);
+                    try {
+                        addAlreadyCheckedEdges();
+                    } finally {
+                        vertex.locker().unlock();
+                    }
                 }
-                if (subTasks.size() == THRESHOLD || !iterator.hasNext()){
-                    joinSubTasks();
-                }
+            } else {
+                super.build();
             }
         }
 
         @Override
-        protected double onConnect(Vendor buyer) {
-            double nextlimit = super.onConnect(buyer);
+        protected double checkConnect(Vendor buyer) {
+            double nextlimit = super.checkConnect(buyer);
             Vendor seller = vertex.getEntry();
             if (nextlimit > 0){
                 if (buyer instanceof TransitVendor && (deep == 0 || seller.getPlace().equals(buyer.getPlace()))){
@@ -163,6 +135,18 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
                 }
             }
             return nextlimit;
+        }
+
+        @Override
+        protected void connect(Vertex<Vendor> next, double nextLimit) {
+            BuildEdge e;
+            if (next.getEntry() instanceof TransitVendor){
+                e = super.createEdge(next);
+            } else {
+                e = createEdge(next);
+                vertex.connect(e);
+            }
+            addSubTask(e, nextLimit);
         }
 
         @Override
@@ -268,9 +252,6 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             // If level > deep when vertex already added on upper deep
             if (next.getLevel() < deep || next.getEntry() instanceof TransitVendor) {
                 boolean adding = next.getLevel() >= deep;
-                if (!adding){
-                    next.setLevel(vertex.getLevel() - 1);
-                }
                 if (deep > 0 || adding) {
                     //Recursive build
                     VendorsGraphBuilder task = new VendorsGraphBuilder(this, e, set, deep - 1, nextLimit);
@@ -286,18 +267,6 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
                 LOG.trace("Vertex {} already check", next);
             }
         }
-
-        private void joinSubTasks(){
-            for (RecursiveAction subTask : subTasks) {
-                if (callback.isCancel()){
-                    subTask.cancel(true);
-                } else {
-                    subTask.join();
-                }
-            }
-            subTasks.clear();
-        }
-
     }
 
     public class VendorsBuildEdge extends BuildEdge {

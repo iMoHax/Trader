@@ -51,7 +51,7 @@ public class ConnectibleGraph<T extends Connectable<T>> extends AbstractGraph<T>
         }
 
         @Override
-        protected double onConnect(T entry) {
+        protected double checkConnect(T entry) {
             distance = vertex.getEntry().getDistance(entry);
             if (distance > getShip().getMaxJumpRange()){
                 LOG.trace("Vertex {} is far away, {}", entry, distance);
