@@ -33,7 +33,7 @@ public class RoutesSearchTask extends AnalyzerTask<Collection<Route>>{
                 if (to != null) {
                     routes = analyzer.getRoutes(stationFrom, to);
                 } else {
-                    routes = analyzer.getRoutes(stationFrom);
+                    routes = analyzer.getLoops(stationFrom, 100);
                 }
             }
         } else {

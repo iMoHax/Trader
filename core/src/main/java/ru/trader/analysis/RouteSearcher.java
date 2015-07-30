@@ -89,6 +89,10 @@ public class RouteSearcher {
         return collector.get();
     }
 
+    public List<Route> getLoops(Vendor source, Collection<Vendor> vendors, int count){
+        return search(source, source, vendors, count, new LoopRouteSpecification<Vendor>(true));
+    }
+
     private class RouteCollector {
         private List<Route> routes = new ArrayList<>();
 

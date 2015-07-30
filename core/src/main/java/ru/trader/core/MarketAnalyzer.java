@@ -202,6 +202,10 @@ public class MarketAnalyzer {
         return top;
     }
 
+    public Collection<Route> getLoops(Vendor vendor, int limit){
+        return searcher.getLoops(vendor, getVendors(), limit);
+    }
+
     public Collection<Route> getRoutes(Place from){
         return searcher.getRoutes(getVendors(from), getVendors());
     }
