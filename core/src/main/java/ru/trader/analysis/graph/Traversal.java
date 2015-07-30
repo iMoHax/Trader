@@ -9,6 +9,8 @@ public interface Traversal<T> {
     List<Edge<T>> getEdges();
     Iterator<Edge<T>> iterator();
     void sort();
+    void setSkipped(boolean skipped);
+    boolean isSkipped();
 
     default boolean isConnect(T target){
         Edge<T> edge = getEdge();

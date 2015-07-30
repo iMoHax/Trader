@@ -10,7 +10,7 @@ public class Vertex<T> {
     private final T entry;
     private final int index;
     private final ReentrantLock lock = new ReentrantLock();
-    private volatile int level = -1;
+    private int level = -1;
 
     public Vertex(T entry, int index) {
         this.entry = entry;
@@ -37,16 +37,15 @@ public class Vertex<T> {
         return level;
     }
 
-    public ReentrantLock locker(){
-        return lock;
-    }
-
     public void connect(Edge<T> edge){
         assert this == edge.getSource();
-        synchronized (edges){
+        lock.lock();
+        try {
             if (!edges.contains(edge)){
                 edges.add(edge);
             }
+        } finally {
+            lock.unlock();
         }
     }
 

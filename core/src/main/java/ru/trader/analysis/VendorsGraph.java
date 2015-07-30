@@ -7,7 +7,6 @@ import ru.trader.analysis.graph.*;
 import ru.trader.core.*;
 
 import java.util.*;
-import java.util.concurrent.ForkJoinTask;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -62,7 +61,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
     private void runDeferredTasks(){
         deferredTasks.sort((b1,b2) -> Integer.compare(b2.getDeep(), b1.getDeep()));
         for (VendorsGraphBuilder task : deferredTasks) {
-            ForkJoinTask.invokeAll(task);
+            task.compute();
         }
         deferredTasks.clear();
     }
@@ -104,54 +103,45 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         }
 
         @Override
-        protected void build() {
+        protected void compute() {
             if (isAdding){
-                if (!vertex.locker().tryLock()){
-                    throw new ConcurrentModificationException("Adding must do in single thread");
-                } else {
-                    try {
-                        addAlreadyCheckedEdges();
-                    } finally {
-                        vertex.locker().unlock();
-                    }
-                }
+                addAlreadyCheckedEdges();
             } else {
-                super.build();
+                super.compute();
             }
         }
 
         @Override
-        protected double checkConnect(Vendor buyer) {
-            double nextlimit = super.checkConnect(buyer);
-            Vendor seller = vertex.getEntry();
-            if (nextlimit > 0){
+        protected BuildHelper<Vendor> createHelper(Vendor buyer) {
+            BuildHelper<Vendor> helper = super.createHelper(buyer);
+            if (helper.isConnected()){
+                Vendor seller = vertex.getEntry();
                 if (buyer instanceof TransitVendor && (deep == 0 || seller.getPlace().equals(buyer.getPlace()))){
                     LOG.trace("Buyer is transit of seller or is end, skipping");
-                    nextlimit = -1;
+                    return new BuildHelper<>(buyer, -1);
                 }
                 if (seller instanceof TransitVendor && seller.getPlace().equals(buyer.getPlace())){
                     LOG.trace("Seller is transit of buyer, skipping");
-                    nextlimit = -1;
+                    return new BuildHelper<>(buyer, -1);
                 }
+
             }
-            return nextlimit;
+            return helper;
         }
 
         @Override
-        protected void connect(Vertex<Vendor> next, double nextLimit) {
-            BuildEdge e;
+        protected void connect(Edge<Vendor> edge) {
+            if (edge instanceof VendorsBuildEdge){
+                super.connect(edge);
+            }
+        }
+
+        @Override
+        protected BuildEdge createEdge(BuildHelper<Vendor> helper, Vertex<Vendor> next) {
+            BuildEdge cEdge = super.createEdge(helper, next);
             if (next.getEntry() instanceof TransitVendor){
-                e = super.createEdge(next);
-            } else {
-                e = createEdge(next);
-                vertex.connect(e);
+                return cEdge;
             }
-            addSubTask(e, nextLimit);
-        }
-
-        @Override
-        protected VendorsBuildEdge createEdge(Vertex<Vendor> target) {
-            BuildEdge cEdge = super.createEdge(target);
             if (vertex.getEntry() instanceof TransitVendor){
                 addEdgesToHead(cEdge);
             }
@@ -193,8 +183,8 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
 
         private void addAlreadyCheckedEdges(){
             LOG.trace("Adding already checked vertex");
-            vertex.getEdges().parallelStream().forEach(aEdge -> {
-                VendorsBuildEdge e = (VendorsBuildEdge) aEdge;
+            vertex.getEdges().parallelStream().forEach(edge -> {
+                VendorsBuildEdge e = (VendorsBuildEdge) edge;
                 if (callback.isCancel()) return;
                 Vendor entry = e.getTarget().getEntry();
                 LOG.trace("Check {}", entry);
@@ -247,25 +237,22 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             }
         }
 
-        private void addSubTask(BuildEdge e, double nextLimit){
-            Vertex<Vendor> next = e.getTarget();
-            // If level > deep when vertex already added on upper deep
-            if (next.getLevel() < deep || next.getEntry() instanceof TransitVendor) {
-                boolean adding = next.getLevel() >= deep;
-                if (deep > 0 || adding) {
-                    //Recursive build
-                    VendorsGraphBuilder task = new VendorsGraphBuilder(this, e, set, deep - 1, nextLimit);
-                    task.isAdding = adding;
-                    if (adding){
-                        holdTask(task);
-                    } else {
-                        task.fork();
-                        subTasks.add(task);
-                    }
+        @Override
+        protected GraphBuilder createSubTask(Edge<Vendor> edge, Collection<Vendor> set, int deep, double limit) {
+            return new VendorsGraphBuilder(this, (BuildEdge) edge, set, deep, limit);
+        }
+
+        @Override
+        protected void addSubTask(Edge<Vendor> edge, double nextLimit) {
+            Vertex<Vendor> next = edge.getTarget();
+            if (next.getLevel() >= deep && next.getEntry() instanceof TransitVendor) {
+                if (deep > 0){
+                    VendorsGraphBuilder task = new VendorsGraphBuilder(this, (BuildEdge) edge, set, deep - 1, nextLimit);
+                    task.isAdding = true;
+                    holdTask(task);
                 }
-            } else {
-                LOG.trace("Vertex {} already check", next);
             }
+            super.addSubTask(edge, nextLimit);
         }
     }
 
@@ -533,7 +520,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             protected boolean check(Edge<Vendor> e){
                 VendorsBuildEdge edge = (VendorsBuildEdge) e;
                 return fuel <= edge.getMaxFuel() && (fuel >= edge.getMinFuel() || edge.getSource().getEntry().canRefill())
-                       && (edge.getProfit() > 0 || isFound(edge, this));
+                       && (edge.getProfit() > 0 || VendorsCrawler.this.isFound(edge, this));
             }
 
             protected VendorsEdge wrap(Edge<Vendor> e) {

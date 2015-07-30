@@ -42,33 +42,32 @@ public class ConnectibleGraph<T extends Connectable<T>> extends AbstractGraph<T>
     }
 
     protected class ConnectibleGraphBuilder extends GraphBuilder {
-        protected double minFuel;
-        protected double maxFuel;
-        protected double distance;
 
         protected ConnectibleGraphBuilder(Vertex<T> vertex, Collection<T> set, int deep, double limit) {
             super(vertex, set, deep, limit);
         }
 
         @Override
-        protected double checkConnect(T entry) {
-            distance = vertex.getEntry().getDistance(entry);
+        protected BuildHelper<T> createHelper(T entry) {
+            double distance = vertex.getEntry().getDistance(entry);
             if (distance > getShip().getMaxJumpRange()){
                 LOG.trace("Vertex {} is far away, {}", entry, distance);
-                return -1;
+                return new BuildHelper<>(entry,-1);
             }
-            maxFuel = getShip().getMaxFuel(distance);
-            minFuel = getShip().getMinFuel(distance);
+            double maxFuel = getShip().getMaxFuel(distance);
+            double minFuel = getShip().getMinFuel(distance);
             double fuel = getProfile().withRefill() ? vertex.getEntry().canRefill() ? getShip().getRoundMaxFuel(distance) : limit : getShip().getTank();
             double fuelCost = getShip().getFuelCost(fuel, distance);
-            return fuel - fuelCost;
+            double nextLimit = getProfile().withRefill() ? fuel - fuelCost : fuel;
+            return new CBuildHelper<>(entry, nextLimit, minFuel, maxFuel, distance);
         }
 
         @Override
-        protected BuildEdge createEdge(Vertex<T> target) {
+        protected BuildEdge createEdge(BuildHelper<T> helper, Vertex<T> target) {
+            CBuildHelper h = (CBuildHelper) helper;
             BuildEdge res = new BuildEdge(vertex, target);
-            res.setFuel(minFuel, maxFuel);
-            res.setDistance(distance);
+            res.setFuel(h.minFuel, h.maxFuel);
+            res.setDistance(h.distance);
             return res;
         }
     }
@@ -130,6 +129,21 @@ public class ConnectibleGraph<T extends Connectable<T>> extends AbstractGraph<T>
                     +"("+minFuel + " - " + maxFuel + ")"
                     +" -> " + target.getEntry().toString();
         }
+
+    }
+
+    public class CBuildHelper<T> extends BuildHelper<T> {
+        private final double minFuel;
+        private final double maxFuel;
+        private final double distance;
+
+        private CBuildHelper(T entry, double nextLimit, double minFuel, double maxFuel, double distance) {
+            super(entry, nextLimit);
+            this.minFuel = minFuel;
+            this.maxFuel = maxFuel;
+            this.distance = distance;
+        }
+
 
     }
 }

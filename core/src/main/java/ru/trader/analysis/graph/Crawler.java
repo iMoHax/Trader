@@ -60,7 +60,11 @@ public class Crawler<T> {
     }
 
     protected boolean isFound(Edge<T> edge, Traversal<T> head){
-        return specification.specified(edge, head);
+        return isFound(edge, head, false);
+    }
+
+    private boolean isFound(Edge<T> edge, Traversal<T> head, boolean updateStates){
+        return updateStates ? specification.updateSpecified(edge, head) : specification.specified(edge, head);
     }
 
     public int getMaxSize() {
@@ -100,7 +104,7 @@ public class Crawler<T> {
                 if (maxDeep < 0) maxDeep = 0;
                 found = bfs(start(s), maxDeep, count);
             } else {
-                found = dfs(start(s), Math.min(t.get().getLevel() + 1, s.getLevel()), count);
+                found = dfs(start(s), t.get().getLevel() + 1, count);
             }
         }
         LOG.debug("Found {} paths", found);
@@ -158,7 +162,7 @@ public class Crawler<T> {
         boolean stop = false;
         if (deep == source.getLevel()){
             for (Edge<T> next : entry.getEdges()) {
-                if (isFound(next, entry)){
+                if (isFound(next, entry, true)){
                     List<Edge<T>> res = getCopyList(entry, next);
                     LOG.debug("Last edge found, path {}", res);
                     found++;
@@ -170,9 +174,13 @@ public class Crawler<T> {
             }
         }
         if (!stop && found < count){
-            if (deep <= source.getLevel() && entry.size() < maxSize-1) {
+            if (deep < source.getLevel() && entry.size() < maxSize-1) {
                 LOG.trace("Search around");
                 for (Edge<T> edge : entry.getEdges()) {
+                    if (entry.isSkipped()){
+                        LOG.trace("Is skipped");
+                        break;
+                    }
                     if (edge.getTarget().isSingle()) continue;
                     found += dfs(travers(entry, edge), deep, count-found);
                     if (found >= count) break;
@@ -190,6 +198,10 @@ public class Crawler<T> {
         queue.add(root);
         while (!queue.isEmpty() && count > found){
             CostTraversalEntry entry = queue.poll();
+            if (entry.isSkipped()){
+                LOG.trace("Is skipped");
+                continue;
+            }
             Vertex<T> source = entry.vertex;
             if (entry.size() >= maxSize){
                 LOG.trace("Is limit deep");
@@ -199,13 +211,17 @@ public class Crawler<T> {
             Iterator<Edge<T>> iterator = entry.iterator();
             while (iterator.hasNext()){
                 Edge<T> edge = iterator.next();
-                if (isFound(edge, entry)){
+                if (isFound(edge, entry, true)){
                     List<Edge<T>> res = getCopyList(entry, edge);
                     LOG.debug("Last edge found, path {}", res);
                     found++;
                     if (!onFoundFunc.test(res)){
                         break;
                     }
+                }
+                if (entry.isSkipped()){
+                    LOG.trace("Is skipped");
+                    break;
                 }
                 if (found >= count) break;
                 if (edge.getTarget().isSingle()) continue;
@@ -226,10 +242,14 @@ public class Crawler<T> {
         queue.add(root);
         while (!queue.isEmpty() && count > found){
             CostTraversalEntry entry = queue.poll();
+            if (entry.isSkipped()){
+                LOG.trace("Is skipped");
+                continue;
+            }
             LOG.trace("Check path entry {}, weight {}", entry, entry.weight);
             Edge<T> edge = entry.getEdge();
             if (edge != null) {
-                if (isFound(edge, entry)) {
+                if (isFound(edge, entry, true)) {
                     List<Edge<T>> res = entry.toEdges();
                     LOG.debug("Path found {}", res);
                     found++;
@@ -237,6 +257,10 @@ public class Crawler<T> {
                         break;
                     }
                     if (found >= count) break;
+                }
+                if (entry.isSkipped()){
+                    LOG.trace("Is skipped");
+                    continue;
                 }
                 if (edge.getTarget().isSingle()){
                     continue;
@@ -288,15 +312,15 @@ public class Crawler<T> {
                 if (found >= count) break;
                 CTEntrySupport next = targetsQueue.peek();
                 limit = next != null ? next.entry.getWeight() :  Double.NaN;
+                if (deep > entry.getTarget().getLevel() || entry.size() >= maxSize){
+                    LOG.trace("Is limit deep");
+                    continue;
+                }
             }
             if (alreadyFound + found < count){
                 LOG.trace("Continue search, limit {}", limit);
             } else {
                 LOG.trace("Already {} found, extracting", alreadyFound);
-                continue;
-            }
-            if (deep >= entry.getTarget().getLevel() || entry.size() >= maxSize){
-                LOG.trace("Is limit deep");
                 continue;
             }
             DFS task = new DFS(curr, deep, count - found, limit);
@@ -371,7 +395,8 @@ public class Crawler<T> {
     }
 
     private class DFS extends RecursiveAction {
-        private final CTEntrySupport root;
+        private CTEntrySupport root;
+        private CTEntrySupport curr;
         private final int count;
         private final int deep;
         private final Collection<CTEntrySupport> queue;
@@ -411,14 +436,52 @@ public class Crawler<T> {
             return queue;
         }
 
+        private boolean cancel(){
+            if (isCancelled()) return true;
+            if (root.entry.isSkipped()){
+                LOG.trace("Root skipped");
+                if (isSubTask){
+                    LOG.trace("Stop sub task");
+                    return true;
+                } else {
+                    curr = root;
+                }
+            }
+            return false;
+        }
+
+        private boolean skip(){
+            if (curr.entry.isSkipped()){
+                while (curr.entry.isSkipped()){
+                    LOG.trace("Is skipped, return to prev level");
+                    if (!levelUp()) break;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private boolean levelUp(){
+            if (isRoot(curr)) return false;
+            assert curr.parent != null;
+            LOG.trace("Return to prev level");
+            if (curr == root){
+                root = root.parent;
+            }
+            curr = curr.parent;
+            return true;
+        }
+
         private void search(){
-            CTEntrySupport curr = root;
+            curr = root;
             LOG.trace("Start {}", root);
             while (curr.hasNext()){
+                if (cancel()) break;
                 Edge<T> edge = curr.next();
                 CostTraversalEntry entry = curr.entry;
+                if (skip()) continue;
                 LOG.trace("Check edge {}, entry {}, weight {}", edge, entry, entry.weight);
-                boolean isTarget = isFound(edge, entry);
+                boolean isTarget = isFound(edge, entry, true);
                 boolean canDeep = !entry.getTarget().isSingle() && deep < entry.getTarget().getLevel() && entry.size() < maxSize-1;
                 if (canDeep || isTarget){
                     CostTraversalEntry nextEntry = travers(entry, edge);
@@ -430,8 +493,9 @@ public class Crawler<T> {
                         LOG.trace("Found, add entry {} to queue", nextEntry);
                         targets.add(curr);
                         limit = Double.isNaN(limit) ? nextEntry.getWeight() : Math.min(limit, nextEntry.getWeight());
-                        curr = curr.parent;
+                        levelUp();
                     } else {
+                        if (skip()) continue;
                         if (!Double.isNaN(limit) && nextEntry.getWeight() >= limit){
                             if (targets.size() < count){
                                 LOG.trace("Not found, limit {}, add entry {} to queue", limit, nextEntry);
@@ -439,24 +503,22 @@ public class Crawler<T> {
                             } else {
                                 LOG.trace("Not found, limit {}, don't add entry {} to queue", limit, nextEntry);
                             }
-                            if (!isRoot(curr.parent)){
-                                curr = curr.parent.parent;
-                            } else {
+                            levelUp();
+                            if (!levelUp()){
                                 break;
                             }
                         } else {
                             if (!isRoot(curr) && maxSize-nextEntry.size() < SPLIT_SIZE){
                                 if (addSubTask(curr))
-                                    curr = curr.parent;
+                                    levelUp();
                             }
                         }
                     }
                 } else {
                     LOG.trace("Is limit deep");
                 }
-                while (!curr.hasNext() && !isRoot(curr)){
-                    LOG.trace("Level complete, return to prev level");
-                    curr = curr.parent;
+                while (!curr.hasNext() && levelUp()){
+                    LOG.trace("Level complete");
                 }
             }
             LOG.trace("Done {}", root);
@@ -503,6 +565,7 @@ public class Crawler<T> {
         private final Edge<T> edge;
         private List<Edge<T>> edges;
         private Integer size;
+        private transient boolean skipped;
 
         protected TraversalEntry(Vertex<T> vertex) {
             this.vertex = vertex;
@@ -515,6 +578,7 @@ public class Crawler<T> {
             this.head = head;
             this.vertex = edge.getTarget();
             this.edge = edge;
+            this.skipped = head.isSkipped();
             edges = null;
         }
 
@@ -548,6 +612,16 @@ public class Crawler<T> {
         @Override
         public void sort(){
             getEdges().sort(Comparator.<Edge<T>>naturalOrder());
+        }
+
+        @Override
+        public void setSkipped(boolean skipped) {
+            this.skipped = skipped;
+        }
+
+        @Override
+        public boolean isSkipped() {
+            return skipped;
         }
 
         protected List<Edge<T>> collect(Collection<Edge<T>> src){

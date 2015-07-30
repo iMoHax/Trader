@@ -248,13 +248,14 @@ public class Ship {
     private double ladenJumpRange = Double.NaN;
     private void fillFuelTable(){
         double fuel = getEngine().getMaxFuel();
-        fuelTable = new FuelHelper[(int) (fuel/FUEL_TABLE_STEP)];
+        FuelHelper[] fuelTable = new FuelHelper[(int) (fuel/FUEL_TABLE_STEP)];
         maxJumpRange = Double.NaN; ladenJumpRange = Double.NaN;
         for (int i = fuelTable.length - 1; i >= 0; i--) {
             double distance = getJumpRange(fuel);
             fuelTable[i] = new FuelHelper(distance, fuel);
             fuel = fuel - FUEL_TABLE_STEP;
         }
+        this.fuelTable = fuelTable;
     }
 
     public double getMaxFuel(double distance){
