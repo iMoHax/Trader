@@ -1,7 +1,5 @@
 package ru.trader.analysis.graph;
 
-import ru.trader.graph.Connectable;
-
 public class ConnectibleEdge<T extends Connectable<T>> extends Edge<T> {
     protected double refill;
     protected double fuelCost;

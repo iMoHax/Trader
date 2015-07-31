@@ -1,6 +1,6 @@
 package ru.trader.core;
 
-import ru.trader.graph.Connectable;
+import ru.trader.analysis.graph.Connectable;
 
 import java.util.ArrayList;
 import java.util.Collection;

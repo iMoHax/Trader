@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import ru.trader.analysis.AnalysisCallBack;
 import ru.trader.core.Profile;
 import ru.trader.core.Ship;
-import ru.trader.graph.Connectable;
 
 import java.util.Collection;
 

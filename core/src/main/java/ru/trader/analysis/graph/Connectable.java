@@ -1,4 +1,4 @@
-package ru.trader.graph;
+package ru.trader.analysis.graph;
 
 public interface Connectable<T> extends Comparable<Connectable<T>>{
 
