@@ -13,9 +13,15 @@ import java.util.*;
 public class RouteSearcher {
     private final static Logger LOG = LoggerFactory.getLogger(RouteSearcher.class);
     private final Scorer scorer;
+    private final AnalysisCallBack callback;
 
     public RouteSearcher(Scorer scorer) {
+        this(scorer, new AnalysisCallBack());
+    }
+
+    public RouteSearcher(Scorer scorer, AnalysisCallBack callback) {
         this.scorer = scorer;
+        this.callback = callback;
     }
 
     public List<Edge<Place>> getPath(Place from, Place to, Collection<Place> places){
@@ -34,12 +40,12 @@ public class RouteSearcher {
     private List<List<Edge<Place>>> search(Place source, Place target, Collection<Place> places, int count, RouteSpecification<Place> specification){
         Profile profile = scorer.getProfile();
         LOG.trace("Start search path from {} to {} ", source, target);
-        ConnectibleGraph<Place> graph = new ConnectibleGraph<>(profile);
+        ConnectibleGraph<Place> graph = new ConnectibleGraph<>(profile, callback);
         LOG.trace("Build connectible graph");
         graph.build(source, places);
         LOG.trace("Graph is builds");
         List<List<Edge<Place>>> paths = new ArrayList<>();
-        Crawler<Place> crawler = specification != null ?  new CCrawler<>(graph, specification, paths::add) :  new CCrawler<>(graph, paths::add);
+        Crawler<Place> crawler = specification != null ?  new CCrawler<>(graph, specification, paths::add, callback) :  new CCrawler<>(graph, paths::add, callback);
         crawler.setMaxSize(profile.getJumps());
         if (profile.getPathPriority() == Profile.PATH_PRIORITY.FAST){
             crawler.findFast(target, count);
@@ -78,12 +84,12 @@ public class RouteSearcher {
 
     private List<Route> search(Vendor source, Vendor target, Collection<Vendor> vendors, int count, RouteSpecification<Vendor> specification){
         LOG.trace("Start search route  from {} to {}", source, target);
-        VendorsGraph vGraph = new VendorsGraph(scorer);
+        VendorsGraph vGraph = new VendorsGraph(scorer, callback);
         LOG.trace("Build vendors graph");
         vGraph.build(source, vendors);
         LOG.trace("Graph is builds");
         RouteCollector collector = new RouteCollector();
-        Crawler<Vendor> crawler = specification != null ? vGraph.crawler(specification, collector::add) : vGraph.crawler(collector::add);
+        Crawler<Vendor> crawler = specification != null ? vGraph.crawler(specification, collector::add, callback) : vGraph.crawler(collector::add, callback);
         crawler.setMaxSize(scorer.getProfile().getLands());
         crawler.findMin(target, count);
         return collector.get();
@@ -96,11 +102,10 @@ public class RouteSearcher {
     private class RouteCollector {
         private List<Route> routes = new ArrayList<>();
 
-        public boolean add(List<Edge<Vendor>> edges){
+        public void add(List<Edge<Vendor>> edges){
             Route route = toRoute(edges);
             route.setBalance(scorer.getProfile().getBalance());
             routes.add(route);
-            return true;
         }
 
         public List<Route> get() {

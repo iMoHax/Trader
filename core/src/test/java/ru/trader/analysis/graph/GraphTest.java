@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.analysis.AnalysisCallBack;
 import ru.trader.core.Profile;
 import ru.trader.core.Ship;
 
@@ -51,7 +52,7 @@ public class GraphTest extends Assert {
         profile.setJumps(10);
         profile.setRefill(false);
         LOG.info("Ship = {}, Jumps = {}", profile.getShip(), profile.getJumps());
-        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile);
+        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile, new AnalysisCallBack());
         graph.build(x5, entrys);
         // x5
         assertFalse(graph.isAccessible(x1));
@@ -76,7 +77,7 @@ public class GraphTest extends Assert {
         Profile profile = new Profile(ship);
         profile.setJumps(2);
         LOG.info("Ship = {}, Jumps = {}", profile.getShip(), profile.getJumps());
-        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile);
+        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile, new AnalysisCallBack());
         graph.build(x5, entrys);
         // x5 <-> x4 <-refill-> x3, x5 -> x6
         assertFalse(graph.isAccessible(x1));
@@ -121,7 +122,7 @@ public class GraphTest extends Assert {
         Profile profile = new Profile(ship);
         profile.setJumps(3);profile.setRefill(false);
         LOG.info("Ship = {}, Jumps = {}", profile.getShip(), profile.getJumps());
-        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile);
+        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile, new AnalysisCallBack());
         graph.build(x5, entrys);
         // x5 <-> x4 <-> x3, x5 <-> x6
         assertFalse(graph.isAccessible(x1));
@@ -158,7 +159,7 @@ public class GraphTest extends Assert {
         Profile profile = new Profile(ship);
         profile.setJumps(3); profile.setRefill(false);
         LOG.info("Ship = {}, Jumps = {}", profile.getShip(), profile.getJumps());
-        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile);
+        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile, new AnalysisCallBack());
         graph.build(x5, entrys);
         //  x5 <-> x4 <-> x3 -> x2, x5 <-> x6 <-> x7 -> x8
         //  x5 <-> x3, x5 <-> x4 <-> x2,  x3 <-> x6, x4 <-> x6

@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.World;
+import ru.trader.analysis.AnalysisCallBack;
 import ru.trader.analysis.Route;
 import ru.trader.controllers.ProgressController;
 import ru.trader.controllers.Screeners;
@@ -65,6 +66,10 @@ public class MarketModel {
 
     public MarketAnalyzer getAnalyzer() {
         return analyzer;
+    }
+
+    public MarketAnalyzer getAnalyzer(AnalysisCallBack callback) {
+        return analyzer.changeCallBack(callback);
     }
 
     public ModelFabric getModeler() {

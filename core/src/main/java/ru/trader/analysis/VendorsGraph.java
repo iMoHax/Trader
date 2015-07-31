@@ -7,7 +7,7 @@ import ru.trader.analysis.graph.*;
 import ru.trader.core.*;
 
 import java.util.*;
-import java.util.function.Predicate;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 
@@ -17,22 +17,17 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
     private final Scorer scorer;
     private final List<VendorsGraphBuilder> deferredTasks = new ArrayList<>();
 
-    public VendorsGraph(Scorer scorer) {
-        super(scorer.getProfile());
-        this.scorer = scorer;
-    }
-
     public VendorsGraph(Scorer scorer, AnalysisCallBack callback) {
         super(scorer.getProfile(), callback);
         this.scorer = scorer;
     }
 
-    public VendorsCrawler crawler(Predicate<List<Edge<Vendor>>> onFoundFunc){
-        return new VendorsCrawler(onFoundFunc);
+    public VendorsCrawler crawler(Consumer<List<Edge<Vendor>>> onFoundFunc, AnalysisCallBack callback){
+        return new VendorsCrawler(onFoundFunc, callback);
     }
 
-    public VendorsCrawler crawler(RouteSpecification<Vendor> specification, Predicate<List<Edge<Vendor>>> onFoundFunc){
-        return new VendorsCrawler(specification, onFoundFunc);
+    public VendorsCrawler crawler(RouteSpecification<Vendor> specification, Consumer<List<Edge<Vendor>>> onFoundFunc, AnalysisCallBack callback){
+        return new VendorsCrawler(specification, onFoundFunc, callback);
     }
 
     @Override
@@ -61,6 +56,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
     private void runDeferredTasks(){
         deferredTasks.sort((b1,b2) -> Integer.compare(b2.getDeep(), b1.getDeep()));
         for (VendorsGraphBuilder task : deferredTasks) {
+            if (callback.isCancel()) break;
             task.compute();
         }
         deferredTasks.clear();
@@ -154,6 +150,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             VendorsGraphBuilder h = this;
             Path<Vendor> path = new Path<>(Collections.singleton(lastEdge));
             while (h != null){
+                if (callback.isCancel()) break;
                 BuildEdge cEdge = h.edge;
                 Vertex<Vendor> source = cEdge.getSource();
                 if (source.equals(vertex)){
@@ -204,8 +201,10 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             int i = 1;
             Path<Vendor> path = paths != null ? paths.get(0) : new Path<>(Collections.singleton((BuildEdge)lastEdge));
             while (path != null){
+                if (callback.isCancel()) break;
                 VendorsGraphBuilder h = this;
                 while (h != null){
+                    if (callback.isCancel()) break;
                     if (h.limit >= path.getMinFuel() && h.limit <= path.getMaxFuel()){
                         BuildEdge cEdge = h.edge;
                         Vertex<Vendor> source = cEdge.getSource();
@@ -464,14 +463,14 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         private double startFuel;
         private double startBalance;
 
-        protected VendorsCrawler(Predicate<List<Edge<Vendor>>> onFoundFunc) {
-            super(VendorsGraph.this, onFoundFunc);
+        protected VendorsCrawler(Consumer<List<Edge<Vendor>>> onFoundFunc, AnalysisCallBack callback) {
+            super(VendorsGraph.this, onFoundFunc, callback);
             startFuel = getShip().getTank();
             startBalance = getProfile().getBalance();
         }
 
-        protected VendorsCrawler(RouteSpecification<Vendor> specification, Predicate<List<Edge<Vendor>>> onFoundFunc) {
-            super(VendorsGraph.this, specification, onFoundFunc);
+        protected VendorsCrawler(RouteSpecification<Vendor> specification, Consumer<List<Edge<Vendor>>> onFoundFunc, AnalysisCallBack callback) {
+            super(VendorsGraph.this, specification, onFoundFunc, callback);
             startFuel = getShip().getTank();
             startBalance = getProfile().getBalance();
         }

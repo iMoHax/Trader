@@ -2,6 +2,7 @@ package ru.trader.analysis.graph;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.analysis.AnalysisCallBack;
 import ru.trader.analysis.RouteSpecification;
 import ru.trader.core.Profile;
 import ru.trader.core.Ship;
@@ -9,23 +10,26 @@ import ru.trader.graph.Connectable;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class CCrawler<T extends Connectable<T>> extends Crawler<T> {
     private final static Logger LOG = LoggerFactory.getLogger(CCrawler.class);
     private double startFuel;
 
-    public CCrawler(ConnectibleGraph<T> graph, Predicate<List<Edge<T>>> onFoundFunc) {
-        super(graph, onFoundFunc);
-        startFuel = getShip().getTank();
+    public CCrawler(ConnectibleGraph<T> graph, Consumer<List<Edge<T>>> onFoundFunc, AnalysisCallBack callback) {
+        super(graph, onFoundFunc, callback);
+        init();
     }
 
-    public CCrawler(ConnectibleGraph<T> graph, RouteSpecification<T> specification, Predicate<List<Edge<T>>> onFoundFunc) {
-        super(graph, specification, onFoundFunc);
-        startFuel = getShip().getTank();
+    public CCrawler(ConnectibleGraph<T> graph, RouteSpecification<T> specification, Consumer<List<Edge<T>>> onFoundFunc, AnalysisCallBack callback) {
+        super(graph, specification, onFoundFunc, callback);
+        init();
     }
 
+    private void init(){
+        startFuel = getShip().getTank();
+    }
 
     protected Ship getShip(){
         return ((ConnectibleGraph<T>)graph).getShip();

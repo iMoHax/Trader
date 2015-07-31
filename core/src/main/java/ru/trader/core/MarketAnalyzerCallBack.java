@@ -1,62 +1,34 @@
 package ru.trader.core;
 
-import ru.trader.graph.GraphCallBack;
-import ru.trader.graph.RouteSearcherCallBack;
+import ru.trader.analysis.AnalysisCallBack;
 
 public class MarketAnalyzerCallBack {
-    private volatile boolean cancel = false;
-    private RouteSearcherCallBack callbackRoute;
-    private GraphCallBack<Place> callbackGraph;
+    private final AnalysisCallBack parent;
+    public final String ANALYSIS_STAGE = "market.stage.analysis";
 
-
-    protected RouteSearcherCallBack getRouteSearcherCallBackInstance(){
-        return new RouteSearcherCallBack();
+    public MarketAnalyzerCallBack(AnalysisCallBack parent) {
+        this.parent = parent;
     }
 
-    protected GraphCallBack<Place> getGraphCallBackInstance(){
-        return new GraphCallBack<>();
+    public void start(int count){
+        parent.startStage(ANALYSIS_STAGE);
+        parent.print(String.format(parent.getMessage(ANALYSIS_STAGE)));
+        parent.setMax(count);
     }
 
-    public final GraphCallBack<Place> onStartGraph(){
-        callbackGraph = getGraphCallBackInstance();
-        return callbackGraph;
+    public void inc(){
+        parent.inc();
     }
 
-    public final void onEndGraph(){
-        callbackGraph = null;
+    public void end(){
+        parent.endStage(ANALYSIS_STAGE);
     }
 
-    public final RouteSearcherCallBack onStartSearch(){
-        callbackRoute = getRouteSearcherCallBackInstance();
-        return callbackRoute;
+    public boolean isCancel(){
+        return parent.isCancel();
     }
 
-    public final void onEndSearch(){
-        callbackRoute = null;
-        onEnd();
+    public AnalysisCallBack getParent() {
+        return parent;
     }
-
-    protected void onEnd(){}
-
-    public void setMax(long max){}
-    public void inc(){}
-
-
-    public final boolean isCancel() {
-        return cancel;
-    }
-
-    public final void cancel(){
-        if (cancel) return;
-        this.cancel = true;
-        if (callbackRoute != null){
-            callbackRoute.cancel();
-            callbackRoute = null;
-        }
-        if (callbackGraph != null){
-            callbackGraph.cancel();
-            callbackGraph = null;
-        }
-    }
-
 }

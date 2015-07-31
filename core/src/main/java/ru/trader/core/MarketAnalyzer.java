@@ -21,18 +21,14 @@ public class MarketAnalyzer {
     private final static Comparator<Order> orderComparator = (o1, o2) -> o2.compareTo(o1);
 
     public MarketAnalyzer(FilteredMarket market, Profile profile) {
-        this(market, profile, new MarketAnalyzerCallBack());
+        this(market, profile, new AnalysisCallBack());
     }
 
-    public MarketAnalyzer(FilteredMarket market, Profile profile, MarketAnalyzerCallBack callback) {
+    public MarketAnalyzer(FilteredMarket market, Profile profile, AnalysisCallBack callback) {
         this.market = market;
-        this.callback = callback;
+        this.callback = new MarketAnalyzerCallBack(callback);
         this.profile = profile;
-        this.searcher =  new RouteSearcher(new Scorer(market, profile));
-    }
-
-    public void setCallback(MarketAnalyzerCallBack callback) {
-        this.callback = callback;
+        this.searcher =  new RouteSearcher(new Scorer(market, profile), callback);
     }
 
     public Profile getProfile() {
@@ -51,7 +47,7 @@ public class MarketAnalyzer {
         LOG.debug("Get top {}", limit);
         Collection<Place> places = getPlaces();
         LimitedQueue<Order> top = new LimitedQueue<>(limit, orderComparator);
-        callback.setMax(places.size());
+        callback.start(places.size());
         for (Place place : places) {
             if (callback.isCancel()) break;
             LOG.trace("Check place {}", place);
@@ -59,7 +55,7 @@ public class MarketAnalyzer {
             top.addAll(orders);
             callback.inc();
         }
-        callback.onEnd();
+        callback.end();
         return top;
     }
 
@@ -105,10 +101,10 @@ public class MarketAnalyzer {
     }
 
     private Collection<Order> getOrders(Place place, Collection<Vendor> sellers, double lowProfit) {
-        ConnectibleGraph<Place> graph = new ConnectibleGraph<>(profile);
+        ConnectibleGraph<Place> graph = new ConnectibleGraph<>(profile, callback.getParent());
         graph.build(place, getPlaces());
         List<Order> res = new ArrayList<>(20);
-        callback.setMax(sellers.size());
+        callback.start(sellers.size());
         for (Vendor vendor : sellers) {
             if (callback.isCancel()) break;
             for (Offer sell : vendor.getAllSellOffers()) {
@@ -139,12 +135,13 @@ public class MarketAnalyzer {
             callback.inc();
         }
         res.sort(orderComparator);
+        callback.end();
         return res;
     }
 
     private Collection<Order> getOrders(Collection<Vendor> sellers, Collection<Vendor> buyers, double lowProfit) {
         List<Order> res = new ArrayList<>();
-        callback.setMax(sellers.size());
+        callback.start(sellers.size());
         for (Vendor seller : sellers) {
             if (callback.isCancel()) break;
             for (Offer sell : seller.getAllSellOffers()) {
@@ -170,6 +167,7 @@ public class MarketAnalyzer {
             callback.inc();
         }
         res.sort(orderComparator);
+        callback.end();
         return res;
     }
 
@@ -189,7 +187,7 @@ public class MarketAnalyzer {
         LOG.debug("Get top {}", limit);
         LimitedQueue<Route> top = new LimitedQueue<>(limit);
         Collection<Vendor> vendors = getVendors();
-        callback.setMax(vendors.size());
+        callback.start(vendors.size());
         Iterator<Vendor> iterator = market.getMarkets(false).iterator();
         while (iterator.hasNext()){
             Vendor vendor = iterator.next();
@@ -198,7 +196,7 @@ public class MarketAnalyzer {
             top.addAll(paths);
             callback.inc();
         }
-        callback.onEndSearch();
+        callback.end();
         return top;
     }
 
@@ -233,7 +231,7 @@ public class MarketAnalyzer {
 
     public Route getRoute(Collection<Vendor> vendors) {
         Route res = null;
-        callback.setMax(vendors.size());
+        callback.start(vendors.size());
         for (Vendor from : vendors) {
             //TODO: implement search with constant length
             Collection<Route> paths = searcher.getRoutes(from, vendors);
@@ -243,12 +241,12 @@ public class MarketAnalyzer {
             }
             callback.inc();
         }
-        callback.onEndSearch();
+        callback.end();
         return res;
     }
 
     private boolean isInaccessible(Place from, Place to){
-        ConnectibleGraph<Place> graph = new ConnectibleGraph<>(profile);
+        ConnectibleGraph<Place> graph = new ConnectibleGraph<>(profile, callback.getParent());
         graph.build(from, getPlaces());
         if (!graph.isAccessible(to)){
             LOG.trace("Is inaccessible buyer");
@@ -267,5 +265,9 @@ public class MarketAnalyzer {
 
     private List<Vendor> getVendors(Place place){
         return market.getVendors(place).collect(Collectors.toList());
+    }
+
+    public MarketAnalyzer changeCallBack(AnalysisCallBack callback){
+        return new MarketAnalyzer(market, profile, callback);
     }
 }

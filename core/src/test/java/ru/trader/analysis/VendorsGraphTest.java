@@ -58,11 +58,11 @@ public class VendorsGraphTest extends Assert {
         profile.setBalance(100000); profile.setJumps(6);
         Scorer scorer = new Scorer(fWorld, profile);
         LOG.info("Build vendors graph");
-        VendorsGraph vGraph = new VendorsGraph(scorer);
+        VendorsGraph vGraph = new VendorsGraph(scorer, new AnalysisCallBack());
         vGraph.build(cabreraDock, fWorld.getMarkets(true).collect(Collectors.toList()));
         LOG.info("Search");
         SimpleCollector<Vendor> paths = new SimpleCollector<>();
-        Crawler<Vendor> crawler = vGraph.crawler(paths::add);
+        Crawler<Vendor> crawler = vGraph.crawler(paths::add, new AnalysisCallBack());
         // Cabrera Dock -> Transit Wolf 1323 -> Transit Wolf 1325 -> Quimper Ring -> Transit Bhadaba -> Transit Wolf 1325 -> Cabrera Dock]
         crawler.findMin(cabreraDock, 100);
         assertEquals(100, paths.get().size());
@@ -189,7 +189,7 @@ public class VendorsGraphTest extends Assert {
         LOG.info("Start build test");
         profile.setBalance(100000); profile.setJumps(6);
         LOG.info("Build connectible graph");
-        ConnectibleGraph<Vendor> vGraph = new ConnectibleGraph<>(profile);
+        ConnectibleGraph<Vendor> vGraph = new ConnectibleGraph<>(profile, new AnalysisCallBack());
         vGraph.build(cabreraDock, fWorld.getMarkets(true).collect(Collectors.toList()));
         for (Vertex<Vendor> vertex : vGraph.vertexes()) {
             assertEquals(edgesStat.get(vertex.getEntry().toString()).intValue(), vertex.getEdges().size());
@@ -197,7 +197,7 @@ public class VendorsGraphTest extends Assert {
 
         LOG.info("Build vendors graph");
         Scorer scorer = new Scorer(fWorld, profile);
-        vGraph = new VendorsGraph(scorer);
+        vGraph = new VendorsGraph(scorer, new AnalysisCallBack());
         vGraph.build(cabreraDock, fWorld.getMarkets(true).collect(Collectors.toList()));
         for (Vertex<Vendor> vertex : vGraph.vertexes()) {
             switch (vertex.getEntry().getName()){
@@ -224,11 +224,11 @@ public class VendorsGraphTest extends Assert {
         profile.setBalance(100000); profile.setJumps(6);
         Scorer scorer = new Scorer(fWorld, profile);
         LOG.info("Build vendors graph");
-        VendorsGraph vGraph = new VendorsGraph(scorer);
+        VendorsGraph vGraph = new VendorsGraph(scorer, new AnalysisCallBack());
         vGraph.build(cabreraDock, fWorld.getMarkets(true).collect(Collectors.toList()));
         LOG.info("Search");
         SimpleCollector<Vendor> paths = new SimpleCollector<>();
-        Crawler<Vendor> crawler =  vGraph.crawler(new LoopRouteSpecification<>(true), paths::add);
+        Crawler<Vendor> crawler =  vGraph.crawler(new LoopRouteSpecification<>(true), paths::add, new AnalysisCallBack());
         crawler.findMin(cabreraDock, 100);
         assertEquals(60, paths.get().size());
         Collection<Vendor> vendors = new ArrayList<>(60);

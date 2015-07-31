@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -12,9 +13,8 @@ import java.util.stream.Collectors;
 public class SimpleCollector<T> {
     private List<List<Edge<T>>> paths = new ArrayList<>();
 
-    public boolean add(List<Edge<T>> path){
+    public void add(List<Edge<T>> path){
         paths.add(path);
-        return true;
     }
 
     public List<List<Edge<T>>> get() {

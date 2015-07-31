@@ -17,10 +17,6 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     protected int minJumps;
     private final ReentrantLock lock = new ReentrantLock();
 
-    protected AbstractGraph() {
-        this(new AnalysisCallBack());
-    }
-
     protected AbstractGraph(AnalysisCallBack callback) {
         this.callback = new GraphCallBack(callback);
         vertexes = new ArrayList<>();

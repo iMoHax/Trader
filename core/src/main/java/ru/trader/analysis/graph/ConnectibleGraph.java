@@ -14,11 +14,6 @@ public class ConnectibleGraph<T extends Connectable<T>> extends AbstractGraph<T>
 
     protected final Profile profile;
 
-    public ConnectibleGraph(Profile profile) {
-        super();
-        this.profile = profile;
-    }
-
     public ConnectibleGraph(Profile profile, AnalysisCallBack callback) {
         super(callback);
         this.profile = profile;

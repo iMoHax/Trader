@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.TestUtil;
+import ru.trader.analysis.AnalysisCallBack;
 import ru.trader.core.Profile;
 import ru.trader.core.Ship;
 
@@ -68,12 +69,12 @@ public class CrawlerTest extends Assert {
         Profile profile = new Profile(ship);
         profile.setJumps(2); profile.setRefill(false);
         LOG.info("Ship = {}, Jumps = {}", profile.getShip(), profile.getJumps());
-        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile);
+        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile, new AnalysisCallBack());
         graph.build(x5, entrys);
         // x5 <-> x4, x5 <-> x6
 
         SimpleCollector<Point> paths = new SimpleCollector<>();
-        Crawler<Point> crawler = new CCrawler<>(graph, paths::add);
+        Crawler<Point> crawler = new CCrawler<>(graph, paths::add, new AnalysisCallBack());
         crawler.findMin(x4, 10);
         TestUtil.assertPaths(paths.get(), PPath.of(x5, x4));
         paths.clear();
@@ -97,12 +98,12 @@ public class CrawlerTest extends Assert {
         Profile profile = new Profile(ship);
         profile.setJumps(3); profile.setRefill(false);
         LOG.info("Ship = {}, Jumps = {}", profile.getShip(), profile.getJumps());
-        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile);
+        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile, new AnalysisCallBack());
         graph.build(x5, entrys);
         //  x5 <-> x4 <-> x3 <-> x2, x5 <-> x6 <-> x7 <-> x8
         //  x5 <-> x3,  x4 <-> x2,  x3 <-> x6, x4 <-> x6
         SimpleCollector<Point> paths = new SimpleCollector<>();
-        Crawler<Point> crawler = new CCrawler<>(graph, paths::add);
+        Crawler<Point> crawler = new CCrawler<>(graph, paths::add, new AnalysisCallBack());
 
         crawler.findMin(x8, 10);
         TestUtil.assertPaths(paths.get(), PPath.of(x5, x6, x7, x8));
@@ -161,12 +162,12 @@ public class CrawlerTest extends Assert {
         Profile profile = new Profile(ship);
         profile.setJumps(3); profile.setRefill(false);
         LOG.info("Ship = {}, Jumps = {}", profile.getShip(), profile.getJumps());
-        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile);
+        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile, new AnalysisCallBack());
         graph.build(x5, entrys);
         //  x5 <-> x4 <- refill -> x3 <- refill -> x2, x5 <-> x6
         //  x5 <-> x3 <- refill -> x2,  x5 <-> x4 <- refill -> x6
         SimpleCollector<Point> paths = new SimpleCollector<>();
-        Crawler<Point> crawler = new CCrawler<>(graph, paths::add);
+        Crawler<Point> crawler = new CCrawler<>(graph, paths::add, new AnalysisCallBack());
 
         crawler.findMin(x1, 10);
         assertTrue(paths.get().isEmpty());
@@ -202,14 +203,14 @@ public class CrawlerTest extends Assert {
         Profile profile = new Profile(ship);
         profile.setJumps(4);
         LOG.info("Ship = {}, Jumps = {}", profile.getShip(), profile.getJumps());
-        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile);
+        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile, new AnalysisCallBack());
         graph.build(x5, entrys);
         // x5 <-> x4 <-> x3 - refill -> x2,
         // x5 <-> x6 <-> x4 <-refill -> x2
         // x5 <-> x3 <- refill -> x2
         // x5 <-> x4 <- refill -> x6
         SimpleCollector<Point> paths = new SimpleCollector<>();
-        Crawler<Point> crawler = new CCrawler<>(graph, paths::add);
+        Crawler<Point> crawler = new CCrawler<>(graph, paths::add, new AnalysisCallBack());
 
         crawler.findMin(x1, 10);
         assertTrue(paths.get().isEmpty());
@@ -255,14 +256,14 @@ public class CrawlerTest extends Assert {
         Profile profile = new Profile(ship);
         profile.setJumps(4);
         LOG.info("Ship = {}, Jumps = {}", profile.getShip(), profile.getJumps());
-        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile);
+        ConnectibleGraph<Point> graph = new ConnectibleGraph<>(profile, new AnalysisCallBack());
         graph.build(x5, entrys);
         // x5 <-> x4 <-> x3 - refill -> x2,
         // x5 <-> x6 <-> x4 <-refill -> x2
         // x5 <-> x3 <- refill -> x2
         // x5 <-> x4 <- refill -> x6
         SimpleCollector<Point> paths = new SimpleCollector<>();
-        CCrawler<Point> crawler = new CCrawler<>(graph, paths::add);
+        CCrawler<Point> crawler = new CCrawler<>(graph, paths::add, new AnalysisCallBack());
 
         crawler.setStartFuel(0.3);
         crawler.findMin(x3, x2);
