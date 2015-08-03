@@ -1,43 +1,66 @@
 package ru.trader.controllers;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
-import org.controlsfx.control.ButtonBar;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.DialogAction;
 import ru.trader.core.GROUP_TYPE;
 import ru.trader.model.GroupModel;
 import ru.trader.model.MarketModel;
 import ru.trader.view.support.Localization;
 
-public class GroupAddController {
-    private final Action OK = new DialogAction("OK", ButtonBar.ButtonType.OK_DONE, false, true, false);
+import java.util.Optional;
 
+public class GroupAddController {
     @FXML
     private ComboBox<GROUP_TYPE> type;
     @FXML
     private TextField name;
 
+    private Dialog<GroupModel> dlg;
+    private MarketModel market;
 
     @FXML
     private void initialize() {
         type.setItems(FXCollections.observableArrayList(GROUP_TYPE.values()));
-        type.getSelectionModel().selectFirst();
         name.clear();
     }
 
-    public GroupModel showDialog(Parent parent, Parent content, MarketModel market) {
-
-        Dialog dlg = new Dialog(parent, Localization.getString("dialog.group.title"));
-        dlg.setContent(content);
-        dlg.getActions().addAll(OK, Dialog.ACTION_CANCEL);
+    private void createDialog(Parent owner, Parent content){
+        dlg = new Dialog<>();
+        if (owner != null) dlg.initOwner(owner.getScene().getWindow());
+        dlg.setTitle(Localization.getString("dialog.group.title"));
+        dlg.getDialogPane().setContent(content);
+        dlg.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        dlg.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                return add(market);
+            }
+            return null;
+        });
         dlg.setResizable(false);
-        GroupModel res = dlg.show() == OK ? add(market) : null;
+    }
+
+    private void clear(){
+        this.market = null;
+        name.clear();
+        type.getSelectionModel().clearSelection();
+    }
+
+    private void fill(MarketModel market){
+        this.market = market;
+    }
+
+    public Optional<GroupModel> showDialog(Parent parent, Parent content, MarketModel market) {
+        if (dlg == null){
+            createDialog(parent, content);
+        }
+        fill(market);
+        Optional<GroupModel> res = dlg.showAndWait();
+        clear();
         return res;
     }
 

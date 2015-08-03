@@ -16,6 +16,7 @@ import ru.trader.model.support.ChangeMarketListener;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.RouteNode;
 
+import java.util.Optional;
 
 
 public class RouterController {
@@ -183,10 +184,10 @@ public class RouterController {
         OrderModel sel = tblOrders.getSelectionModel().getSelectedItem();
         int index = tblOrders.getSelectionModel().getSelectedIndex();
         //TODO: implement
-/*        market.getOrders(sel.getStation(), sel.getBuyer(), sel.getBalance(), result -> {
-            OrderModel order = Screeners.showOrders(result);
-            if (order!=null){
-                orders.set(index, order);
+/*      market.getOrders(sel.getStation(), sel.getBuyer(), sel.getBalance(), result -> {
+            Optional<OrderModel> order = Screeners.showOrders(result);
+            if (order.isPresent()){
+                orders.set(index, order.get());
             }
 
         });*/
@@ -241,10 +242,10 @@ public class RouterController {
 
     public void showTopOrders(){
         market.getTop(totalBalance.getValue().doubleValue(), result -> {
-            OrderModel order = Screeners.showOrders(result);
-            if (order!=null){
-                orders.add(order);
-                addOrderToPath(order);
+            Optional<OrderModel> order = Screeners.showOrders(result);
+            if (order.isPresent()){
+                orders.add(order.get());
+                addOrderToPath(order.get());
             }
         });
     }
@@ -255,10 +256,10 @@ public class RouterController {
         StationModel sS = sStation.getValue();
         StationModel tS = tStation.getValue();
         market.getOrders(s, sS, t, tS, totalBalance.getValue().doubleValue(), result -> {
-            OrderModel order = Screeners.showOrders(result);
-            if (order!=null){
-                orders.add(order);
-                addOrderToPath(order);
+            Optional<OrderModel> order = Screeners.showOrders(result);
+            if (order.isPresent()){
+                orders.add(order.get());
+                addOrderToPath(order.get());
             }
         });
     }
@@ -269,20 +270,20 @@ public class RouterController {
         StationModel sS = sStation.getValue();
         StationModel tS = tStation.getValue();
         market.getRoutes(s, sS, t, tS, totalBalance.getValue().doubleValue(), routes -> {
-            RouteModel path = Screeners.showRouters(routes);
-            if (path!=null){
-                orders.addAll(path.getOrders());
-                addRouteToPath(path);
+            Optional<RouteModel> path = Screeners.showRouters(routes);
+            if (path.isPresent()){
+                orders.addAll(path.get().getOrders());
+                addRouteToPath(path.get());
             }
         });
     }
 
     public void showTopRoutes(){
         market.getTopRoutes(totalBalance.getValue().doubleValue(), routes -> {
-            RouteModel path = Screeners.showRouters(routes);
-            if (path!=null){
-                orders.addAll(path.getOrders());
-                addRouteToPath(path);
+            Optional<RouteModel> path = Screeners.showRouters(routes);
+            if (path.isPresent()){
+                orders.addAll(path.get().getOrders());
+                addRouteToPath(path.get());
             }
         });
     }

@@ -7,15 +7,9 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.util.converter.DefaultStringConverter;
 import javafx.util.converter.DoubleStringConverter;
-import org.controlsfx.control.ButtonBar;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.DialogAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.model.MarketModel;
@@ -63,12 +57,8 @@ public class SystemsEditorController {
     @FXML
     private ComboBox<SystemModel> system6;
 
+    private Dialog<ButtonType> dlg;
     private MarketModel market;
-
-    private final Action actSave = new DialogAction(Localization.getString("dialog.button.save"), ButtonBar.ButtonType.OK_DONE, false, true, false, (e) -> {
-        tblSystems.getSelectionModel().selectFirst();
-        commit();
-    });
 
     @FXML
     private void initialize() {
@@ -104,19 +94,43 @@ public class SystemsEditorController {
         system6.setItems(market.systemsProperty());
     }
 
-    public void showDialog(Parent parent, Parent content, SystemModel system){
-        Dialog dlg = new Dialog(parent, Localization.getString("sEditor.title"));
-        dlg.setContent(content);
-        dlg.getActions().addAll(actSave,  Dialog.ACTION_CANCEL);
+    private void createDialog(Parent owner, Parent content){
+        dlg = new Dialog<>();
+        if (owner != null) dlg.initOwner(owner.getScene().getWindow());
+        dlg.setTitle(Localization.getString("sEditor.title"));
+        ButtonType saveButton = new ButtonType(Localization.getString("dialog.button.save"), ButtonBar.ButtonData.OK_DONE);
+        dlg.getDialogPane().setContent(content);
+        dlg.getDialogPane().getButtonTypes().addAll(saveButton, ButtonType.CANCEL);
+        dlg.setResultConverter(dialogButton -> {
+            if (dialogButton == saveButton) {
+                save();
+            }
+            return dialogButton;
+        });
         dlg.setResizable(false);
+    }
+
+    private void save(){
+        tblSystems.getSelectionModel().selectFirst();
+        commit();
+    }
+
+    public void showDialog(Parent parent, Parent content, SystemModel system){
+        if (dlg == null){
+            createDialog(parent, content);
+        }
+        fill(system);
+        dlg.showAndWait();
+        clear();
+    }
+
+    private void fill(SystemModel system){
         if (system != null){
             tblSystems.getItems().add(new SystemData(system));
         }
         for (int i = 0; i < 10; i++) {
             add();
         }
-        dlg.show();
-        reset();
     }
 
     public void add(){
@@ -153,7 +167,7 @@ public class SystemsEditorController {
         }
     }
 
-    private void reset(){
+    private void clear(){
         tblSystems.getItems().clear();
     }
 

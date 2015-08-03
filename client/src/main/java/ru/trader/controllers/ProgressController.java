@@ -2,13 +2,11 @@ package ru.trader.controllers;
 
 import javafx.application.Platform;
 import javafx.scene.Parent;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.VBox;
-import org.controlsfx.control.ButtonBar;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.DialogAction;
 import ru.trader.services.*;
 
 import java.util.function.Consumer;
@@ -16,13 +14,16 @@ import java.util.function.Consumer;
 public class ProgressController {
     private Label text;
     private ProgressBar bar;
-    private Action cancel;
-    private Dialog dlg;
-    private final static String TASK_KEY = "task";
+    private Dialog<ButtonType> dlg;
+    private AnalyzerTask task;
 
 
     public ProgressController(Parent owner, String title) {
-        dlg = new Dialog(owner, title);
+        dlg = new Dialog<>();
+        dlg.initOwner(owner.getScene().getWindow());
+        dlg.setTitle(title);
+        dlg.setResizable(false);
+
         createStage();
     }
 
@@ -34,21 +35,23 @@ public class ProgressController {
         vbox.setMaxWidth(Double.MAX_VALUE);
         vbox.setPrefSize(300, 100);
 
-        dlg.setClosable(false);
-        dlg.setContent(vbox);
-        cancel = new DialogAction(impl.org.controlsfx.i18n.Localization.asKey("dlg.cancel.button"), ButtonBar.ButtonType.CANCEL_CLOSE, e -> {
-            AnalyzerTask<?> task = (AnalyzerTask<?>) cancel.getProperties().get(TASK_KEY);
-            if (task != null){
-                task.stop();
+        dlg.getDialogPane().setContent(vbox);
+        dlg.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+
+        dlg.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                if (task != null){
+                    task.stop();
+                }
             }
+            return dialogButton;
         });
-        dlg.getActions().addAll(cancel);
     }
 
     private <T> void bind(AnalyzerTask<T> task, Consumer<T> onSuccess){
         bar.progressProperty().bind(task.progressProperty());
         text.textProperty().bind(task.messageProperty());
-        cancel.getProperties().put(TASK_KEY, task);
+        this.task = task;
         task.setOnSucceeded(e -> {
             Platform.runLater(dlg::hide);
             onSuccess.accept(task.getValue());
@@ -69,7 +72,7 @@ public class ProgressController {
     private void unbind(){
         bar.progressProperty().unbind();
         text.textProperty().unbind();
-        cancel.getProperties().remove(TASK_KEY);
+        task = null;
     }
 
     public <T> void run(AnalyzerTask<T> task, Consumer<T> onSuccess){

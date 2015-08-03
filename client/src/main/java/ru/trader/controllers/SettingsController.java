@@ -2,12 +2,7 @@ package ru.trader.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
-import org.controlsfx.control.ButtonBar;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.DialogAction;
+import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.EMDNUpdater;
@@ -32,8 +27,7 @@ public class SettingsController {
     @FXML
     private NumberField pathsCount;
 
-    private final Action actSave = new DialogAction(Localization.getString("dialog.button.save"), ButtonBar.ButtonType.OK_DONE, false, true, false, (e) -> save());
-
+    private Dialog<ButtonType> dlg;
 
     @FXML
     private void initialize(){
@@ -48,6 +42,22 @@ public class SettingsController {
         pathsCount.setValue(Main.SETTINGS.getRoutesCount());
     }
 
+    private void createDialog(Parent owner, Parent content){
+        dlg = new Dialog<>();
+        if (owner != null) dlg.initOwner(owner.getScene().getWindow());
+        dlg.setTitle(Localization.getString("settings.title"));
+        ButtonType saveButton = new ButtonType(Localization.getString("dialog.button.save"), ButtonBar.ButtonData.OK_DONE);
+        dlg.getDialogPane().setContent(content);
+        dlg.getDialogPane().getButtonTypes().addAll(saveButton, ButtonType.CANCEL);
+        dlg.setResultConverter(dialogButton -> {
+            if (dialogButton == saveButton) {
+                save();
+            }
+            return dialogButton;
+        });
+        dlg.setResizable(false);
+    }
+
     private void save() {
         Main.SETTINGS.setEMDNSub(emdnSubServ.getText());
         EMDNUpdater.setSub(emdnSubServ.getText());
@@ -59,13 +69,12 @@ public class SettingsController {
         EMDNUpdater.setInterval(emdnUpdateTime.getValue().longValue());
     }
 
-    public Action showDialog(Parent parent, Parent content){
+    public void showDialog(Parent parent, Parent content){
+        if (dlg == null){
+            createDialog(parent, content);
+        }
         init();
-        Dialog dlg = new Dialog(parent, Localization.getString("settings.title"));
-        dlg.setContent(content);
-        dlg.getActions().addAll(actSave, Dialog.ACTION_CANCEL);
-        dlg.setResizable(false);
-        return dlg.show();
+        dlg.showAndWait();
     }
 
 }
