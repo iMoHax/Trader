@@ -39,7 +39,7 @@ public class ProgressController {
         dlg.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
 
         dlg.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
+            if (dialogButton == ButtonType.CANCEL) {
                 if (task != null){
                     task.stop();
                 }
