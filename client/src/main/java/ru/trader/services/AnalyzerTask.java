@@ -13,7 +13,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class AnalyzerTask<T> extends Task<T> {
-    private final AnalyzerCallBack callback;                    protected final MarketAnalyzer analyzer;
+    private final AnalyzerCallBack callback;
+    protected final MarketAnalyzer analyzer;
 
     private final LongProperty found;
     private final AtomicReference<Long> foundUpdate;
@@ -70,12 +71,12 @@ public abstract class AnalyzerTask<T> extends Task<T> {
 
         @Override
         public String getMessage(String key) {
-            return Localization.getString(key);
+            return Localization.getString("analyzer."+key);
         }
 
         @Override
         public void print(String message) {
-            super.print(message);
+            updateMessage(message);
         }
 
         @Override
