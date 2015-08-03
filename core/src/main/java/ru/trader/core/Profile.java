@@ -5,10 +5,14 @@ import java.util.Properties;
 public class Profile {
     public static enum PATH_PRIORITY {FAST, ECO}
 
+    private String name;
     private double balance;
+    private Place system;
+    private Vendor station;
+    private Ship ship;
+    private boolean docked;
     private int jumps;
     private int lands;
-    private Ship ship;
     private boolean refill;
     private int routesCount;
     //Scorer multipliers
@@ -35,12 +39,52 @@ public class Profile {
         pathPriority = PATH_PRIORITY.FAST;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public double getBalance() {
         return balance;
     }
 
     public void setBalance(double balance) {
         this.balance = balance;
+    }
+
+    public Place getSystem() {
+        return system;
+    }
+
+    public void setSystem(Place system) {
+        this.system = system;
+    }
+
+    public Vendor getStation() {
+        return station;
+    }
+
+    public void setStation(Vendor station) {
+        this.station = station;
+    }
+
+    public Ship getShip() {
+        return ship;
+    }
+
+    public void setShip(Ship ship) {
+        this.ship = ship;
+    }
+
+    public boolean isDocked() {
+        return docked;
+    }
+
+    public void setDocked(boolean docked) {
+        this.docked = docked;
     }
 
     public int getJumps() {
@@ -57,14 +101,6 @@ public class Profile {
 
     public void setLands(int lands) {
         this.lands = lands;
-    }
-
-    public Ship getShip() {
-        return ship;
-    }
-
-    public void setShip(Ship ship) {
-        this.ship = ship;
     }
 
     public boolean withRefill() {
@@ -139,10 +175,26 @@ public class Profile {
         this.pathPriority = pathPriority;
     }
 
-    public static Profile readFrom(Properties values){
+    public static Profile readFrom(Properties values, Market market){
         Ship ship = Ship.readFrom(values);
         Profile profile = new Profile(ship);
+        profile.setName(values.getProperty("profile.name","Cmdr NoName"));
         profile.setBalance(Double.valueOf(values.getProperty("profile.balance","1000")));
+        String v = values.getProperty("profile.system", null);
+        if (v != null){
+            Place system = market.get(v);
+            profile.setSystem(system);
+            v = values.getProperty("profile.station", null);
+            if (v != null && system != null){
+                profile.setStation(system.get(v));
+            } else {
+                profile.setStation(null);
+            }
+        } else {
+            profile.setSystem(null);
+            profile.setStation(null);
+        }
+        profile.setDocked(Boolean.valueOf(values.getProperty("profile.docked","false")));
         profile.setJumps(Integer.valueOf(values.getProperty("profile.jumps", "6")));
         profile.setLands(Integer.valueOf(values.getProperty("profile.lands", "4")));
         profile.setPathPriority(PATH_PRIORITY.valueOf(values.getProperty("profile.search.priority", "FAST")));
@@ -157,7 +209,11 @@ public class Profile {
     }
 
     public void writeTo(Properties values){
+        values.setProperty("profile.name", String.valueOf(name));
         values.setProperty("profile.balance", String.valueOf(balance));
+        values.setProperty("profile.system", String.valueOf(system != null ? system.getName():""));
+        values.setProperty("profile.station", String.valueOf(station != null ? station.getName():""));
+        values.setProperty("profile.docked", String.valueOf(docked));
         values.setProperty("profile.jumps", String.valueOf(jumps));
         values.setProperty("profile.lands", String.valueOf(lands));
         values.setProperty("profile.search.priority", String.valueOf(pathPriority));

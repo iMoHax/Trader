@@ -26,7 +26,7 @@ public class Settings {
         profile = new Profile(new Ship());
     }
 
-    public void load() {
+    public void load(Market market) {
         try (InputStream is = new FileInputStream(file)) {
             values.load(is);
         } catch (FileNotFoundException e) {
@@ -34,7 +34,7 @@ public class Settings {
         } catch (IOException e) {
             LOG.error("Error on load settings", e);
         }
-        profile = Profile.readFrom(values);
+        profile = Profile.readFrom(values, market);
     }
 
     public void save(){

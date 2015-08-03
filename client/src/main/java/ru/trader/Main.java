@@ -28,7 +28,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         SETTINGS = new Settings(new File("profile.properties"));
-        SETTINGS.load();
+        SETTINGS.load(World.getMarket());
         Locale locale = SETTINGS.getLocale();
         if (locale != null){
             Localization.setLocale(locale);
