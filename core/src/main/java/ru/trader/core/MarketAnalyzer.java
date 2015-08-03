@@ -264,7 +264,11 @@ public class MarketAnalyzer {
     }
 
     private List<Vendor> getVendors(Place place){
-        return market.getVendors(place).collect(Collectors.toList());
+        List<Vendor> vendors = market.getVendors(place).collect(Collectors.toList());
+        if (vendors.isEmpty()){
+            vendors = Collections.singletonList(place.asTransit());
+        }
+        return vendors;
     }
 
     public MarketAnalyzer changeCallBack(AnalysisCallBack callback){

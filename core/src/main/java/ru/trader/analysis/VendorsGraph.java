@@ -149,7 +149,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             assert vertex.getEntry() instanceof TransitVendor && !(target.getEntry() instanceof TransitVendor);
             VendorsGraphBuilder h = this;
             Path<Vendor> path = new Path<>(Collections.singleton(lastEdge));
-            while (h != null){
+            while (h != null && h.edge != null){
                 if (callback.isCancel()) break;
                 BuildEdge cEdge = h.edge;
                 Vertex<Vendor> source = cEdge.getSource();
@@ -203,7 +203,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             while (path != null){
                 if (callback.isCancel()) break;
                 VendorsGraphBuilder h = this;
-                while (h != null){
+                while (h != null && h.edge != null){
                     if (callback.isCancel()) break;
                     if (h.limit >= path.getMinFuel() && h.limit <= path.getMaxFuel()){
                         BuildEdge cEdge = h.edge;
