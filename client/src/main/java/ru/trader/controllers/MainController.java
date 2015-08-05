@@ -35,8 +35,8 @@ public class MainController {
     private final static Logger LOG = LoggerFactory.getLogger(MainController.class);
 
     private static MarketModel world = new MarketModel(World.getMarket());
+    private static ProfileModel profile = new ProfileModel(Main.SETTINGS.getProfile(), world);
     private static MarketModel market = world;
-
 
     @FXML
     private BorderPane mainPane;
@@ -44,6 +44,8 @@ public class MainController {
     @FXML
     private Menu langs;
 
+    @FXML
+    private ProfileController profController;
     @FXML
     private OffersController offersController;
     @FXML
@@ -54,6 +56,7 @@ public class MainController {
     @FXML
     private void initialize() {
         fillLangs();
+        profController.setProfile(profile);
     }
 
     private void fillLangs() {
@@ -93,6 +96,10 @@ public class MainController {
     }
     public static MarketModel getWorld() {
         return world;
+    }
+
+    public static ProfileModel getProfile() {
+        return profile;
     }
 
     public void setMarket(MarketModel market) {
