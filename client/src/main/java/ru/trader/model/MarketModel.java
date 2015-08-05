@@ -87,6 +87,14 @@ public class MarketModel {
         return systemsList;
     }
 
+    public SystemModel get(String name){
+        Place s = market.get(name);
+        if (s == null){
+            return ModelFabric.NONE_SYSTEM;
+        }
+        return modeler.get(s);
+    }
+
     public SystemModel add(String name, double x, double y, double z) {
         SystemModel system = modeler.get(market.addPlace(name, x, y, z));
         LOG.info("Add system {} to market {}", system, this);
