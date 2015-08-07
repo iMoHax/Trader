@@ -92,6 +92,10 @@ public class SystemModel {
         return system.get().stream().filter(v -> v.has(service)).map(this::asModel).collect(Collectors.toList());
     }
 
+    public StationModel get(String name){
+        return asModel(system.get(name));
+    }
+
     public StationModel add(String name){
         StationModel station = market.getModeler().get(system.addVendor(name));
         LOG.info("Add station {} to system {}", station, this);
