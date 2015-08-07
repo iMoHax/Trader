@@ -6717,8 +6717,8 @@
       "lvl": 1
     },
     "cargo": {
-      "capacity": 0,
-      "qty": 0,
+      "capacity": 12,
+      "qty": 4,
       "items": []
     },
     "passengers": [],

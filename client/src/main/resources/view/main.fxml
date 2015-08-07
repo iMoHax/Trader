@@ -8,6 +8,7 @@
             fx:id="mainPane"
         >
    <top>
+       <VBox>
        <MenuBar>
            <Menu text="%main.menu.file">
                <MenuItem text="%main.menu.file.save" onAction="#save"/>
@@ -43,6 +44,8 @@
                <Menu fx:id="langs" text="%main.menu.settings.language"/>
            </Menu>
        </MenuBar>
+           <fx:include fx:id="prof" source="profile.fxml"/>
+       </VBox>
    </top>
    <center>
        <TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
