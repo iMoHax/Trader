@@ -149,7 +149,13 @@ public class EDSession {
     }
 
     public void close() throws IOException {
-        writeCookieStore(cookieStore);
+        close(true);
+    }
+
+    public void close(boolean saveCookie) throws IOException {
+        if (saveCookie){
+            writeCookieStore(cookieStore);
+        }
         httpClient.close();
     }
 
