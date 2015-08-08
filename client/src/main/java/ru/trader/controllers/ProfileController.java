@@ -14,6 +14,7 @@ import ru.trader.model.ProfileModel;
 import ru.trader.model.StationModel;
 import ru.trader.model.SystemModel;
 import ru.trader.view.support.NumberField;
+import ru.trader.view.support.ViewUtils;
 import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.SystemsProvider;
 
@@ -137,14 +138,14 @@ public class ProfileController {
     }
 
 
-    private final ChangeListener<String> nameListener = (ov, o, n) -> name.setText(n);
-    private final ChangeListener<Number> balanceListener = (ov, o, n) -> balance.setValue(n);
-    private final ChangeListener<SystemModel> systemListener = (ov, o, n) -> system.setValue(n);
-    private final ChangeListener<StationModel> stationListener = (ov, o, n) -> station.setValue(n);
-    private final ChangeListener<Number> massListener = (ov, o, n) -> mass.setValue(n);
-    private final ChangeListener<Number> tankListener = (ov, o, n) -> tank.setValue(n);
-    private final ChangeListener<Number> cargoListener = (ov, o, n) -> cargo.setValue(n);
-    private final ChangeListener<Engine> engineListener = (ov, o, n) -> engine.setValue(n);
+    private final ChangeListener<String> nameListener = (ov, o, n) -> ViewUtils.doFX(() -> name.setText(n));
+    private final ChangeListener<Number> balanceListener = (ov, o, n) -> ViewUtils.doFX(() -> balance.setValue(n));
+    private final ChangeListener<SystemModel> systemListener = (ov, o, n) -> ViewUtils.doFX(() -> system.setValue(n));
+    private final ChangeListener<StationModel> stationListener = (ov, o, n) -> ViewUtils.doFX(() -> station.setValue(n));
+    private final ChangeListener<Number> massListener = (ov, o, n) -> ViewUtils.doFX(() -> mass.setValue(n));
+    private final ChangeListener<Number> tankListener = (ov, o, n) -> ViewUtils.doFX(() -> tank.setValue(n));
+    private final ChangeListener<Number> cargoListener = (ov, o, n) -> ViewUtils.doFX(() -> cargo.setValue(n));
+    private final ChangeListener<Engine> engineListener = (ov, o, n) -> ViewUtils.doFX(() -> engine.setValue(n));
 
     private class EngineStringConverter extends StringConverter<Engine> {
         @Override
