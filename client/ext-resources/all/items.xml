@@ -1,0 +1,301 @@
+<?xml version="1.0" ?>
+<market>
+    <items>
+        <group name="chemicals" type="MARKET">
+            <item name="explosives" id="i0"/>
+            <item name="hydrogenfuel" id="i1"/>
+            <item name="mineraloil" id="i2"/>
+            <item name="pesticides" id="i3"/>
+        </group>
+        <group name="consumer_items" type="MARKET">
+            <item name="clothing" id="i4"/>
+            <item name="consumertechnology" id="i5"/>
+            <item name="domesticappliances" id="i6"/>
+        </group>
+        <group name="foods" type="MARKET">
+            <item name="algae" id="i7"/>
+            <item name="animalmeat" id="i8"/>
+            <item name="coffee" id="i9"/>
+            <item name="energydrinks" id="i10"/>
+            <item name="fish" id="i11"/>
+            <item name="foodcartridges" id="i12"/>
+            <item name="fruitandvegetables" id="i13"/>
+            <item name="grain" id="i14"/>
+            <item name="syntheticmeat" id="i15"/>
+            <item name="tea" id="i16"/>
+        </group>
+        <group name="engineered_ceramics" type="MARKET">
+            <item name="polymers" id="i17"/>
+            <item name="semiconductors" id="i18"/>
+            <item name="superconductors" id="i19"/>
+        </group>
+        <group name="drugs" type="MARKET">
+            <item name="beer" id="i20"/>
+            <item name="liquor" id="i21"/>
+            <item name="basicnarcotics" id="i22"/>
+            <item name="tobacco" id="i23"/>
+            <item name="wine" id="i24"/>
+        </group>
+        <group name="machinery" type="MARKET">
+            <item name="atmosphericprocessors" id="i25"/>
+            <item name="cropharvesters" id="i26"/>
+            <item name="marinesupplies" id="i27"/>
+            <item name="microbialfurnaces" id="i28"/>
+            <item name="mineralextractors" id="i29"/>
+            <item name="powergenerators" id="i30"/>
+            <item name="waterpurifiers" id="i31"/>
+        </group>
+        <group name="medicines" type="MARKET">
+            <item name="agriculturalmedicines" id="i32"/>
+            <item name="basicmedicines" id="i33"/>
+            <item name="combatstabilisers" id="i34"/>
+            <item name="performanceenhancers" id="i35"/>
+            <item name="progenitorcells" id="i36"/>
+        </group>
+        <group name="metals" type="MARKET">
+            <item name="aluminium" id="i37"/>
+            <item name="beryllium" id="i38"/>
+            <item name="cobalt" id="i39"/>
+            <item name="copper" id="i40"/>
+            <item name="gallium" id="i41"/>
+            <item name="gold" id="i42"/>
+            <item name="indium" id="i43"/>
+            <item name="lithium" id="i44"/>
+            <item name="osmium" id="i245"/>
+            <item name="palladium" id="i45"/>
+            <item name="platinum" id="i46"/>
+            <item name="silver" id="i47"/>
+            <item name="tantalum" id="i48"/>
+            <item name="titanium" id="i49"/>
+            <item name="uranium" id="i50"/>
+        </group>
+        <group name="minerals" type="MARKET">
+            <item name="bauxite" id="i51"/>
+            <item name="bertrandite" id="i52"/>
+            <item name="coltan" id="i53"/>
+            <item name="gallite" id="i54"/>
+            <item name="indite" id="i55"/>
+            <item name="lepidolite" id="i56"/>
+            <item name="painite" id="i243"/>
+            <item name="rutile" id="i57"/>
+            <item name="uraninite" id="i58"/>
+        </group>
+        <group name="salvage" type="MARKET">
+            <item name="sap8corecontainer" id="i244"/>
+        </group>
+        <group name="slaves" type="MARKET">
+            <item name="imperialslaves" id="i59"/>
+            <item name="slaves" id="i60"/>
+        </group>
+        <group name="technology" type="MARKET">
+            <item name="advancedcatalysers" id="i61"/>
+            <item name="animalmonitors" id="i62"/>
+            <item name="aquaponicsystems" id="i63"/>
+            <item name="autofabricators" id="i64"/>
+            <item name="bioreducinglichen" id="i65"/>
+            <item name="computercomponents" id="i66"/>
+            <item name="hazardousenvironmentsuits" id="i67"/>
+            <item name="landenrichmentsystems" id="i68"/>
+            <item name="resonatingseparators" id="i69"/>
+            <item name="robotics" id="i70"/>
+        </group>
+        <group name="textiles" type="MARKET">
+            <item name="leather" id="i71"/>
+            <item name="naturalfabrics" id="i72"/>
+            <item name="syntheticfabrics" id="i73"/>
+        </group>
+        <group name="waste" type="MARKET">
+            <item name="biowaste" id="i74"/>
+            <item name="chemicalwaste" id="i75"/>
+            <item name="scrap" id="i76"/>
+        </group>
+        <group name="weapons" type="MARKET">
+            <item name="battleweapons" id="i77"/>
+            <item name="nonlethalweapons" id="i78"/>
+            <item name="personalweapons" id="i79"/>
+            <item name="reactivearmour" id="i80"/>
+        </group>
+        <group name="ships" type="SHIP">
+            <item name="Sidewinder" id="i81"/>
+            <item name="Hauler" id="i82"/>
+            <item name="Eagle" id="i83"/>
+            <item name="Adder" id="i84"/>
+            <item name="Viper" id="i85"/>
+            <item name="Cobra MK3" id="i86"/>
+            <item name="TYPE-6" id="i87"/>
+            <item name="TYPE-7" id="i88"/>
+            <item name="TYPE-9" id="i89"/>
+            <item name="ASP" id="i90"/>
+            <item name="Python" id="i91"/>
+            <item name="Orca" id="i92"/>
+            <item name="Imperial Clipper" id="i93"/>
+            <item name="Federal Dropship" id="i94"/>
+            <item name="Anaconda" id="i95"/>
+        </group>
+        <group name="powerplant" type="OUTFIT">
+            <item name="Power Plant A1" id="i96"/>
+            <item name="Power Plant B1" id="i97"/>
+            <item name="Power Plant C1" id="i98"/>
+            <item name="Power Plant D1" id="i99"/>
+            <item name="Power Plant A2" id="i100"/>
+            <item name="Power Plant B2" id="i101"/>
+            <item name="Power Plant C2" id="i102"/>
+            <item name="Power Plant D2" id="i103"/>
+            <item name="Power Plant A3" id="i104"/>
+            <item name="Power Plant B3" id="i105"/>
+            <item name="Power Plant C3" id="i106"/>
+            <item name="Power Plant D3" id="i107"/>
+            <item name="Power Plant A4" id="i108"/>
+            <item name="Power Plant B4" id="i109"/>
+            <item name="Power Plant C4" id="i110"/>
+            <item name="Power Plant D4" id="i111"/>
+            <item name="Power Plant A5" id="i112"/>
+            <item name="Power Plant B5" id="i113"/>
+            <item name="Power Plant C5" id="i114"/>
+            <item name="Power Plant D5" id="i115"/>
+        </group>
+        <group name="powerdistributor" type="OUTFIT">
+            <item name="Power Distributor A1" id="i116"/>
+            <item name="Power Distributor B1" id="i117"/>
+            <item name="Power Distributor C1" id="i118"/>
+            <item name="Power Distributor D1" id="i119"/>
+            <item name="Power Distributor A2" id="i120"/>
+            <item name="Power Distributor B2" id="i121"/>
+            <item name="Power Distributor C2" id="i122"/>
+            <item name="Power Distributor D2" id="i123"/>
+            <item name="Power Distributor A3" id="i124"/>
+            <item name="Power Distributor B3" id="i125"/>
+            <item name="Power Distributor C3" id="i126"/>
+            <item name="Power Distributor D3" id="i127"/>
+            <item name="Power Distributor A4" id="i128"/>
+            <item name="Power Distributor B4" id="i129"/>
+            <item name="Power Distributor C4" id="i130"/>
+            <item name="Power Distributor D4" id="i131"/>
+            <item name="Power Distributor A5" id="i132"/>
+            <item name="Power Distributor B5" id="i133"/>
+            <item name="Power Distributor C5" id="i134"/>
+            <item name="Power Distributor D5" id="i135"/>
+        </group>
+        <group name="sensors" type="OUTFIT">
+            <item name="Sensors A1" id="i136"/>
+            <item name="Sensors B1" id="i137"/>
+            <item name="Sensors C1" id="i138"/>
+            <item name="Sensors D1" id="i139"/>
+            <item name="Sensors A2" id="i140"/>
+            <item name="Sensors B2" id="i141"/>
+            <item name="Sensors C2" id="i142"/>
+            <item name="Sensors D2" id="i143"/>
+            <item name="Sensors A3" id="i144"/>
+            <item name="Sensors B3" id="i145"/>
+            <item name="Sensors C3" id="i146"/>
+            <item name="Sensors D3" id="i147"/>
+            <item name="Sensors A4" id="i148"/>
+            <item name="Sensors B4" id="i149"/>
+            <item name="Sensors C4" id="i150"/>
+            <item name="Sensors D4" id="i151"/>
+            <item name="Sensors A5" id="i152"/>
+            <item name="Sensors B5" id="i153"/>
+            <item name="Sensors C5" id="i154"/>
+            <item name="Sensors D5" id="i155"/>
+        </group>
+        <group name="thrusters" type="OUTFIT">
+            <item name="Thrusters A1" id="i156"/>
+            <item name="Thrusters B1" id="i157"/>
+            <item name="Thrusters C1" id="i158"/>
+            <item name="Thrusters D1" id="i159"/>
+            <item name="Thrusters A2" id="i160"/>
+            <item name="Thrusters B2" id="i161"/>
+            <item name="Thrusters C2" id="i162"/>
+            <item name="Thrusters D2" id="i163"/>
+            <item name="Thrusters A3" id="i164"/>
+            <item name="Thrusters B3" id="i165"/>
+            <item name="Thrusters C3" id="i166"/>
+            <item name="Thrusters D3" id="i167"/>
+            <item name="Thrusters A4" id="i168"/>
+            <item name="Thrusters B4" id="i169"/>
+            <item name="Thrusters C4" id="i170"/>
+            <item name="Thrusters D4" id="i171"/>
+            <item name="Thrusters A5" id="i172"/>
+            <item name="Thrusters B5" id="i173"/>
+            <item name="Thrusters C5" id="i174"/>
+            <item name="Thrusters D5" id="i175"/>
+        </group>
+        <group name="fsd" type="OUTFIT">
+            <item name="FSD A1" id="i176"/>
+            <item name="FSD B1" id="i177"/>
+            <item name="FSD C1" id="i178"/>
+            <item name="FSD D1" id="i179"/>
+            <item name="FSD A2" id="i180"/>
+            <item name="FSD B2" id="i181"/>
+            <item name="FSD C2" id="i182"/>
+            <item name="FSD D2" id="i183"/>
+            <item name="FSD A3" id="i184"/>
+            <item name="FSD B3" id="i185"/>
+            <item name="FSD C3" id="i186"/>
+            <item name="FSD D3" id="i187"/>
+            <item name="FSD A4" id="i188"/>
+            <item name="FSD B4" id="i189"/>
+            <item name="FSD C4" id="i190"/>
+            <item name="FSD D4" id="i191"/>
+            <item name="FSD A5" id="i192"/>
+            <item name="FSD B5" id="i193"/>
+            <item name="FSD C5" id="i194"/>
+            <item name="FSD D5" id="i195"/>
+        </group>
+        <group name="shieldgenerator" type="OUTFIT">
+            <item name="Shield Generator A1" id="i196"/>
+            <item name="Shield Generator B1" id="i197"/>
+            <item name="Shield Generator C1" id="i198"/>
+            <item name="Shield Generator D1" id="i199"/>
+            <item name="Shield Generator A2" id="i200"/>
+            <item name="Shield Generator B2" id="i201"/>
+            <item name="Shield Generator C2" id="i202"/>
+            <item name="Shield Generator D2" id="i203"/>
+            <item name="Shield Generator A3" id="i204"/>
+            <item name="Shield Generator B3" id="i205"/>
+            <item name="Shield Generator C3" id="i206"/>
+            <item name="Shield Generator D3" id="i207"/>
+            <item name="Shield Generator A4" id="i208"/>
+            <item name="Shield Generator B4" id="i209"/>
+            <item name="Shield Generator C4" id="i210"/>
+            <item name="Shield Generator D4" id="i211"/>
+            <item name="Shield Generator A5" id="i212"/>
+            <item name="Shield Generator B5" id="i213"/>
+            <item name="Shield Generator C5" id="i214"/>
+            <item name="Shield Generator D5" id="i215"/>
+        </group>
+        <group name="cargorack" type="OUTFIT">
+            <item name="Cargo Rack E1" id="i216"/>
+            <item name="Cargo Rack E2" id="i217"/>
+            <item name="Cargo Rack E3" id="i218"/>
+            <item name="Cargo Rack E4" id="i219"/>
+            <item name="Cargo Rack E5" id="i220"/>
+            <item name="Cargo Rack E6" id="i221"/>
+        </group>
+        <group name="shieldcellbank" type="OUTFIT">
+            <item name="Shield Cell Bank A1" id="i222"/>
+            <item name="Shield Cell Bank B1" id="i223"/>
+            <item name="Shield Cell Bank C1" id="i224"/>
+            <item name="Shield Cell Bank D1" id="i225"/>
+            <item name="Shield Cell Bank A2" id="i226"/>
+            <item name="Shield Cell Bank B2" id="i227"/>
+            <item name="Shield Cell Bank C2" id="i228"/>
+            <item name="Shield Cell Bank D2" id="i229"/>
+            <item name="Shield Cell Bank A3" id="i230"/>
+            <item name="Shield Cell Bank B3" id="i231"/>
+            <item name="Shield Cell Bank C3" id="i232"/>
+            <item name="Shield Cell Bank D3" id="i233"/>
+            <item name="Shield Cell Bank A4" id="i234"/>
+            <item name="Shield Cell Bank B4" id="i235"/>
+            <item name="Shield Cell Bank C4" id="i236"/>
+            <item name="Shield Cell Bank D4" id="i237"/>
+            <item name="Shield Cell Bank A5" id="i238"/>
+            <item name="Shield Cell Bank B5" id="i239"/>
+            <item name="Shield Cell Bank C5" id="i240"/>
+            <item name="Shield Cell Bank D5" id="i241"/>
+        </group>
+        <group name="Rare" type="MARKET">
+            <item name="Tauri Chimes" id="i242"/>
+        </group>
+    </items>
+</market>
