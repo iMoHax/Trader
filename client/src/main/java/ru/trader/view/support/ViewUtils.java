@@ -2,6 +2,7 @@ package ru.trader.view.support;
 
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
@@ -31,5 +32,13 @@ public class ViewUtils {
             }
         }
         editNext(tableView);
+    }
+
+    public static void doFX(Runnable runnable){
+        if (Platform.isFxApplicationThread()){
+            runnable.run();
+        } else {
+            Platform.runLater(runnable);
+        }
     }
 }

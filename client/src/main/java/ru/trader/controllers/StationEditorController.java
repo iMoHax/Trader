@@ -8,7 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.EMDNUpdater;
 import ru.trader.core.SERVICE_TYPE;
-import ru.trader.model.*;
+import ru.trader.model.ItemModel;
+import ru.trader.model.StationModel;
+import ru.trader.model.SystemModel;
 import ru.trader.model.support.StationUpdater;
 import ru.trader.view.support.Localization;
 import ru.trader.view.support.NumberField;
@@ -67,7 +69,7 @@ public class StationEditorController {
         sell.setCellFactory(EditOfferCell.forTable(new PriceStringConverter(), true));
         demand.setCellFactory(TextFieldCell.forTableColumn(new LongStringConverter()));
         supply.setCellFactory(TextFieldCell.forTableColumn(new LongStringConverter()));
-        name.setOnAction((v)->distance.requestFocus());
+        name.setOnAction((v) -> distance.requestFocus());
         distance.setOnAction((v) -> {
             items.requestFocus();
             items.getSelectionModel().select(0, buy);
@@ -132,15 +134,21 @@ public class StationEditorController {
     }
 
     public void showDialog(Parent parent, Parent content, StationModel station){
-        showDialog(parent, content, station.getSystem(), station);
-    }
-
-    public void showDialog(Parent parent, Parent content, SystemModel system, StationModel station){
         if (dlg == null){
             createDialog(parent, content);
         }
-        dlg.setTitle(Localization.getString(station == null ? "vEditor.title.add" : "vEditor.title.edit"));
-        updater.init(system, station);
+        dlg.setTitle(Localization.getString("vEditor.title.edit"));
+        updater.edit(station);
+        dlg.showAndWait();
+        updater.reset();
+    }
+
+    public void showDialog(Parent parent, Parent content, SystemModel system){
+        if (dlg == null){
+            createDialog(parent, content);
+        }
+        dlg.setTitle(Localization.getString("vEditor.title.add"));
+        updater.create(system);
         dlg.showAndWait();
         updater.reset();
     }

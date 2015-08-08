@@ -5,7 +5,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.apache.log4j.PropertyConfigurator;
 import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.*;
+import org.controlsfx.dialog.Dialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.controllers.Screeners;
@@ -36,7 +36,7 @@ public class Main extends Application {
         Main.primaryStage = primaryStage;
         loadMainScene();
         loadResources();
-        EMDNUpdater.init();
+        ServicesManager.runAll();
         primaryStage.show();
     }
 
@@ -69,19 +69,19 @@ public class Main extends Application {
     private static void loadMainScene() throws IOException {
         primaryStage.setTitle(Localization.getString("main.title"));
         primaryStage.setMinHeight(590);
-        primaryStage.setScene(new Scene(Screeners.newScreeners(Main.class.getResource("/view/main.fxml"),getUrl("style.css").toExternalForm())));
-        primaryStage.setOnCloseRequest((we)->{
+        primaryStage.setScene(new Scene(Screeners.newScreeners(Main.class.getResource("/view/main.fxml"), getUrl("style.css").toExternalForm())));
+        primaryStage.setOnCloseRequest((we) -> {
             try {
-                if (World.getMarket().isChange()){
+                if (World.getMarket().isChange()) {
                     Action res = Screeners.showConfirm(Localization.getString("dialog.confirm.save"));
                     if (res == Dialog.ACTION_YES) World.save();
                     else if (res == Dialog.ACTION_CANCEL) we.consume();
                 }
-                EMDNUpdater.shutdown();
+                ServicesManager.stopAll();
                 SETTINGS.save();
                 Screeners.closeAll();
             } catch (FileNotFoundException | UnsupportedEncodingException | XMLStreamException e) {
-                LOG.error("Error on save world",e);
+                LOG.error("Error on save world", e);
                 Screeners.showException(e);
             }
         });
@@ -98,6 +98,7 @@ public class Main extends Application {
         Screeners.loadFilterStage(getUrl(("filter.fxml")));
         Screeners.loadItemAddStage(getUrl("itemAdd.fxml"));
         Screeners.loadGroupAddStage(getUrl("groupAdd.fxml"));
+        Screeners.loadLoginStage(getUrl("login.fxml"));
     }
 
     private static URL getUrl(String filename) throws MalformedURLException {

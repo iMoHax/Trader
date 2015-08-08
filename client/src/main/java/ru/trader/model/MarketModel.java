@@ -22,6 +22,7 @@ import ru.trader.services.RoutesSearchTask;
 import ru.trader.view.support.Localization;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 
@@ -123,6 +124,10 @@ public class MarketModel {
 
     public ReadOnlyListProperty<ItemModel> itemsProperty() {
         return items;
+    }
+
+    public Optional<ItemModel> getItem(String id){
+        return Optional.ofNullable(modeler.get(market.getItem(id)));
     }
 
     public ItemModel add(String name, GroupModel group) {

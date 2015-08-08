@@ -9,6 +9,8 @@ import ru.trader.core.OFFER_TYPE;
 import ru.trader.core.SERVICE_TYPE;
 import ru.trader.model.*;
 
+import java.util.Optional;
+
 
 public class StationUpdater {
     private final static Logger LOG = LoggerFactory.getLogger(StationUpdater.class);
@@ -35,7 +37,15 @@ public class StationUpdater {
         this.updateOnly = false;
     }
 
-    public void init(SystemModel system, StationModel station){
+    public void edit(StationModel station){
+        init(station.getSystem(), station);
+    }
+
+    public void create(SystemModel system){
+        init(system, null);
+    }
+
+    private void init(SystemModel system, StationModel station){
         LOG.debug("Init update of {}", station);
         this.station = station;
         this.system = system;
@@ -76,6 +86,10 @@ public class StationUpdater {
         return offers;
     }
 
+    public Optional<FakeOffer> getOffer(final ItemModel item){
+        return offers.stream().filter(o -> o.hasItem(item)).findAny();
+    }
+
     public StationModel getStation() {
         return station;
     }
@@ -88,12 +102,20 @@ public class StationUpdater {
         return name;
     }
 
+    public void setName(String name) {
+        this.name.set(name);
+    }
+
     public double getDistance() {
         return distance.get();
     }
 
     public DoubleProperty distanceProperty() {
         return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance.set(distance);
     }
 
     public BooleanProperty serviceProperty(SERVICE_TYPE service){
@@ -104,7 +126,7 @@ public class StationUpdater {
         offers.add(index, new FakeOffer(item));
     }
 
-    public void commit(){
+    public StationModel commit(){
         LOG.debug("Save changes of {}", station);
         if (isNew()) {
             Notificator notificator = market.getNotificator();
@@ -131,6 +153,7 @@ public class StationUpdater {
             }
             offers.forEach(FakeOffer::commit);
         }
+        return station;
     }
 
     public void reset(){
