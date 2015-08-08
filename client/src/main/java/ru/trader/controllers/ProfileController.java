@@ -73,7 +73,9 @@ public class ProfileController {
             if (!ignoreChanges){
                 profile.setSystem(n);
             }
+            ignoreChanges = true;
             station.setItems(n.getStationsList());
+            ignoreChanges = false;
         });
         station.valueProperty().addListener((ov, o, n) -> {
             if (!ignoreChanges)
