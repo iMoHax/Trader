@@ -274,5 +274,6 @@ public class MarketModel {
         LOG.debug("Refresh names");
         groups.get().forEach(GroupModel::updateName);
         items.get().forEach(ItemModel::updateName);
+        items.sort(ItemModel::compareTo);
     }
 }

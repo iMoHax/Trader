@@ -8,6 +8,7 @@ import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.controllers.MainController;
 import ru.trader.controllers.Screeners;
 import ru.trader.view.support.Localization;
 
@@ -36,8 +37,8 @@ public class Main extends Application {
         Main.primaryStage = primaryStage;
         loadMainScene();
         loadResources();
-        ServicesManager.runAll();
         primaryStage.show();
+        ServicesManager.runAll();
     }
 
 
@@ -61,6 +62,7 @@ public class Main extends Application {
     public static void changeLocale(Locale locale) throws IOException {
         Localization.setLocale(locale);
         primaryStage.hide();
+        MainController.getWorld().refresh();
         loadMainScene();
         loadResources();
         primaryStage.show();

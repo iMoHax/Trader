@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import ru.trader.Main;
 import ru.trader.World;
-import ru.trader.core.MarketFilter;
 import ru.trader.maddavo.Parser;
 import ru.trader.model.*;
 import ru.trader.view.support.Localization;
@@ -73,7 +72,6 @@ public class MainController {
             try {
                 if (n != null) {
                     Main.changeLocale((Locale) n.getUserData());
-                    world.refresh();
                 }
             } catch (IOException e) {
                 LOG.error("Error on change locale to {}", n.getUserData());
@@ -239,9 +237,9 @@ public class MainController {
     }
 
     public void editStation(ActionEvent actionEvent) {
-        StationModel station = offersController.getStation();
+        StationModel station = profile.getStation();
         if (station != null) {
-            Screeners.showEditStation(offersController.getStation());
+            Screeners.showEditStation(station);
         }
     }
 
@@ -310,8 +308,6 @@ public class MainController {
             action.accept(file);
         }
     }
-
-
 
     private void reload(){
         if (world != null) world.getModeler().clear();
