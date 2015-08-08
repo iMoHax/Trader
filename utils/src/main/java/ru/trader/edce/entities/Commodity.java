@@ -1,6 +1,8 @@
 package ru.trader.edce.entities;
 
 
+import java.util.Objects;
+
 public class Commodity {
     private long id;
     private String name;
@@ -82,5 +84,31 @@ public class Commodity {
 
     public void setCategoryname(String categoryname) {
         this.categoryname = categoryname;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Commodity commodity = (Commodity) o;
+        return Objects.equals(id, commodity.id) &&
+                Objects.equals(buyPrice, commodity.buyPrice) &&
+                Objects.equals(sellPrice, commodity.sellPrice) &&
+                Objects.equals(stock, commodity.stock) &&
+                Objects.equals(demand, commodity.demand);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Commodity{" +
+                "id:" + id +
+                ", name:'" + name + '\'' +
+                ", group:'" + categoryname + '\'' +
+                '}';
     }
 }

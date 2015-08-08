@@ -1,5 +1,7 @@
 package ru.trader.edce.entities;
 
+import java.util.Objects;
+
 public class Commander {
     private String name;
     private long credits;
@@ -29,4 +31,18 @@ public class Commander {
         this.docked = docked;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Commander commander = (Commander) o;
+        return Objects.equals(credits, commander.credits) &&
+                Objects.equals(docked, commander.docked) &&
+                Objects.equals(name, commander.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(credits, docked);
+    }
 }

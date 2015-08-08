@@ -131,7 +131,7 @@ public class ProfileModel {
         this.station.set(station);
     }
 
-    public boolean getDocked() {
+    public boolean isDocked() {
         return docked.get();
     }
 

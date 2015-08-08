@@ -15,6 +15,8 @@ import ru.trader.model.*;
 import ru.trader.model.support.StationUpdater;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -25,6 +27,9 @@ public class EDCE {
     private final static Logger LOG = LoggerFactory.getLogger(EMDNUpdater.class);
     private static ScheduledExecutorService executor;
     private static ScheduledFuture<?> checker;
+
+    private final static int CACHE_LIMIT = 8;
+    private List<EDPacket> cache = new LinkedList<>();
 
     private final ProfileModel profile;
     private final MarketModel world;
@@ -38,18 +43,37 @@ public class EDCE {
         this.world = world;
         this.session = new EDSession();
         this.updater = new StationUpdater(world);
-        interval = 5;
-        forceUpdate = true;
+        interval = 20;
+    }
+
+    public void setForceUpdate(boolean forceUpdate) {
+        this.forceUpdate = forceUpdate;
     }
 
     private void parseAndCheck(String json) {
         try {
             EDPacket packet = EDCEParser.parseJSON(json);
+            if (cache.contains(packet)){
+                if (!forceUpdate) {
+                    LOG.debug("Is old packet, skip");
+                    return;
+                }
+            } else {
+                cache.add(packet);
+            }
+            if (cache.size() > CACHE_LIMIT){
+                cache.remove(0);
+            }
             checkCmd(packet.getCommander());
             if (checkSystem(packet.getLastSystem())){
-                checkStarport(packet.getLastStarport());
+                if (profile.isDocked()) {
+                    checkStarport(packet.getLastStarport());
+                } else {
+                    profile.setSystem(ModelFabric.NONE_SYSTEM);
+                }
             }
             checkShip(packet.getShip());
+            forceUpdate = false;
         } catch (IOException e) {
             LOG.warn("Error on parse json:");
             LOG.warn("{}", json);
@@ -75,9 +99,10 @@ public class EDCE {
         boolean found = sModel != ModelFabric.NONE_SYSTEM;
         if (!found){
             LOG.warn("Not found system {}", system.getName());
+            sModel = world.add(system.getName(), 0,0,0);
         }
         profile.setSystem(sModel);
-        return found;
+        return true;
     }
 
     private void checkStarport(Starport starport){
@@ -89,17 +114,13 @@ public class EDCE {
         StationModel station = sModel.get(starport.getName());
         boolean found = station != ModelFabric.NONE_STATION;
         if (!found){
-            forceUpdate = false;
             LOG.info("Not found station {}, adding", starport.getName());
             updater.create(sModel);
             updater.setName(starport.getName());
             station = updateStation(starport);
         } else {
-            if (!profile.getStation().equals(station) || forceUpdate){
-                forceUpdate = false;
-                updater.edit(station);
-                updateStation(starport);
-            }
+            updater.edit(station);
+            updateStation(starport);
         }
         profile.setStation(station);
     }
@@ -107,7 +128,12 @@ public class EDCE {
     private StationModel updateStation(Starport starport) {
         updater.setName(starport.getName());
         for (Commodity commodity : starport.getCommodities()) {
-            Optional<ItemModel> item = world.getItem(Converter.getItemId(commodity.getId()));
+            String id = Converter.getItemId(commodity);
+            if (id.isEmpty()){
+                LOG.debug("{} is ignored, skip", commodity.getName());
+                continue;
+            }
+            Optional<ItemModel> item = world.getItem(id);
             if (item.isPresent()){
                 Optional<StationUpdater.FakeOffer> offer = updater.getOffer(item.get());
                 if (offer.isPresent()){
@@ -116,7 +142,7 @@ public class EDCE {
                     LOG.error("Not found offer in updater, item: {}", item.get());
                 }
             } else {
-                LOG.warn("Not found item id: {}, name: {}, group: {}", commodity.getId(), commodity.getName(), commodity.getCategoryname());
+                LOG.warn("Not found {}, id={}", commodity, id);
             }
         }
         StationModel res = updater.commit();
@@ -125,8 +151,8 @@ public class EDCE {
     }
 
     private void fillOffers(StationUpdater.FakeOffer offer, Commodity commodity){
-        offer.setBprice(commodity.getBuyPrice());
-        offer.setSprice(commodity.getSellPrice());
+        offer.setSprice(commodity.getBuyPrice());
+        offer.setBprice(commodity.getSellPrice());
         offer.setDemand(commodity.getDemand());
         offer.setSupply(commodity.getStock());
     }
@@ -142,8 +168,8 @@ public class EDCE {
 
     public void run(){
         if (executor == null) executor = Executors.newSingleThreadScheduledExecutor();
-        LOG.debug("Start EDCE checker each {} sec", interval);
-        checker = executor.scheduleAtFixedRate(new EDCEChecker(), interval, interval, TimeUnit.SECONDS);
+        LOG.info("Start EDCE checker each {} sec", interval);
+        checker = executor.scheduleAtFixedRate(new EDCEChecker(), 1, interval, TimeUnit.SECONDS);
     }
 
     public void shutdown() throws IOException {
@@ -169,7 +195,7 @@ public class EDCE {
                     LOG.trace("Read profile from ED");
                     session.readProfile(EDCE.this::parseAndCheck);
                 }
-                if (session.getLastStatus() == ED_SESSION_STATUS.LOGIN_REQUIRED) {
+                if (session.getLastStatus() == ED_SESSION_STATUS.LOGIN_REQUIRED || session.getLastStatus() == ED_SESSION_STATUS.LOGIN_FAILED) {
                     waiting = true;
                     Platform.runLater(() -> {
                                 Optional<Pair<String, String>> login = Screeners.showLogin();
@@ -193,6 +219,17 @@ public class EDCE {
                                 waiting = false;
                             }
                     );
+                }
+                if (session.getLastStatus() == ED_SESSION_STATUS.VERIFICATION_REQUIRED){
+                    waiting = true;
+                    Platform.runLater(() -> {
+                        LOG.trace("Verification required, send request");
+                        Optional<String> code = Screeners.showVerifyCodeDialog();
+                        if (code.isPresent()) {
+                            session.submitVerifyCode(code.get());
+                        }
+                        waiting = false;
+                    });
                 }
             } catch (Exception ex){
                 LOG.error("",ex);

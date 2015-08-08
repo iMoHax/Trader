@@ -115,7 +115,7 @@ public class EDSession {
     }
 
     public void readProfile(Consumer<String> contentConsumer){
-        LOG.info("Submit profile request to {}", COMPANION_DOMAIN);
+        LOG.debug("Submit profile request to {}", COMPANION_DOMAIN);
         HttpUriRequest submitRequest = RequestBuilder.get(PROFILE_URL).build();
         EDResponseHandler handler = new EDResponseHandler(content -> {
             if (lastStatus != ED_SESSION_STATUS.OK){

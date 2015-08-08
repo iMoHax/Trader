@@ -1,5 +1,7 @@
 package ru.trader.edce;
 
+import ru.trader.edce.entities.Commodity;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -112,8 +114,12 @@ public class Converter {
 
     }
 
-    public static String getItemId(long edId){
-        return ITEM_ID.get(edId);
+    public static String getItemId(Commodity commodity){
+        String id = ITEM_ID.get(commodity.getId());
+        if (id == null){
+            id = commodity.getName().toLowerCase().replace(" ","_");
+        }
+        return id;
     }
 
     public static String getGroupId(String edName){

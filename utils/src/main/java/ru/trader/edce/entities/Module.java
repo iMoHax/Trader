@@ -1,5 +1,7 @@
 package ru.trader.edce.entities;
 
+import java.util.Objects;
+
 public class Module {
     private long id;
     private String category;
@@ -36,5 +38,19 @@ public class Module {
 
     public void setCost(long cost) {
         this.cost = cost;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Module module = (Module) o;
+        return Objects.equals(id, module.id) &&
+                Objects.equals(cost, module.cost);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

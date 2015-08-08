@@ -1,5 +1,7 @@
 package ru.trader.edce.entities;
 
+import java.util.Objects;
+
 public class Fuel {
     private double capacity;
     private double lvl;
@@ -18,5 +20,19 @@ public class Fuel {
 
     public void setLvl(double lvl) {
         this.lvl = lvl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Fuel fuel = (Fuel) o;
+        return Objects.equals(capacity, fuel.capacity) &&
+                Objects.equals(lvl, fuel.lvl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(capacity);
     }
 }

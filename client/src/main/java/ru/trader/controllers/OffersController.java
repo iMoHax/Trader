@@ -3,17 +3,21 @@ package ru.trader.controllers;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import org.controlsfx.control.SegmentedButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javafx.fxml.FXML;
 import ru.trader.core.SERVICE_TYPE;
-import ru.trader.model.*;
+import ru.trader.model.MarketModel;
+import ru.trader.model.OfferModel;
+import ru.trader.model.StationModel;
+import ru.trader.model.SystemModel;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.model.support.ChangeMarketListener;
+import ru.trader.view.support.ViewUtils;
 
 import java.util.List;
 
@@ -220,37 +224,41 @@ public class OffersController {
         @Override
         public void priceChange(OfferModel offer, double oldPrice, double newPrice) {
             if (station.hasBuy(offer.getItem()) || station.hasSell(offer.getItem())){
-                sort();
+                ViewUtils.doFX(OffersController.this::sort);
             }
         }
 
         @Override
         public void add(OfferModel offer) {
             if (offer.getStation().equals(station)){
-                addOffer(offer);
+                ViewUtils.doFX(()-> addOffer(offer));
             }
         }
 
         @Override
         public void add(StationModel station) {
-            stationsBar.getButtons().add(buildStationNode(station));
-            refresh();
-            sort();
+            ViewUtils.doFX(() -> {
+                stationsBar.getButtons().add(buildStationNode(station));
+                refresh();
+                sort();
+            });
         }
 
         @Override
         public void remove(OfferModel offer) {
             if (offer.getStation().equals(station)){
-                removeOffer(offer);
+                ViewUtils.doFX(() -> removeOffer(offer));
             }
         }
 
         @Override
         public void remove(StationModel station) {
-            stationsBar.getToggleGroup().getSelectedToggle().setSelected(false);
-            stationsBar.getButtons().removeIf(b -> b.getUserData().equals(station));
-            refresh();
-            sort();
+            ViewUtils.doFX(() -> {
+                stationsBar.getToggleGroup().getSelectedToggle().setSelected(false);
+                stationsBar.getButtons().removeIf(b -> b.getUserData().equals(station));
+                refresh();
+                sort();
+            });
         }
 
     }

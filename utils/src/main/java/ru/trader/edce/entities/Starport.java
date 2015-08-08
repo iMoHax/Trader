@@ -1,9 +1,6 @@
 package ru.trader.edce.entities;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Starport {
     private long id;
@@ -50,5 +47,19 @@ public class Starport {
 
     public void setModules(Map<String, Module> modules) {
         this.modules = modules;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Starport starport = (Starport) o;
+        return Objects.equals(id, starport.id) &&
+                Objects.equals(commodities, starport.commodities);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
