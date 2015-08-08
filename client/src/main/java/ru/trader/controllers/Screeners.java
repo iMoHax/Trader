@@ -5,7 +5,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialogs;
 import ru.trader.EMDNUpdater;
@@ -30,6 +32,7 @@ public class Screeners {
     private static Parent filterScreen;
     private static Parent itemAddScreen;
     private static Parent groupAddScreen;
+    private static Parent loginScreen;
 
     private static MainController mainController;
     private static ItemDescController itemDescController;
@@ -41,6 +44,7 @@ public class Screeners {
     private static FilterController filterController;
     private static ItemAddController itemAddController;
     private static GroupAddController groupAddController;
+    private static LoginController loginController;
 
     private static FXMLLoader initLoader(URL url){
         FXMLLoader loader = new FXMLLoader(url, Localization.getResources());
@@ -132,6 +136,13 @@ public class Screeners {
         groupAddController = loader.getController();
     }
 
+    public static void loadLoginStage(URL fxml) throws IOException {
+        FXMLLoader loader =  initLoader(fxml);
+        loginScreen = loader.load();
+        addStylesheet(loginScreen);
+        loginController = loader.getController();
+    }
+
     public static void show(Node node){
         mainController.getMainPane().setCenter(node);
     }
@@ -158,7 +169,7 @@ public class Screeners {
     }
 
     public static void showAddStation(SystemModel system){
-        vEditorController.showDialog(mainScreen, vEditorScreen, system, null);
+        vEditorController.showDialog(mainScreen, vEditorScreen, system);
     }
 
     public static void showEditStation(StationModel station){
@@ -207,6 +218,25 @@ public class Screeners {
 
     public static Optional<MarketFilter> showFilter(MarketFilter filter) {
         return filterController.showDialog(mainScreen, filterScreen, filter);
+    }
+
+    public static Optional<Pair<String, String>> showLogin() {
+        return loginController.showDialog(mainScreen, loginScreen);
+    }
+
+    public static Optional<String> showVerifyCodeDialog(){
+        return showTextDialog(Localization.getString("verify.title"),
+                Localization.getString("verify.header"),
+                Localization.getString("verify.content")
+                );
+    }
+
+    public static Optional<String> showTextDialog(String title, String header, String content){
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle(title);
+        dialog.setHeaderText(header);
+        dialog.setContentText(content);
+        return dialog.showAndWait();
     }
 
     public static void reinitAll() {

@@ -1,0 +1,12 @@
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="ru.trader.controllers.LoginController">
+    <Label text="%login.text.email"/>
+    <TextField fx:id="email" GridPane.columnIndex="1" promptText="%login.text.email"/>
+    <Label text="%login.text.password" GridPane.rowIndex="1"/>
+    <PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="%login.text.password"/>
+</GridPane>
+
