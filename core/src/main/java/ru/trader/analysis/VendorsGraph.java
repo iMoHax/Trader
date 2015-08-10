@@ -426,7 +426,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             int jumps = source.getEntry().getPlace().equals(target.getEntry().getPlace())? 0 : 1;
             int lands = 1;
             if (path != null){
-                jumps = path.size()-1;
+                jumps = path.size();
                 lands += path.getRefillCount();
                 //not lands if refuel on this station
                 if (path.isRefill()) lands--;
