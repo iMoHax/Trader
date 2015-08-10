@@ -64,13 +64,13 @@ public class RouteSearcherTest extends Assert{
         LOG.info("Start test routes, 3 lands");
         RouteSearcher searcher = new RouteSearcher(scorer);
 
-        Route route = new Route(new RouteEntry(ithaca_st, false, 3.3789702637348586d, 0));
-        route.add(new RouteEntry(morgor.asTransit(), false, 4.137765020523591d, 0));
-        route.add(new RouteEntry(lhs3006.asTransit(), false, 4.0674474942172765d, 0));
-        route.add(new RouteEntry(lhs3262_st, true, 4.149937831634785d, 0));
-        route.add(new RouteEntry(lhs3006.asTransit(), false, 4.1292528548103d, 0));
-        route.add(new RouteEntry(morgor.asTransit(), false, 3.3050364899848566, 0));
-        route.add(new RouteEntry(ithaca_st, false, 0, 0));
+        Route route = new Route(new RouteEntry(ithaca_st, 0, 3.3789702637348586d, 0));
+        route.add(new RouteEntry(morgor.asTransit(), 0, 4.137765020523591d, 0));
+        route.add(new RouteEntry(lhs3006.asTransit(), 0, 4.0674474942172765d, 0));
+        route.add(new RouteEntry(lhs3262_st, 15, 4.149937831634785d, 0));
+        route.add(new RouteEntry(lhs3006.asTransit(), 0, 4.1292528548103d, 0));
+        route.add(new RouteEntry(morgor.asTransit(), 0, 3.3050364899848566, 0));
+        route.add(new RouteEntry(ithaca_st, 0, 0, 0));
         RouteFiller filler = new RouteFiller(scorer);
         filler.fill(route);
 
@@ -88,17 +88,17 @@ public class RouteSearcherTest extends Assert{
 
         LOG.info("Start test routes, 4 lands");
         profile.setLands(4);
-        route = new Route(new RouteEntry(ithaca_st, false, 3.3789702637348586d, 0));
-        route.add(new RouteEntry(morgor.asTransit(), false, 4.137765020523591d, 0));
-        route.add(new RouteEntry(lhs3006.asTransit(), false, 4.0674474942172765d, 0));
-        route.add(new RouteEntry(lhs3262_st, true, 0.644029909978323d, 0));
-        route.add(new RouteEntry(dnDraconis.asTransit(), false, 4.437544442558194d, 0));
-        route.add(new RouteEntry(cmDraco_st, false, 4.385307711185104d, 0));
-        route.add(new RouteEntry(dnDraconis.asTransit(), false, 0.6279317619086441d, 0));
-        route.add(new RouteEntry(lhs3262_st, true, 4.149937831634785d, 0));
-        route.add(new RouteEntry(lhs3006.asTransit(), false, 4.1292528548103d, 0));
-        route.add(new RouteEntry(morgor.asTransit(), false, 3.3050364899848566, 0));
-        route.add(new RouteEntry(ithaca_st, false, 0, 0));
+        route = new Route(new RouteEntry(ithaca_st, 0, 3.3789702637348586d, 0));
+        route.add(new RouteEntry(morgor.asTransit(), 0, 4.137765020523591d, 0));
+        route.add(new RouteEntry(lhs3006.asTransit(), 0, 4.0674474942172765d, 0));
+        route.add(new RouteEntry(lhs3262_st, 15, 0.644029909978323d, 0));
+        route.add(new RouteEntry(dnDraconis.asTransit(), 0, 4.437544442558194d, 0));
+        route.add(new RouteEntry(cmDraco_st, 0, 4.385307711185104d, 0));
+        route.add(new RouteEntry(dnDraconis.asTransit(), 0, 0.6279317619086441d, 0));
+        route.add(new RouteEntry(lhs3262_st, 15, 4.149937831634785d, 0));
+        route.add(new RouteEntry(lhs3006.asTransit(), 0, 4.1292528548103d, 0));
+        route.add(new RouteEntry(morgor.asTransit(), 0, 3.3050364899848566, 0));
+        route.add(new RouteEntry(ithaca_st, 0, 0, 0));
         filler = new RouteFiller(scorer);
         filler.fill(route);
 
@@ -108,7 +108,7 @@ public class RouteSearcherTest extends Assert{
 
         apaths = searcher.getRoutes(ithaca_st, ithaca_st, fWorld.getMarkets(true).collect(Collectors.toList()));
         actual = apaths.stream().findFirst().get();
-        assertEquals("Routes is different", route, actual);
+        assertEquals(route, actual);
 
     }
 }

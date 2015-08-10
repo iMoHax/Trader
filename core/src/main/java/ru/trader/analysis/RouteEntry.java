@@ -12,10 +12,10 @@ public class RouteEntry {
     private final double fuel;
     private final List<Order> orders;
     private boolean land;
-    private boolean refill;
+    private double refill;
     private double score;
 
-    public RouteEntry(Vendor vendor, boolean refill, double fuel, double score) {
+    public RouteEntry(Vendor vendor, double refill, double fuel, double score) {
         orders = new ArrayList<>();
         this.vendor = vendor;
         this.refill = refill;
@@ -32,10 +32,14 @@ public class RouteEntry {
     }
 
     public boolean isRefill() {
+        return refill > 0;
+    }
+
+    public double getRefill(){
         return refill;
     }
 
-    void setRefill(boolean refill) {
+    void setRefill(double refill) {
         this.refill = refill;
     }
 
@@ -72,7 +76,7 @@ public class RouteEntry {
     }
 
     public boolean isLand(){
-        return land || refill || !orders.isEmpty();
+        return land || isRefill() || !orders.isEmpty();
     }
 
     void setLand(boolean land) {
@@ -104,7 +108,7 @@ public class RouteEntry {
         temp = Double.doubleToLongBits(fuel);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (land ? 1 : 0);
-        result = 31 * result + (refill ? 1 : 0);
+        result = 31 * result + (isRefill() ? 1 : 0);
         temp = Double.doubleToLongBits(score);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;

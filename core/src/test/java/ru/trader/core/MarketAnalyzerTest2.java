@@ -31,13 +31,13 @@ public class MarketAnalyzerTest2 extends Assert {
         Vendor lhs3006 = market.get("LHS 3006").asTransit();
         Vendor lhs3262 = market.get("LHS 3262").get().iterator().next();
         Collection<Route> paths = analyzer.getRoutes(ithaca, ithaca);
-        Route expect = new Route(new RouteEntry(ithaca, false, 3.3789702637348586d, 0));
-        expect.add(new RouteEntry(morgor, false, 4.137765020523591d, 0));
-        expect.add(new RouteEntry(lhs3006, false, 4.0674474942172765d, 0));
-        expect.add(new RouteEntry(lhs3262, true, 4.149937831634785d, 0));
-        expect.add(new RouteEntry(lhs3006, false, 4.1292528548103d, 0));
-        expect.add(new RouteEntry(morgor, false, 3.3050364899848566, 0));
-        expect.add(new RouteEntry(ithaca, false, 0, 0));
+        Route expect = new Route(new RouteEntry(ithaca, 0, 3.3789702637348586d, 0));
+        expect.add(new RouteEntry(morgor, 0, 4.137765020523591d, 0));
+        expect.add(new RouteEntry(lhs3006, 0, 4.0674474942172765d, 0));
+        expect.add(new RouteEntry(lhs3262, 15, 4.149937831634785d, 0));
+        expect.add(new RouteEntry(lhs3006, 0, 4.1292528548103d, 0));
+        expect.add(new RouteEntry(morgor, 0, 3.3050364899848566, 0));
+        expect.add(new RouteEntry(ithaca, 0, 0, 0));
         RouteFiller filler = new RouteFiller(new Scorer(fWorld, profile));
         filler.fill(expect);
 

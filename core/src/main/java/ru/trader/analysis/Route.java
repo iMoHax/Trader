@@ -103,7 +103,7 @@ public class Route implements Comparable<Route> {
             entries.remove(entries.size()-1);
         } else {
             LOG.trace("Is not connected route, set refill");
-            end.setRefill(true);
+            end.setRefill(end.getFuel());
         }
         entries.addAll(route.entries);
         updateStats();

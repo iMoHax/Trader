@@ -51,8 +51,8 @@ public class RouteFillerTest extends Assert {
         v2.addOffer(OFFER_TYPE.BUY, ITEM2, 350, -1);
         v2.addOffer(OFFER_TYPE.BUY, ITEM3, 400, -1);
 
-        Route route = new Route(new RouteEntry(v1, false, 0,0));
-        route.add(new RouteEntry(v2, false, 0,0));
+        Route route = new Route(new RouteEntry(v1, 0, 0,0));
+        route.add(new RouteEntry(v2, 0, 0,0));
 
         return route;
     }
@@ -93,9 +93,9 @@ public class RouteFillerTest extends Assert {
         v3.addOffer(OFFER_TYPE.BUY, ITEM2, 350, -1);
         v3.addOffer(OFFER_TYPE.BUY, ITEM3, 400, -1);
 
-        Route route = new Route(new RouteEntry(v1, false, 0,0));
-        route.add(new RouteEntry(v2, false, 0,0));
-        route.add(new RouteEntry(v3, false, 0,0));
+        Route route = new Route(new RouteEntry(v1, 0, 0,0));
+        route.add(new RouteEntry(v2, 0, 0,0));
+        route.add(new RouteEntry(v3, 0, 0,0));
 
         return route;
     }
@@ -142,10 +142,10 @@ public class RouteFillerTest extends Assert {
         v3.addOffer(OFFER_TYPE.BUY, ITEM1, 200, -1);
         v4.addOffer(OFFER_TYPE.BUY, ITEM3, 450, -1);
 
-        Route route = new Route(new RouteEntry(v1, false, 0,0));
-        route.add(new RouteEntry(v2, false, 0,0));
-        route.add(new RouteEntry(v3, false, 0,0));
-        route.add(new RouteEntry(v4, false, 0,0));
+        Route route = new Route(new RouteEntry(v1, 0, 0,0));
+        route.add(new RouteEntry(v2, 0, 0,0));
+        route.add(new RouteEntry(v3, 0, 0,0));
+        route.add(new RouteEntry(v4, 0, 0,0));
 
         return route;
     }
@@ -224,11 +224,11 @@ public class RouteFillerTest extends Assert {
         v4.addOffer(OFFER_TYPE.BUY, ITEM3, 370, -1);
         v5.addOffer(OFFER_TYPE.BUY, ITEM1, 400, -1);
 
-        Route route = new Route(new RouteEntry(v1, false, 0,0));
-        route.add(new RouteEntry(v2, false, 0,0));
-        route.add(new RouteEntry(v3, false, 0,0));
-        route.add(new RouteEntry(v4, false, 0,0));
-        route.add(new RouteEntry(v5, false, 0,0));
+        Route route = new Route(new RouteEntry(v1, 0, 0,0));
+        route.add(new RouteEntry(v2, 0, 0,0));
+        route.add(new RouteEntry(v3, 0, 0,0));
+        route.add(new RouteEntry(v4, 0, 0,0));
+        route.add(new RouteEntry(v5, 0, 0,0));
 
         return route;
     }
@@ -287,10 +287,10 @@ public class RouteFillerTest extends Assert {
         v3.addOffer(OFFER_TYPE.BUY, ITEM1, 200, -1);
         v4.addOffer(OFFER_TYPE.BUY, ITEM3, 450, -1);
 
-        Route route = new Route(new RouteEntry(v1, false, 0,0));
-        route.add(new RouteEntry(v2, false, 0,0));
-        route.add(new RouteEntry(v3, false, 0,0));
-        route.add(new RouteEntry(v4, false, 0,0));
+        Route route = new Route(new RouteEntry(v1, 0, 0,0));
+        route.add(new RouteEntry(v2, 0, 0,0));
+        route.add(new RouteEntry(v3, 0, 0,0));
+        route.add(new RouteEntry(v4, 0, 0,0));
 
         return route;
     }
@@ -369,8 +369,8 @@ public class RouteFillerTest extends Assert {
 
         v2.addOffer(OFFER_TYPE.BUY, ITEM2, 225, -1);
 
-        Route route = new Route(new RouteEntry(v1, false, 0,0));
-        route.add(new RouteEntry(v2, false, 0,0));
+        Route route = new Route(new RouteEntry(v1, 0, 0,0));
+        route.add(new RouteEntry(v2, 0, 0,0));
 
 
         return route;
@@ -386,9 +386,9 @@ public class RouteFillerTest extends Assert {
         v3.addOffer(OFFER_TYPE.BUY, ITEM1, 200, -1);
         v4.addOffer(OFFER_TYPE.BUY, ITEM3, 450, -1);
 
-        Route route = new Route(new RouteEntry(v2, false, 0,0));
-        route.add(new RouteEntry(v3, false, 0,0));
-        route.add(new RouteEntry(v4, false, 0,0));
+        Route route = new Route(new RouteEntry(v2, 0, 0,0));
+        route.add(new RouteEntry(v3, 0, 0,0));
+        route.add(new RouteEntry(v4, 0, 0,0));
 
         return route;
     }

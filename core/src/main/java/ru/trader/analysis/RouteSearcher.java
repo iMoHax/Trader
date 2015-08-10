@@ -123,7 +123,7 @@ public class RouteSearcher {
             for (int k = 0; k < transitEdges.size(); k++) {
                 ConnectibleEdge<Vendor> edge = transitEdges.get(k);
                 Vendor vendor = edge.getSource().getEntry();
-                RouteEntry entry = new RouteEntry(vendor, edge.isRefill(), edge.getFuelCost(), 0);
+                RouteEntry entry = new RouteEntry(vendor, edge.getRefill(), edge.getFuelCost(), 0);
                 if (buyer != null && vendor.equals(buyer)) {
                     entry.setLand(true);
                     buyer = null;
@@ -140,7 +140,7 @@ public class RouteSearcher {
             }
         }
         if (vEdge != null) {
-            RouteEntry entry = new RouteEntry(vEdge.getTarget().getEntry(), false, 0, 0);
+            RouteEntry entry = new RouteEntry(vEdge.getTarget().getEntry(), 0, 0, 0);
             if (buyer != null) entry.setLand(true);
             entries.add(entry);
         }
@@ -160,10 +160,10 @@ public class RouteSearcher {
         for (int i = 0; i < edges.size(); i++) {
             ConnectibleEdge<Place> edge = (ConnectibleEdge<Place>) edges.get(i);
             Vendor vendor = i == 0 ? from : edge.getSource().getEntry().asTransit();
-            RouteEntry entry = new RouteEntry(vendor, edge.isRefill(), edge.getFuelCost(), 0);
+            RouteEntry entry = new RouteEntry(vendor, edge.getRefill(), edge.getFuelCost(), 0);
             entries.add(entry);
             if (i == edges.size()-1){
-                entry = new RouteEntry(to, false, 0, 0);
+                entry = new RouteEntry(to, 0, 0, 0);
                 entry.setLand(true);
                 entries.add(entry);
             }

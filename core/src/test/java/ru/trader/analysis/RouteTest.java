@@ -28,9 +28,9 @@ public class RouteTest extends Assert {
         v3 = new SimpleVendor("v3",0,0,0);
         v4 = new SimpleVendor("v4",0,0,0);
 
-        Route path = new Route(new RouteEntry(v1, false, 0,0));
-        path.add(new RouteEntry(v2, false, 0,0));
-        path.add(new RouteEntry(v3, false, 0,0));
+        Route path = new Route(new RouteEntry(v1, 0, 0,0));
+        path.add(new RouteEntry(v2, 0, 0,0));
+        path.add(new RouteEntry(v3, 0, 0,0));
         TestUtil.assertCollectionContainAll(path.getVendors(), v1, v2, v3);
     }
 
@@ -42,9 +42,9 @@ public class RouteTest extends Assert {
         v3 = new SimpleVendor("v3",0,0,0);
         v4 = new SimpleVendor("v4",0,0,0);
 
-        Route path = new Route(new RouteEntry(v1, false, 0,0));
-        path.add(new RouteEntry(v2, false, 0,0));
-        path.add(new RouteEntry(v3, false, 0,0));
+        Route path = new Route(new RouteEntry(v1, 0, 0,0));
+        path.add(new RouteEntry(v2, 0, 0,0));
+        path.add(new RouteEntry(v3, 0, 0,0));
         Collection<Vendor> vendors = new ArrayList<>();
         Collections.addAll(vendors, v1, v2, v3);
         assertTrue(path.contains(vendors));
