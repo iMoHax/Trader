@@ -176,11 +176,11 @@ public class MarketAnalyzer {
     }
 
     public Route getPath(Vendor from, Vendor to){
-        return RouteSearcher.toRoute(from, to, searcher.getPath(from.getPlace(), to.getPlace(), getPlaces()));
+        return RouteSearcher.toRoute(from, to, searcher.getPath(from.getPlace(), to.getPlace(), getPlaces()), searcher.getScorer());
     }
 
     public Route getPath(Order order){
-        return RouteSearcher.toRoute(order, searcher.getPath(order.getSeller().getPlace(), order.getBuyer().getPlace(), getPlaces()));
+        return RouteSearcher.toRoute(order, searcher.getPath(order.getSeller().getPlace(), order.getBuyer().getPlace(), getPlaces()), searcher.getScorer());
     }
 
     public Collection<Route> getTopRoutes(int limit){

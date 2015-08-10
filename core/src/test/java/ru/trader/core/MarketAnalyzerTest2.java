@@ -45,7 +45,7 @@ public class MarketAnalyzerTest2 extends Assert {
         assertTrue(path.isPresent());
         Route actual = path.get();
         assertEquals(expect, actual);
-        assertEquals(981200, actual.getProfit(), 0.00001);
+        assertEquals(978883.1, actual.getProfit(), 0.1);
         assertEquals(72.42, actual.getDistance(), 0.01);
         assertEquals(2, actual.getLands());
     }
@@ -78,7 +78,7 @@ public class MarketAnalyzerTest2 extends Assert {
         assertTrue(path.isPresent());
         Route actual = path.get();
 
-        assertEquals(199056, actual.getProfit(), 0.00001);
+        assertEquals(198127.6, actual.getProfit(), 0.1);
         assertEquals(28.72, actual.getDistance(), 0.01);
         assertEquals(2, actual.getLands());
 

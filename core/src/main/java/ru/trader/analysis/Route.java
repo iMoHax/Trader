@@ -13,8 +13,8 @@ public class Route implements Comparable<Route> {
     private double profit = 0;
     private double balance = 0;
     private double distance = 0;
-    private double score = 0;
     private double fuel = 0;
+    private double time = 0;
     private int lands = 0;
     private int refills = 0;
 
@@ -62,6 +62,18 @@ public class Route implements Comparable<Route> {
 
     public int getRefills() {
         return refills;
+    }
+
+    public double getTime() {
+        return time;
+    }
+
+    public double getFuel() {
+        return fuel;
+    }
+
+    public double getScore() {
+        return profit / time;
     }
 
     public void add(RouteEntry entry){
@@ -120,7 +132,7 @@ public class Route implements Comparable<Route> {
     }
 
     void updateStats(){
-        LOG.trace("Update stats, old: profit={}, distance={}, lands={}, fuel={}, refills={}, score={}", profit, distance, lands, fuel, refills, score);
+        LOG.trace("Update stats, old: profit={}, distance={}, lands={}, fuel={}, refills={}, time={}", profit, distance, lands, fuel, refills, time);
         profit = 0; distance = 0; lands = 0; fuel = 0; refills = 0;
         if (entries.isEmpty()) return;
         RouteEntry entry = entries.get(0);
@@ -128,7 +140,7 @@ public class Route implements Comparable<Route> {
             RouteEntry next = entries.get(i);
             distance += entry.getVendor().getDistance(next.getVendor());
             profit += entry.getProfit();
-            score += entry.getScore();
+            time += entry.getFullTime();
             fuel += entry.getFuel();
             if (entry.isLand()){
                 lands++;
@@ -138,12 +150,12 @@ public class Route implements Comparable<Route> {
             }
             entry = next;
         }
-        LOG.trace("new stats profit={}, distance={}, lands={}, fuel={}, score={}", profit, distance, lands, fuel, score);
+        LOG.trace("new stats profit={}, distance={}, lands={}, fuel={}, time={}", profit, distance, lands, fuel, time);
     }
 
     @Override
     public int compareTo(Route o) {
-        return Double.compare(score, o.score);
+        return Double.compare(getScore(), o.getScore());
     }
 
     @Override
@@ -151,7 +163,7 @@ public class Route implements Comparable<Route> {
         if (this == o) return true;
         if (!(o instanceof Route)) return false;
         Route route = (Route) o;
-        return Double.compare(route.profit, profit) == 0 && entries.equals(route.entries);
+        return (Double.compare(route.profit, profit) == 0 || Math.abs(profit - route.profit) < 0.1)&& entries.equals(route.entries);
     }
 
     @Override
@@ -166,7 +178,8 @@ public class Route implements Comparable<Route> {
                 ", profit=" + profit +
                 ", balance=" + balance +
                 ", distance=" + distance +
-                ", score=" + score +
+                ", time=" + time +
+                ", score=" + getScore() +
                 ", fuel=" + fuel +
                 ", lands=" + lands +
                 '}';

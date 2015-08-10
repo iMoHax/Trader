@@ -383,8 +383,17 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             return path.getRemain();
         }
 
+        @Override
         public boolean isRefill() {
             return path.isRefill();
+        }
+
+        @Override
+        public double getFuelCost() {
+            if (path != null){
+                return path.getFuelCost();
+            }
+            return super.getFuelCost();
         }
 
         public TransitPath getPath() {
@@ -415,11 +424,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         }
 
         protected double computeProfit(){
-            double fuel = fuelCost;
-            if (path != null){
-                fuel = path.getFuelCost();
-            }
-            return scorer.getProfit(getProfit(), fuel);
+            return scorer.getProfitByTonne(getProfit(), getFuelCost());
         }
 
         protected double computeTime(){

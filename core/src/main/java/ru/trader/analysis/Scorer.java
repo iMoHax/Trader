@@ -95,15 +95,6 @@ public class Scorer {
         return avgDistance;
     }
 
-    public double getScore(RouteEntry entry, int jumps) {
-        int lands = entry.isLand() ? 1 : 0;
-        return getScore(entry.getVendor(), entry.getProfit(), jumps, lands, entry.getFuel());
-    }
-
-    public double getScore(Vendor vendor, double profit, int jumps, int lands, double fuel) {
-        return getScore(vendor.getDistance(), profit, jumps, lands, fuel);
-    }
-
     private double getTime(double distance){
         double a = 6000;
         double b = 673;
@@ -111,10 +102,24 @@ public class Scorer {
         return Math.log(distance + a)*b*profile.getDistanceTime() - c;
     }
 
+    public double getProfitByTonne(double profit, double fuel){
+        return getProfit(profit, fuel) / profile.getShip().getCargo();
+    }
+
     public double getProfit(double profit, double fuel){
         profit -= profile.getFuelPrice() * fuel;
-        profit = profit / profile.getShip().getCargo();
         return profit;
+    }
+
+    public double getTime(RouteEntry entry, RouteEntry prev) {
+        if (prev == null) return 0;
+        int lands = entry.isLand() ? 1 : 0;
+        int jumps = prev.getVendor().getPlace().equals(entry.getVendor().getPlace()) ? 0 : 1;
+        double time = getTime(entry.getVendor().getDistance(), jumps, lands);
+        if (!prev.isLand()){
+            time = time - profile.getTakeoffTime() + profile.getRechargeTime();
+        }
+        return time;
     }
 
     public double getTime(double distance, int jumps, int lands){
@@ -122,15 +127,25 @@ public class Scorer {
         if (jumps > 0){
             time += profile.getJumpTime() + (jumps-1) * (profile.getRechargeTime() + profile.getJumpTime());
         }
-        if (profile.getLandingTime() > 0){
+        if (profile.getLandingTime() > 0 & lands > 0){
             time += (lands-1)*(getTime(avgDistance) + profile.getLandingTime() + profile.getTakeoffTime()) + getTime(distance) + profile.getLandingTime();
         }
         return time;
     }
 
+    public double getScore(RouteEntry entry, RouteEntry prev) {
+        int lands = prev.isLand() ? 1 : 0;
+        int jumps = prev.getVendor().getPlace().equals(entry.getVendor().getPlace())? 0 : 1;
+        return getScore(prev.getVendor(), prev.getProfit(), jumps, lands, prev.getFuel());
+    }
+
+    public double getScore(Vendor vendor, double profit, int jumps, int lands, double fuel) {
+        return getScore(vendor.getDistance(), profit, jumps, lands, fuel);
+    }
+
     public double getScore(double distance, double profit, int jumps, int lands, double fuel){
         LOG.trace("Compute score distance={}, profit={}, jumps={}, lands={}, fuel={}", distance, profit, jumps, lands, fuel);
-        double score = getProfit(profit, fuel)/getTime(distance, jumps, lands);
+        double score = getProfitByTonne(profit, fuel)/getTime(distance, jumps, lands);
         LOG.trace("score={}", score);
         return score;
     }

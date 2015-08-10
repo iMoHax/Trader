@@ -13,14 +13,16 @@ public class RouteEntry {
     private final List<Order> orders;
     private boolean land;
     private double refill;
-    private double score;
+    private double profit;
+    private double time;
+    private double fulltime;
 
-    public RouteEntry(Vendor vendor, double refill, double fuel, double score) {
+    public RouteEntry(Vendor vendor, double refill, double fuel, double profit) {
         orders = new ArrayList<>();
         this.vendor = vendor;
         this.refill = refill;
         this.fuel = fuel;
-        this.score = score;
+        this.profit = profit;
     }
 
     public Vendor getVendor() {
@@ -47,12 +49,28 @@ public class RouteEntry {
         return fuel;
     }
 
-    public double getScore() {
-        return score;
+    public double getProfit() {
+        return profit;
     }
 
-    void setScore(double score) {
-        this.score = score;
+    void setProfit(double profit) {
+        this.profit = profit;
+    }
+
+    public double getTime() {
+        return time;
+    }
+
+    void setTime(double time) {
+        this.time = time;
+    }
+
+    public double getFullTime() {
+        return fulltime;
+    }
+
+    void setFullTime(double fullTime) {
+        this.fulltime = fullTime;
     }
 
     void add(Order order){
@@ -71,7 +89,7 @@ public class RouteEntry {
         orders.clear();
     }
 
-    public double getProfit(){
+    public double getProfitByOrders(){
         return orders.stream().mapToDouble(Order::getProfit).sum();
     }
 
@@ -97,6 +115,7 @@ public class RouteEntry {
         if (refill != that.refill) return false;
         if (Double.compare(that.fuel, fuel) != 0) return false;
         if (orders.size() != that.orders.size()) return false;
+        if (time != that.time) return false;
         return vendor.equals(that.vendor);
     }
 
@@ -109,7 +128,7 @@ public class RouteEntry {
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (land ? 1 : 0);
         result = 31 * result + (isRefill() ? 1 : 0);
-        temp = Double.doubleToLongBits(score);
+        temp = Double.doubleToLongBits(profit);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }

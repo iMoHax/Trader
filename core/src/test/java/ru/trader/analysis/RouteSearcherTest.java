@@ -74,7 +74,7 @@ public class RouteSearcherTest extends Assert{
         RouteFiller filler = new RouteFiller(scorer);
         filler.fill(route);
 
-        assertEquals(981200, route.getProfit(), 0);
+        assertEquals(978883.1, route.getProfit(), 0.1);
         assertEquals(2, route.getLands());
         assertEquals(72.42, route.getDistance(), 0.01);
 
@@ -102,7 +102,7 @@ public class RouteSearcherTest extends Assert{
         filler = new RouteFiller(scorer);
         filler.fill(route);
 
-        assertEquals(1971200, route.getProfit(), 0);
+        assertEquals(1967873.6, route.getProfit(), 0.1);
         assertEquals(4, route.getLands());
         assertEquals(109.51, route.getDistance(), 0.01);
 

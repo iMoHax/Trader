@@ -176,8 +176,15 @@ public class RouteFiller {
                 if (best != TRANSIT)
                     entry.addAll(best.bestOrders);
             }
-            int jumps = i==0 || entries.get(i-1).getVendor().getPlace().equals(entry.getVendor().getPlace())? 0 : 1;
-            entry.setScore(i==0 ? 0 : scorer.getScore(entry, jumps));
+            RouteEntry prev = i != 0 ? entries.get(i-1) : null;
+            if (prev != null){
+                prev.setProfit(scorer.getProfit(prev.getProfitByOrders(), prev.getFuel()));
+                prev.setTime(scorer.getTime(entry, prev));
+                prev.setFullTime(prev.getTime());
+            } else {
+                entry.setProfit(0);
+                entry.setTime(0);
+            }
         }
     }
 

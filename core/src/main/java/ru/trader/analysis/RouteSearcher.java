@@ -24,6 +24,10 @@ public class RouteSearcher {
         this.callback = callback;
     }
 
+    public Scorer getScorer() {
+        return scorer;
+    }
+
     public List<Edge<Place>> getPath(Place from, Place to, Collection<Place> places){
         List<List<Edge<Place>>> res = search(from, to, places, 1, null);
         return res.isEmpty() ? null : res.get(0);
@@ -103,8 +107,7 @@ public class RouteSearcher {
         private List<Route> routes = new ArrayList<>();
 
         public void add(List<Edge<Vendor>> edges){
-            Route route = toRoute(edges);
-            route.setBalance(scorer.getProfile().getBalance());
+            Route route = toRoute(edges, scorer);
             routes.add(route);
         }
 
@@ -113,10 +116,11 @@ public class RouteSearcher {
         }
     }
 
-    public static Route toRoute(List<Edge<Vendor>> edges){
+    public static Route toRoute(List<Edge<Vendor>> edges, final Scorer scorer){
         List<RouteEntry> entries = new ArrayList<>(edges.size()+1);
         Vendor buyer = null;
         VendorsGraph.VendorsEdge vEdge = null;
+        RouteEntry prev = null;
         for (Edge<Vendor> e : edges) {
             vEdge = (VendorsGraph.VendorsEdge) e;
             List<ConnectibleEdge<Vendor>> transitEdges = vEdge.getPath().getEntries();
@@ -129,45 +133,67 @@ public class RouteSearcher {
                     buyer = null;
                 }
                 if (k == 0) {
-                    entry.setScore(vEdge.getWeight());
+                    entry.setProfit(scorer.getProfit(vEdge.getProfit(), vEdge.getFuelCost()));
+                    entry.setFullTime(vEdge.getTime());
                     List<Order> orders = vEdge.getOrders();
                     if (!orders.isEmpty()) {
                         buyer = orders.get(0).getBuyer();
                         entry.addAll(orders);
                     }
                 }
+                if (prev != null){
+                    prev.setTime(scorer.getTime(entry, prev));
+                }
                 entries.add(entry);
+                prev = entry;
             }
         }
         if (vEdge != null) {
             RouteEntry entry = new RouteEntry(vEdge.getTarget().getEntry(), 0, 0, 0);
             if (buyer != null) entry.setLand(true);
+            if (prev != null){
+                prev.setTime(scorer.getTime(entry, prev));
+            }
             entries.add(entry);
         }
-        return new Route(entries);
+        Route route = new Route(entries);
+        route.setBalance(scorer.getProfile().getBalance());
+        return route;
     }
 
-    public static Route toRoute(Order order, List<Edge<Place>> edges){
-        Route route = toRoute(order.getSeller(), order.getBuyer(), edges);
+    public static Route toRoute(Order order, List<Edge<Place>> edges, final Scorer scorer){
+        Route route = toRoute(order.getSeller(), order.getBuyer(), edges, scorer);
         if (route.isEmpty()) return route;
         route.get(0).add(order);
         route.updateStats();
         return route;
     }
 
-    public static Route toRoute(Vendor from, Vendor to, List<Edge<Place>> edges){
+    public static Route toRoute(Vendor from, Vendor to, List<Edge<Place>> edges, final Scorer scorer){
         List<RouteEntry> entries = new ArrayList<>(edges.size()+1);
+        RouteEntry prev = null;
         for (int i = 0; i < edges.size(); i++) {
             ConnectibleEdge<Place> edge = (ConnectibleEdge<Place>) edges.get(i);
             Vendor vendor = i == 0 ? from : edge.getSource().getEntry().asTransit();
             RouteEntry entry = new RouteEntry(vendor, edge.getRefill(), edge.getFuelCost(), 0);
+            if (prev != null){
+                prev.setTime(scorer.getTime(entry, prev));
+                prev.setFullTime(prev.getTime());
+            }
             entries.add(entry);
             if (i == edges.size()-1){
                 entry = new RouteEntry(to, 0, 0, 0);
                 entry.setLand(true);
+                if (prev != null){
+                    prev.setTime(scorer.getTime(entry, prev));
+                    prev.setFullTime(prev.getTime());
+                }
                 entries.add(entry);
             }
+            prev = entry;
         }
-        return new Route(entries);
+        Route route = new Route(entries);
+        route.setBalance(scorer.getProfile().getBalance());
+        return route;
     }
 }
