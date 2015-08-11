@@ -171,6 +171,12 @@ public class EDCE {
         LOG.info("Start EDCE checker each {} sec", interval);
         checker = executor.scheduleAtFixedRate(new EDCEChecker(), 1, interval, TimeUnit.SECONDS);
     }
+    public void stop(){
+        LOG.info("Stop EDCE checker");
+        if (checker != null){
+            checker.cancel(false);
+        }
+    }
 
     public void shutdown() throws IOException {
         if (executor != null) {
@@ -215,6 +221,8 @@ public class EDCE {
                                         LOG.trace("Read profile from ED");
                                         session.readProfile(EDCE.this::parseAndCheck);
                                     }
+                                } else {
+                                    stop();
                                 }
                                 waiting = false;
                             }
