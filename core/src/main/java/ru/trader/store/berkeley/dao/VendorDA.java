@@ -30,6 +30,14 @@ public class VendorDA<T> {
         return DAUtils.getAll(indexByPlaceId, placeId, convertFunc);
     }
 
+    public boolean contains(long placeId){
+        return indexByPlaceId.contains(placeId);
+    }
+
+    public long count(long placeId){
+        return indexByPlaceId.subIndex(placeId).count();
+    }
+
     public BDBVendor put(BDBVendor vendor){
         return indexById.put(vendor);
     }

@@ -36,7 +36,7 @@ public interface Place extends Connectable<Place> {
     Vendor addVendor(String name);
     void remove(Vendor vendor);
 
-    default int count(){
+    default long count(){
         return get().size();
     }
 

@@ -16,7 +16,7 @@ public class PlacesWrapper extends AbstractCollection<Vendor> {
         this.includeTransit = includeTransit;
         size = 0;
         for (Place place : places) {
-            int count = place.count();
+            long count = place.count();
             size += count > 0 ? count : includeTransit ? 1 : 0;
         }
     }

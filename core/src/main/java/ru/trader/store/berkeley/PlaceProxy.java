@@ -10,10 +10,12 @@ import java.util.Collection;
 public class PlaceProxy extends AbstractPlace {
     private final BDBPlace place;
     private BDBStore store;
+    private long count;
 
     public PlaceProxy(BDBPlace place, BDBStore store) {
         this.place = place;
         this.store = store;
+        count = -1;
     }
 
     public PlaceProxy(BDBPlace place, BDBMarket market, BDBStore store) {
@@ -49,11 +51,13 @@ public class PlaceProxy extends AbstractPlace {
     @Override
     protected void addVendor(Vendor vendor) {
         store.getVendorAccessor().put(((VendorProxy)vendor).getEntity());
+        if (count != -1) count++;
     }
 
     @Override
     protected void removeVendor(Vendor vendor) {
         store.getVendorAccessor().delete(((VendorProxy)vendor).getEntity());
+        if (count != -1) count--;
     }
 
     @Override
@@ -79,6 +83,22 @@ public class PlaceProxy extends AbstractPlace {
     @Override
     public Collection<Vendor> get() {
         return store.getVendorAccessor().getAllByPlace(place.getId());
+    }
+
+    @Override
+    public long count() {
+        if (count == -1){
+            count = store.getVendorAccessor().count(place.getId());
+        }
+        return count;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        if (count > -1){
+            return count == 0;
+        }
+        return !store.getVendorAccessor().contains(place.getId());
     }
 
     @Override

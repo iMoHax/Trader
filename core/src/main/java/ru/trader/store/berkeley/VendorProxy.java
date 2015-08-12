@@ -18,22 +18,34 @@ public class VendorProxy extends AbstractVendor {
     public VendorProxy(BDBVendor vendor, BDBStore store) {
         this.vendor = vendor;
         this.store = store;
-        init();
     }
 
-    private void init(){
+    private void initSellCache(){
         sell = new ConcurrentHashMap<>(20, 0.9f, 2);
-        buy = new ConcurrentHashMap<>(20, 0.9f, 2);
         for (Offer offer : store.getOfferAccessor().getAllByType(vendor.getId(), OFFER_TYPE.SELL)) {
             sell.put(((ItemProxy)offer.getItem()).getId(), offer);
         }
+    }
+
+    private void initBuyCache(){
+        buy = new ConcurrentHashMap<>(20, 0.9f, 2);
         for (Offer offer : store.getOfferAccessor().getAllByType(vendor.getId(), OFFER_TYPE.BUY)) {
             buy.put(((ItemProxy)offer.getItem()).getId(), offer);
         }
     }
 
     private Map<Long, Offer> getCache(OFFER_TYPE type){
-        return type == OFFER_TYPE.SELL ? sell : buy;
+        if (type == OFFER_TYPE.SELL){
+            if (sell == null){
+                initSellCache();
+            }
+            return sell;
+        } else {
+            if (buy == null){
+                initBuyCache();
+            }
+            return buy;
+        }
     }
 
     protected long getId(){
