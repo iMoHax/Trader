@@ -9,11 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class OffersHandler implements ParseHandler {
     private final static Logger LOG = LoggerFactory.getLogger(OffersHandler.class);
 
-    private final Market market;
+    private final Map<String, Item> items;
+    private final Map<String, Vendor> stations;
     private final boolean withRemove;
     private Vendor station;
 
@@ -22,8 +24,13 @@ public class OffersHandler implements ParseHandler {
     private final Map<Item, OfferData> buyUpdates = new HashMap<>(100, 0.9f);
 
     protected OffersHandler(Market market, boolean withRemove) {
-        this.market = market;
         this.withRemove = withRemove;
+        items = market.getItems().stream().collect(Collectors.toMap(Item::getName, i -> i));
+        stations = market.getVendors().stream().collect(Collectors.toMap(this::getStationId, s -> s));
+    }
+
+    private String getStationId(Vendor vendor){
+        return vendor.getPlace().getName()+"/"+vendor.getName();
     }
 
     @Override
@@ -106,15 +113,10 @@ public class OffersHandler implements ParseHandler {
 
         name = sb.toString();
         LOG.trace("system: {}, station: {}", system, name);
-
-        Place sys = market.get(system);
-        if (sys != null){
-            station = sys.get(name);
-            if (station == null){
-                LOG.warn("Station {} not found", name);
-            }
-        } else {
-            LOG.warn("System {} not found", system);
+        String id = system + "/" +name;
+        station = stations.get(id);
+        if (station == null){
+            LOG.warn("Station {} not found", id);
         }
     }
 
@@ -133,7 +135,7 @@ public class OffersHandler implements ParseHandler {
             Double sell = getDoubleValue(matcher.group(3));
             Long demand = getLongValue(matcher.group(4));
             Long supply = getLongValue(matcher.group(6));
-            Item item = market.getItem(ItemConverter.getItemId(name));
+            Item item = items.get(ItemConverter.getItemId(name));
             if (item != null){
                 if (buy != null && buy > 0){
                     buyUpdates.put(item, new OfferData(buy, demand));
