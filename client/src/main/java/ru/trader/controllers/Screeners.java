@@ -33,6 +33,7 @@ public class Screeners {
     private static Parent itemAddScreen;
     private static Parent groupAddScreen;
     private static Parent loginScreen;
+    private static Parent helperScreen;
 
     private static MainController mainController;
     private static ItemDescController itemDescController;
@@ -45,6 +46,7 @@ public class Screeners {
     private static ItemAddController itemAddController;
     private static GroupAddController groupAddController;
     private static LoginController loginController;
+    private static HelperController helperController;
 
     private static FXMLLoader initLoader(URL url){
         FXMLLoader loader = new FXMLLoader(url, Localization.getResources());
@@ -104,8 +106,6 @@ public class Screeners {
         settingsScreen = loader.load();
         addStylesheet(settingsScreen);
         settingsController = loader.getController();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(settingsScreen));
     }
 
     public static void loadSEditorStage(URL fxml) throws IOException {
@@ -141,6 +141,13 @@ public class Screeners {
         loginScreen = loader.load();
         addStylesheet(loginScreen);
         loginController = loader.getController();
+    }
+
+    public static void loadHelperStage(URL fxml) throws IOException {
+        FXMLLoader loader =  initLoader(fxml);
+        helperScreen = loader.load();
+        addStylesheet(helperScreen);
+        helperController = loader.getController();
     }
 
     public static void show(Node node){
@@ -237,6 +244,17 @@ public class Screeners {
         dialog.setHeaderText(header);
         dialog.setContentText(content);
         return dialog.showAndWait();
+    }
+
+    public static void showHelper(RouteModel route){
+        helperController.setRoute(route);
+        if (helperScreen.getScene() == null){
+            Stage stage = new Stage();
+            stage.setScene(new Scene(helperScreen));
+            stage.show();
+        } else {
+            ((Stage)helperScreen.getScene().getWindow()).show();
+        }
     }
 
     public static void reinitAll() {

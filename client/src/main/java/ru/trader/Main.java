@@ -101,6 +101,7 @@ public class Main extends Application {
         Screeners.loadItemAddStage(getUrl("itemAdd.fxml"));
         Screeners.loadGroupAddStage(getUrl("groupAdd.fxml"));
         Screeners.loadLoginStage(getUrl("login.fxml"));
+        Screeners.loadHelperStage(getUrl("helper.fxml"));
     }
 
     private static URL getUrl(String filename) throws MalformedURLException {

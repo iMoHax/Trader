@@ -33,18 +33,18 @@
                 <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
             </TableColumn>
             <TableColumn minWidth="70.0" text="%market.order.profit">
-                <cellValueFactory><PropertyValueFactory property="totalProfit"/></cellValueFactory>
+                <cellValueFactory><PropertyValueFactory property="profit"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="avgProfit" minWidth="70.0" text="%market.offer.avg" sortType="DESCENDING">
+            <TableColumn fx:id="profitByTime" minWidth="70.0" text="%market.offer.avg" sortType="DESCENDING">
                 <cellFactory><DoubleCell format="\%.0f"/></cellFactory>
-                <cellValueFactory><PropertyValueFactory property="avgProfit"/></cellValueFactory>
+                <cellValueFactory><PropertyValueFactory property="profitByTime"/></cellValueFactory>
             </TableColumn>
         </columns>
         <columnResizePolicy>
             <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
         </columnResizePolicy>
         <sortOrder>
-            <fx:reference source="avgProfit"/>
+            <fx:reference source="profitByTime"/>
         </sortOrder>
     </TableView>
 </HBox>

@@ -1,35 +1,69 @@
 package ru.trader.model;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import ru.trader.analysis.Route;
 import ru.trader.analysis.RouteEntry;
 import ru.trader.core.Order;
+import ru.trader.model.support.BindingsHelper;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class RouteModel {
     private final MarketModel market;
     private final Route _route;
+    private final DoubleProperty profit;
+    private final DoubleProperty profitByTime;
+    private final List<RouteEntryModel> entries;
 
     RouteModel(Route route, MarketModel market) {
         this.market = market;
         this._route = route;
+        entries = _route.getEntries().stream().map(e -> new RouteEntryModel(e, market)).collect(Collectors.toList());
+        profit = new SimpleDoubleProperty();
+        profit.bind(BindingsHelper.group(Double::sum, RouteEntryModel::profitProperty, entries));
+        profitByTime = new SimpleDoubleProperty();
+        profitByTime.bind(profit.divide(_route.getTime()));
+        fillSellOrders();
+    }
+
+    private void fillSellOrders(){
+        for (int i = 0; i < entries.size(); i++) {
+            RouteEntryModel entry = entries.get(i);
+            for (OrderModel order : entry.orders()) {
+                for (int j = i+1; j < entries.size(); j++) {
+                    RouteEntryModel buyEntry = entries.get(j);
+                    if (buyEntry.getStation().equals(order.getBuyer())){
+                        buyEntry.addSellOrder(order);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    public RouteEntryModel get(int index){
+        return entries.get(index);
     }
 
     public double getDistance() {
         return _route.getDistance();
     }
 
-    public double getTotalProfit() {
-        return _route.getProfit();
-    }
-
     public int getJumps() {
-        return _route.getLands();
+        return entries.size();
     }
 
     public int getRefuels() {
         return _route.getRefills();
+    }
+
+    public long getTime(){
+        return _route.getTime();
     }
 
     public Route getRoute() {
@@ -40,8 +74,20 @@ public class RouteModel {
         return _route.getLands();
     }
 
-    public double getAvgProfit(){
-        return _route.getProfit()/_route.getLands();
+    public double getProfit() {
+        return profit.get();
+    }
+
+    public ReadOnlyDoubleProperty profitProperty() {
+        return profit;
+    }
+
+    public double getProfitByTime(){
+        return profitByTime.get();
+    }
+
+    public ReadOnlyDoubleProperty profitByTimeProperty(){
+        return profitByTime;
     }
 
     public Collection<OrderModel> getOrders(){
@@ -55,18 +101,21 @@ public class RouteModel {
         return res;
     }
 
-    public void add(OrderModel order){
+    public RouteModel add(OrderModel order){
         Route path = market._getPath(order);
-        if (path == null) return;
+        if (path == null) return this;
         _route.join(path);
+        return new RouteModel(_route, market);
     }
 
-    public void add(RouteModel route){
+    public RouteModel add(RouteModel route){
         _route.join(route.getRoute());
+        return new RouteModel(_route, market);
     }
 
-    public void remove(OrderModel order) {
+    public RouteModel remove(OrderModel order) {
         _route.dropTo(order.getStation().getStation());
+        return new RouteModel(_route, market);
     }
 
 }

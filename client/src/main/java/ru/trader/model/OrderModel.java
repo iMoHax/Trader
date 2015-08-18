@@ -1,6 +1,7 @@
 package ru.trader.model;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import ru.trader.core.Order;
@@ -152,5 +153,21 @@ public class OrderModel {
             distance = new SimpleDoubleProperty(buyer!=null ? getStation().getDistance(buyer) : Double.NaN);
         }
         return distance;
+    }
+
+    public StringBinding asString(final boolean buy){
+        if (buy){
+            return Bindings.createStringBinding(() -> this.toString(buy), countProperty(), ModelBindings.offerPrice(buyOfferProperty(), true));
+        } else {
+            return Bindings.createStringBinding(() -> this.toString(buy), countProperty(), priceProperty(), nameProperty());
+        }
+    }
+
+    public String toString(final boolean buy){
+        if (buy){
+            return String.format("%d x %s", getCount(), getBuyOffer().toItemString());
+        } else {
+            return String.format("%d x %s", getCount(), getOffer().toItemString());
+        }
     }
 }

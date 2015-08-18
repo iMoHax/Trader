@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import ru.trader.view.support.cells.OfferListCell?>
+<?import javafx.geometry.Insets?>
+<?import ru.trader.view.support.NumberField?>
+<?import org.controlsfx.glyphfont.Glyph?>
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ru.trader.controllers.HelperController"
+      spacing="4" >
+    <HBox><Label text="Система:" /><Label fx:id="system" /></HBox>
+    <HBox><Label text="Станция:" /><Label fx:id="station" /></HBox>
+    <HBox><Label text="Время:" /><Label fx:id="time" /></HBox>
+    <HBox><Label text="Заправить:" /><Label fx:id="refuel" /></HBox>
+    <HBox>
+        <VBox>
+            <Label text="Продать:" />
+            <ListView fx:id="sellOrders"/>
+        </VBox>
+        <VBox>
+            <Label text="Купить:" />
+            <ListView fx:id="buyOrders"/>
+        </VBox>
+    </HBox>
+    <HBox>
+        <Button prefWidth="30" onAction="#previous">
+            <graphic><Glyph text="FontAwesome|ARROW_LEFT"/></graphic>
+        </Button>
+        <Button prefWidth="30" onAction="#pause">
+            <graphic><Glyph text="FontAwesome|PAUSE"/></graphic>
+        </Button>
+        <Button prefWidth="30" onAction="#next">
+            <graphic><Glyph text="FontAwesome|ARROW_RIGHT"/></graphic>
+        </Button>
+    </HBox>
+</VBox>

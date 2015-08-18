@@ -41,4 +41,8 @@ public class ViewUtils {
             Platform.runLater(runnable);
         }
     }
+
+    public static String timeToString(long time){
+        return String.format("%d:%02d:%02d", time/3600, (time%3600)/60, (time%60));
+    }
 }

@@ -200,11 +200,11 @@ public class OfferModel {
     }
 
     public String toStationString(){
-        return offer.toPString();
+        return String.format("%.0f (%s - %s (%.0f Ls))", getPrice(), getSystem().getName(), getStation().getName(), getStation().getDistance());
     }
 
     public String toItemString(){
-        return offer.toIString();
+        return String.format("%s (%.0f)", getItem().getName(), getPrice());
     }
 
     public void refresh(){
