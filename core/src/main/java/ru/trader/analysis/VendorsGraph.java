@@ -354,7 +354,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         private TransitPath  path;
         private List<Order> orders;
         private Double profitByTonne;
-        private Double time;
+        private Long time;
 
         protected VendorsEdge(Vertex<Vendor> source, Vertex<Vendor> target, TransitPath path) {
             super(source, target);
@@ -407,7 +407,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             return profitByTonne;
         }
 
-        public double getTime() {
+        public long getTime() {
             if (time == null){
                 time = computeTime();
             }
@@ -427,7 +427,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             return scorer.getProfitByTonne(getProfit(), getFuelCost());
         }
 
-        protected double computeTime(){
+        protected long computeTime(){
             int jumps = source.getEntry().getPlace().equals(target.getEntry().getPlace())? 0 : 1;
             int lands = 1;
             if (path != null){

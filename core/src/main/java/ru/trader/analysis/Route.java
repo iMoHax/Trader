@@ -14,7 +14,7 @@ public class Route implements Comparable<Route> {
     private double balance = 0;
     private double distance = 0;
     private double fuel = 0;
-    private double time = 0;
+    private long time = 0;
     private int lands = 0;
     private int refills = 0;
 
@@ -64,7 +64,7 @@ public class Route implements Comparable<Route> {
         return refills;
     }
 
-    public double getTime() {
+    public long getTime() {
         return time;
     }
 
@@ -133,7 +133,7 @@ public class Route implements Comparable<Route> {
 
     void updateStats(){
         LOG.trace("Update stats, old: profit={}, distance={}, lands={}, fuel={}, refills={}, time={}", profit, distance, lands, fuel, refills, time);
-        profit = 0; distance = 0; lands = 0; fuel = 0; refills = 0;
+        profit = 0; distance = 0; lands = 0; fuel = 0; refills = 0; time = 0;
         if (entries.isEmpty()) return;
         RouteEntry entry = entries.get(0);
         for (int i = 1; i < entries.size(); i++) {

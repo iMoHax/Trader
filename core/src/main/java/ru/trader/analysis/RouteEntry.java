@@ -14,8 +14,8 @@ public class RouteEntry {
     private boolean land;
     private double refill;
     private double profit;
-    private double time;
-    private double fulltime;
+    private long time;
+    private long fulltime;
 
     public RouteEntry(Vendor vendor, double refill, double fuel, double profit) {
         orders = new ArrayList<>();
@@ -57,19 +57,19 @@ public class RouteEntry {
         this.profit = profit;
     }
 
-    public double getTime() {
+    public long getTime() {
         return time;
     }
 
-    void setTime(double time) {
+    void setTime(long time) {
         this.time = time;
     }
 
-    public double getFullTime() {
+    public long getFullTime() {
         return fulltime;
     }
 
-    void setFullTime(double fullTime) {
+    void setFullTime(long fullTime) {
         this.fulltime = fullTime;
     }
 

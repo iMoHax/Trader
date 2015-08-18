@@ -111,7 +111,7 @@ public class Scorer {
         return profit;
     }
 
-    public double getTime(RouteEntry entry, RouteEntry prev) {
+    public long getTime(RouteEntry entry, RouteEntry prev) {
         if (prev == null) return 0;
         int lands = entry.isLand() ? 1 : 0;
         int jumps = prev.getVendor().getPlace().equals(entry.getVendor().getPlace()) ? 0 : 1;
@@ -119,10 +119,10 @@ public class Scorer {
         if (!prev.isLand()){
             time = time - profile.getTakeoffTime() + profile.getRechargeTime();
         }
-        return time;
+        return Math.round(time);
     }
 
-    public double getTime(double distance, int jumps, int lands){
+    public long getTime(double distance, int jumps, int lands){
         double time = profile.getTakeoffTime();
         if (jumps > 0){
             time += profile.getJumpTime() + (jumps-1) * (profile.getRechargeTime() + profile.getJumpTime());
@@ -130,7 +130,7 @@ public class Scorer {
         if (profile.getLandingTime() > 0 & lands > 0){
             time += (lands-1)*(getTime(avgDistance) + profile.getLandingTime() + profile.getTakeoffTime()) + getTime(distance) + profile.getLandingTime();
         }
-        return time;
+        return Math.round(time);
     }
 
     public double getScore(RouteEntry entry, RouteEntry prev) {
