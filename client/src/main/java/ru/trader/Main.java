@@ -45,6 +45,9 @@ public class Main extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
+        KeyBinding.unbind();
+        ServicesManager.stopAll();
+        SETTINGS.save();
     }
 
     public static void main(String[] args) {
@@ -77,10 +80,11 @@ public class Main extends Application {
                 if (World.getMarket().isChange()) {
                     Action res = Screeners.showConfirm(Localization.getString("dialog.confirm.save"));
                     if (res == Dialog.ACTION_YES) World.save();
-                    else if (res == Dialog.ACTION_CANCEL) we.consume();
+                    else if (res == Dialog.ACTION_CANCEL) {
+                        we.consume();
+                        return;
+                    }
                 }
-                ServicesManager.stopAll();
-                SETTINGS.save();
                 Screeners.closeAll();
             } catch (FileNotFoundException | UnsupportedEncodingException | XMLStreamException e) {
                 LOG.error("Error on save world", e);

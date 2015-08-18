@@ -205,6 +205,7 @@ public class Screeners {
 
     public static void closeAll() {
         itemDescController.close();
+        helperController.close();
     }
 
     public static Optional<OrderModel> showOrders(ObservableList<OrderModel> orders) {
@@ -247,14 +248,7 @@ public class Screeners {
     }
 
     public static void showHelper(RouteModel route){
-        helperController.setRoute(route);
-        if (helperScreen.getScene() == null){
-            Stage stage = new Stage();
-            stage.setScene(new Scene(helperScreen));
-            stage.show();
-        } else {
-            ((Stage)helperScreen.getScene().getWindow()).show();
-        }
+        helperController.show(helperScreen, route);
     }
 
     public static void reinitAll() {
