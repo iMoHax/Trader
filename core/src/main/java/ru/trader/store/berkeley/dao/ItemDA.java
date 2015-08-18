@@ -23,6 +23,11 @@ public class ItemDA<T> {
         return DAUtils.get(indexById, id, convertFunc);
     }
 
+    public T get(String name){
+        Collection<T> items = DAUtils.getAll(indexById, convertFunc, item -> item.getName().equals(name));
+        return items.isEmpty() ? null : items.iterator().next();
+    }
+
     public Collection<T> getAll(){
         return DAUtils.getAll(indexById, convertFunc);
     }

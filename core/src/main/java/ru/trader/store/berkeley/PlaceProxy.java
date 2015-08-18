@@ -6,16 +6,19 @@ import ru.trader.store.berkeley.entities.BDBPlace;
 import ru.trader.store.berkeley.entities.BDBVendor;
 
 import java.util.Collection;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 
 public class PlaceProxy extends AbstractPlace {
     private final BDBPlace place;
     private BDBStore store;
-    private long count;
+    private Collection<Vendor> vendors;
+    private final ReentrantLock lock = new ReentrantLock();
 
     public PlaceProxy(BDBPlace place, BDBStore store) {
         this.place = place;
         this.store = store;
-        count = -1;
+        vendors = null;
     }
 
     public PlaceProxy(BDBPlace place, BDBMarket market, BDBStore store) {
@@ -51,13 +54,25 @@ public class PlaceProxy extends AbstractPlace {
     @Override
     protected void addVendor(Vendor vendor) {
         store.getVendorAccessor().put(((VendorProxy)vendor).getEntity());
-        if (count != -1) count++;
+        if (vendors != null || lock.isLocked()) {
+            unsafe( (v) -> {
+                if (vendors != null){
+                    vendors.add(vendor);
+                }
+            });
+        }
     }
 
     @Override
     protected void removeVendor(Vendor vendor) {
         store.getVendorAccessor().delete(((VendorProxy)vendor).getEntity());
-        if (count != -1) count--;
+        if (vendors != null || lock.isLocked()) {
+            unsafe( (v) -> {
+                if (vendors != null){
+                    vendors.remove(vendor);
+                }
+            });
+        }
     }
 
     @Override
@@ -82,21 +97,28 @@ public class PlaceProxy extends AbstractPlace {
 
     @Override
     public Collection<Vendor> get() {
-        return store.getVendorAccessor().getAllByPlace(place.getId());
+        if (vendors == null){
+            unsafe( (v) -> {
+                if (vendors == null){
+                    vendors = store.getVendorAccessor().getAllByPlace(place.getId());
+                }
+            });
+        }
+        return vendors;
     }
 
     @Override
     public long count() {
-        if (count == -1){
-            count = store.getVendorAccessor().count(place.getId());
+        if (vendors != null){
+            return vendors.size();
         }
-        return count;
+        return get().size();
     }
 
     @Override
     public boolean isEmpty() {
-        if (count > -1){
-            return count == 0;
+        if (vendors != null){
+            return vendors.isEmpty();
         }
         return !store.getVendorAccessor().contains(place.getId());
     }
@@ -116,5 +138,14 @@ public class PlaceProxy extends AbstractPlace {
     @Override
     public int hashCode() {
         return place.hashCode();
+    }
+
+    private void unsafe(Consumer<Void> operation){
+        lock.lock();
+        try {
+            operation.accept(null);
+        } finally {
+            lock.unlock();
+        }
     }
 }

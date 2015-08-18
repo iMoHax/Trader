@@ -29,7 +29,7 @@ public class BDBStore {
         EnvironmentConfig envConfig = new EnvironmentConfig();
         envConfig.setAllowCreate(true);
         envConfig.setSharedCache(true);
-        envConfig.setTransactional(true);
+        envConfig.setTransactional(false);
         dbEnvironment = new Environment(new File(path), envConfig);
 
         try {

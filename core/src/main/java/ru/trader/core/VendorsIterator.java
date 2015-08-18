@@ -26,7 +26,7 @@ public class VendorsIterator implements Iterator<Vendor> {
         if (places.hasNext()){
             Place place = places.next();
             Collection<Vendor> v = place.get();
-            if (place.count() > 0){
+            if (!v.isEmpty()){
                 vendors = v.iterator();
                 nextVendor();
             } else {

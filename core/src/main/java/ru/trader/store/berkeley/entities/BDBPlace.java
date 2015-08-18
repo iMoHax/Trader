@@ -5,7 +5,7 @@ import com.sleepycat.persist.model.PrimaryKey;
 import com.sleepycat.persist.model.Relationship;
 import com.sleepycat.persist.model.SecondaryKey;
 
-@Entity(version = 1)
+@Entity(version = 2)
 public class BDBPlace {
 
     @PrimaryKey(sequence = "P_ID")
@@ -14,6 +14,7 @@ public class BDBPlace {
     @SecondaryKey(relate = Relationship.MANY_TO_ONE)
     private double distance;
 
+    @SecondaryKey(relate = Relationship.MANY_TO_ONE)
     private String name;
     private double x;
     private double y;

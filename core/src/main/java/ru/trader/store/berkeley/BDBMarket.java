@@ -103,6 +103,11 @@ public class BDBMarket extends AbstractMarket {
     }
 
     @Override
+    public Place get(String name) {
+        return store.getPlaceAccessor().get(name);
+    }
+
+    @Override
     public Collection<Place> get() {
         return store.getPlaceAccessor().getAll();
     }
@@ -113,8 +118,22 @@ public class BDBMarket extends AbstractMarket {
     }
 
     @Override
+    public Item getItem(String name) {
+        return store.getItemAccessor().get(name);
+    }
+
+    @Override
     public Collection<Item> getItems() {
         return store.getItemAccessor().getAll();
+    }
+
+    @Override
+    public Collection<Vendor> getVendors(boolean includeTransit) {
+        Collection<Vendor> vendors = store.getVendorAccessor().getAll();
+        if (includeTransit){
+            store.getPlaceAccessor().getAll().stream().map(Place::asTransit).forEach(vendors::add);
+        }
+        return vendors;
     }
 
     @Override

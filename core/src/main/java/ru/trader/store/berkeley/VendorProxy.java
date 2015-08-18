@@ -7,6 +7,8 @@ import ru.trader.store.berkeley.entities.BDBVendor;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 
 public class VendorProxy extends AbstractVendor {
     private final BDBVendor vendor;
@@ -14,6 +16,7 @@ public class VendorProxy extends AbstractVendor {
     private Place place;
     protected Map<Long, Offer> sell;
     protected Map<Long, Offer> buy;
+    private final ReentrantLock lock = new ReentrantLock();
 
     public VendorProxy(BDBVendor vendor, BDBStore store) {
         this.vendor = vendor;
@@ -21,28 +24,38 @@ public class VendorProxy extends AbstractVendor {
     }
 
     private void initSellCache(){
-        sell = new ConcurrentHashMap<>(20, 0.9f, 2);
+        Map<Long, Offer> sell = new ConcurrentHashMap<>(20, 0.9f, 2);
         for (Offer offer : store.getOfferAccessor().getAllByType(vendor.getId(), OFFER_TYPE.SELL)) {
             sell.put(((ItemProxy)offer.getItem()).getId(), offer);
         }
+        this.sell = sell;
     }
 
     private void initBuyCache(){
-        buy = new ConcurrentHashMap<>(20, 0.9f, 2);
+        Map<Long, Offer> buy = new ConcurrentHashMap<>(20, 0.9f, 2);
         for (Offer offer : store.getOfferAccessor().getAllByType(vendor.getId(), OFFER_TYPE.BUY)) {
             buy.put(((ItemProxy)offer.getItem()).getId(), offer);
         }
+        this.buy = buy;
     }
 
     private Map<Long, Offer> getCache(OFFER_TYPE type){
         if (type == OFFER_TYPE.SELL){
             if (sell == null){
-                initSellCache();
+                unsafe((v) -> {
+                    if (sell == null){
+                        initSellCache();
+                    }
+                });
             }
             return sell;
         } else {
             if (buy == null){
-                initBuyCache();
+                unsafe((v) -> {
+                    if (buy == null){
+                        initBuyCache();
+                    }
+                });
             }
             return buy;
         }
@@ -120,7 +133,11 @@ public class VendorProxy extends AbstractVendor {
     @Override
     public Place getPlace() {
         if (place == null){
-            place = store.getPlaceAccessor().get(vendor.getPlaceId());
+            unsafe((v) -> {
+                if (place == null){
+                    place = store.getPlaceAccessor().get(vendor.getPlaceId());
+                }
+            });
         }
         return place;
     }
@@ -166,4 +183,14 @@ public class VendorProxy extends AbstractVendor {
     public int hashCode() {
         return vendor.hashCode();
     }
+
+    private void unsafe(Consumer<Void> operation){
+        lock.lock();
+        try {
+            operation.accept(null);
+        } finally {
+            lock.unlock();
+        }
+    }
+
 }

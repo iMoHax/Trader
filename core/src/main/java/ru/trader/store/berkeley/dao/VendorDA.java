@@ -4,7 +4,6 @@ import com.sleepycat.persist.*;
 import ru.trader.store.berkeley.entities.BDBVendor;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.function.Function;
 
 public class VendorDA<T> {
