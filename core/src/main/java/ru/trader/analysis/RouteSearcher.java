@@ -66,16 +66,19 @@ public class RouteSearcher {
     public List<Route> getRoutes(Collection<Vendor> fVendors, Collection<Vendor> toVendors, Collection<Vendor> vendors){
         List<Route> res = new LimitedQueue<>(scorer.getProfile().getRoutesCount());
         int count = (int) Math.ceil(scorer.getProfile().getRoutesCount() / fVendors.size());
-        RouteSpecification<Vendor> specification = RouteSpecificationByTargets.any(toVendors);
+        CrawlerSpecificator specificator = new CrawlerSpecificator();
+        specificator.any(toVendors);
         for (Vendor fromVendor : fVendors) {
-            Collection<Route> routes = search(fromVendor, fromVendor, vendors, count, specification);
+            Collection<Route> routes = search(fromVendor, fromVendor, vendors, count, specificator);
             res.addAll(routes);
         }
         return res;
     }
 
     public List<Route> getRoutes(Vendor from, Collection<Vendor> vendors){
-        return search(from, from, vendors, scorer.getProfile().getRoutesCount(), RouteSpecificationByTargets.any(vendors));
+        CrawlerSpecificator specificator = new CrawlerSpecificator();
+        specificator.any(vendors);
+        return search(from, from, vendors, scorer.getProfile().getRoutesCount(), specificator);
     }
 
     public List<Route> getRoutes(Vendor from, Vendor to, Collection<Vendor> vendors){
@@ -83,24 +86,41 @@ public class RouteSearcher {
     }
 
     public List<Route> getRoutes(Vendor source, Vendor target, Collection<Vendor> vendors, int count){
-        return search(source, target, vendors, count, null);
+        return search(source, target, vendors, count, new CrawlerSpecificator());
     }
 
-    private List<Route> search(Vendor source, Vendor target, Collection<Vendor> vendors, int count, RouteSpecification<Vendor> specification){
+
+    public List<Route> getLoops(Vendor source, Collection<Vendor> vendors, int count){
+        return searchLoops(source, vendors, count, new CrawlerSpecificator());
+    }
+
+    public List<Route> search(Vendor source, Vendor target, Collection<Vendor> vendors, int count, CrawlerSpecificator specificator){
         LOG.trace("Start search route  from {} to {}", source, target);
         VendorsGraph vGraph = new VendorsGraph(scorer, callback);
         LOG.trace("Build vendors graph");
         vGraph.build(source, vendors);
         LOG.trace("Graph is builds");
         RouteCollector collector = new RouteCollector();
-        Crawler<Vendor> crawler = specification != null ? vGraph.crawler(specification, collector::add, callback) : vGraph.crawler(collector::add, callback);
+        Crawler<Vendor> crawler = vGraph.crawler(specificator.build(collector::add), callback);
         crawler.setMaxSize(scorer.getProfile().getLands());
         crawler.findMin(target, count);
         return collector.get();
     }
 
-    public List<Route> getLoops(Vendor source, Collection<Vendor> vendors, int count){
-        return search(source, source, vendors, count, new LoopRouteSpecification<Vendor>(true));
+    public List<Route> searchLoops(Vendor source, Collection<Vendor> vendors, int count, CrawlerSpecificator specificator){
+        LOG.trace("Start search loops from {}", source);
+        VendorsGraph vGraph = new VendorsGraph(scorer, callback);
+        LOG.trace("Build vendors graph");
+        vGraph.build(source, vendors);
+        LOG.trace("Graph is builds");
+        RouteCollector collector = new RouteCollector();
+        Crawler<Vendor> crawler = vGraph.crawler(specificator.build(collector::add, new LoopRouteSpecification<>(true)), callback);
+        crawler.setMaxSize(scorer.getProfile().getLands());
+        crawler.findMin(source, count);
+        crawler = vGraph.crawler(specificator.build(collector::add, new RouteSpecificationByTarget<>(source)), callback);
+        crawler.setMaxSize(scorer.getProfile().getLands());
+        crawler.findMin(source, 1);
+        return collector.get();
     }
 
     private class RouteCollector {
