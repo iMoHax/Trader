@@ -119,10 +119,10 @@ public class RouteSearcher {
     public static Route toRoute(List<Edge<Vendor>> edges, final Scorer scorer){
         List<RouteEntry> entries = new ArrayList<>(edges.size()+1);
         Vendor buyer = null;
-        VendorsGraph.VendorsEdge vEdge = null;
+        VendorsCrawler.VendorsEdge vEdge = null;
         RouteEntry prev = null;
         for (Edge<Vendor> e : edges) {
-            vEdge = (VendorsGraph.VendorsEdge) e;
+            vEdge = (VendorsCrawler.VendorsEdge) e;
             List<ConnectibleEdge<Vendor>> transitEdges = vEdge.getPath().getEntries();
             for (int k = 0; k < transitEdges.size(); k++) {
                 ConnectibleEdge<Vendor> edge = transitEdges.get(k);

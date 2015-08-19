@@ -1,6 +1,5 @@
 package ru.trader.analysis;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.analysis.graph.*;
@@ -8,7 +7,6 @@ import ru.trader.core.*;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 
 public class VendorsGraph extends ConnectibleGraph<Vendor> {
@@ -22,12 +20,28 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         this.scorer = scorer;
     }
 
+    public Scorer getScorer() {
+        return scorer;
+    }
+
     public VendorsCrawler crawler(Consumer<List<Edge<Vendor>>> onFoundFunc, AnalysisCallBack callback){
-        return new VendorsCrawler(onFoundFunc, callback);
+        return new VendorsCrawler(this, new CrawlerSpecificationByProfit(onFoundFunc), callback);
     }
 
     public VendorsCrawler crawler(RouteSpecification<Vendor> specification, Consumer<List<Edge<Vendor>>> onFoundFunc, AnalysisCallBack callback){
-        return new VendorsCrawler(specification, onFoundFunc, callback);
+        return new VendorsCrawler(this, new CrawlerSpecificationByProfit(specification, onFoundFunc), callback);
+    }
+
+    public VendorsCrawler crawlerByTime(Consumer<List<Edge<Vendor>>> onFoundFunc, AnalysisCallBack callback){
+        return new VendorsCrawler(this, new CrawlerSpecificationByTime(onFoundFunc), callback);
+    }
+
+    public VendorsCrawler crawlerByTime(RouteSpecification<Vendor> specification, Consumer<List<Edge<Vendor>>> onFoundFunc, AnalysisCallBack callback){
+        return new VendorsCrawler(this, new CrawlerSpecificationByTime(specification, onFoundFunc), callback);
+    }
+
+    public VendorsCrawler crawler(CrawlerSpecification specification, AnalysisCallBack callback){
+        return new VendorsCrawler(this, specification, callback);
     }
 
     @Override
@@ -298,7 +312,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             return paths;
         }
 
-        private Path<Vendor> getPath(double fuel){
+        public Path<Vendor> getPath(double fuel){
             Path<Vendor> res = null;
             for (Path<Vendor> p : paths) {
                 if (fuel >= p.getMinFuel() && fuel <= p.getMaxFuel() || getSource().getEntry().canRefill()) {
@@ -340,216 +354,6 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
                 update(path);
             }
         }
-
-        public VendorsEdge getInstance(double fuel, double balance){
-            Path<Vendor> path = getPath(fuel);
-            if (path == null) return null;
-            VendorsEdge res = new VendorsEdge(source, target, new TransitPath(path,fuel));
-            res.setOrders(MarketUtils.getStack(getOrders(), balance, getShip().getCargo()));
-            return res;
-        }
     }
 
-    public class VendorsEdge extends ConnectibleEdge<Vendor> {
-        private TransitPath  path;
-        private List<Order> orders;
-        private Double profitByTonne;
-        private Long time;
-
-        protected VendorsEdge(Vertex<Vendor> source, Vertex<Vendor> target, TransitPath path) {
-            super(source, target);
-            if (path == null) throw new IllegalArgumentException("Path must be no-null");
-            this.path = path;
-        }
-
-        protected void setOrders(List<Order> orders){
-            this.orders = orders;
-        }
-
-        public double getProfit(){
-            return getOrders().stream().mapToDouble(Order::getProfit).sum();
-        }
-
-        public List<Order> getOrders(){
-            if (orders == null){
-                Vendor seller = source.getEntry();
-                Vendor buyer = target.getEntry();
-                orders = MarketUtils.getOrders(seller, buyer);
-            }
-            return orders;
-        }
-
-        public double getRemain() {
-            return path.getRemain();
-        }
-
-        @Override
-        public boolean isRefill() {
-            return path.isRefill();
-        }
-
-        @Override
-        public double getFuelCost() {
-            if (path != null){
-                return path.getFuelCost();
-            }
-            return super.getFuelCost();
-        }
-
-        public TransitPath getPath() {
-            return path;
-        }
-
-        public double getProfitByTonne() {
-            if (profitByTonne == null){
-                profitByTonne = computeProfit();
-            }
-            return profitByTonne;
-        }
-
-        public long getTime() {
-            if (time == null){
-                time = computeTime();
-            }
-            return time;
-        }
-
-        @Override
-        public int compareTo(@NotNull Edge other) {
-            double w = getWeight();
-            double ow = other.getWeight();
-            if (ow >= 0 && w >= 0) return super.compareTo(other);
-            if (w < 0 && ow < 0) return Double.compare(Math.abs(w), Math.abs(ow));
-            return w < 0 ? 1 : -1;
-        }
-
-        protected double computeProfit(){
-            return scorer.getProfitByTonne(getProfit(), getFuelCost());
-        }
-
-        protected long computeTime(){
-            int jumps = source.getEntry().getPlace().equals(target.getEntry().getPlace())? 0 : 1;
-            int lands = 1;
-            if (path != null){
-                jumps = path.size();
-                lands += path.getRefillCount();
-                //not lands if refuel on this station
-                if (path.isRefill()) lands--;
-            } else {
-                lands += isRefill() ? 1 :0;
-            }
-            return scorer.getTime(target.getEntry().getDistance(), jumps, lands);
-        }
-
-        @Override
-        protected double computeWeight() {
-            return getTime()/getProfitByTonne();
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof VendorsEdge)) return false;
-            if (!super.equals(o)) return false;
-            VendorsEdge edge = (VendorsEdge) o;
-            return !(path != null ? !path.equals(edge.path) : edge.path != null);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = super.hashCode();
-            result = 31 * result + (path != null ? path.hashCode() : 0);
-            return result;
-        }
-
-    }
-
-    public class VendorsCrawler extends Crawler<Vendor> {
-        private double startFuel;
-        private double startBalance;
-
-        protected VendorsCrawler(Consumer<List<Edge<Vendor>>> onFoundFunc, AnalysisCallBack callback) {
-            super(VendorsGraph.this, onFoundFunc, callback);
-            startFuel = getShip().getTank();
-            startBalance = getProfile().getBalance();
-        }
-
-        protected VendorsCrawler(RouteSpecification<Vendor> specification, Consumer<List<Edge<Vendor>>> onFoundFunc, AnalysisCallBack callback) {
-            super(VendorsGraph.this, specification, onFoundFunc, callback);
-            startFuel = getShip().getTank();
-            startBalance = getProfile().getBalance();
-        }
-
-        public void setStartFuel(double startFuel) {
-            this.startFuel = startFuel;
-        }
-
-        public void setStartBalance(double startBalance) {
-            this.startBalance = startBalance;
-        }
-
-        @Override
-        protected VendorsTraversalEntry start(Vertex<Vendor> vertex) {
-            return new VendorsTraversalEntry(super.start(vertex), startFuel, startBalance);
-        }
-
-        @Override
-        protected VendorsTraversalEntry travers(final CostTraversalEntry entry, final Edge<Vendor> edge) {
-            VendorsTraversalEntry vEntry = (VendorsTraversalEntry)entry;
-            VendorsEdge vEdge = (VendorsEdge) edge;
-            return new VendorsTraversalEntry(vEntry, vEdge);
-        }
-
-        protected class VendorsTraversalEntry extends CostTraversalEntry {
-            private final double fuel;
-            private final double balance;
-
-            protected VendorsTraversalEntry(CostTraversalEntry entry, double fuel, double balance) {
-                super(entry.getTarget());
-                this.fuel = fuel;
-                this.balance = balance;
-            }
-
-            protected VendorsTraversalEntry(VendorsTraversalEntry head, VendorsEdge edge) {
-                super(head, edge);
-                this.balance = head.balance + edge.getProfit();
-                this.fuel = edge.getRemain();
-            }
-
-            @Override
-            public List<Edge<Vendor>> collect(Collection<Edge<Vendor>> src) {
-                return src.stream().filter(this::check).map(this::wrap).filter(e -> e != null).collect(Collectors.toList());
-            }
-
-            protected boolean check(Edge<Vendor> e){
-                VendorsBuildEdge edge = (VendorsBuildEdge) e;
-                return fuel <= edge.getMaxFuel() && (fuel >= edge.getMinFuel() || edge.getSource().getEntry().canRefill())
-                       && (edge.getProfit() > 0 || VendorsCrawler.this.isFound(edge, this));
-            }
-
-            protected VendorsEdge wrap(Edge<Vendor> e) {
-                VendorsBuildEdge edge = (VendorsBuildEdge) e;
-                return edge.getInstance(fuel, balance);
-            }
-
-            @Override
-            public double getWeight() {
-                if (weight == null){
-                    double profit = 0; double time = 0;
-                    Iterator<Edge<Vendor>> iterator = routeIterator();
-                    while (iterator.hasNext()){
-                        VendorsEdge edge = (VendorsEdge)iterator.next();
-                        if (edge != null){
-                            profit += edge.getProfitByTonne();
-                            time += edge.getTime();
-                        }
-                    }
-                    weight = profit > 1 ? time / profit : time;
-                }
-                return weight;
-            }
-        }
-
-
-    }
 }

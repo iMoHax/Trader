@@ -26,11 +26,7 @@ public class Crawler<T> {
     private int maxSize;
 
     public Crawler(Graph<T> graph, Consumer<List<Edge<T>>> onFoundFunc, AnalysisCallBack callback) {
-        this.graph = graph;
-        this.callback = new CrawlerCallBack(callback);
-        maxSize = graph.getRoot().getLevel();
-        this.onFoundFunc = onFoundFunc;
-        this.specification = (edge, entry) -> isTarget(edge);
+        this(graph, null, onFoundFunc, callback);
     }
 
     public Crawler(Graph<T> graph, RouteSpecification<T> specification, Consumer<List<Edge<T>>> onFoundFunc, AnalysisCallBack callback) {
@@ -38,7 +34,11 @@ public class Crawler<T> {
         this.callback = new CrawlerCallBack(callback);
         maxSize = graph.getRoot().getLevel();
         this.onFoundFunc = onFoundFunc;
-        this.specification = specification;
+        if (specification != null){
+            this.specification = specification;
+        } else {
+            this.specification = (edge, entry) -> isTarget(edge);
+        }
     }
 
     protected List<Edge<T>> getCopyList(Traversal<T> head, Edge<T> tail){
