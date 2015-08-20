@@ -28,16 +28,8 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         return new VendorsCrawler(this, new CrawlerSpecificationByProfit(onFoundFunc), callback);
     }
 
-    public VendorsCrawler crawler(RouteSpecification<Vendor> specification, Consumer<List<Edge<Vendor>>> onFoundFunc, AnalysisCallBack callback){
-        return new VendorsCrawler(this, new CrawlerSpecificationByProfit(specification, onFoundFunc), callback);
-    }
-
     public VendorsCrawler crawlerByTime(Consumer<List<Edge<Vendor>>> onFoundFunc, AnalysisCallBack callback){
         return new VendorsCrawler(this, new CrawlerSpecificationByTime(onFoundFunc), callback);
-    }
-
-    public VendorsCrawler crawlerByTime(RouteSpecification<Vendor> specification, Consumer<List<Edge<Vendor>>> onFoundFunc, AnalysisCallBack callback){
-        return new VendorsCrawler(this, new CrawlerSpecificationByTime(specification, onFoundFunc), callback);
     }
 
     public VendorsCrawler crawler(CrawlerSpecification specification, AnalysisCallBack callback){

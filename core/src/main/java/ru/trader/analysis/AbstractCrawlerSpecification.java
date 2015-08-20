@@ -10,10 +10,16 @@ import java.util.function.Consumer;
 public abstract class AbstractCrawlerSpecification implements CrawlerSpecification {
     private final RouteSpecification<Vendor> routeSpecification;
     private final Consumer<List<Edge<Vendor>>> onFoundFunc;
+    private final boolean loop;
 
-    protected AbstractCrawlerSpecification(RouteSpecification<Vendor> routeSpecification, Consumer<List<Edge<Vendor>>> onFoundFunc) {
+    protected AbstractCrawlerSpecification(RouteSpecification<Vendor> routeSpecification, Consumer<List<Edge<Vendor>>> onFoundFunc, boolean loop) {
         this.routeSpecification = routeSpecification;
         this.onFoundFunc = onFoundFunc;
+        this.loop = loop;
+    }
+
+    protected boolean isLoop() {
+        return loop;
     }
 
     @Override

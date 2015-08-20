@@ -9,6 +9,8 @@ import ru.trader.core.*;
 import ru.trader.store.simple.Store;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,7 @@ public class RouteSearcherTest extends Assert{
     private Place dnDraconis;
     private Place aulin;
     private Place cmDraco;
+    private Place aulis;
 
     @Before
     public void setUp() throws Exception {
@@ -37,6 +40,7 @@ public class RouteSearcherTest extends Assert{
         dnDraconis = world.get("DN Draconis");
         aulin = world.get("Aulin");
         cmDraco = world.get("CM Draco");
+        aulis = world.get("Aulis");
 
         MarketFilter filter = new MarketFilter();
         fWorld = new FilteredMarket(world, filter);
@@ -78,7 +82,8 @@ public class RouteSearcherTest extends Assert{
         assertEquals(2, route.getLands());
         assertEquals(72.42, route.getDistance(), 0.01);
 
-        List<Route> apaths = searcher.getRoutes(ithaca_st, ithaca_st, fWorld.getMarkets(true).collect(Collectors.toList()));
+        Collection<Vendor> world = fWorld.getMarkets(true).collect(Collectors.toList());
+        List<Route> apaths = searcher.getRoutes(ithaca_st, ithaca_st, world);
 /*        List<Route> apaths = searcher.getRoutes(ithaca_st, ithaca_st, Arrays.asList(ithaca_st, lhs3262_st,
                 morgor_st, lhs3006_st, ithaca.asTransit(), lhs3262.asTransit(),
                 morgor.asTransit(), lhs3006.asTransit()));
@@ -106,9 +111,84 @@ public class RouteSearcherTest extends Assert{
         assertEquals(4, route.getLands());
         assertEquals(109.51, route.getDistance(), 0.01);
 
-        apaths = searcher.getRoutes(ithaca_st, ithaca_st, fWorld.getMarkets(true).collect(Collectors.toList()));
+        apaths = searcher.getRoutes(ithaca_st, ithaca_st, world);
         actual = apaths.stream().findFirst().get();
         assertEquals(route, actual);
 
     }
+
+    @Test
+    public void testRoutesByTime() throws Exception {
+        // Balance: 6000000, cargo: 440, tank: 40, distance: 13.4, jumps: 6
+        // Ithaca (Palladium to Aulis) -> Aulis (Consumer Technology to Ithaca) -> Aulis
+        // Profit: 231093.9, time: 476, distance: 17.36, lands: 2
+        Vendor ithaca_st = ithaca.get().iterator().next();
+        Vendor aulis_st = aulis.get().iterator().next();
+        Ship ship = new Ship();
+        ship.setCargo(440); ship.setTank(15);
+        ship.setEngine(5, 'A'); ship.setMass(466);
+        Profile profile = new Profile(ship);
+        profile.setBalance(6000000); profile.setJumps(6);
+        profile.setRoutesCount(100); profile.setLands(3);
+        Scorer scorer = new Scorer(fWorld, profile);
+
+        LOG.info("Start search by times test");
+        RouteSearcher searcher = new RouteSearcher(scorer);
+
+        Route route = new Route(new RouteEntry(ithaca_st, 0, 1.73439683972718d, 0));
+        route.add(new RouteEntry(aulis_st, 0, 1.726405672421771d, 0));
+        route.add(new RouteEntry(ithaca_st, 0, 0, 0));
+        RouteFiller filler = new RouteFiller(scorer);
+        filler.fill(route);
+
+        assertEquals(231093.9, route.getProfit(), 0.1);
+        assertEquals(476, route.getTime(), 0.1);
+        assertEquals(2, route.getLands());
+        assertEquals(17.36, route.getDistance(), 0.01);
+
+        CrawlerSpecificator specificator = new CrawlerSpecificator();
+        specificator.setByTime(true);
+        Collection<Vendor> world = fWorld.getMarkets(true).collect(Collectors.toList());
+        List<Route> apaths = searcher.search(ithaca_st, ithaca_st, world, profile.getRoutesCount(), specificator);
+        Route actual = apaths.stream().findFirst().get();
+        assertEquals("Routes is different", route, actual);
+    }
+
+    @Test
+    public void testLoopRoutes() throws Exception {
+        // Balance: 6000000, cargo: 440, tank: 40, distance: 13.4, jumps: 6
+        Ship ship = new Ship();
+        ship.setCargo(440); ship.setTank(15);
+        ship.setEngine(5, 'A'); ship.setMass(466);
+        Profile profile = new Profile(ship);
+        profile.setBalance(6000000); profile.setJumps(6);
+        profile.setRoutesCount(100); profile.setLands(3);
+        Scorer scorer = new Scorer(fWorld, profile);
+
+        LOG.info("Start loop search ");
+        RouteSearcher searcher = new RouteSearcher(scorer);
+        Vendor ithaca_st = ithaca.get().iterator().next();
+        Collection<Vendor> world = fWorld.getMarkets(true).collect(Collectors.toList());
+
+        List<Route> apaths = searcher.getLoops(ithaca_st, world, profile.getRoutesCount());
+        assertEquals(39, apaths.size());
+        Collection<Vendor> vendors = new ArrayList<>(40);
+        apaths.forEach(route -> {
+            List<RouteEntry> entries = route.getEntries();
+            Vendor v = entries.get(entries.size()-1).getVendor();
+            assertFalse(vendors.contains(v));
+            vendors.add(v);
+/*            List<Route> p = searcher.getRoutes(v, v, world, 1);
+            double profit = route.getProfit() - route.get(0).getProfit();
+            long time = route.getTime() - route.get(0).getFullTime();
+            double score = profit/time;
+            Route oRoute = p.get(0);
+            LOG.info("{} - loop", v);
+            LOG.info("profit: {}, time: {},  score: {} ", profit, time, score);
+            LOG.info("profit: {}, time: {},  score: {} ", oRoute.getProfit(), oRoute.getTime(), oRoute.getScore());
+            assertTrue(score <= oRoute.getScore());*/
+        });
+        assertTrue(vendors.contains(ithaca_st));
+    }
+
 }

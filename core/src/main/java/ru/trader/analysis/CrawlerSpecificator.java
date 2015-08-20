@@ -64,7 +64,7 @@ public class CrawlerSpecificator {
         this.offers.addAll(offers);
     }
 
-    public CrawlerSpecification build(Consumer<List<Edge<Vendor>>> onFoundFunc, RouteSpecification<Vendor> andSpec){
+    public CrawlerSpecification build(Consumer<List<Edge<Vendor>>> onFoundFunc, RouteSpecification<Vendor> andSpec, boolean loop){
         RouteSpecification<Vendor> spec;
         RouteSpecification<Vendor> res = null;
         if (!all.isEmpty()){
@@ -95,13 +95,13 @@ public class CrawlerSpecificator {
             }
         }
         if (byTime){
-            return new CrawlerSpecificationByTime(res, onFoundFunc);
+            return new CrawlerSpecificationByTime(res, onFoundFunc, loop);
         }
-        return new CrawlerSpecificationByProfit(res, onFoundFunc);
+        return new CrawlerSpecificationByProfit(res, onFoundFunc, loop);
     }
 
     public CrawlerSpecification build(Consumer<List<Edge<Vendor>>> onFoundFunc){
-        return build(onFoundFunc, null);
+        return build(onFoundFunc, null, false);
     }
 
 }

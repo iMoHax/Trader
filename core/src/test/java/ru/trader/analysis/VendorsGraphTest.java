@@ -228,7 +228,7 @@ public class VendorsGraphTest extends Assert {
         vGraph.build(cabreraDock, fWorld.getMarkets(true).collect(Collectors.toList()));
         LOG.info("Search");
         SimpleCollector<Vendor> paths = new SimpleCollector<>();
-        Crawler<Vendor> crawler =  vGraph.crawler(new LoopRouteSpecification<>(true), paths::add, new AnalysisCallBack());
+        Crawler<Vendor> crawler =  vGraph.crawler(new CrawlerSpecificationByProfit(new LoopRouteSpecification<>(true), paths::add, true), new AnalysisCallBack());
         crawler.findMin(cabreraDock, 100);
         assertEquals(60, paths.get().size());
         Collection<Vendor> vendors = new ArrayList<>(60);

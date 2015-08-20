@@ -6,16 +6,17 @@ import ru.trader.core.Order;
 import ru.trader.core.Vendor;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class VendorsCrawler extends Crawler<Vendor> {
     private double startFuel;
     private double startBalance;
+    private final CrawlerSpecification specification;
 
     public VendorsCrawler(VendorsGraph graph, CrawlerSpecification specification, AnalysisCallBack callback) {
         super(graph, specification.routeSpecification(), specification.onFoundFunc(), callback);
+        this.specification = specification;
         startFuel = graph.getProfile().getShip().getTank();
         startBalance = graph.getProfile().getBalance();
     }
@@ -83,16 +84,7 @@ public class VendorsCrawler extends Crawler<Vendor> {
         @Override
         public double getWeight() {
             if (weight == null){
-                double profit = 0; double time = 0;
-                Iterator<Edge<Vendor>> iterator = routeIterator();
-                while (iterator.hasNext()){
-                    VendorsEdge edge = (VendorsEdge)iterator.next();
-                    if (edge != null){
-                        profit += edge.getProfitByTonne();
-                        time += edge.getTime();
-                    }
-                }
-                weight = profit > 1 ? time / profit : time;
+                weight = specification.computeWeight(this);
             }
             return weight;
         }
@@ -191,7 +183,7 @@ public class VendorsCrawler extends Crawler<Vendor> {
 
         @Override
         protected double computeWeight() {
-            return getTime()/getProfitByTonne();
+            return specification.computeWeight(this);
         }
 
         @Override
