@@ -150,11 +150,7 @@ public class Crawler<T> {
             setTarget(target);
             int maxDeep = s.isEntry(target) ? maxSize - graph.getMinJumps() * 2 : graph.getMinLevel();
             if (maxDeep < 0) maxDeep = 0;
-            if (maxSize - maxDeep <= SPLIT_SIZE){
-                found = ucs(start(s), maxDeep, count);
-            } else {
-                found = ucs2(start(s), maxDeep, count);
-            }
+            found = ucs2(start(s), maxDeep, count);
         }
         LOG.debug("Found {} paths", found);
         callback.endSearch();
