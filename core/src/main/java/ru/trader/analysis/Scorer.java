@@ -80,7 +80,7 @@ public class Scorer {
     }
 
     public double getAvgProfit() {
-        return avgProfit * profile.getShip().getCargo();
+        return avgProfit;
     }
 
     public double getMaxProfit() {
