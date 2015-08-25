@@ -78,6 +78,12 @@ public class LimitedQueue<E> extends ArrayList<E> implements Queue<E> {
     }
 
     @Override
+    public E remove(int index) {
+        sort();
+        return super.remove(index);
+    }
+
+    @Override
     public boolean add(E element) {
         if (comparator != null){
             return addToTop(element);
