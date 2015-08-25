@@ -483,6 +483,9 @@ public class Crawler<T> {
         private void search(){
             curr = root;
             LOG.trace("Start {}", root);
+            while (!curr.hasNext() && levelUp()){
+                LOG.trace("Level complete");
+            }
             while (curr.hasNext()){
                 if (cancel()) break;
                 Edge<T> edge = curr.next();
