@@ -3,9 +3,7 @@ package ru.trader.analysis.graph;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.trader.analysis.AnalysisCallBack;
-import ru.trader.analysis.LimitedQueue;
-import ru.trader.analysis.RouteSpecification;
+import ru.trader.analysis.*;
 
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
@@ -20,22 +18,22 @@ public class Crawler<T> {
 
     protected final Graph<T> graph;
     protected final CrawlerCallBack callback;
-    private final Consumer<List<Edge<T>>> onFoundFunc;
     private final RouteSpecification<T> specification;
+    private final CrawlerSpecification<T> crawlerSpecification;
     private T target;
     private int maxSize;
 
     public Crawler(Graph<T> graph, Consumer<List<Edge<T>>> onFoundFunc, AnalysisCallBack callback) {
-        this(graph, null, onFoundFunc, callback);
+        this(graph, new SimpleCrawlerSpecification<>(onFoundFunc), callback);
     }
 
-    public Crawler(Graph<T> graph, RouteSpecification<T> specification, Consumer<List<Edge<T>>> onFoundFunc, AnalysisCallBack callback) {
+    public Crawler(Graph<T> graph, CrawlerSpecification<T> specification, AnalysisCallBack callback) {
         this.graph = graph;
         this.callback = new CrawlerCallBack(callback);
         maxSize = graph.getRoot().getLevel();
-        this.onFoundFunc = onFoundFunc;
-        if (specification != null){
-            this.specification = specification;
+        crawlerSpecification = specification;
+        if (crawlerSpecification.routeSpecification() != null){
+            this.specification = crawlerSpecification.routeSpecification();
         } else {
             this.specification = (edge, entry) -> isTarget(edge);
         }
@@ -64,17 +62,18 @@ public class Crawler<T> {
     }
 
     protected boolean isFound(Edge<T> edge, Traversal<T> head){
-        return isFound(edge, head, false);
+        return specification.specified(edge, head);
     }
 
-    private boolean isFound(Edge<T> edge, Traversal<T> head, boolean updateStates){
-        return updateStates ? specification.updateSpecified(edge, head) : specification.specified(edge, head);
+    private void updateState(Traversal<T> entry){
+        if (specification.mutable()){
+            specification.update(entry);
+        }
     }
 
     private void found(List<Edge<T>> res){
         callback.found();
-        onFoundFunc.accept(res);
-
+        crawlerSpecification.onFoundFunc().accept(res);
     }
 
     public int getMaxSize() {
@@ -171,7 +170,8 @@ public class Crawler<T> {
         LOG.trace("DFS from {} to {}, deep {}, count {}, entry {}", source, target, deep, count, entry);
         if (deep == source.getLevel()){
             for (Edge<T> next : entry.getEdges()) {
-                if (isFound(next, entry, true)){
+                if (isFound(next, entry)){
+                    updateState(entry);
                     List<Edge<T>> res = getCopyList(entry, next);
                     LOG.debug("Last edge found, path {}", res);
                     found++;
@@ -222,7 +222,8 @@ public class Crawler<T> {
             while (iterator.hasNext()){
                 if (callback.isCancel()) break;
                 Edge<T> edge = iterator.next();
-                if (isFound(edge, entry, true)){
+                if (isFound(edge, entry)){
+                    updateState(entry);
                     List<Edge<T>> res = getCopyList(entry, edge);
                     LOG.debug("Last edge found, path {}", res);
                     found++;
@@ -259,7 +260,8 @@ public class Crawler<T> {
             LOG.trace("Check path entry {}, weight {}", entry, entry.weight);
             Edge<T> edge = entry.getEdge();
             if (edge != null) {
-                if (isFound(edge, entry, true)) {
+                if (isFound(edge, entry)) {
+                    updateState(entry);
                     List<Edge<T>> res = entry.toEdges();
                     LOG.debug("Path found {}", res);
                     found++;
@@ -296,15 +298,22 @@ public class Crawler<T> {
         LOG.trace("UCS2 from {} to {}, deep {}, count {}", root.vertex, target, deep, count);
         int found = 0;
         double limit = Double.NaN;
-        LimitedQueue<CTEntrySupport> targetsQueue = new LimitedQueue<>(count, Comparator.<CTEntrySupport>naturalOrder());
-        LimitedQueue<CTEntrySupport> queue = new LimitedQueue<>(count, Comparator.<CTEntrySupport>naturalOrder());
+        Queue<CTEntrySupport> targetsQueue;
+        Queue<CTEntrySupport> queue;
+        if (crawlerSpecification.getGroupCount() > 0){
+            int routesByGroup = 1 + count / crawlerSpecification.getGroupCount();
+            targetsQueue = new GroupLimitedQueue<>(routesByGroup, Comparator.<CTEntrySupport>naturalOrder(), e -> crawlerSpecification.getGroupGetter(true).apply(e.entry));
+            queue = new GroupLimitedQueue<>(routesByGroup * maxSize, Comparator.<CTEntrySupport>naturalOrder(), e -> crawlerSpecification.getGroupGetter(false).apply(e.entry));
+        } else {
+            targetsQueue = new LimitedQueue<>(count, Comparator.<CTEntrySupport>naturalOrder());
+            queue = new LimitedQueue<>(count * maxSize, Comparator.<CTEntrySupport>naturalOrder());
+        }
         root.sort();
         queue.add(new CTEntrySupport(root));
         while (!(queue.isEmpty() && targetsQueue.isEmpty()) && count > found){
             if (callback.isCancel()) break;
-            int alreadyFound = targetsQueue.size();
             CTEntrySupport curr = targetsQueue.peek();
-            boolean isTarget = curr != null && (queue.isEmpty() || alreadyFound + found >= count || Comparator.<CTEntrySupport>naturalOrder().compare(curr, queue.peek()) <= 0);
+            boolean isTarget = curr != null && (queue.isEmpty() || compareQueue(curr.entry, queue.peek().entry) <= 0);
             if (isTarget){
                 targetsQueue.poll();
             } else {
@@ -312,12 +321,18 @@ public class Crawler<T> {
             }
             CostTraversalEntry entry = curr.entry;
             LOG.trace("Check path entry {}, weight {}", entry, entry.weight);
+            if (specification.updateMutated() && entry.containsSkipped()){
+                updateState(entry);
+            }
             if (isTarget) {
-                List<Edge<T>> res = entry.toEdges();
-                LOG.trace("Path found {}", res);
-                found++;
-                found(res);
-                if (found >= count) break;
+                if (!entry.isSkipped()){
+                    updateState(entry);
+                    List<Edge<T>> res = entry.toEdges();
+                    LOG.trace("Path found {}", res);
+                    found++;
+                    found(res);
+                    if (found >= count) break;
+                }
                 CTEntrySupport next = targetsQueue.peek();
                 limit = next != null ? next.entry.getWeight() :  Double.NaN;
                 if (deep > entry.getTarget().getLevel() || entry.size() >= maxSize){
@@ -325,18 +340,16 @@ public class Crawler<T> {
                     continue;
                 }
             }
-            if (alreadyFound + found < count){
-                LOG.trace("Continue search, limit {}", limit);
-            } else {
-                LOG.trace("Already {} found, extracting", alreadyFound);
-                continue;
-            }
             DFS task = new DFS(curr, deep, count - found, limit);
             POOL.invoke(task);
             targetsQueue.addAll(task.getTargets());
             queue.addAll(task.getQueue());
         }
         return found;
+    }
+
+    protected int compareQueue(CostTraversalEntry target, CostTraversalEntry queue) {
+        return target.compareTo(queue);
     }
 
     private class CTEntrySupport implements Comparable<CTEntrySupport>, Iterator<Edge<T>>{
@@ -422,8 +435,14 @@ public class Crawler<T> {
             this.deep = deep;
             this.count = count;
             this.limit = limit;
-            queue = new LimitedQueue<>(count, Comparator.<CTEntrySupport>naturalOrder());
-            targets = new LimitedQueue<>(count, Comparator.<CTEntrySupport>naturalOrder());
+            if (crawlerSpecification.getGroupCount() > 0){
+                int routesByGroup = 1 + count / crawlerSpecification.getGroupCount();
+                targets = new GroupLimitedQueue<>(routesByGroup, Comparator.<CTEntrySupport>naturalOrder(), e -> crawlerSpecification.getGroupGetter(true).apply(e.entry));
+                queue = new GroupLimitedQueue<>(routesByGroup * maxSize, Comparator.<CTEntrySupport>naturalOrder(), e -> crawlerSpecification.getGroupGetter(false).apply(e.entry));
+            } else {
+                targets = new LimitedQueue<>(count, Comparator.<CTEntrySupport>naturalOrder());
+                queue = new LimitedQueue<>(count * maxSize, Comparator.<CTEntrySupport>naturalOrder());
+            }
             subTasks = new ArrayList<>(THRESHOLD);
             isSubTask = subtask;
         }
@@ -491,8 +510,8 @@ public class Crawler<T> {
                 Edge<T> edge = curr.next();
                 CostTraversalEntry entry = curr.entry;
                 if (skip()) continue;
-                LOG.trace("Check edge {}, entry {}, weight {}", edge, entry, entry.weight);
-                boolean isTarget = isFound(edge, entry, true);
+                LOG.trace("Check edge {}, entry {}, weight {}, curr {}", edge, entry, entry.weight, curr);
+                boolean isTarget = isFound(edge, entry);
                 boolean canDeep = !entry.getTarget().isSingle() && deep < entry.getTarget().getLevel() && entry.size() < maxSize-1;
                 if (canDeep || isTarget){
                     CostTraversalEntry nextEntry = travers(entry, edge);
@@ -508,20 +527,17 @@ public class Crawler<T> {
                     } else {
                         if (skip()) continue;
                         if (!Double.isNaN(limit) && nextEntry.getWeight() >= limit){
-                            if (targets.size() < count){
-                                LOG.trace("Not found, limit {}, add entry {} to queue", limit, nextEntry);
-                                queue.add(curr);
-                            } else {
-                                LOG.trace("Not found, limit {}, don't add entry {} to queue", limit, nextEntry);
-                            }
+                            LOG.trace("Not found, limit {}, add entry {} to queue", limit, nextEntry);
+                            queue.add(curr);
                             levelUp();
                             if (!levelUp()){
                                 break;
                             }
                         } else {
                             if (!isRoot(curr) && maxSize-nextEntry.size() < SPLIT_SIZE){
-                                if (addSubTask(curr))
+                                if (addSubTask(curr)){
                                     levelUp();
+                                }
                             }
                         }
                     }
@@ -633,6 +649,18 @@ public class Crawler<T> {
         @Override
         public boolean isSkipped() {
             return skipped;
+        }
+
+        @Override
+        public boolean containsSkipped() {
+            if (skipped) return true;
+            Optional<Traversal<T>> head = getHead();
+            while (head.isPresent()) {
+                Traversal<T> curr = head.get();
+                if (curr.isSkipped()) return true;
+                head = curr.getHead();
+            }
+            return false;
         }
 
         protected List<Edge<T>> collect(Collection<Edge<T>> src){

@@ -32,7 +32,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         return new VendorsCrawler(this, new CrawlerSpecificationByTime(onFoundFunc), callback);
     }
 
-    public VendorsCrawler crawler(CrawlerSpecification specification, AnalysisCallBack callback){
+    public VendorsCrawler crawler(VendorsCrawlerSpecification specification, AnalysisCallBack callback){
         return new VendorsCrawler(this, specification, callback);
     }
 

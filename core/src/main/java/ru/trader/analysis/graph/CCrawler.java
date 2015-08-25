@@ -21,8 +21,8 @@ public class CCrawler<T extends Connectable<T>> extends Crawler<T> {
         init();
     }
 
-    public CCrawler(ConnectibleGraph<T> graph, RouteSpecification<T> specification, Consumer<List<Edge<T>>> onFoundFunc, AnalysisCallBack callback) {
-        super(graph, specification, onFoundFunc, callback);
+    public CCrawler(ConnectibleGraph<T> graph, CrawlerSpecification<T> specification, AnalysisCallBack callback) {
+        super(graph, specification, callback);
         init();
     }
 

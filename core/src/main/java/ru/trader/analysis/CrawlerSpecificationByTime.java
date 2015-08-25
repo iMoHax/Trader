@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class CrawlerSpecificationByTime extends AbstractCrawlerSpecification {
+public class CrawlerSpecificationByTime extends SimpleCrawlerSpecification<Vendor> implements VendorsCrawlerSpecification {
     public CrawlerSpecificationByTime(Consumer<List<Edge<Vendor>>> onFoundFunc) {
         super(null, onFoundFunc, false);
     }

@@ -5,7 +5,7 @@ import ru.trader.analysis.graph.Traversal;
 
 import java.util.Optional;
 
-public class LoopRouteSpecification<T> implements RouteSpecification<T> {
+public class LoopRouteSpecification<T> implements MutableRouteSpecification<T> {
     private final boolean unique;
 
     public LoopRouteSpecification(boolean unique) {
@@ -27,30 +27,27 @@ public class LoopRouteSpecification<T> implements RouteSpecification<T> {
 
     @Override
     public boolean specified(Edge<T> edge, Traversal<T> entry) {
-        return check(edge, entry, false);
+        return check(edge, entry);
     }
 
     @Override
-    public boolean updateSpecified(Edge<T> edge, Traversal<T> entry) {
-        return check(edge, entry, true);
+    public void update(Traversal<T> entry) {
+        setSkip(entry);
     }
 
-    private boolean check(Edge<T> edge, Traversal<T> entry, boolean update) {
+    private boolean check(Edge<T> edge, Traversal<T> entry) {
         Optional<Traversal<T>> head = entry.getHead();
         if (!head.isPresent() || head.get().getEdge() == null) return false;
         Traversal<T> start = getStart(head.get());
         boolean found = edge.isConnect(start.getTarget().getEntry());
         if (found && unique){
             found = !start.isSkipped();
-            if (update){
-                start.setSkipped(true);
-                setSkip(entry);
-            }
         }
         return found;
     }
 
     private void setSkip(Traversal<T> entry) {
+        if (entry.isSkipped()) return;
         Traversal<T> curr = entry;
         Optional<Traversal<T>> head = entry.getHead();
         while (head.isPresent()) {

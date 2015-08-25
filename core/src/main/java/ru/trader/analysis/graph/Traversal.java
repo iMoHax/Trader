@@ -11,6 +11,7 @@ public interface Traversal<T> {
     void sort();
     void setSkipped(boolean skipped);
     boolean isSkipped();
+    boolean containsSkipped();
 
     default boolean isConnect(T target){
         Edge<T> edge = getEdge();

@@ -49,7 +49,9 @@ public class RouteSearcher {
         graph.build(source, places);
         LOG.trace("Graph is builds");
         List<List<Edge<Place>>> paths = new ArrayList<>();
-        Crawler<Place> crawler = specification != null ?  new CCrawler<>(graph, specification, paths::add, callback) :  new CCrawler<>(graph, paths::add, callback);
+        Crawler<Place> crawler = specification != null ?
+                new CCrawler<>(graph, new SimpleCrawlerSpecification<>(specification, paths::add), callback) :
+                new CCrawler<>(graph, paths::add, callback);
         crawler.setMaxSize(profile.getJumps());
         if (profile.getPathPriority() == Profile.PATH_PRIORITY.FAST){
             crawler.findFast(target, count);
@@ -114,9 +116,10 @@ public class RouteSearcher {
         vGraph.build(source, vendors);
         LOG.trace("Graph is builds");
         RouteCollector collector = new RouteCollector();
+        specificator.setGroupCount(vendors.size());
         Crawler<Vendor> crawler = vGraph.crawler(specificator.build(collector::add, new LoopRouteSpecification<>(true), true), callback);
         crawler.setMaxSize(scorer.getProfile().getLands());
-        crawler.findMin(source, count);
+        crawler.findMin(source, vendors.size());
         crawler = vGraph.crawler(specificator.build(collector::add, new RouteSpecificationByTarget<>(source), false), callback);
         crawler.setMaxSize(scorer.getProfile().getLands());
         crawler.findMin(source, 1);

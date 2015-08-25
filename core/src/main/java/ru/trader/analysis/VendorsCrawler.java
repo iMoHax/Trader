@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 public class VendorsCrawler extends Crawler<Vendor> {
     private double startFuel;
     private double startBalance;
-    private final CrawlerSpecification specification;
+    private final VendorsCrawlerSpecification specification;
 
-    public VendorsCrawler(VendorsGraph graph, CrawlerSpecification specification, AnalysisCallBack callback) {
-        super(graph, specification.routeSpecification(), specification.onFoundFunc(), callback);
+    public VendorsCrawler(VendorsGraph graph, VendorsCrawlerSpecification specification, AnalysisCallBack callback) {
+        super(graph, specification, callback);
         this.specification = specification;
         startFuel = graph.getProfile().getShip().getTank();
         startBalance = graph.getProfile().getBalance();

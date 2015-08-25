@@ -14,6 +14,7 @@ public class CrawlerSpecificator {
     private final List<Vendor> containsAny;
     private final List<Vendor> all;
     private final Collection<Offer> offers;
+    private int groupCount;
     private boolean byTime;
 
     public CrawlerSpecificator() {
@@ -64,7 +65,11 @@ public class CrawlerSpecificator {
         this.offers.addAll(offers);
     }
 
-    public CrawlerSpecification build(Consumer<List<Edge<Vendor>>> onFoundFunc, RouteSpecification<Vendor> andSpec, boolean loop){
+    public void setGroupCount(int groupCount) {
+        this.groupCount = groupCount;
+    }
+
+    public VendorsCrawlerSpecification build(Consumer<List<Edge<Vendor>>> onFoundFunc, RouteSpecification<Vendor> andSpec, boolean loop){
         RouteSpecification<Vendor> spec;
         RouteSpecification<Vendor> res = null;
         if (!all.isEmpty()){
@@ -94,13 +99,17 @@ public class CrawlerSpecificator {
                 res = andSpec;
             }
         }
+        SimpleCrawlerSpecification crawlerSpecification;
         if (byTime){
-            return new CrawlerSpecificationByTime(res, onFoundFunc, loop);
+            crawlerSpecification = new CrawlerSpecificationByTime(res, onFoundFunc, loop);
+        } else {
+            crawlerSpecification = new CrawlerSpecificationByProfit(res, onFoundFunc, loop);
         }
-        return new CrawlerSpecificationByProfit(res, onFoundFunc, loop);
+        crawlerSpecification.setGroupCount(groupCount);
+        return (VendorsCrawlerSpecification) crawlerSpecification;
     }
 
-    public CrawlerSpecification build(Consumer<List<Edge<Vendor>>> onFoundFunc){
+    public VendorsCrawlerSpecification build(Consumer<List<Edge<Vendor>>> onFoundFunc){
         return build(onFoundFunc, null, false);
     }
 
