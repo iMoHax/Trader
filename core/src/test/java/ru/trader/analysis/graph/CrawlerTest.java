@@ -17,7 +17,7 @@ import java.util.List;
 public class CrawlerTest extends Assert {
     private final static Logger LOG = LoggerFactory.getLogger(CrawlerTest.class);
 
-    private final static ArrayList<Point> entrys = new ArrayList<>();
+    private final ArrayList<Point> entrys = new ArrayList<>();
     private final static Point x1 = new Point("x1", -40);
     private final static Point x2 = new Point("x2", -20);
     private final static Point x3 = new Point("x3", -10, true);
