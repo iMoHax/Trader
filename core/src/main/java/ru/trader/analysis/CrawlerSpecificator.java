@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class CrawlerSpecificator {
     private final List<Vendor> any;
@@ -69,17 +70,33 @@ public class CrawlerSpecificator {
         this.groupCount = groupCount;
     }
 
-    public VendorsCrawlerSpecification build(Consumer<List<Edge<Vendor>>> onFoundFunc, RouteSpecification<Vendor> andSpec, boolean loop){
+    private RouteSpecification<Vendor> buildOffersSpec(Collection<Vendor> vendors){
+        RouteSpecification<Vendor> res = null;
+        for (Offer offer : offers) {
+            List<Vendor> sellers = vendors.stream().filter(v -> {
+                Offer sell = v.getSell(offer.getItem());
+                return sell != null && sell.getCount() >= offer.getCount();
+            }).collect(Collectors.toList());
+            if (res != null){
+                res = res.and(RouteSpecificationByTargets.containAny(sellers));
+            } else {
+                res = RouteSpecificationByTargets.containAny(sellers);
+            }
+        }
+        return res;
+    }
+
+    public VendorsCrawlerSpecification build(Collection<Vendor> vendors, Consumer<List<Edge<Vendor>>> onFoundFunc, RouteSpecification<Vendor> andSpec, boolean loop){
         RouteSpecification<Vendor> spec;
         RouteSpecification<Vendor> res = null;
         if (!all.isEmpty()){
-            spec = all.size() > 1 ? RouteSpecificationByTargets.all(all) : new RouteSpecificationByTarget<>(all.get(0));
+            spec = RouteSpecificationByTargets.all(all);
             res = spec;
         }
         if (!any.isEmpty()){
             spec = any.size() > 1 ? RouteSpecificationByTargets.any(any) : new RouteSpecificationByTarget<>(any.get(0));
             if (res != null){
-                res.and(spec);
+                res = res.and(spec);
             } else {
                 res = spec;
             }
@@ -87,14 +104,22 @@ public class CrawlerSpecificator {
         if (!containsAny.isEmpty()){
             spec = RouteSpecificationByTargets.containAny(containsAny);
             if (res != null){
-                res.and(spec);
+                res = res.and(spec);
+            } else {
+                res = spec;
+            }
+        }
+        if (!offers.isEmpty()){
+            spec = buildOffersSpec(vendors);
+            if (res != null){
+                res = res.and(spec);
             } else {
                 res = spec;
             }
         }
         if (andSpec != null){
             if (res != null){
-                res.and(andSpec);
+                res = res.and(andSpec);
             } else {
                 res = andSpec;
             }
@@ -109,8 +134,8 @@ public class CrawlerSpecificator {
         return (VendorsCrawlerSpecification) crawlerSpecification;
     }
 
-    public VendorsCrawlerSpecification build(Consumer<List<Edge<Vendor>>> onFoundFunc){
-        return build(onFoundFunc, null, false);
+    public VendorsCrawlerSpecification build(Collection<Vendor> vendors, Consumer<List<Edge<Vendor>>> onFoundFunc){
+        return build(vendors, onFoundFunc, null, false);
     }
 
 }

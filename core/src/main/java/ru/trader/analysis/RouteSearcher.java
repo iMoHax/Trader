@@ -103,7 +103,7 @@ public class RouteSearcher {
         vGraph.build(source, vendors);
         LOG.trace("Graph is builds");
         RouteCollector collector = new RouteCollector();
-        Crawler<Vendor> crawler = vGraph.crawler(specificator.build(collector::add), callback);
+        Crawler<Vendor> crawler = vGraph.crawler(specificator.build(vendors, collector::add), callback);
         crawler.setMaxSize(scorer.getProfile().getLands());
         crawler.findMin(target, count);
         return collector.get();
@@ -117,10 +117,10 @@ public class RouteSearcher {
         LOG.trace("Graph is builds");
         RouteCollector collector = new RouteCollector();
         specificator.setGroupCount(vendors.size());
-        Crawler<Vendor> crawler = vGraph.crawler(specificator.build(collector::add, new LoopRouteSpecification<>(true), true), callback);
+        Crawler<Vendor> crawler = vGraph.crawler(specificator.build(vendors, collector::add, new LoopRouteSpecification<>(true), true), callback);
         crawler.setMaxSize(scorer.getProfile().getLands());
         crawler.findMin(source, vendors.size());
-        crawler = vGraph.crawler(specificator.build(collector::add, new RouteSpecificationByTarget<>(source), false), callback);
+        crawler = vGraph.crawler(specificator.build(vendors, collector::add, new RouteSpecificationByTarget<>(source), false), callback);
         crawler.setMaxSize(scorer.getProfile().getLands());
         crawler.findMin(source, 1);
         List<Route> routes = collector.get();

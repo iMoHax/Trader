@@ -76,6 +76,10 @@ public class Route implements Comparable<Route> {
         return profit / time;
     }
 
+    public int getJumps(){
+        return entries.size();
+    }
+
     public void add(RouteEntry entry){
         LOG.trace("Add entry {} to route {}", entry, this);
         entries.add(entry);

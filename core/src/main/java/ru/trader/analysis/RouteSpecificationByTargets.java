@@ -28,7 +28,7 @@ public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
         Collection<T> set = new ArrayList<>(targets.size());
         set.add(obj);
         entry.routeIterator().forEachRemaining(e -> set.add(e.getTarget().getEntry()));
-        return targets.containsAll(set);
+        return set.containsAll(targets);
     }
 
     private boolean containsAny(Edge<T> edge, Traversal<T> entry) {
