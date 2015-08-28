@@ -65,6 +65,10 @@ public class Crawler<T> {
         return specification.specified(edge, head);
     }
 
+    protected int lastFound(Edge<T> edge, Traversal<T> head){
+        return specification.lastFound(edge, head);
+    }
+
     private void updateState(Traversal<T> entry){
         if (specification.mutable()){
             specification.update(entry);
@@ -511,8 +515,9 @@ public class Crawler<T> {
                 CostTraversalEntry entry = curr.entry;
                 if (skip()) continue;
                 LOG.trace("Check edge {}, entry {}, weight {}, curr {}", edge, entry, entry.weight, curr);
-                boolean isTarget = isFound(edge, entry);
-                boolean canDeep = !entry.getTarget().isSingle() && deep < entry.getTarget().getLevel() && entry.size() < maxSize-1;
+                int lastFound = lastFound(edge, entry);
+                boolean isTarget = lastFound == 0;
+                boolean canDeep = !entry.getTarget().isSingle() && deep < entry.getTarget().getLevel() && entry.size()+lastFound < maxSize;
                 if (canDeep || isTarget){
                     CostTraversalEntry nextEntry = travers(entry, edge);
                     if (canDeep){

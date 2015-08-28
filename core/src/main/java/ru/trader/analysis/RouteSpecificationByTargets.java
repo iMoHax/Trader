@@ -20,30 +20,46 @@ public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
 
     @Override
     public boolean specified(Edge<T> edge, Traversal<T> entry) {
+        return all ? containsAll(edge, entry) == 0 : containsAny(edge, entry) == 0;
+    }
+
+    @Override
+    public int lastFound(Edge<T> edge, Traversal<T> entry) {
         return all ? containsAll(edge, entry) : containsAny(edge, entry);
     }
 
-    private boolean containsAll(Edge<T> edge, Traversal<T> entry) {
+    @Override
+    public int matchCount() {
+        return all ? targets.size() : 1;
+    }
+
+    private int containsAll(Edge<T> edge, Traversal<T> entry) {
         T obj = edge.getTarget().getEntry();
         Collection<T> set = new ArrayList<>(targets.size());
         set.add(obj);
         entry.routeIterator().forEachRemaining(e -> set.add(e.getTarget().getEntry()));
-        return set.containsAll(targets);
+        int last = targets.size();
+        for (T target : targets) {
+            if (set.contains(target)){
+                last--;
+            }
+        }
+        return last;
     }
 
-    private boolean containsAny(Edge<T> edge, Traversal<T> entry) {
+    private int containsAny(Edge<T> edge, Traversal<T> entry) {
         T obj = edge.getTarget().getEntry();
-        if (targets.contains(obj)) return true;
+        if (targets.contains(obj)) return 0;
         if (targetOnly){
-            return false;
+            return 1;
         }
         Iterator<Edge<T>> iterator = entry.routeIterator();
         while (iterator.hasNext()){
             if (targets.contains(iterator.next().getTarget().getEntry())){
-                return true;
+                return 0;
             }
         }
-        return false;
+        return 1;
     }
 
     public static <T> RouteSpecificationByTargets<T> all(Collection<T> targets){
