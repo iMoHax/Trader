@@ -5,6 +5,7 @@ import ru.trader.analysis.graph.Traversal;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 
 public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
@@ -15,7 +16,7 @@ public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
     private RouteSpecificationByTargets(Collection<T> targets, boolean all, boolean targetOnly) {
         this.all = all;
         this.targetOnly = targetOnly;
-        this.targets = new ArrayList<>(targets);
+        this.targets = new HashSet<>(targets);
     }
 
     @Override

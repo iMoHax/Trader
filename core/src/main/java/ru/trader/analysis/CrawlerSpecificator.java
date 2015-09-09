@@ -62,12 +62,31 @@ public class CrawlerSpecificator {
         }
     }
 
+    public void buy(Offer offer){
+        offers.add(offer);
+    }
+
     public void buy(Collection<Offer> offers){
         this.offers.addAll(offers);
     }
 
     public void setGroupCount(int groupCount) {
         this.groupCount = groupCount;
+    }
+
+    public int getMinHop(){
+        return all.size() + (any.isEmpty() ? 0 : 1) + (containsAny.isEmpty() ? 0 : 1) + offers.size()/4 ;
+    }
+
+    public boolean contains(Vendor vendor){
+        boolean res = all.contains(vendor) || any.contains(vendor) || containsAny.contains(vendor);
+        if (res) return true;
+        for (Offer offer : offers) {
+            Offer sell = vendor.getSell(offer.getItem());
+            res = sell != null && sell.getCount() >= offer.getCount();
+            if (res) return true;
+        }
+        return false;
     }
 
     private RouteSpecification<Vendor> buildOffersSpec(Collection<Vendor> vendors){
