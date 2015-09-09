@@ -44,6 +44,10 @@ public class Order implements Comparable<Order> {
         return profit;
     }
 
+    public double getProfitByTonne(){
+        return count == 0 ? buy.getPrice() - sell.getPrice() : profit/count;
+    }
+
     public long getCount() {
         return count;
     }
@@ -86,7 +90,7 @@ public class Order implements Comparable<Order> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Order)) return false;
 
         Order order = (Order) o;
 

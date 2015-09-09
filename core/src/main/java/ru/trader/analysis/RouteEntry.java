@@ -3,14 +3,13 @@ package ru.trader.analysis;
 import ru.trader.core.Order;
 import ru.trader.core.Vendor;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class RouteEntry {
     private final Vendor vendor;
     private final double fuel;
-    private final List<Order> orders;
+    private final List<OrderWrapper> orders;
     private boolean land;
     private double refill;
     private double profit;
@@ -74,15 +73,77 @@ public class RouteEntry {
     }
 
     void add(Order order){
-        orders.add(order);
+        orders.add(fixedWrap(order));
     }
 
     void addAll(Collection<Order> orders){
-        this.orders.addAll(orders);
+        orders.forEach(this::add);
+    }
+
+    void addOrder(Order order){
+        orders.add(wrap(order));
+    }
+
+    void removeOrder(Order order){
+        assert order instanceof OrderWrapper;
+        orders.remove(order);
+    }
+
+    void clearTemporal(){
+        for (Iterator<OrderWrapper> iterator = orders.iterator(); iterator.hasNext(); ) {
+            OrderWrapper order = iterator.next();
+            if (!order.fixed){
+                iterator.remove();
+            }
+        }
+        orders.forEach(OrderWrapper::reset);
     }
 
     public List<Order> getOrders() {
-        return orders;
+        return new AbstractList<Order>() {
+            @Override
+            public Order get(int index) {
+                return orders.get(index);
+            }
+
+            @Override
+            public int size() {
+                return orders.size();
+            }
+        };
+    }
+
+    public List<Order> getFixedOrders(){
+        return orders.stream().filter(o -> o.fixed).collect(Collectors.toList());
+    }
+
+    void reserve(long count){
+        List<Order> fixedOrders = getFixedOrders();
+        fixedOrders.sort((o1, o2) -> Double.compare(o1.getProfitByTonne(), o2.getProfitByTonne()));
+        for (Order order : fixedOrders) {
+            long newCount = order.getCount() - count;
+            if (newCount < 0){
+                newCount = 0;
+            }
+            count -= order.getCount() - newCount;
+            order.setCount(newCount);
+            if (count <= 0) break;
+        }
+    }
+
+    void fill(long count){
+        List<Order> fixedOrders = getFixedOrders();
+        fixedOrders.sort((o1, o2) -> Double.compare(o2.getProfitByTonne(), o1.getProfitByTonne()));
+        for (Order order : fixedOrders) {
+            long newCount = Math.min(((OrderWrapper)order).max, order.getCount() + count);
+            count -= order.getCount() - newCount;
+            order.setCount(newCount);
+            if (count <= 0) break;
+        }
+    }
+
+    public long getCargo(){
+        return orders.stream().mapToLong(Order::getCount).sum();
     }
 
     void clearOrders(){
@@ -136,5 +197,28 @@ public class RouteEntry {
     @Override
     public String toString() {
         return vendor + (isRefill() ? " (R)":"");
+    }
+
+    private OrderWrapper wrap(Order order){
+        return new OrderWrapper(order, false);
+    }
+
+    private OrderWrapper fixedWrap(Order order){
+        return new OrderWrapper(order, true);
+    }
+
+    private class OrderWrapper extends Order {
+        private final boolean fixed;
+        private final long max;
+
+        private OrderWrapper(Order order, boolean fixed) {
+            super(order.getSell(), order.getBuy(), order.getCount());
+            this.fixed = fixed;
+            this.max = order.getCount();
+        }
+
+        public void reset(){
+            setCount(max);
+        }
     }
 }

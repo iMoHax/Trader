@@ -226,5 +226,25 @@ public class Profile {
         values.setProperty("profile.search.times.recharge", String.valueOf(rechargeTime));
         ship.writeTo(values);
     }
-
+    
+    public Profile copy(){
+        Profile res = new Profile(ship);
+        res.name = this.name;
+        res.balance = this.balance;
+        res.system = this.system;
+        res.station = this.station;
+        res.docked = this.docked;
+        res.jumps = this.jumps;
+        res.lands = this.lands;
+        res.refill = this.refill;
+        res.routesCount = this.routesCount;
+        res.distanceTime = this.distanceTime;
+        res.jumpTime = this.jumpTime;
+        res.landingTime = this.landingTime;
+        res.takeoffTime = this.takeoffTime;
+        res.rechargeTime = this.rechargeTime;
+        res.fuelPrice = this.fuelPrice;
+        res.pathPriority = this.pathPriority;
+        return res;
+    } 
 }

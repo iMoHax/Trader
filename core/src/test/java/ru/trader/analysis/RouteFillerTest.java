@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import ru.trader.TestUtil;
 import ru.trader.core.*;
 import ru.trader.store.simple.SimpleMarket;
+import ru.trader.store.simple.SimpleOffer;
 
 import java.util.List;
 
@@ -469,6 +470,221 @@ public class RouteFillerTest extends Assert {
         assertEquals(60, entry.getProfit(), 0.0001);
         TestUtil.assertCollectionEquals(entry.getOrders(), order7);
 
+    }
+
+    @Test
+    public void testLostProfits() throws Exception {
+        LOG.info("Start lost profit test");
+        Route route = initTest5();
+        int cargo = 7;
+        RouteFiller filler = getFillerInstance(700, cargo, true, market);
+        filler.fill(route);
+
+        assertEquals(750, route.getProfit(), 0.0001);
+        assertEquals(3, route.getLands());
+
+        /* v1 3x100 + 2x20 -> v2 5x50 -> v3 3x60 -> v4 */
+        double[] profits = RouteFiller.getLostProfits(route, 0, v4, cargo, cargo);
+        assertArrayEquals(new double[]{750, 430, 180, 0}, profits, 0.001);
+
+        profits = RouteFiller.getLostProfits(route, 0, v1, cargo, cargo);
+        assertArrayEquals(new double[]{0, 430, 180, 0}, profits, 0.001);
+
+        profits = RouteFiller.getLostProfits(route, 1, v2, cargo, cargo);
+        assertArrayEquals(new double[]{320, 0, 500, 320}, profits, 0.001);
+
+        profits = RouteFiller.getLostProfits(route, 2, v3, cargo, cargo);
+        assertArrayEquals(new double[]{570, 250, 0, 570}, profits, 0.001);
+
+        profits = RouteFiller.getLostProfits(route, 0, v3, cargo, cargo);
+        assertArrayEquals(new double[]{570, 250, 0, 570}, profits, 0.001);
+
+        profits = RouteFiller.getLostProfits(route, 0, v1, 2, cargo);
+        assertArrayEquals(new double[]{0, 0, 0, 0}, profits, 0.001);
+
+        /* v1 -2x20 -> v2 -2x50 -> v3 -> v4 */
+        profits = RouteFiller.getLostProfits(route, 0, v4, 4, cargo);
+        assertArrayEquals(new double[]{120, 100, 0, 0}, profits, 0.001);
+
+        /* v1 -1x100 - 2x20 -> v2 -3x50 -> v3 -1x60 -> v4 */
+        profits = RouteFiller.getLostProfits(route, 0, v4, 5, cargo);
+        assertArrayEquals(new double[]{330, 210, 60, 0}, profits, 0.001);
+    }
+
+    private Route initTest5c(){
+        LOG.info("Init test 5c");
+        market = new SimpleMarket();
+        ITEM1 = market.addItem("ITEM1", null);
+        ITEM2 = market.addItem("ITEM2", null);
+        ITEM3 = market.addItem("ITEM3", null);
+        ITEM4 = market.addItem("ITEM4", null);
+        v1 = market.addPlace("p1",0,0,0).addVendor("v1");
+        v2 = market.addPlace("p2",0,0,0).addVendor("v2");
+        v3 = market.addPlace("p3",0,0,0).addVendor("v3");
+        v4 = market.addPlace("p4",0,0,0).addVendor("v4");
+        v1.addOffer(OFFER_TYPE.SELL, ITEM1, 100, 5);
+        v1.addOffer(OFFER_TYPE.SELL, ITEM2, 200, 5);
+        v1.addOffer(OFFER_TYPE.SELL, ITEM3, 300, 5);
+        v1.addOffer(OFFER_TYPE.SELL, ITEM4, 40, -1);
+        v2.addOffer(OFFER_TYPE.SELL, ITEM1, 150, 5);
+        v2.addOffer(OFFER_TYPE.SELL, ITEM3, 320, 5);
+        v3.addOffer(OFFER_TYPE.SELL, ITEM3, 390, 5);
+        v4.addOffer(OFFER_TYPE.SELL, ITEM3, 200, 5);
+
+        v1.addOffer(OFFER_TYPE.BUY, ITEM3, 250, -1);
+        v2.addOffer(OFFER_TYPE.BUY, ITEM2, 300, -1);
+        v2.addOffer(OFFER_TYPE.BUY, ITEM4, 50, -1);
+        v3.addOffer(OFFER_TYPE.BUY, ITEM1, 200, -1);
+        v4.addOffer(OFFER_TYPE.BUY, ITEM3, 450, -1);
+
+        Route route = new Route(new RouteEntry(v1, 0, 0,0));
+        route.add(new RouteEntry(v2, 0, 0,0));
+        route.add(new RouteEntry(v3, 0, 0,0));
+        route.add(new RouteEntry(v4, 0, 0,0));
+        route.add(new RouteEntry(v3, 0, 0,0));
+        route.add(new RouteEntry(v1, 0, 0,0));
+
+        return route;
+    }
+
+    @Test
+    public void testProfitsByLoop() throws Exception {
+        LOG.info("Start profit by loop test");
+        Route route = initTest5c();
+        int cargo = 7;
+        RouteFiller filler = getFillerInstance(700, cargo, true, market);
+        filler.fill(route);
+
+        assertEquals(1000, route.getProfit(), 0.0001);
+        assertEquals(4, route.getLands());
+
+        /* v1 3x100 + 2x20 -> v2 5x50 -> v3 3x60 -> v4 5x50 -> v3 transit -> v1 */
+        double[] profits = RouteFiller.getLostProfits(route, 0, v4, cargo, cargo);
+        assertArrayEquals(new double[]{750, 430, 180, 0, 750}, profits, 0.001);
+
+        profits = RouteFiller.getLostProfits(route, 0, v1, cargo, cargo);
+        assertArrayEquals(new double[]{0, 680, 430, 250, 0}, profits, 0.001);
+
+        profits = RouteFiller.getLostProfits(route, 1, v2, cargo, cargo);
+        assertArrayEquals(new double[]{320, 0, 750, 570, 320}, profits, 0.001);
+
+        profits = RouteFiller.getLostProfits(route, 2, v3, cargo, cargo);
+        assertArrayEquals(new double[]{570, 250, 0, 820, 570}, profits, 0.001);
+
+        profits = RouteFiller.getLostProfits(route, 0, v3, cargo, cargo);
+        assertArrayEquals(new double[]{570, 250, 0, 820, 570}, profits, 0.001);
+
+        profits = RouteFiller.getLostProfits(route, 0, v1, 2, cargo);
+        assertArrayEquals(new double[]{0, 0, 0, 0, 0}, profits, 0.001);
+
+    }
+
+    private Route initTest5d(){
+        LOG.info("Init test 5d");
+        market = new SimpleMarket();
+        ITEM1 = market.addItem("ITEM1", null);
+        ITEM2 = market.addItem("ITEM2", null);
+        ITEM3 = market.addItem("ITEM3", null);
+        ITEM4 = market.addItem("ITEM4", null);
+        v1 = market.addPlace("p1",0,0,0).addVendor("v1");
+        v2 = market.addPlace("p2",0,0,0).addVendor("v2");
+        v3 = market.addPlace("p3",0,0,0).addVendor("v3");
+        v4 = market.addPlace("p4",0,0,0).addVendor("v4");
+        v1.addOffer(OFFER_TYPE.SELL, ITEM1, 100, 5);
+        v1.addOffer(OFFER_TYPE.SELL, ITEM2, 200, 5);
+        v1.addOffer(OFFER_TYPE.SELL, ITEM3, 300, 5);
+        v1.addOffer(OFFER_TYPE.SELL, ITEM4, 40, -1);
+        v2.addOffer(OFFER_TYPE.SELL, ITEM1, 150, 5);
+        v2.addOffer(OFFER_TYPE.SELL, ITEM3, 320, 5);
+        v3.addOffer(OFFER_TYPE.SELL, ITEM3, 390, 5);
+        v4.addOffer(OFFER_TYPE.SELL, ITEM1, 180, 5);
+
+        v1.addOffer(OFFER_TYPE.BUY, ITEM3, 400, -1);
+        v2.addOffer(OFFER_TYPE.BUY, ITEM2, 300, -1);
+        v2.addOffer(OFFER_TYPE.BUY, ITEM4, 50, -1);
+        v3.addOffer(OFFER_TYPE.BUY, ITEM1, 200, -1);
+        v4.addOffer(OFFER_TYPE.BUY, ITEM3, 450, -1);
+
+        Route route = new Route(new RouteEntry(v1, 0, 0,0));
+        route.add(new RouteEntry(v2, 0, 0,0));
+        route.add(new RouteEntry(v3, 0, 0,0));
+        route.add(new RouteEntry(v4, 0, 0,0));
+        route.add(new RouteEntry(v3, 0, 0,0));
+        route.add(new RouteEntry(v1, 0, 0,0));
+
+        return route;
+    }
+
+    @Test
+    public void testProfitsByLoop2() throws Exception {
+        LOG.info("Start profit by loop2 test");
+        Route route = initTest5d();
+        int cargo = 7;
+        RouteFiller filler = getFillerInstance(700, cargo, true, market);
+        filler.fill(route);
+
+        assertEquals(880, route.getProfit(), 0.0001);
+        assertEquals(5, route.getLands());
+
+        /* v1 3x100 + 2x20 -> v2 5x50 -> v3 3x60 -> v4 5x20 -> v3 3x10 -> v1 */
+        double[] profits = RouteFiller.getLostProfits(route, 0, v4, cargo, cargo);
+        assertArrayEquals(new double[]{750, 430, 180, 0, 780}, profits, 0.001);
+
+        profits = RouteFiller.getLostProfits(route, 0, v1, cargo, cargo);
+        assertArrayEquals(new double[]{0, 560, 310, 130, 30}, profits, 0.001);
+
+        profits = RouteFiller.getLostProfits(route, 1, v2, cargo, cargo);
+        assertArrayEquals(new double[]{320, 0, 630, 450, 350}, profits, 0.001);
+
+        profits = RouteFiller.getLostProfits(route, 2, v3, cargo, cargo);
+        assertArrayEquals(new double[]{570, 250, 0, 100, 0}, profits, 0.001);
+
+        profits = RouteFiller.getLostProfits(route, 0, v3, cargo, cargo);
+        assertArrayEquals(new double[]{570, 250, 0, 100, 0}, profits, 0.001);
+
+        profits = RouteFiller.getLostProfits(route, 0, v1, 2, cargo);
+        assertArrayEquals(new double[]{0, 0, 0, 0, 0}, profits, 0.001);
+
+    }
+
+    @Test
+    public void testAddOffer() throws Exception {
+        LOG.info("Start add offer test");
+        Route route = initTest5d();
+        int cargo = 7;
+        RouteFiller filler = getFillerInstance(700, cargo, true, market);
+        filler.fill(route);
+
+        assertEquals(880, route.getProfit(), 0.0001);
+        assertEquals(5, route.getLands());
+
+        /* v1 3x100 + 2x20 -> v2 5x50 -> v3 3x60 -> v4 5x20 -> v3 3x10 -> v1 */
+        Offer offer = SimpleOffer.fakeBuy(v2, ITEM3, 210, 3);
+        RouteFiller.addOrders(route, 1, offer, cargo);
+
+        Order order1 = new Order(v1.getSell(ITEM2), v2.getBuy(ITEM2), 3);
+        Order order2 = new Order(v1.getSell(ITEM4), v2.getBuy(ITEM4), 1);
+        Order order3 = new Order(v2.getSell(ITEM1), v3.getBuy(ITEM1), 5);
+        Order order4 = new Order(v3.getSell(ITEM3), v4.getBuy(ITEM3), 3);
+        Order order5 = new Order(v4.getSell(ITEM1), v3.getBuy(ITEM1), 5);
+        Order order6 = new Order(v3.getSell(ITEM3), v1.getBuy(ITEM3), 3);
+        Order order7 = new Order(v1.getSell(ITEM3), offer, 2);
+        Order order8 = new Order(v3.getSell(ITEM3), offer, 1);
+
+        TestUtil.assertCollectionEquals(route.get(0).getOrders(), order1, order2, order7);
+        TestUtil.assertCollectionEquals(route.get(1).getOrders(), order3);
+        TestUtil.assertCollectionEquals(route.get(2).getOrders(), order4);
+        TestUtil.assertCollectionEquals(route.get(3).getOrders(), order5);
+        TestUtil.assertCollectionEquals(route.get(4).getOrders(), order6, order8);
+
+        order2 = new Order(v1.getSell(ITEM4), v2.getBuy(ITEM4), 2);
+
+        RouteFiller.removeOrders(route, offer);
+        TestUtil.assertCollectionEquals(route.get(0).getOrders(), order1, order2);
+        TestUtil.assertCollectionEquals(route.get(1).getOrders(), order3);
+        TestUtil.assertCollectionEquals(route.get(2).getOrders(), order4);
+        TestUtil.assertCollectionEquals(route.get(3).getOrders(), order5);
+        TestUtil.assertCollectionEquals(route.get(4).getOrders(), order6);
     }
 
 }

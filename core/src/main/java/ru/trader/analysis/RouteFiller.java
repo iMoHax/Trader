@@ -357,4 +357,135 @@ public class RouteFiller {
             return "{" + bestOrders + "}";
         }
     }
+
+    public static double[] getLostProfits(Route route, int offset, Vendor target, long count, long cargo){
+        List<RouteEntry> entries = route.getEntries();
+        int size = entries.size() - (route.isLoop() ? 1 : 0);
+        double[] res = new double[size];
+        for (int i = 0; i < size; i++) {
+            int index = i + offset;
+            if (index >= size) index -= size;
+            RouteEntry entry = entries.get(index);
+            if (entry.isTransit()) continue;
+            List<Order> orders = new ArrayList<>(entry.getFixedOrders());
+            orders.sort((o1, o2) -> Double.compare(o1.getProfitByTonne(), o2.getProfitByTonne()));
+            long empty = cargo - orders.stream().mapToLong(Order::getCount).sum();
+            long need = count - empty;
+            double profit = 0;
+            for (Order order : orders) {
+                if (need > 0){
+                    long reserved = Math.min(order.getCount(), need);
+                    profit += reserved * order.getProfitByTonne();
+                    need -= reserved;
+                } else {
+                    break;
+                }
+            }
+            for (int j = 0; j < size; j++) {
+                index = i - j + offset;
+                if (index >= size) index -= size;
+                if (index < 0) index += size;
+                entry = entries.get(index);
+                if (!entry.isTransit() && entry.is(target)) {
+                    break;
+                }
+                res[index] += profit;
+            }
+        }
+        return res;
+    }
+
+    public static void reservedCargo(final Route route, final int offset, Vendor target, long count, long cargo){
+        List<RouteEntry> entries = route.getEntries();
+        int size = entries.size() - (route.isLoop() ? 1 : 0);
+        for (int i = 0; i < size; i++) {
+            int index = i + offset;
+            if (index >= size) index -= size;
+            RouteEntry entry = entries.get(index);
+            if (entry.isTransit()) continue;
+            if (entry.is(target)) {
+                break;
+            }
+            long empty = cargo - entry.getCargo();
+            long need = count - empty;
+            if (need > 0){
+                entry.reserve(need);
+            }
+        }
+    }
+
+    public static void fillCargo(final Route route, final int offset, Vendor target, long count){
+        List<RouteEntry> entries = route.getEntries();
+        int size = entries.size() - (route.isLoop() ? 1 : 0);
+        for (int i = 0; i < size; i++) {
+            int index = i + offset;
+            if (index >= size) index -= size;
+            RouteEntry entry = entries.get(index);
+            if (entry.isTransit()) continue;
+            if (entry.is(target)) {
+                break;
+            }
+            entry.fill(count);
+        }
+    }
+
+    public static void removeOrders(final Route route, final Offer buyOffer){
+        List<RouteEntry> entries = route.getEntries();
+        int size = entries.size() - (route.isLoop() ? 1 : 0);
+        for (int i = 0; i < size; i++) {
+            RouteEntry entry = entries.get(i);
+            if (entry.isTransit()) continue;
+            Optional<Order> order = entry.getOrders().stream().filter(o -> o.getBuy().equals(buyOffer)).findAny();
+            if (order.isPresent()){
+                fillCargo(route, i, buyOffer.getVendor(), order.get().getCount());
+                entry.removeOrder(order.get());
+            }
+        }
+    }
+
+    public static void addOrders(final Route route, final int startEntry, final Offer buyOffer, final long cargo){
+        final double[] profits = getLostProfits(route, startEntry, buyOffer.getVendor(), buyOffer.getCount(), cargo);
+
+        class SortHelper {
+            RouteEntry entry;
+            int index;
+            Order sell;
+
+            SortHelper(RouteEntry entry, int index) {
+                this.entry = entry;
+                this.index = index;
+                Offer sell = entry.getVendor().getSell(buyOffer.getItem());
+                if (sell != null){
+                    this.sell = new Order(sell, buyOffer, route.getBalance(), buyOffer.getCount());
+                }
+            }
+
+            private double getProfit(){
+                return sell != null ? profits[index] - sell.getProfit() : profits[index];
+            }
+        }
+
+        List<RouteEntry> entries = route.getEntries();
+        int size = entries.size()-1;
+        List<SortHelper> sortedEntries = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            RouteEntry entry = entries.get(i);
+            sortedEntries.add(new SortHelper(entry, i));
+        }
+        sortedEntries.sort((e1, e2) -> Double.compare(e1.getProfit(), e2.getProfit()));
+
+        long need = buyOffer.getCount();
+        double balance = route.getBalance();
+        for (SortHelper helper : sortedEntries) {
+            RouteEntry entry = helper.entry;
+            if (helper.sell != null){
+                Order order = new Order(helper.sell.getSell(), buyOffer, balance, need);
+                reservedCargo(route, helper.index, buyOffer.getVendor(), order.getCount(), cargo);
+                entry.addOrder(order);
+                need -= order.getCount();
+                if (need <= 0) break;
+            }
+            balance += entry.getProfit();
+        }
+    }
 }

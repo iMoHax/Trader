@@ -61,4 +61,35 @@ public class SimpleOffer extends AbstractOffer {
         this.count = count;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SimpleOffer)) return false;
+
+        SimpleOffer that = (SimpleOffer) o;
+
+        if (count != that.count) return false;
+        if (Double.compare(that.price, price) != 0) return false;
+        if (!item.equals(that.item)) return false;
+        if (type != that.type) return false;
+        if (!vendor.equals(that.vendor)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = vendor.hashCode();
+        result = 31 * result + item.hashCode();
+        result = 31 * result + type.hashCode();
+        return result;
+    }
+
+    public static Offer fakeBuy(Vendor buyer, Item item, double price, long count){
+        SimpleOffer res = new SimpleOffer(OFFER_TYPE.BUY, item, price, count);
+        res.setVendor(buyer);
+        return res;
+    }
+
 }

@@ -80,6 +80,10 @@ public class Route implements Comparable<Route> {
         return entries.size();
     }
 
+    public boolean isLoop(){
+        return !isEmpty() && entries.get(0).is(entries.get(entries.size()-1).getVendor());
+    }
+
     public void add(RouteEntry entry){
         LOG.trace("Add entry {} to route {}", entry, this);
         entries.add(entry);
