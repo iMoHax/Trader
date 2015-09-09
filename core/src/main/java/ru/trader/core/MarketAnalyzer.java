@@ -192,7 +192,9 @@ public class MarketAnalyzer {
         while (iterator.hasNext()){
             Vendor vendor = iterator.next();
             if (callback.isCancel()) break;
-            Collection<Route> paths = searcher.getRoutes(vendor, vendor, vendors, 3);
+            CrawlerSpecificator specificator = new CrawlerSpecificator();
+            specificator.target(vendor);
+            Collection<Route> paths = searcher.search(vendor, vendor, vendors, 3, specificator);
             top.addAll(paths);
             callback.inc();
         }
@@ -200,44 +202,66 @@ public class MarketAnalyzer {
         return top;
     }
 
-    public Collection<Route> getLoops(Vendor vendor, int limit){
-        return searcher.getLoops(vendor, getVendors(), limit);
+    public Collection<Route> getLoops(Vendor vendor, CrawlerSpecificator specificator){
+        return searcher.searchLoops(vendor, getVendors(), specificator);
     }
 
-    public Collection<Route> getRoutes(Place from){
-        return searcher.getRoutes(getVendors(from), getVendors());
+    public Collection<Route> getRoutes(Place from, CrawlerSpecificator specificator){
+        return getRoutes(getVendors(from), getVendors(), specificator);
     }
 
     public Collection<Route> getRoutes(Place from, Place to){
-        return searcher.getRoutes(getVendors(from), getVendors(to), getVendors());
+        return getRoutes(from, to, new CrawlerSpecificator());
     }
 
-    public Collection<Route> getRoutes(Place from, Vendor to){
-        return searcher.getRoutes(getVendors(from), Collections.singleton(to), getVendors());
+    public Collection<Route> getRoutes(Place from, Place to, CrawlerSpecificator specificator){
+        specificator.any(getVendors(to));
+        return getRoutes(from, specificator);
     }
 
-    public Collection<Route> getRoutes(Vendor from){
-        return searcher.getRoutes(from, getVendors());
+    public Collection<Route> getRoutes(Vendor from, CrawlerSpecificator specificator){
+        specificator.any(getVendors());
+        return searcher.search(from, from, getVendors(), profile.getRoutesCount(), specificator);
     }
 
-    public Collection<Route> getRoutes(Vendor from, Place to){
-        return searcher.getRoutes(Collections.singleton(from), getVendors(to), getVendors());
+    public Collection<Route> getRoutes(Vendor from, Place to, CrawlerSpecificator specificator){
+        specificator.any(getVendors(to));
+        return searcher.search(from, from, getVendors(), profile.getRoutesCount(), specificator);
     }
 
     public Collection<Route> getRoutes(Vendor from, Vendor to){
-        return searcher.getRoutes(from, to, getVendors());
+        CrawlerSpecificator specificator = new CrawlerSpecificator();
+        specificator.target(to);
+        return getRoutes(from, to, specificator);
+    }
+
+    public Collection<Route> getRoutes(Vendor from, Vendor to, CrawlerSpecificator specificator){
+        return searcher.search(from, to, getVendors(), profile.getRoutesCount(), specificator);
+    }
+
+    public List<Route> getRoutes(Collection<Vendor> fVendors, Collection<Vendor> vendors, CrawlerSpecificator specificator){
+        List<Route> res = new LimitedQueue<>(profile.getRoutesCount());
+        int count = (int) Math.ceil(profile.getRoutesCount() / fVendors.size());
+        for (Vendor fromVendor : fVendors) {
+            Collection<Route> routes = searcher.search(fromVendor, fromVendor, vendors, count, specificator);
+            res.addAll(routes);
+        }
+        return res;
     }
 
 
     public Route getRoute(Collection<Vendor> vendors) {
         Route res = null;
         callback.start(vendors.size());
+        CrawlerSpecificator specificator = new CrawlerSpecificator();
+        specificator.all(vendors);
         for (Vendor from : vendors) {
-            //TODO: implement search with constant length
-            Collection<Route> paths = searcher.getRoutes(from, vendors);
-            Optional<Route> route = paths.stream().filter(p -> p.contains(vendors)).findFirst();
-            if (route.isPresent() && (res == null || res.compareTo(route.get()) > 0)){
-                res = route.get();
+            Collection<Route> routes = searcher.search(from, from, vendors, 1, specificator);
+            if (!routes.isEmpty()){
+                Route route = routes.iterator().next();
+                if (res == null || res.compareTo(route) < 0){
+                    res = route;
+                }
             }
             callback.inc();
         }
@@ -271,7 +295,12 @@ public class MarketAnalyzer {
         return vendors;
     }
 
-    public MarketAnalyzer changeCallBack(AnalysisCallBack callback){
+    public MarketAnalyzer newInstance(Profile profile, AnalysisCallBack callback){
         return new MarketAnalyzer(market, profile, callback);
     }
+
+    public MarketAnalyzer newInstance(AnalysisCallBack callback){
+        return new MarketAnalyzer(market, profile, callback);
+    }
+
 }

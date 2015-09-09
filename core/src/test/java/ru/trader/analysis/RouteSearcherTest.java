@@ -83,7 +83,9 @@ public class RouteSearcherTest extends Assert{
         assertEquals(72.42, route.getDistance(), 0.01);
 
         Collection<Vendor> world = fWorld.getMarkets(true).collect(Collectors.toList());
-        List<Route> apaths = searcher.getRoutes(ithaca_st, ithaca_st, world);
+        CrawlerSpecificator specificator = new CrawlerSpecificator();
+        specificator.target(ithaca_st);
+        List<Route> apaths = searcher.search(ithaca_st, ithaca_st, world, 10, specificator);
 /*        List<Route> apaths = searcher.getRoutes(ithaca_st, ithaca_st, Arrays.asList(ithaca_st, lhs3262_st,
                 morgor_st, lhs3006_st, ithaca.asTransit(), lhs3262.asTransit(),
                 morgor.asTransit(), lhs3006.asTransit()));
@@ -111,7 +113,7 @@ public class RouteSearcherTest extends Assert{
         assertEquals(4, route.getLands());
         assertEquals(109.51, route.getDistance(), 0.01);
 
-        apaths = searcher.getRoutes(ithaca_st, ithaca_st, world);
+        apaths = searcher.search(ithaca_st, ithaca_st, world, 10, specificator);
         actual = apaths.stream().findFirst().get();
         assertEquals(route, actual);
 
@@ -170,7 +172,7 @@ public class RouteSearcherTest extends Assert{
         Vendor ithaca_st = ithaca.get().iterator().next();
         Collection<Vendor> world = fWorld.getMarkets(true).collect(Collectors.toList());
 
-        List<Route> apaths = searcher.getLoops(ithaca_st, world, profile.getRoutesCount());
+        List<Route> apaths = searcher.searchLoops(ithaca_st, world, new CrawlerSpecificator());
         assertEquals(39, apaths.size());
         Collection<Vendor> vendors = new ArrayList<>(40);
         apaths.forEach(route -> {

@@ -61,41 +61,6 @@ public class RouteSearcher {
         return paths;
     }
 
-    public List<Route> getRoutes(Collection<Vendor> fVendors, Collection<Vendor> vendors){
-        return getRoutes(fVendors, vendors, vendors);
-    }
-
-    public List<Route> getRoutes(Collection<Vendor> fVendors, Collection<Vendor> toVendors, Collection<Vendor> vendors){
-        List<Route> res = new LimitedQueue<>(scorer.getProfile().getRoutesCount());
-        int count = (int) Math.ceil(scorer.getProfile().getRoutesCount() / fVendors.size());
-        CrawlerSpecificator specificator = new CrawlerSpecificator();
-        specificator.any(toVendors);
-        for (Vendor fromVendor : fVendors) {
-            Collection<Route> routes = search(fromVendor, fromVendor, vendors, count, specificator);
-            res.addAll(routes);
-        }
-        return res;
-    }
-
-    public List<Route> getRoutes(Vendor from, Collection<Vendor> vendors){
-        CrawlerSpecificator specificator = new CrawlerSpecificator();
-        specificator.any(vendors);
-        return search(from, from, vendors, scorer.getProfile().getRoutesCount(), specificator);
-    }
-
-    public List<Route> getRoutes(Vendor from, Vendor to, Collection<Vendor> vendors){
-        return getRoutes(from, to, vendors, scorer.getProfile().getRoutesCount());
-    }
-
-    public List<Route> getRoutes(Vendor source, Vendor target, Collection<Vendor> vendors, int count){
-        return search(source, target, vendors, count, new CrawlerSpecificator());
-    }
-
-
-    public List<Route> getLoops(Vendor source, Collection<Vendor> vendors, int count){
-        return searchLoops(source, vendors, count, new CrawlerSpecificator());
-    }
-
     public List<Route> search(Vendor source, Vendor target, Collection<Vendor> vendors, int count, CrawlerSpecificator specificator){
         LOG.trace("Start search route  from {} to {}", source, target);
         VendorsGraph vGraph = new VendorsGraph(scorer, callback);
@@ -109,7 +74,7 @@ public class RouteSearcher {
         return collector.get();
     }
 
-    public List<Route> searchLoops(Vendor source, Collection<Vendor> vendors, int count, CrawlerSpecificator specificator){
+    public List<Route> searchLoops(Vendor source, Collection<Vendor> vendors, CrawlerSpecificator specificator){
         LOG.trace("Start search loops from {}", source);
         VendorsGraph vGraph = new VendorsGraph(scorer, callback);
         LOG.trace("Build vendors graph");
