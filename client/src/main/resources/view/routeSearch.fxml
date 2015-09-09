@@ -6,35 +6,30 @@
 <?import ru.trader.view.support.cells.OfferListCell?>
 <?import javafx.geometry.Insets?>
 <?import ru.trader.view.support.NumberField?>
-<HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<?import org.controlsfx.glyphfont.Glyph?>
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.RouteSearchController"
       spacing="4" >
-    <Label text="Имя:" />
-    <TextField fx:id="name" />
-    <Label text="Баланс:" />
-    <NumberField fx:id="balance" />
-    <Label text="Система:" />
-    <TextField fx:id="systemText" />
-    <Button fx:id="btnAddSystem"/>
-    <Label text="Станция:" />
-    <ComboBox fx:id="station" />
-    <Button fx:id="btnAddStation"/>
+    <HBox>
+        <HBox>
+            <Label text="От:" />
+            <TextField fx:id="fromSystemText" />
+            <ComboBox fx:id="fromStation" />
+            <Button onAction="#currentAsFrom"/>
+        </HBox>
+        <HBox>
+            <Label text="До:" />
+            <TextField fx:id="toSystemText" />
+            <ComboBox fx:id="toStation" />
+            <Button onAction="#loop"/>
+        </HBox>
+        <Button prefWidth="80" text="Найти" onAction="#search" />
+    </HBox>
     <VBox>
+        <fx:include fx:id="missions" source="missions.fxml"/>
         <HBox>
-            <Label text="Трюм:" />
-            <NumberField fx:id="cargo" />
-        </HBox>
-        <HBox>
-            <Label text="Топливный бак:" />
-            <NumberField fx:id="tank" />
-        </HBox>
-        <HBox>
-            <Label text="Масса:" />
-            <NumberField fx:id="mass" />
-        </HBox>
-        <HBox>
-            <Label text="Двигатель:" />
-            <ComboBox fx:id="engine" />
+            <ListView fx:id="missionsList" />
+            <Button prefWidth="30" onAction="#removeMission"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
         </HBox>
     </VBox>
-</HBox>
+</VBox>

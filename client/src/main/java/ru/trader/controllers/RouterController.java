@@ -11,6 +11,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 import ru.trader.Main;
+import ru.trader.analysis.CrawlerSpecificator;
 import ru.trader.model.*;
 import ru.trader.model.support.ChangeMarketListener;
 import ru.trader.view.support.NumberField;
@@ -219,7 +220,7 @@ public class RouterController {
 
     public void rebuild(){
         if (route != null){
-            RouteModel r = market.getRoute(route, balance.getValue().doubleValue());
+            RouteModel r = market.getRoute(route);
             if (r != null){
                 route = r;
                 orders.clear();
@@ -269,7 +270,7 @@ public class RouterController {
         SystemModel t = target.getValue();
         StationModel sS = sStation.getValue();
         StationModel tS = tStation.getValue();
-        market.getRoutes(s, sS, t, tS, totalBalance.getValue().doubleValue(), routes -> {
+        market.getRoutes(s, sS, t, tS, totalBalance.getValue().doubleValue(), new CrawlerSpecificator(), routes -> {
             Optional<RouteModel> path = Screeners.showRouters(routes);
             if (path.isPresent()){
                 orders.addAll(path.get().getOrders());

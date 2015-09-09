@@ -97,16 +97,11 @@ public class SystemModel {
     }
 
     public StationModel add(String name){
-        StationModel station = market.getModeler().get(system.addVendor(name));
-        LOG.info("Add station {} to system {}", station, this);
-        market.getNotificator().sendAdd(station);
-        return station;
+        return market.addStation(this, name);
     }
 
     public void remove(StationModel station) {
-        LOG.info("Remove station {} from system {}", station, this);
-        market.getNotificator().sendRemove(station);
-        system.remove(station.getStation());
+        market.removeStation(station);
     }
 
     public boolean isEmpty(){

@@ -10,8 +10,9 @@ import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.World;
-import ru.trader.analysis.AnalysisCallBack;
+import ru.trader.analysis.CrawlerSpecificator;
 import ru.trader.analysis.Route;
+import ru.trader.controllers.MainController;
 import ru.trader.controllers.ProgressController;
 import ru.trader.controllers.Screeners;
 import ru.trader.core.*;
@@ -21,7 +22,6 @@ import ru.trader.services.OrdersSearchTask;
 import ru.trader.services.RoutesSearchTask;
 import ru.trader.view.support.Localization;
 
-import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -35,6 +35,7 @@ public class MarketModel {
     private final Notificator notificator;
 
     private final ListProperty<SystemModel> systems;
+    private final ListProperty<StationModel> stations;
     // with NONE_SYSTEM
     private ListProperty<SystemModel> systemsList;
     private final ListProperty<GroupModel> groups;
@@ -51,6 +52,7 @@ public class MarketModel {
         systems = new SimpleListProperty<>(BindingsHelper.observableList(market.get(), modeler::get));
         systemsList = new SimpleListProperty<>(FXCollections.observableArrayList(ModelFabric.NONE_SYSTEM));
         systemsList.addAll(systems);
+        stations = new SimpleListProperty<>(BindingsHelper.observableList(market.getVendors(), modeler::get));
         systems.addListener(SYSTEMS_CHANGE_LISTENER);
     }
 
@@ -69,10 +71,6 @@ public class MarketModel {
         return analyzer;
     }
 
-    public MarketAnalyzer getAnalyzer(AnalysisCallBack callback) {
-        return analyzer.changeCallBack(callback);
-    }
-
     public ModelFabric getModeler() {
         return modeler;
     }
@@ -88,6 +86,10 @@ public class MarketModel {
         return systemsList;
     }
 
+    public ReadOnlyListProperty<StationModel> stationsProperty() {
+        return stations;
+    }
+
     public SystemModel get(String name){
         Place s = market.get(name);
         if (s == null){
@@ -101,14 +103,31 @@ public class MarketModel {
         LOG.info("Add system {} to market {}", system, this);
         notificator.sendAdd(system);
         systems.add(system);
+        stations.addAll(system.getStations());
         return system;
     }
 
     public void remove(SystemModel system) {
         LOG.info("Remove system {} from market {}", system, this);
         notificator.sendRemove(system);
+        stations.removeAll(system.getStations());
         market.remove(system.getSystem());
         systems.remove(system);
+    }
+
+    StationModel addStation(SystemModel system, String name) {
+        StationModel station = modeler.get(system.getSystem().addVendor(name));
+        LOG.info("Add station {} to system {}", station, system);
+        stations.add(station);
+        notificator.sendAdd(station);
+        return station;
+    }
+
+    void removeStation(StationModel station) {
+        LOG.info("Remove station {} from system {}", station, station.getSystem());
+        notificator.sendRemove(station);
+        stations.remove(station);
+        station.getSystem().getSystem().remove(station.getStation());
     }
 
     public ReadOnlyListProperty<GroupModel> getGroups(){
@@ -146,7 +165,7 @@ public class MarketModel {
         return BindingsHelper.observableList(analyzer.getOffers(offerType, item.getItem(), filter), modeler::get);
     }
 
-    public Collection<StationModel> getStations(MarketFilter filter){
+    public ObservableList<StationModel> getStations(MarketFilter filter){
         return BindingsHelper.observableList(analyzer.getVendors(filter), modeler::get);
     }
 
@@ -164,17 +183,19 @@ public class MarketModel {
 
     public void getOrders(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo, double balance, Consumer<ObservableList<OrderModel>> result) {
         ProgressController progress = new ProgressController(Screeners.getMainScreen(), Localization.getString("analyzer.orders.title"));
+        Profile profile = MainController.getProfile().getProfile().copy();
+        profile.setBalance(balance);
         OrdersSearchTask task = new OrdersSearchTask(this,
                 from == null || from == ModelFabric.NONE_SYSTEM ? null : from.getSystem(),
                 stationFrom == null || stationFrom == ModelFabric.NONE_STATION ? null : stationFrom.getStation(),
                 to == null || to == ModelFabric.NONE_SYSTEM ? null : to.getSystem(),
                 stationTo == null || stationTo == ModelFabric.NONE_STATION ? null : stationTo.getStation(),
-                balance
+                profile
         );
 
         progress.run(task, order -> {
             ObservableList<OrderModel> res = BindingsHelper.observableList(order, modeler::get);
-            if (Platform.isFxApplicationThread()){
+            if (Platform.isFxApplicationThread()) {
                 result.accept(res);
             } else {
                 Platform.runLater(() -> result.accept(res));
@@ -186,22 +207,17 @@ public class MarketModel {
         getOrders(ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, balance, result);
     }
 
-    public void getRoutes(SystemModel from, double balance, Consumer<ObservableList<RouteModel>> result){
-        getRoutes(from, ModelFabric.NONE_STATION, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, balance, result);
-    }
-
-    public void getRoutes(SystemModel from, SystemModel to, double balance, Consumer<ObservableList<RouteModel>> result){
-        getRoutes(from, ModelFabric.NONE_STATION, to, ModelFabric.NONE_STATION, balance, result);
-    }
-
-    public void getRoutes(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo, double balance, Consumer<ObservableList<RouteModel>> result) {
+    public void getRoutes(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo, double balance, CrawlerSpecificator specificator, Consumer<ObservableList<RouteModel>> result) {
         ProgressController progress = new ProgressController(Screeners.getMainScreen(), Localization.getString("analyzer.routes.title"));
+        Profile profile = MainController.getProfile().getProfile().copy();
+        profile.setBalance(balance);
         RoutesSearchTask task = new RoutesSearchTask(this,
                 from == null || from == ModelFabric.NONE_SYSTEM ? null : from.getSystem(),
                 stationFrom == null || stationFrom == ModelFabric.NONE_STATION ? null : stationFrom.getStation(),
                 to == null || to == ModelFabric.NONE_SYSTEM ? null : to.getSystem(),
                 stationTo == null || stationTo == ModelFabric.NONE_STATION ? null : stationTo.getStation(),
-                balance
+                profile,
+                specificator
         );
 
         progress.run(task, route -> {
@@ -215,15 +231,13 @@ public class MarketModel {
     }
 
     public void getTopRoutes(double balance, Consumer<ObservableList<RouteModel>> result){
-        getRoutes(ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, balance, result);
+        getRoutes(ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, balance, new CrawlerSpecificator(), result);
     }
 
-    public RouteModel getRoute(RouteModel path, double balance) {
-        //TODO: implement
-        /*Route r = analyzer.getRoute(path.getRoute());
+    public RouteModel getRoute(RouteModel path) {
+        Route r = analyzer.getRoute(path.getRoute().getVendors());
         if (r == null) return null;
-        return modeler.get(r);*/
-        return null;
+        return modeler.get(r);
     }
 
     Route _getPath(OrderModel order) {

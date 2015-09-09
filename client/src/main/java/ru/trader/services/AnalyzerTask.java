@@ -6,7 +6,9 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.concurrent.Task;
 import ru.trader.analysis.AnalysisCallBack;
 import ru.trader.core.MarketAnalyzer;
+import ru.trader.core.Profile;
 import ru.trader.model.MarketModel;
+import ru.trader.model.ProfileModel;
 import ru.trader.view.support.Localization;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -19,11 +21,11 @@ public abstract class AnalyzerTask<T> extends Task<T> {
     private final LongProperty found;
     private final AtomicReference<Long> foundUpdate;
 
-    public AnalyzerTask(MarketModel market) {
+    public AnalyzerTask(MarketModel market, Profile profile) {
         foundUpdate = new AtomicReference<>((long) 0);
         found = new SimpleLongProperty(0);
         callback = new AnalyzerCallBack();
-        analyzer = market.getAnalyzer(callback);
+        analyzer = market.getAnalyzer().newInstance(profile, callback);
     }
 
     public long getFound() {

@@ -79,6 +79,10 @@ public class ProfileModel {
 
     }
 
+    Profile getProfile() {
+        return profile;
+    }
+
     public MarketModel getMarket() {
         return market;
     }

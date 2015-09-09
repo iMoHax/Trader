@@ -1,7 +1,9 @@
 package ru.trader.services;
 
+import ru.trader.analysis.CrawlerSpecificator;
 import ru.trader.analysis.Route;
 import ru.trader.core.Place;
+import ru.trader.core.Profile;
 import ru.trader.core.Vendor;
 import ru.trader.model.MarketModel;
 
@@ -12,14 +14,18 @@ public class RoutesSearchTask extends AnalyzerTask<Collection<Route>>{
     private final Vendor stationFrom;
     private final Place to;
     private final Vendor stationTo;
+    private final CrawlerSpecificator specificator;
 
-    public RoutesSearchTask(MarketModel market, Place from, Vendor stationFrom, Place to, Vendor stationTo, double balance) {
-        super(market);
+    public RoutesSearchTask(MarketModel market, Place from, Vendor stationFrom, Place to, Vendor stationTo, Profile profile, CrawlerSpecificator specificator) {
+        super(market, profile);
         this.from = from;
         this.stationFrom = stationFrom;
         this.to = to;
         this.stationTo = stationTo;
-        market.getAnalyzer().getProfile().setBalance(balance);
+        this.specificator = specificator;
+        if (stationTo != null){
+            specificator.target(stationTo);
+        }
     }
 
     @Override
@@ -28,23 +34,23 @@ public class RoutesSearchTask extends AnalyzerTask<Collection<Route>>{
 
         if (stationFrom != null) {
             if (stationTo != null) {
-                routes = analyzer.getRoutes(stationFrom, stationTo);
+                routes = analyzer.getRoutes(stationFrom, stationTo, specificator);
             } else {
                 if (to != null) {
-                    routes = analyzer.getRoutes(stationFrom, to);
+                    routes = analyzer.getRoutes(stationFrom, to, specificator);
                 } else {
-                    routes = analyzer.getLoops(stationFrom, 100);
+                    routes = analyzer.getRoutes(stationFrom, specificator);
                 }
             }
         } else {
             if (stationTo != null) {
-                routes = analyzer.getRoutes(from, stationTo);
+                routes = analyzer.getRoutes(from, specificator);
             } else {
                 if (to != null) {
-                    routes = analyzer.getRoutes(from, to);
+                    routes = analyzer.getRoutes(from, to, specificator);
                 } else {
                     if (from != null){
-                        routes = analyzer.getRoutes(from);
+                        routes = analyzer.getRoutes(from, specificator);
                     } else {
                         routes = analyzer.getTopRoutes(100);
                     }

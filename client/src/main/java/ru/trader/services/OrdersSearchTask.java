@@ -2,6 +2,7 @@ package ru.trader.services;
 
 import ru.trader.core.Order;
 import ru.trader.core.Place;
+import ru.trader.core.Profile;
 import ru.trader.core.Vendor;
 import ru.trader.model.MarketModel;
 
@@ -12,15 +13,13 @@ public class OrdersSearchTask extends AnalyzerTask<Collection<Order>>{
     private final Vendor stationFrom;
     private final Place to;
     private final Vendor stationTo;
-    private final double balance;
 
-    public OrdersSearchTask(MarketModel market, Place from, Vendor stationFrom, Place to, Vendor stationTo, double balance) {
-        super(market);
+    public OrdersSearchTask(MarketModel market, Place from, Vendor stationFrom, Place to, Vendor stationTo, Profile profile) {
+        super(market, profile);
         this.from = from;
         this.stationFrom = stationFrom;
         this.to = to;
         this.stationTo = stationTo;
-        this.balance = balance;
     }
 
     @Override
