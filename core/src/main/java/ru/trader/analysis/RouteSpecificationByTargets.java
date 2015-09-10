@@ -34,6 +34,25 @@ public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
         return all ? targets.size() : 1;
     }
 
+    @Override
+    public void onAnd(RouteSpecification<T> other) {
+        if (other instanceof RouteSpecificationByTarget){
+            T otherTarget = ((RouteSpecificationByTarget<T>)other).target;
+            targets.remove(otherTarget);
+        } else
+        if (other instanceof RouteSpecificationByTargets){
+            RouteSpecificationByTargets<T> os = ((RouteSpecificationByTargets<T>)other);
+            if (os.all){
+                Collection<T> otherTargets = ((RouteSpecificationByTargets<T>)other).targets;
+                targets.removeAll(otherTargets);
+            }
+        } else
+        if (other instanceof RouteSpecificationByPair){
+            T otherTarget = ((RouteSpecificationByPair<T>)other).second;
+            targets.remove(otherTarget);
+        }
+    }
+
     private int containsAll(Edge<T> edge, Traversal<T> entry) {
         T obj = edge.getTarget().getEntry();
         Collection<T> set = new ArrayList<>(targets.size());

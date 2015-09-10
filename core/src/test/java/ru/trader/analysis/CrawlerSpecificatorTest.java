@@ -167,13 +167,13 @@ public class CrawlerSpecificatorTest extends Assert{
         LOG.info("Test offer");
         List<Route> paths = new ArrayList<>();
         CrawlerSpecificator specificator = new CrawlerSpecificator();
-        Offer goldOffer = new SimpleOffer(OFFER_TYPE.BUY, gold, 0, 30);
-        Offer weaponOffer = new SimpleOffer(OFFER_TYPE.BUY, personalweapons, 0, 100);
+        Offer goldOffer = SimpleOffer.fakeBuy(lhs3262_st, gold, 0, 30);
+        Offer weaponOffer = SimpleOffer.fakeBuy(lhs3262_st, personalweapons, 0, 100);
         specificator.buy(Arrays.asList(goldOffer, weaponOffer));
         VendorsCrawlerSpecification spec = specificator.build(vendors, edges -> {paths.add(RouteSearcher.toRoute(edges, vGraph.getScorer()));});
 
         Crawler<Vendor> crawler = vGraph.crawler(spec, new AnalysisCallBack());
-        crawler.setMaxSize(3);
+        crawler.setMaxSize(4);
         crawler.findMin(lhs3262_st, 10);
         assertEquals(10, paths.size());
         for (Route path : paths) {
@@ -193,13 +193,13 @@ public class CrawlerSpecificatorTest extends Assert{
         specificator.add(lhs3262_st, false);
         specificator.add(lhs3006_st, false);
         specificator.any(Arrays.asList(ovid_st, aulis_st));
-        Offer goldOffer = new SimpleOffer(OFFER_TYPE.BUY, gold, 0, 30);
-        Offer weaponOffer = new SimpleOffer(OFFER_TYPE.BUY, personalweapons, 0, 100);
+        Offer goldOffer = SimpleOffer.fakeBuy(aulin_st, gold, 0, 30);
+        Offer weaponOffer = SimpleOffer.fakeBuy(aulin_st, personalweapons, 0, 100);
         specificator.buy(Arrays.asList(goldOffer, weaponOffer));
         VendorsCrawlerSpecification spec = specificator.build(vendors, edges -> {paths.add(RouteSearcher.toRoute(edges, vGraph.getScorer()));});
 
         Crawler<Vendor> crawler = vGraph.crawler(spec, new AnalysisCallBack());
-        crawler.setMaxSize(6);
+        crawler.setMaxSize(7);
         crawler.findMin(ithaca_st, 10);
         assertEquals(10, paths.size());
         for (Route path : paths) {

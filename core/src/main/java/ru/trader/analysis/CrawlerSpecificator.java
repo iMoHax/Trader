@@ -97,9 +97,9 @@ public class CrawlerSpecificator {
                 return sell != null && sell.getCount() >= offer.getCount();
             }).collect(Collectors.toList());
             if (res != null){
-                res = res.and(RouteSpecificationByTargets.containAny(sellers));
+                res = res.and(new RouteSpecificationByPair<>(sellers, offer.getVendor()));
             } else {
-                res = RouteSpecificationByTargets.containAny(sellers);
+                res = new RouteSpecificationByPair<>(sellers, offer.getVendor());
             }
         }
         return res;
