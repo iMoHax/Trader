@@ -81,6 +81,9 @@ public class RouteSearchController {
         market.getRoutes(f, fS, t, tS, profile.getBalance(), specificator, routes -> {
             Optional<RouteModel> path = Screeners.showRouters(routes);
             if (path.isPresent()){
+                RouteModel route = path.get();
+                route.addAll(missionsList.getItems());
+                Screeners.showHelper(route);
             }
         });
     }

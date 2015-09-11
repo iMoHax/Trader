@@ -5,6 +5,9 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import ru.trader.analysis.Route;
 import ru.trader.analysis.RouteEntry;
+import ru.trader.analysis.RouteFiller;
+import ru.trader.controllers.MainController;
+import ru.trader.core.Offer;
 import ru.trader.core.Order;
 import ru.trader.model.support.BindingsHelper;
 
@@ -116,6 +119,34 @@ public class RouteModel {
     public RouteModel remove(OrderModel order) {
         _route.dropTo(order.getStation().getStation());
         return new RouteModel(_route, market);
+    }
+
+    public void add(MissionModel mission){
+        long cargo = MainController.getProfile().getShipCargo();
+        Offer offer = mission.toOffer();
+        if (offer != null){
+            RouteFiller.addOrders(_route, 0, offer, cargo);
+            for (RouteEntryModel entry : entries) {
+                entry.sellOrders().clear();
+                entry.refresh(market);
+            }
+            fillSellOrders();
+        }
+    }
+
+    public void addAll(Collection<MissionModel> missions){
+        long cargo = MainController.getProfile().getShipCargo();
+        for (MissionModel mission : missions) {
+            Offer offer = mission.toOffer();
+            if (offer != null){
+                RouteFiller.addOrders(_route, 0, offer, cargo);
+            }
+        }
+        for (RouteEntryModel entry : entries) {
+            entry.sellOrders().clear();
+            entry.refresh(market);
+        }
+        fillSellOrders();
     }
 
 }

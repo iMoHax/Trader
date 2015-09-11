@@ -1,6 +1,7 @@
 package ru.trader.model;
 
 import ru.trader.analysis.CrawlerSpecificator;
+import ru.trader.core.Offer;
 import ru.trader.store.simple.SimpleOffer;
 
 public class MissionModel {
@@ -71,10 +72,14 @@ public class MissionModel {
 
     public void toSpecification(CrawlerSpecificator specificator){
         if (isSupply()){
-            specificator.buy(SimpleOffer.fakeBuy(target.getStation(), item.getItem(), profit/count, count));
+            specificator.buy(toOffer());
         } else
         if (isCourier() || isDelivery()){
             specificator.add(target.getStation(), true);
         }
+    }
+
+    Offer toOffer(){
+        return isSupply() ? SimpleOffer.fakeBuy(target.getStation(), item.getItem(), profit/count, count) : null;
     }
 }

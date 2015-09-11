@@ -68,4 +68,8 @@ public class RouteEntryModel {
         return sellOrders;
     }
 
+    void refresh(MarketModel market){
+        orders.clear();
+        orders.addAll(BindingsHelper.observableList(entry.getOrders(), market.getModeler()::get));
+    }
 }
