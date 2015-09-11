@@ -1,6 +1,7 @@
 package ru.trader.controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -24,6 +25,8 @@ public class RouteSearchController {
     @FXML
     private ComboBox<StationModel> toStation;
     @FXML
+    private CheckBox cbFast;
+    @FXML
     private ListView<MissionModel> missionsList;
     @FXML
     private MissionsController missionsController;
@@ -42,9 +45,9 @@ public class RouteSearchController {
         market = MainController.getMarket();
         profile = MainController.getProfile();
         SystemsProvider provider = new SystemsProvider(market);
-        fromSystem = new AutoCompletion<>(fromSystemText, provider, provider.getConverter());
+        fromSystem = new AutoCompletion<>(fromSystemText, provider, ModelFabric.NONE_SYSTEM, provider.getConverter());
         provider = new SystemsProvider(market);
-        toSystem = new AutoCompletion<>(toSystemText, provider, provider.getConverter());
+        toSystem = new AutoCompletion<>(toSystemText, provider, ModelFabric.NONE_SYSTEM, provider.getConverter());
     }
 
     private void initListeners(){
@@ -73,6 +76,7 @@ public class RouteSearchController {
         StationModel tS = toStation.getValue();
 
         CrawlerSpecificator specificator = new CrawlerSpecificator();
+        specificator.setByTime(cbFast.isSelected());
         missionsList.getItems().forEach(m -> m.toSpecification(specificator));
         market.getRoutes(f, fS, t, tS, profile.getBalance(), specificator, routes -> {
             Optional<RouteModel> path = Screeners.showRouters(routes);

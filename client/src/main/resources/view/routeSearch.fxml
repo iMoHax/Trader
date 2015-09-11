@@ -23,6 +23,7 @@
             <ComboBox fx:id="toStation" />
             <Button onAction="#loop"/>
         </HBox>
+        <CheckBox fx:id="cbFast" text="Быстрый"/>
         <Button prefWidth="80" text="Найти" onAction="#search" />
     </HBox>
     <VBox>
