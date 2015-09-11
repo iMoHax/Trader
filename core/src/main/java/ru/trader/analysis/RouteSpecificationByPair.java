@@ -16,11 +16,13 @@ public class RouteSpecificationByPair<T> implements RouteSpecification<T> {
         this.first = new ArrayList<>();
         this.first.add(first);
         this.second = second;
+        checkSecond = true;
     }
 
     public RouteSpecificationByPair(Collection<T> first, T second) {
         this.first = new ArrayList<>(first);
         this.second = second;
+        checkSecond = true;
     }
 
     @Override
@@ -74,8 +76,16 @@ public class RouteSpecificationByPair<T> implements RouteSpecification<T> {
     @Override
     public void onAnd(RouteSpecification<T> other) {
         if (other instanceof RouteSpecificationByTarget){
-            T otherTarget = ((RouteSpecificationByTarget<T>)other).target;
-            checkSecond = checkSecond || !second.equals(otherTarget);
+            if (checkSecond){
+                T otherTarget = ((RouteSpecificationByTarget<T>)other).target;
+                checkSecond = !second.equals(otherTarget);
+            }
+        } else
+        if (other instanceof RouteSpecificationByPair){
+            RouteSpecificationByPair<T> os = (RouteSpecificationByPair<T>)other;
+            if (checkSecond && os.checkSecond){
+                checkSecond = !second.equals(os.second);
+            }
         }
     }
 }
