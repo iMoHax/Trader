@@ -7,10 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import ru.trader.model.ItemModel;
-import ru.trader.model.MarketModel;
-import ru.trader.model.MissionModel;
-import ru.trader.model.StationModel;
+import ru.trader.model.*;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.StationsProvider;
@@ -56,9 +53,9 @@ public class MissionsController {
     private void initialize(){
         MarketModel world = MainController.getWorld();
         StationsProvider provider = new StationsProvider(world);
-        receiver = new AutoCompletion<>(receiverText, provider, provider.getConverter());
+        receiver = new AutoCompletion<>(receiverText, provider, ModelFabric.NONE_STATION, provider.getConverter());
         provider = new StationsProvider(world);
-        buyer = new AutoCompletion<>(buyerText, provider, provider.getConverter());
+        buyer = new AutoCompletion<>(buyerText, provider, ModelFabric.NONE_STATION, provider.getConverter());
         item.setItems(world.itemsProperty());
         addCourierBtn.disableProperty().bind(Bindings.createBooleanBinding(() -> receiver.getCompletion() == null, receiver.completionProperty())
                 .or(courierProfit.wrongProperty())

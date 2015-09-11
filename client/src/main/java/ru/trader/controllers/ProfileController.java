@@ -9,10 +9,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 import ru.trader.core.Engine;
-import ru.trader.model.MarketModel;
-import ru.trader.model.ProfileModel;
-import ru.trader.model.StationModel;
-import ru.trader.model.SystemModel;
+import ru.trader.model.*;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.ViewUtils;
 import ru.trader.view.support.autocomplete.AutoCompletion;
@@ -52,7 +49,7 @@ public class ProfileController {
         profile = MainController.getProfile();
         MarketModel world = MainController.getWorld();
         SystemsProvider provider = new SystemsProvider(world);
-        system = new AutoCompletion<>(systemText, provider, provider.getConverter());
+        system = new AutoCompletion<>(systemText, provider, ModelFabric.NONE_SYSTEM, provider.getConverter());
         engine.setItems(FXCollections.observableList(Engine.getEngines()));
         engine.setConverter(new EngineStringConverter());
         btnAddSystem.setOnAction(e -> Screeners.showSystemsEditor(null));
@@ -71,9 +68,9 @@ public class ProfileController {
         });
         system.completionProperty().addListener((ov, o , n) -> {
             if (!ignoreChanges){
+                ignoreChanges = true;
                 profile.setSystem(n);
             }
-            ignoreChanges = true;
             station.setItems(n.getStationsList());
             ignoreChanges = false;
         });
@@ -142,7 +139,10 @@ public class ProfileController {
 
     private final ChangeListener<String> nameListener = (ov, o, n) -> ViewUtils.doFX(() -> name.setText(n));
     private final ChangeListener<Number> balanceListener = (ov, o, n) -> ViewUtils.doFX(() -> balance.setValue(n));
-    private final ChangeListener<SystemModel> systemListener = (ov, o, n) -> ViewUtils.doFX(() -> system.setValue(n));
+    private final ChangeListener<SystemModel> systemListener = (ov, o, n) -> {
+        if (!ignoreChanges)
+            ViewUtils.doFX(() -> system.setValue(n));
+    };
     private final ChangeListener<StationModel> stationListener = (ov, o, n) -> ViewUtils.doFX(() -> station.setValue(n));
     private final ChangeListener<Number> massListener = (ov, o, n) -> ViewUtils.doFX(() -> mass.setValue(n));
     private final ChangeListener<Number> tankListener = (ov, o, n) -> ViewUtils.doFX(() -> tank.setValue(n));
