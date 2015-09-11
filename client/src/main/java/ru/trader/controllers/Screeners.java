@@ -224,8 +224,8 @@ public class Screeners {
         return filterController.showDialog(mainScreen, filterScreen);
     }
 
-    public static Optional<MarketFilter> showFilter(MarketFilter filter) {
-        return filterController.showDialog(mainScreen, filterScreen, filter);
+    public static boolean showFilter(MarketFilter filter) {
+        return filterController.showEditDialog(mainScreen, filterScreen, filter);
     }
 
     public static Optional<Pair<String, String>> showLogin() {

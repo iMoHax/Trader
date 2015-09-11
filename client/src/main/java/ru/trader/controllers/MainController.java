@@ -258,12 +258,9 @@ public class MainController {
     }
 
     public void editFilter(){
-        /*TODO: implement
-        Optional<MarketFilter> res = Screeners.showFilter(market.getAnalyzer().getFilter());
-        if (res.isPresent()){
-            Main.SETTINGS.setFilter(res.get());
+        if (Screeners.showFilter(market.getAnalyzer().getFilter())){
+            Main.SETTINGS.setFilter(market.getAnalyzer().getFilter());
         }
-        */
     }
 
     public void impMadSystems(ActionEvent actionEvent) {

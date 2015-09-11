@@ -302,6 +302,10 @@ public class MarketAnalyzer {
         return vendors;
     }
 
+    public MarketFilter getFilter(){
+        return market.getFilter();
+    }
+
     public MarketAnalyzer newInstance(Profile profile, AnalysisCallBack callback){
         return new MarketAnalyzer(market, profile, callback);
     }

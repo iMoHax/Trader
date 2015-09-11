@@ -131,7 +131,11 @@ public class FilterController {
         return showDialog(parent, content, new MarketFilter());
     }
 
-    public Optional<MarketFilter> showDialog(Parent parent, Parent content, MarketFilter filter){
+    public boolean showEditDialog(Parent parent, Parent content, MarketFilter filter){
+        return showDialog(parent, content, filter).isPresent();
+    }
+
+    private Optional<MarketFilter> showDialog(Parent parent, Parent content, MarketFilter filter){
         if (dlg == null){
             createDialog(parent, content);
         }
@@ -164,7 +168,4 @@ public class FilterController {
         excludes.getItems().clear();
     }
 
-    public MarketFilter getFilter(){
-        return filter;
-    }
 }
