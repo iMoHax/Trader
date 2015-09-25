@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import ru.trader.KeyBinding;
+import ru.trader.model.MissionModel;
 import ru.trader.model.OrderModel;
 import ru.trader.model.RouteEntryModel;
 import ru.trader.model.RouteModel;
@@ -36,6 +37,8 @@ public class HelperController {
     private ListView<OrderModel> buyOrders;
     @FXML
     private ListView<OrderModel> sellOrders;
+    @FXML
+    private ListView<MissionModel> missions;
 
     private Stage stage;
     private RouteModel route;
@@ -81,6 +84,7 @@ public class HelperController {
         refuel.setText(String.valueOf(entry.getRefill()));
         buyOrders.setItems(entry.orders());
         sellOrders.setItems(entry.sellOrders());
+        missions.setItems(entry.missions());
     }
 
     @FXML

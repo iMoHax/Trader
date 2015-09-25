@@ -14,7 +14,7 @@
     <HBox><Label text="Станция:" /><Label fx:id="station" /></HBox>
     <HBox><Label text="Время:" /><Label fx:id="time" /></HBox>
     <HBox><Label text="Заправить:" /><Label fx:id="refuel" /></HBox>
-    <HBox>
+    <HBox maxHeight="200">
         <VBox>
             <Label text="Продать:" />
             <ListView fx:id="sellOrders"/>
@@ -24,6 +24,10 @@
             <ListView fx:id="buyOrders"/>
         </VBox>
     </HBox>
+    <VBox>
+        <Label text="Сдать миссии:" />
+        <ListView fx:id="missions"/>
+    </VBox>
     <HBox>
         <Button prefWidth="30" onAction="#previous">
             <graphic><Glyph text="FontAwesome|ARROW_LEFT"/></graphic>

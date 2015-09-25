@@ -17,6 +17,7 @@ public class RouteEntryModel {
     private final DoubleProperty profit;
     private final ObservableList<OrderModel> orders;
     private final ObservableList<OrderModel> sellOrders;
+    private final ObservableList<MissionModel> missions;
 
     RouteEntryModel(RouteEntry entry, MarketModel market) {
         this.entry = entry;
@@ -24,12 +25,21 @@ public class RouteEntryModel {
         List<Order> orderList = entry.getOrders();
         orders = BindingsHelper.observableList(orderList, market.getModeler()::get);
         sellOrders = FXCollections.observableArrayList();
+        missions = FXCollections.observableArrayList();
         profit = new SimpleDoubleProperty();
         profit.bind(BindingsHelper.group(Double::sum, OrderModel::profitProperty, orders));
     }
 
     void addSellOrder(OrderModel order){
         sellOrders.add(order);
+    }
+
+    void add(MissionModel mission){
+        missions.add(mission);
+    }
+
+    void remove(MissionModel mission){
+        missions.remove(mission);
     }
 
     public StationModel getStation() {
@@ -66,6 +76,10 @@ public class RouteEntryModel {
 
     public ObservableList<OrderModel> sellOrders() {
         return sellOrders;
+    }
+
+    public ObservableList<MissionModel> missions() {
+        return missions;
     }
 
     void refresh(MarketModel market){

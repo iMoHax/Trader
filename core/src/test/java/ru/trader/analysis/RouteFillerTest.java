@@ -660,7 +660,8 @@ public class RouteFillerTest extends Assert {
 
         /* v1 3x100 + 2x20 -> v2 5x50 -> v3 3x60 -> v4 5x20 -> v3 3x10 -> v1 */
         Offer offer = SimpleOffer.fakeBuy(v2, ITEM3, 210, 3);
-        RouteFiller.addOrders(route, 1, offer, cargo);
+        int completeIndex = RouteFiller.addOrders(route, 1, offer, cargo);
+        assertEquals(1, completeIndex);
 
         Order order1 = new Order(v1.getSell(ITEM2), v2.getBuy(ITEM2), 3);
         Order order2 = new Order(v1.getSell(ITEM4), v2.getBuy(ITEM4), 1);

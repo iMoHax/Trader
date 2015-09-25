@@ -110,6 +110,22 @@ public class Route implements Comparable<Route> {
         return vendors;
     }
 
+    public int find(Vendor vendor, int offset){
+        int size = entries.size();
+        for (int i = 0; i < size; i++) {
+            int index = i + offset;
+            if (index >= size){
+                if (isLoop()) index -= size;
+                    else break;
+            }
+            RouteEntry entry = entries.get(index);
+            if (entry.is(vendor)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public boolean contains(Collection<Vendor> vendors){
         return vendors.isEmpty()
                || vendors.size() <= entries.size()

@@ -121,25 +121,48 @@ public class RouteModel {
         return new RouteModel(_route, market);
     }
 
-    public void add(MissionModel mission){
+    public void add(int offset, MissionModel mission){
+        int completeIndex = -1;
         long cargo = MainController.getProfile().getShipCargo();
-        Offer offer = mission.toOffer();
+        Offer offer = mission.getOffer();
         if (offer != null){
-            RouteFiller.addOrders(_route, 0, offer, cargo);
+            completeIndex = RouteFiller.addOrders(_route, offset, offer, cargo);
             for (RouteEntryModel entry : entries) {
                 entry.sellOrders().clear();
                 entry.refresh(market);
             }
             fillSellOrders();
+        } else
+        if (mission.isDelivery()){
+            completeIndex = RouteFiller.reservedCargo(_route, offset, mission.getTarget().getStation(), mission.getCount(), cargo);
+            for (RouteEntryModel entry : entries) {
+                entry.refresh(market);
+            }
+        } else
+        if (mission.isCourier()){
+            completeIndex = _route.find(mission.getTarget().getStation(), offset);
+        }
+        if (completeIndex != -1){
+            entries.get(completeIndex).add(mission);
         }
     }
 
-    public void addAll(Collection<MissionModel> missions){
+    public void addAll(int offset, Collection<MissionModel> missions){
         long cargo = MainController.getProfile().getShipCargo();
         for (MissionModel mission : missions) {
-            Offer offer = mission.toOffer();
+            Offer offer = mission.getOffer();
+            int completeIndex = -1;
             if (offer != null){
-                RouteFiller.addOrders(_route, 0, offer, cargo);
+                completeIndex = RouteFiller.addOrders(_route, offset, offer, cargo);
+            } else
+            if (mission.isDelivery()){
+                    completeIndex = RouteFiller.reservedCargo(_route, offset, mission.getTarget().getStation(), mission.getCount(), cargo);
+            } else
+            if (mission.isCourier()){
+                completeIndex = _route.find(mission.getTarget().getStation(), offset);
+            }
+            if (completeIndex != -1){
+                entries.get(completeIndex).add(mission);
             }
         }
         for (RouteEntryModel entry : entries) {
