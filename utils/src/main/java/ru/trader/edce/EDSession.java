@@ -256,6 +256,10 @@ public class EDSession {
                 if (entity != null){
                     if ("application/json".equals(entity.getContentType().getValue())){
                         lastStatus = ED_SESSION_STATUS.OK;
+                    } else {
+                        if (lastStatus == ED_SESSION_STATUS.OK){
+                            lastStatus = ED_SESSION_STATUS.ERROR;
+                        }
                     }
                     readContent(entity);
                 }
