@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import ru.trader.analysis.Route;
 import ru.trader.analysis.RouteEntry;
 import ru.trader.analysis.RouteFiller;
-import ru.trader.controllers.MainController;
+import ru.trader.analysis.RouteReserve;
 import ru.trader.core.Offer;
 import ru.trader.core.Order;
 import ru.trader.model.support.BindingsHelper;
@@ -123,24 +123,31 @@ public class RouteModel {
 
     public void add(int offset, MissionModel mission){
         int completeIndex = -1;
-        long cargo = MainController.getProfile().getShipCargo();
         Offer offer = mission.getOffer();
         if (offer != null){
-            completeIndex = RouteFiller.addOrders(_route, offset, offer, cargo);
-            for (RouteEntryModel entry : entries) {
-                entry.sellOrders().clear();
-                entry.refresh(market);
+            Collection<RouteReserve> reserves = RouteFiller.getReserves(_route, offset, offer);
+            if (!reserves.isEmpty()) {
+                _route.reserve(reserves);
+                completeIndex = RouteReserve.getCompleteIndex(reserves, offset);
+                for (RouteEntryModel entry : entries) {
+                    entry.sellOrders().clear();
+                    entry.refresh(market);
+                }
+                fillSellOrders();
             }
-            fillSellOrders();
         } else
         if (mission.isDelivery()){
-            completeIndex = RouteFiller.reservedCargo(_route, offset, mission.getTarget().getStation(), mission.getCount(), cargo);
-            for (RouteEntryModel entry : entries) {
-                entry.refresh(market);
+            RouteReserve reserve = RouteFiller.getReserves(_route, offset, mission.getTarget().getStation(), mission.getCount());
+            if (reserve != null) {
+                _route.reserve(reserve);
+                completeIndex = reserve.getToIndex();
+                for (RouteEntryModel entry : entries) {
+                    entry.refresh(market);
+                }
             }
         } else
         if (mission.isCourier()){
-            completeIndex = _route.find(mission.getTarget().getStation(), offset);
+            completeIndex = _route.find(mission.getTarget().getStation(), offset+1);
         }
         if (completeIndex != -1){
             entries.get(completeIndex).add(mission);
@@ -148,20 +155,28 @@ public class RouteModel {
     }
 
     public void addAll(int offset, Collection<MissionModel> missions){
-        long cargo = MainController.getProfile().getShipCargo();
         for (MissionModel mission : missions) {
             Offer offer = mission.getOffer();
             int completeIndex = -1;
             if (offer != null){
-                completeIndex = RouteFiller.addOrders(_route, offset, offer, cargo);
+                Collection<RouteReserve> reserves = RouteFiller.getReserves(_route, offset, offer);
+                if (!reserves.isEmpty()) {
+                    _route.reserve(reserves);
+                    completeIndex = RouteReserve.getCompleteIndex(reserves, offset);
+                }
             } else
             if (mission.isDelivery()){
-                    completeIndex = RouteFiller.reservedCargo(_route, offset, mission.getTarget().getStation(), mission.getCount(), cargo);
+                RouteReserve reserve = RouteFiller.getReserves(_route, offset, mission.getTarget().getStation(), mission.getCount());
+                if (reserve != null) {
+                    _route.reserve(reserve);
+                    completeIndex = reserve.getToIndex();
+                }
             } else
             if (mission.isCourier()){
-                completeIndex = _route.find(mission.getTarget().getStation(), offset);
+                completeIndex = _route.find(mission.getTarget().getStation(), offset+1);
             }
             if (completeIndex != -1){
+                if (completeIndex == 0 && _route.isLoop()) completeIndex = _route.getJumps()-1;
                 entries.get(completeIndex).add(mission);
             }
         }

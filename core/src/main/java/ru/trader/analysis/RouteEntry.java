@@ -3,7 +3,10 @@ package ru.trader.analysis;
 import ru.trader.core.Order;
 import ru.trader.core.Vendor;
 
-import java.util.*;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class RouteEntry {
@@ -15,6 +18,7 @@ public class RouteEntry {
     private double profit;
     private long time;
     private long fulltime;
+    private long reserved;
 
     public RouteEntry(Vendor vendor, double refill, double fuel, double profit) {
         orders = new ArrayList<>();
@@ -22,6 +26,7 @@ public class RouteEntry {
         this.refill = refill;
         this.fuel = fuel;
         this.profit = profit;
+        reserved = 0;
     }
 
     public Vendor getVendor() {
@@ -85,18 +90,11 @@ public class RouteEntry {
     }
 
     void removeOrder(Order order){
-        assert order instanceof OrderWrapper;
-        orders.remove(order);
-    }
-
-    void clearTemporal(){
-        for (Iterator<OrderWrapper> iterator = orders.iterator(); iterator.hasNext(); ) {
-            OrderWrapper order = iterator.next();
-            if (!order.fixed){
-                iterator.remove();
-            }
+      if (order instanceof OrderWrapper) {
+            orders.remove(order);
+        } else {
+            orders.removeIf(order::equals);
         }
-        orders.forEach(OrderWrapper::reset);
     }
 
     public List<Order> getOrders() {
@@ -117,18 +115,23 @@ public class RouteEntry {
         return orders.stream().filter(o -> o.fixed).collect(Collectors.toList());
     }
 
-    void reserve(long count){
-        List<Order> fixedOrders = getFixedOrders();
-        fixedOrders.sort((o1, o2) -> Double.compare(o1.getProfitByTonne(), o2.getProfitByTonne()));
-        for (Order order : fixedOrders) {
-            long newCount = order.getCount() - count;
-            if (newCount < 0){
-                newCount = 0;
+    void reserve(final long count, final long cargo){
+        long empty = cargo - getCargo();
+        long need = count - empty;
+        if (need > 0){
+            List<Order> fixedOrders = getFixedOrders();
+            fixedOrders.sort((o1, o2) -> Double.compare(o1.getProfitByTonne(), o2.getProfitByTonne()));
+            for (Order order : fixedOrders) {
+                long newCount = order.getCount() - need;
+                if (newCount < 0){
+                    newCount = 0;
+                }
+                need -= order.getCount() - newCount;
+                order.setCount(newCount);
+                if (need <= 0) break;
             }
-            count -= order.getCount() - newCount;
-            order.setCount(newCount);
-            if (count <= 0) break;
         }
+        reserved += count;
     }
 
     void fill(long count){
@@ -140,10 +143,14 @@ public class RouteEntry {
             order.setCount(newCount);
             if (count <= 0) break;
         }
+        reserved -= count;
+        if (reserved < 0){
+            reserved = 0;
+        }
     }
 
     public long getCargo(){
-        return orders.stream().mapToLong(Order::getCount).sum();
+        return orders.stream().filter(o -> o.fixed).mapToLong(Order::getCount).sum() + reserved;
     }
 
     void clearOrders(){

@@ -1,5 +1,6 @@
 package ru.trader.analysis;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.Vendor;
@@ -17,6 +18,7 @@ public class Route implements Comparable<Route> {
     private long time = 0;
     private int lands = 0;
     private int refills = 0;
+    private long cargo=0;
 
     public Route(RouteEntry root) {
         entries = new ArrayList<>();
@@ -46,6 +48,14 @@ public class Route implements Comparable<Route> {
 
     public double getBalance() {
         return balance;
+    }
+
+    public long getCargo() {
+        return cargo;
+    }
+
+    void setCargo(long cargo) {
+        this.cargo = cargo;
     }
 
     public double getProfit() {
@@ -92,7 +102,7 @@ public class Route implements Comparable<Route> {
 
     public void addAll(Collection<RouteEntry> entries){
         LOG.trace("Add {} entries {} to route {}", entries, this);
-        entries.addAll(entries);
+        this.entries.addAll(entries);
         updateStats();
     }
 
@@ -110,20 +120,50 @@ public class Route implements Comparable<Route> {
         return vendors;
     }
 
-    public int find(Vendor vendor, int offset){
-        int size = entries.size();
-        for (int i = 0; i < size; i++) {
-            int index = i + offset;
-            if (index >= size){
-                if (isLoop()) index -= size;
-                    else break;
-            }
-            RouteEntry entry = entries.get(index);
-            if (entry.is(vendor)){
-                return i;
+    public int find(Vendor vendor, int fromIndex){
+        for (Route.LoopIterator iterator = loopIterator(fromIndex); iterator.hasNext(); ) {
+            RouteEntry entry = iterator.next();
+            if (entry.is(vendor)) {
+                return iterator.getRealIndex();
             }
         }
         return -1;
+    }
+
+    public void reserve(final RouteReserve reserve){
+        for (Route.LoopIterator iterator = loopIterator(reserve.getFromIndex()); iterator.hasNext(); ) {
+            RouteEntry entry = iterator.next();
+            if (entry.isTransit()) continue;
+            if (iterator.getRealIndex() == reserve.getToIndex() && (reserve.getFromIndex() != reserve.getToIndex() || iterator.getIndex() > 0)) {
+                break;
+            }
+            entry.reserve(reserve.getCount(), cargo);
+        }
+        if (reserve.getOrder() != null) {
+            entries.get(reserve.getFromIndex()).addOrder(reserve.getOrder());
+        }
+    }
+
+    public void reserve(Collection<RouteReserve> reserves){
+        reserves.forEach(this::reserve);
+    }
+
+    public void unreserve(final RouteReserve reserve){
+        for (Route.LoopIterator iterator = loopIterator(reserve.getFromIndex()); iterator.hasNext(); ) {
+            RouteEntry entry = iterator.next();
+            if (entry.isTransit()) continue;
+            if (iterator.getRealIndex() == reserve.getToIndex() && (reserve.getFromIndex() != reserve.getToIndex() || iterator.getIndex() > 0)) {
+                break;
+            }
+            entry.fill(reserve.getCount());
+        }
+        if (reserve.getOrder() != null) {
+            entries.get(reserve.getFromIndex()).removeOrder(reserve.getOrder());
+        }
+    }
+
+    public void unreserve(Collection<RouteReserve> reserves){
+        reserves.forEach(this::unreserve);
     }
 
     public boolean contains(Collection<Vendor> vendors){
@@ -178,7 +218,7 @@ public class Route implements Comparable<Route> {
     }
 
     @Override
-    public int compareTo(Route o) {
+    public int compareTo(@NotNull Route o) {
         return Double.compare(getScore(), o.getScore());
     }
 
@@ -207,5 +247,40 @@ public class Route implements Comparable<Route> {
                 ", fuel=" + fuel +
                 ", lands=" + lands +
                 '}';
+    }
+
+    public interface LoopIterator extends Iterator<RouteEntry>{
+        int getIndex();
+        int getRealIndex();
+    }
+
+    public LoopIterator loopIterator(int from){
+        return new LoopIterator() {
+            private final int size = entries.size() - (isLoop() ? 1 : from);
+            private int i = -1;
+
+            @Override
+            public int getIndex(){
+                return i;
+            }
+
+            @Override
+            public int getRealIndex(){
+                int index = i + from;
+                if (index >= size) index -= size;
+                return index;
+            }
+
+            @Override
+            public boolean hasNext() {
+                return i < size-1;
+            }
+
+            @Override
+            public RouteEntry next() {
+                i++;
+                return entries.get(getRealIndex());
+            }
+        };
     }
 }

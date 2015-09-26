@@ -8,7 +8,9 @@ import ru.trader.core.Place;
 import ru.trader.core.Profile;
 import ru.trader.core.Vendor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class RouteSearcher {
     private final static Logger LOG = LoggerFactory.getLogger(RouteSearcher.class);
@@ -152,6 +154,7 @@ public class RouteSearcher {
         }
         Route route = new Route(entries);
         route.setBalance(scorer.getProfile().getBalance());
+        route.setCargo(scorer.getProfile().getShip().getCargo());
         return route;
     }
 
@@ -188,6 +191,7 @@ public class RouteSearcher {
         }
         Route route = new Route(entries);
         route.setBalance(scorer.getProfile().getBalance());
+        route.setCargo(scorer.getProfile().getShip().getCargo());
         return route;
     }
 }
