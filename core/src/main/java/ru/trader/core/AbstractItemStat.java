@@ -76,6 +76,26 @@ public abstract class AbstractItemStat implements ItemStat {
         }
 
         @Override
+        public FACTION getFaction() {
+            return FACTION.NONE;
+        }
+
+        @Override
+        public void setFaction(FACTION faction) {
+            throw new UnsupportedOperationException("Is fake place, change unsupported");
+        }
+
+        @Override
+        public GOVERNMENT getGovernment() {
+            return GOVERNMENT.NONE;
+        }
+
+        @Override
+        public void setGovernment(GOVERNMENT government) {
+            throw new UnsupportedOperationException("Is fake place, change unsupported");
+        }
+
+        @Override
         public double getX() {
             return 0;
         }
@@ -129,6 +149,26 @@ public abstract class AbstractItemStat implements ItemStat {
 
         @Override
         public void setName(String name) {
+            throw new UnsupportedOperationException("Is fake vendor, change unsupported");
+        }
+
+        @Override
+        public FACTION getFaction() {
+            return FACTION.NONE;
+        }
+
+        @Override
+        public void setFaction(FACTION faction) {
+            throw new UnsupportedOperationException("Is fake vendor, change unsupported");
+        }
+
+        @Override
+        public GOVERNMENT getGovernment() {
+            return GOVERNMENT.NONE;
+        }
+
+        @Override
+        public void setGovernment(GOVERNMENT government) {
             throw new UnsupportedOperationException("Is fake vendor, change unsupported");
         }
 

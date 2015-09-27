@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
-
-<?import javafx.scene.control.cell.PropertyValueFactory?>
-<?import ru.trader.view.support.cells.PriceCellImpl?>
-<?import ru.trader.view.support.cells.OfferCellValueImpl?>
-
-<?import ru.trader.view.support.cells.DoubleCell?>
-<?import org.controlsfx.glyphfont.Glyph?>
 <?import org.controlsfx.control.SegmentedButton?>
+<?import ru.trader.view.support.cells.*?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="ru.trader.controllers.OffersController">
 
@@ -39,9 +34,16 @@
         <SegmentedButton fx:id="stationsBar" />
     </TitledPane>
     <TitledPane GridPane.rowIndex="1" GridPane.columnIndex="1" text="" maxHeight="60" collapsible="false">
-        <HBox spacing="4">
-            <Label text="%offers.text.distance"/>
-            <Label fx:id="distance" minWidth="60"/>
+        <VBox>
+            <HBox spacing="4">
+                <Label text="%offers.text.distance"/>
+                <Label fx:id="distance" minWidth="60"/>
+                <Label text="%market.allegiance"/>
+                <Label fx:id="faction" minWidth="60"/>
+                <Label text="%market.government"/>
+                <Label fx:id="government" minWidth="60"/>
+            </HBox>
+            <HBox spacing="4">
             <Label text="%offers.text.services"/>
             <HBox spacing="15">
                 <CheckBox fx:id="cbMarket" text="%services.MARKET"/>
@@ -54,6 +56,7 @@
                 <CheckBox fx:id="cbLargeLandpad" text="%services.LARGE_LANDPAD"/>
             </HBox>
         </HBox>
+        </VBox>
 
     </TitledPane>
     <Accordion GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">

@@ -23,6 +23,26 @@ public class TransitVendor implements Vendor {
     }
 
     @Override
+    public FACTION getFaction() {
+        return FACTION.NONE;
+    }
+
+    @Override
+    public void setFaction(FACTION faction) {
+        throw new UnsupportedOperationException("Is fake vendor, change unsupported");
+    }
+
+    @Override
+    public GOVERNMENT getGovernment() {
+        return GOVERNMENT.NONE;
+    }
+
+    @Override
+    public void setGovernment(GOVERNMENT government) {
+        throw new UnsupportedOperationException("Is fake vendor, change unsupported");
+    }
+
+    @Override
     public Place getPlace() {
         return place;
     }

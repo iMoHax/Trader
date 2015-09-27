@@ -1,6 +1,8 @@
 package ru.trader.store.simple;
 
 import ru.trader.core.AbstractPlace;
+import ru.trader.core.FACTION;
+import ru.trader.core.GOVERNMENT;
 import ru.trader.core.Vendor;
 
 import java.util.Collection;
@@ -14,6 +16,9 @@ public class SimplePlace extends AbstractPlace {
     private double x;
     private double y;
     private double z;
+
+    private FACTION faction;
+    private GOVERNMENT government;
 
     public SimplePlace(String name) {
         this.name = name;
@@ -41,6 +46,16 @@ public class SimplePlace extends AbstractPlace {
     }
 
     @Override
+    public FACTION getFaction() {
+        return faction;
+    }
+
+    @Override
+    public GOVERNMENT getGovernment() {
+        return government;
+    }
+
+    @Override
     public double getX() {
         return x;
     }
@@ -63,6 +78,16 @@ public class SimplePlace extends AbstractPlace {
     @Override
     protected void updateName(String name) {
         this.name = name;
+    }
+
+    @Override
+    protected void updateFaction(FACTION faction) {
+        this.faction = faction;
+    }
+
+    @Override
+    protected void updateGovernment(GOVERNMENT government) {
+        this.government = government;
     }
 
     @Override

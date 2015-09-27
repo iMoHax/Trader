@@ -15,6 +15,12 @@ public interface Vendor extends Connectable<Vendor> {
     double getDistance();
     void setDistance(double distance);
 
+    FACTION getFaction();
+    void setFaction(FACTION faction);
+
+    GOVERNMENT getGovernment();
+    void setGovernment(GOVERNMENT government);
+
     void add(SERVICE_TYPE service);
     void remove(SERVICE_TYPE service);
     boolean has(SERVICE_TYPE service);

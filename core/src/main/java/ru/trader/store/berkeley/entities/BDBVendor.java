@@ -1,12 +1,14 @@
 package ru.trader.store.berkeley.entities;
 
 import com.sleepycat.persist.model.*;
+import ru.trader.core.FACTION;
+import ru.trader.core.GOVERNMENT;
 import ru.trader.core.SERVICE_TYPE;
 
 import java.util.Collection;
 import java.util.HashSet;
 
-@Entity(version = 1)
+@Entity(version = 2)
 public class BDBVendor {
 
     @PrimaryKey(sequence = "V_ID")
@@ -16,6 +18,8 @@ public class BDBVendor {
                   relatedEntity = BDBPlace.class, onRelatedEntityDelete = DeleteAction.CASCADE)
     private long placeId;
     private String name;
+    private FACTION faction;
+    private GOVERNMENT government;
     private double distance;
 
     @SecondaryKey(relate=Relationship.MANY_TO_MANY)
@@ -39,6 +43,22 @@ public class BDBVendor {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public FACTION getFaction() {
+        return faction;
+    }
+
+    public void setFaction(FACTION faction) {
+        this.faction = faction;
+    }
+
+    public GOVERNMENT getGovernment() {
+        return government;
+    }
+
+    public void setGovernment(GOVERNMENT government) {
+        this.government = government;
     }
 
     public long getPlaceId() {

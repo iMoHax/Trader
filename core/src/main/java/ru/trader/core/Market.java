@@ -90,6 +90,8 @@ public interface Market {
             } else {
                 nPlace.setPosition(place.getX(), place.getY(), place.getZ());
             }
+            nPlace.setFaction(place.getFaction());
+            nPlace.setGovernment(place.getGovernment());
             for (Vendor vendor : place.get()) {
                 Vendor nVendor = nPlace.get(vendor.getName());
                 if (nVendor == null){
@@ -102,6 +104,8 @@ public interface Market {
                 if (vendor.getDistance() > 0){
                     nVendor.setDistance(vendor.getDistance());
                 }
+                nVendor.setFaction(vendor.getFaction());
+                nVendor.setGovernment(vendor.getGovernment());
                 // add offers
                 for (Offer offer : vendor.getAllBuyOffers()) {
                     Offer nOffer = nVendor.get(offer.getType(), mapItems.get(offer.getItem()));

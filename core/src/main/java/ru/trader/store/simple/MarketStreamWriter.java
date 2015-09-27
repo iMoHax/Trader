@@ -79,6 +79,12 @@ public class MarketStreamWriter {
     protected void writePlace(Place place) throws XMLStreamException {
         out.writeStartElement(MarketDocHandler.PLACE);
         out.writeAttribute(MarketDocHandler.NAME_ATTR, place.getName());
+        if (place.getFaction() != null) {
+            out.writeAttribute(MarketDocHandler.FACTION_ATTR, String.valueOf(place.getFaction()));
+        }
+        if (place.getGovernment() != null) {
+            out.writeAttribute(MarketDocHandler.GOVERNMENT_ATTR, String.valueOf(place.getGovernment()));
+        }
         out.writeAttribute(MarketDocHandler.X_ATTR, String.valueOf(place.getX()));
         out.writeAttribute(MarketDocHandler.Y_ATTR, String.valueOf(place.getY()));
         out.writeAttribute(MarketDocHandler.Z_ATTR, String.valueOf(place.getZ()));
@@ -91,6 +97,12 @@ public class MarketStreamWriter {
     protected void writeVendor(Vendor vendor) throws XMLStreamException {
         out.writeStartElement(MarketDocHandler.VENDOR);
         out.writeAttribute(MarketDocHandler.NAME_ATTR, vendor.getName());
+        if (vendor.getFaction() != null) {
+            out.writeAttribute(MarketDocHandler.FACTION_ATTR, String.valueOf(vendor.getFaction()));
+        }
+        if (vendor.getGovernment() != null) {
+            out.writeAttribute(MarketDocHandler.GOVERNMENT_ATTR, String.valueOf(vendor.getGovernment()));
+        }
         out.writeAttribute(MarketDocHandler.DISTANCE_ATTR, String.valueOf(vendor.getDistance()));
         out.writeStartElement(MarketDocHandler.SERVICES_LIST);
         for (SERVICE_TYPE service_type : vendor.getServices()) {

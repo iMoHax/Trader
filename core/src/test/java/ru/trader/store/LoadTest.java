@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
-import ru.trader.TestUtil;
 import ru.trader.core.*;
 import ru.trader.store.simple.SimpleMarket;
 import ru.trader.store.simple.Store;
@@ -46,11 +45,15 @@ public class LoadTest extends Assert {
         assertEquals(place1.getX(), place2.getX(), 0.00001);
         assertEquals(place1.getY(), place2.getY(), 0.00001);
         assertEquals(place1.getZ(), place2.getZ(), 0.00001);
+        assertEquals(place1.getFaction(), place2.getFaction());
+        assertEquals(place1.getGovernment(), place2.getGovernment());
     }
 
     private void assertVendor(Vendor vendor1, Vendor vendor2){
         assertEquals(vendor1.getName(), vendor2.getName());
         assertEquals(vendor1.getDistance(), vendor2.getDistance(), 0.00001);
+        assertEquals(vendor1.getFaction(), vendor2.getFaction());
+        assertEquals(vendor1.getGovernment(), vendor2.getGovernment());
     }
 
     private void assertOffer(Offer offer1, Offer offer2){
@@ -74,12 +77,16 @@ public class LoadTest extends Assert {
         Item item4 = market.addItem("Item 4", group2);
         Item item5 = market.addItem("Item 5", group3);
         Place place1 = market.addPlace("Place 1", 0, 1, 3);
+        place1.setFaction(FACTION.ALLIANCE);
+        place1.setGovernment(GOVERNMENT.PRISON_COLONY);
         Place place2 = market.addPlace("Place 2",4,0,5);
         Place place3 = market.addPlace("Place 3",0,0,0);
         Vendor vendor1 = place1.addVendor("Vendor 1");
         Vendor vendor2 = place1.addVendor("Vendor 2");
         Vendor vendor3 = place2.addVendor("Vendor 3");
         vendor1.setDistance(10);
+        vendor1.setFaction(FACTION.ALLIANCE);
+        vendor1.setGovernment(GOVERNMENT.ANARCHY);
         vendor1.add(SERVICE_TYPE.MARKET);
         vendor1.add(SERVICE_TYPE.OUTFIT);
         Offer offer1 = vendor1.addOffer(OFFER_TYPE.SELL, item1, 10,43);
@@ -89,6 +96,7 @@ public class LoadTest extends Assert {
         Offer offer5 = vendor1.addOffer(OFFER_TYPE.SELL, item4, 1112,12);
         Offer offer6 = vendor1.addOffer(OFFER_TYPE.BUY, item5, 11,10);
         vendor2.setDistance(100.4);
+        vendor2.setGovernment(GOVERNMENT.NONE);
         vendor3.setDistance(200000.4);
         vendor3.add(SERVICE_TYPE.OUTFIT);
 

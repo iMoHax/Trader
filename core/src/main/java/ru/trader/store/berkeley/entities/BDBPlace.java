@@ -4,8 +4,10 @@ import com.sleepycat.persist.model.Entity;
 import com.sleepycat.persist.model.PrimaryKey;
 import com.sleepycat.persist.model.Relationship;
 import com.sleepycat.persist.model.SecondaryKey;
+import ru.trader.core.FACTION;
+import ru.trader.core.GOVERNMENT;
 
-@Entity(version = 2)
+@Entity(version = 3)
 public class BDBPlace {
 
     @PrimaryKey(sequence = "P_ID")
@@ -20,6 +22,8 @@ public class BDBPlace {
     private double y;
     private double z;
 
+    private FACTION faction;
+    private GOVERNMENT government;
 
     private BDBPlace() {
     }
@@ -39,6 +43,22 @@ public class BDBPlace {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public FACTION getFaction() {
+        return faction;
+    }
+
+    public void setFaction(FACTION faction) {
+        this.faction = faction;
+    }
+
+    public GOVERNMENT getGovernment() {
+        return government;
+    }
+
+    public void setGovernment(GOVERNMENT government) {
+        this.government = government;
     }
 
     public double getX() {

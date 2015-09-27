@@ -2,10 +2,7 @@ package ru.trader.maddavo;
 
 import org.junit.Assert;
 import org.junit.Test;
-import ru.trader.core.Market;
-import ru.trader.core.Place;
-import ru.trader.core.SERVICE_TYPE;
-import ru.trader.core.Vendor;
+import ru.trader.core.*;
 import ru.trader.store.simple.SimpleMarket;
 
 import java.util.Collection;
@@ -42,20 +39,27 @@ public class StationImportTest  extends Assert {
     private Market createMarket(){
         Market market = new SimpleMarket();
         market.addPlace("1 Hydrae",0,0,0);
-        market.addPlace("1 Kappa Cygni",0,0,0);
+        market.addPlace("1 Kappa Cygni", 0, 0, 0);
         Place system = market.addPlace("10 CANUM VENATICORUM", 0, 0, 0);
+        system.setFaction(FACTION.FEDERATION);
+        system.setGovernment(GOVERNMENT.PRISON_COLONY);
+
         Vendor station = system.addVendor("Trevithick Hub");
         station.setDistance(2000);
         station.add(SERVICE_TYPE.MARKET);
         station.add(SERVICE_TYPE.BLACK_MARKET);
         station.add(SERVICE_TYPE.OUTFIT);
         station.add(SERVICE_TYPE.MEDIUM_LANDPAD);
+        station.setFaction(FACTION.ALLIANCE);
+        station.setGovernment(GOVERNMENT.COMMUNISM);
 
         station = system.addVendor("Litke Port");
         station.setDistance(2000);
         station.add(SERVICE_TYPE.BLACK_MARKET);
         station.add(SERVICE_TYPE.OUTFIT);
         station.add(SERVICE_TYPE.SHIPYARD);
+        station.setFaction(FACTION.EMPIRE);
+        station.setGovernment(GOVERNMENT.CONFEDERACY);
 
 
         system = market.addPlace("Test sys", 0, 0, 0);
@@ -88,6 +92,8 @@ public class StationImportTest  extends Assert {
 
         station =  market.get("1 Hydrae").get("Voss Hub");
         assertNotNull(station);
+        assertNull(station.getFaction());
+        assertNull(station.getGovernment());
         assertEquals(823, station.getDistance(), 0.00001);
         assertTrue(station.has(SERVICE_TYPE.BLACK_MARKET));
         assertTrue(station.has(SERVICE_TYPE.MEDIUM_LANDPAD));
@@ -108,8 +114,15 @@ public class StationImportTest  extends Assert {
         assertFalse(station.has(SERVICE_TYPE.OUTFIT));
         assertFalse(station.has(SERVICE_TYPE.MUNITION));
 
-        station =  market.get("10 CANUM VENATICORUM").get("Trevithick Hub");
+        Place place = market.get("10 CANUM VENATICORUM");
+        assertNotNull(place);
+        assertEquals(FACTION.FEDERATION, place.getFaction());
+        assertEquals(GOVERNMENT.PRISON_COLONY, place.getGovernment());
+
+        station = place.get("Trevithick Hub");
         assertNotNull(station);
+        assertEquals(FACTION.ALLIANCE, station.getFaction());
+        assertEquals(GOVERNMENT.COMMUNISM, station.getGovernment());
         assertEquals(957, station.getDistance(), 0.00001);
         assertFalse(station.has(SERVICE_TYPE.BLACK_MARKET));
         assertTrue(station.has(SERVICE_TYPE.MEDIUM_LANDPAD));
@@ -121,6 +134,8 @@ public class StationImportTest  extends Assert {
 
         station =  market.get("10 CANUM VENATICORUM").get("Litke Port");
         assertNotNull(station);
+        assertEquals(FACTION.EMPIRE, station.getFaction());
+        assertEquals(GOVERNMENT.CONFEDERACY, station.getGovernment());
         assertEquals(2000, station.getDistance(), 0.00001);
         assertTrue(station.has(SERVICE_TYPE.BLACK_MARKET));
         assertTrue(station.has(SERVICE_TYPE.MEDIUM_LANDPAD));

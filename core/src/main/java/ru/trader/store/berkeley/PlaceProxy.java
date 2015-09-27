@@ -1,6 +1,8 @@
 package ru.trader.store.berkeley;
 
 import ru.trader.core.AbstractPlace;
+import ru.trader.core.FACTION;
+import ru.trader.core.GOVERNMENT;
 import ru.trader.core.Vendor;
 import ru.trader.store.berkeley.entities.BDBPlace;
 import ru.trader.store.berkeley.entities.BDBVendor;
@@ -46,6 +48,18 @@ public class PlaceProxy extends AbstractPlace {
     }
 
     @Override
+    protected void updateFaction(FACTION faction) {
+        place.setFaction(faction);
+        store.getPlaceAccessor().update(place);
+    }
+
+    @Override
+    protected void updateGovernment(GOVERNMENT government) {
+        place.setGovernment(government);
+        store.getPlaceAccessor().update(place);
+    }
+
+    @Override
     protected void updatePosition(double x, double y, double z) {
         place.setPosition(x, y, z);
         store.getPlaceAccessor().update(place);
@@ -78,6 +92,16 @@ public class PlaceProxy extends AbstractPlace {
     @Override
     public String getName() {
         return place.getName();
+    }
+
+    @Override
+    public FACTION getFaction() {
+        return place.getFaction();
+    }
+
+    @Override
+    public GOVERNMENT getGovernment() {
+        return place.getGovernment();
     }
 
     @Override

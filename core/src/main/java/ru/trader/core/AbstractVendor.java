@@ -12,6 +12,8 @@ public abstract class AbstractVendor implements Vendor {
 
     protected abstract Offer createOffer(OFFER_TYPE type, Item item, double price, long count);
     protected abstract void updateName(String name);
+    protected abstract void updateFaction(FACTION faction);
+    protected abstract void updateGovernment(GOVERNMENT government);
     protected abstract void updateDistance(double distance);
     protected abstract void addService(SERVICE_TYPE service);
     protected abstract void removeService(SERVICE_TYPE service);
@@ -35,6 +37,30 @@ public abstract class AbstractVendor implements Vendor {
             market.setChange(true);
         } else {
             updateName(name);
+        }
+    }
+
+    @Override
+    public final void setFaction(FACTION faction){
+        AbstractMarket market = getMarket();
+        if (market != null){
+            LOG.debug("Change faction of vendor {} to {}", this, faction);
+            market.updateFaction(this, faction);
+            market.setChange(true);
+        } else {
+            updateFaction(faction);
+        }
+    }
+
+    @Override
+    public final void setGovernment(GOVERNMENT government){
+        AbstractMarket market = getMarket();
+        if (market != null){
+            LOG.debug("Change government of vendor {} to {}", this, government);
+            market.updateGovernment(this, government);
+            market.setChange(true);
+        } else {
+            updateGovernment(government);
         }
     }
 

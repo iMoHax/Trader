@@ -1,5 +1,6 @@
 package ru.trader.controllers;
 
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -7,15 +8,14 @@ import javafx.util.converter.LongStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.EMDNUpdater;
+import ru.trader.core.FACTION;
+import ru.trader.core.GOVERNMENT;
 import ru.trader.core.SERVICE_TYPE;
 import ru.trader.model.ItemModel;
 import ru.trader.model.StationModel;
 import ru.trader.model.SystemModel;
 import ru.trader.model.support.StationUpdater;
-import ru.trader.view.support.Localization;
-import ru.trader.view.support.NumberField;
-import ru.trader.view.support.PriceStringConverter;
-import ru.trader.view.support.ViewUtils;
+import ru.trader.view.support.*;
 import ru.trader.view.support.cells.EditOfferCell;
 import ru.trader.view.support.cells.TextFieldCell;
 
@@ -27,6 +27,12 @@ public class StationEditorController {
 
     @FXML
     private TextField name;
+
+    @FXML
+    private ComboBox<FACTION> faction;
+
+    @FXML
+    private ComboBox<GOVERNMENT> government;
 
     @FXML
     private TableView<StationUpdater.FakeOffer> items;
@@ -64,6 +70,10 @@ public class StationEditorController {
 
     @FXML
     private void initialize() {
+        faction.setItems(FXCollections.observableArrayList(FACTION.values()));
+        faction.setConverter(new FactionStringConverter());
+        government.setItems(FXCollections.observableArrayList(GOVERNMENT.values()));
+        government.setConverter(new GovernmentStringConverter());
         items.getSelectionModel().setCellSelectionEnabled(true);
         buy.setCellFactory(EditOfferCell.forTable(new PriceStringConverter(), false));
         sell.setCellFactory(EditOfferCell.forTable(new PriceStringConverter(), true));
@@ -80,10 +90,14 @@ public class StationEditorController {
     void init(){
         if (updater != null){
             name.textProperty().unbindBidirectional(updater.nameProperty());
+            faction.valueProperty().unbindBidirectional(updater.factionProperty());
+            government.valueProperty().unbindBidirectional(updater.governmentProperty());
             distance.numberProperty().unbindBidirectional(updater.distanceProperty());
         }
         updater = new StationUpdater(MainController.getMarket());
         name.textProperty().bindBidirectional(updater.nameProperty());
+        faction.valueProperty().bindBidirectional(updater.factionProperty());
+        government.valueProperty().bindBidirectional(updater.governmentProperty());
         distance.numberProperty().bindBidirectional(updater.distanceProperty());
         cbMarket.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.MARKET));
         cbBlackMarket.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.BLACK_MARKET));

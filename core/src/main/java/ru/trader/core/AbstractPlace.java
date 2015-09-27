@@ -13,6 +13,8 @@ public abstract class AbstractPlace implements Place {
 
     protected abstract Vendor createVendor(String name);
     protected abstract void updateName(String name);
+    protected abstract void updateFaction(FACTION faction);
+    protected abstract void updateGovernment(GOVERNMENT government);
     protected abstract void updatePosition(double x, double y, double z);
     protected abstract void addVendor(Vendor vendor);
     protected abstract void removeVendor(Vendor vendor);
@@ -47,6 +49,29 @@ public abstract class AbstractPlace implements Place {
             updatePosition(x, y, z);
         }
     }
+
+    @Override
+    public final void setFaction(FACTION faction){
+        if (market != null){
+            LOG.debug("Change faction of place {} to {}", this, faction);
+            market.updateFaction(this, faction);
+            market.setChange(true);
+        } else {
+            updateFaction(faction);
+        }
+    }
+
+    @Override
+    public final void setGovernment(GOVERNMENT government){
+        if (market != null){
+            LOG.debug("Change government of place {} to {}", this, government);
+            market.updateGovernment(this, government);
+            market.setChange(true);
+        } else {
+            updateGovernment(government);
+        }
+    }
+
 
     @Override
     public final void add(Vendor vendor) {

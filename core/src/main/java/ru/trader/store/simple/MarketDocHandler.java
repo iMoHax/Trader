@@ -34,6 +34,8 @@ public class MarketDocHandler extends DefaultHandler {
     protected final static String X_ATTR = "x";
     protected final static String Y_ATTR = "y";
     protected final static String Z_ATTR = "z";
+    protected final static String FACTION_ATTR = "faction";
+    protected final static String GOVERNMENT_ATTR = "government";
 
     protected SimpleMarket world;
     protected Vendor curVendor;
@@ -86,15 +88,22 @@ public class MarketDocHandler extends DefaultHandler {
         String x = attributes.getValue(X_ATTR);
         String y = attributes.getValue(Y_ATTR);
         String z = attributes.getValue(Z_ATTR);
-        LOG.debug("parse place {} position ({};{};{})", name, x, y, z);
-        onPlace(name, x != null ? Double.valueOf(x) : 0, y != null ? Double.valueOf(y) : 0, z != null ? Double.valueOf(z) : 0);
+        String faction = attributes.getValue(FACTION_ATTR);
+        String government = attributes.getValue(GOVERNMENT_ATTR);
+        LOG.debug("parse place {} position ({};{};{}), faction {}, government {}", name, x, y, z, faction, government);
+        onPlace(name, x != null ? Double.valueOf(x) : 0, y != null ? Double.valueOf(y) : 0, z != null ? Double.valueOf(z) : 0,
+                faction != null ? FACTION.valueOf(faction) : null, government != null ? GOVERNMENT.valueOf(government) : null
+                );
     }
 
     protected void parseVendor(Attributes attributes) throws SAXException {
         String name = attributes.getValue(NAME_ATTR);
         String distance = attributes.getValue(DISTANCE_ATTR);
-        LOG.debug("parse vendor {}, distance {}", name, distance);
-        onVendor(name, distance != null ? Double.valueOf(distance) : 0);
+        String faction = attributes.getValue(FACTION_ATTR);
+        String government = attributes.getValue(GOVERNMENT_ATTR);
+        LOG.debug("parse vendor {}, distance {}, faction {}, government {}", name, distance, faction, government);
+        onVendor(name, distance != null ? Double.valueOf(distance) : 0,
+                 faction != null ? FACTION.valueOf(faction) : null, government != null ? GOVERNMENT.valueOf(government) : null);
     }
 
     protected void parseService(Attributes attributes) throws SAXException {
@@ -133,13 +142,17 @@ public class MarketDocHandler extends DefaultHandler {
         curVendor.addOffer(offerType, item, price, count);
     }
 
-    protected void onPlace(String name, double x, double y, double z){
+    protected void onPlace(String name, double x, double y, double z, FACTION faction, GOVERNMENT government){
         curPlace = world.addPlace(name, x, y, z);
+        curPlace.setFaction(faction);
+        curPlace.setGovernment(government);
     }
 
-    protected void onVendor(String name, double distance){
+    protected void onVendor(String name, double distance, FACTION faction, GOVERNMENT government){
         curVendor = curPlace.addVendor(name);
         curVendor.setDistance(distance);
+        curVendor.setFaction(faction);
+        curVendor.setGovernment(government);
     }
 
     protected void onService(SERVICE_TYPE type){

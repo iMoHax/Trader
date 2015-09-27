@@ -87,6 +87,18 @@ public class VendorProxy extends AbstractVendor {
     }
 
     @Override
+    protected void updateFaction(FACTION faction) {
+        vendor.setFaction(faction);
+        store.getVendorAccessor().update(vendor);
+    }
+
+    @Override
+    protected void updateGovernment(GOVERNMENT government) {
+        vendor.setGovernment(government);
+        store.getVendorAccessor().update(vendor);
+    }
+
+    @Override
     protected void updateDistance(double distance) {
         vendor.setDistance(distance);
         store.getVendorAccessor().update(vendor);
@@ -128,6 +140,16 @@ public class VendorProxy extends AbstractVendor {
     @Override
     public String getName() {
         return vendor.getName();
+    }
+
+    @Override
+    public FACTION getFaction() {
+        return vendor.getFaction();
+    }
+
+    @Override
+    public GOVERNMENT getGovernment() {
+        return vendor.getGovernment();
     }
 
     @Override

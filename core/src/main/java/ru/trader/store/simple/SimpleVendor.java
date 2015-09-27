@@ -2,7 +2,9 @@ package ru.trader.store.simple;
 
 import ru.trader.core.*;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SimpleVendor extends AbstractVendor {
@@ -10,6 +12,8 @@ public class SimpleVendor extends AbstractVendor {
     private Place place;
     private double distance;
     private EnumSet<SERVICE_TYPE> services = EnumSet.noneOf(SERVICE_TYPE.class);
+    private FACTION faction;
+    private GOVERNMENT government;
 
     protected Map<Item, Offer> sell;
     protected Map<Item, Offer> buy;
@@ -46,6 +50,27 @@ public class SimpleVendor extends AbstractVendor {
     @Override
     protected void updateName(String name) {
         this.name = name;
+    }
+
+
+    @Override
+    public FACTION getFaction() {
+        return faction;
+    }
+
+    @Override
+    protected void updateFaction(FACTION faction) {
+        this.faction = faction;
+    }
+
+    @Override
+    public GOVERNMENT getGovernment() {
+        return government;
+    }
+
+    @Override
+    protected void updateGovernment(GOVERNMENT government) {
+        this.government = government;
     }
 
     @Override

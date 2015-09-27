@@ -1,13 +1,13 @@
 package ru.trader.model;
 
-import javafx.beans.property.*;
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.trader.core.Place;
-import ru.trader.core.SERVICE_TYPE;
-import ru.trader.core.Vendor;
+import ru.trader.core.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,6 +50,24 @@ public class SystemModel {
             name = new SimpleStringProperty(system.getName());
         }
         return name;
+    }
+
+    public FACTION getFaction() {return system.getFaction();}
+
+    public void setFaction(FACTION faction) {
+        FACTION oldFaction = getFaction();
+        if (oldFaction != null && oldFaction.equals(faction) || faction == null) return;
+        LOG.info("Change faction station {} to {}", system, faction);
+        system.setFaction(faction);
+    }
+
+    public GOVERNMENT getGovernment() {return system.getGovernment();}
+
+    public void setGovernment(GOVERNMENT government) {
+        GOVERNMENT oldGovernment = getGovernment();
+        if (oldGovernment != null && oldGovernment.equals(government) || government == null) return;
+        LOG.info("Change government station {} to {}", system, government);
+        system.setGovernment(government);
     }
 
     public double getX(){

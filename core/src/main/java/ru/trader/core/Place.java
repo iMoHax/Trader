@@ -16,6 +16,12 @@ public interface Place extends Connectable<Place> {
     double getZ();
     void setPosition(double x, double y, double z);
 
+    FACTION getFaction();
+    void setFaction(FACTION faction);
+
+    GOVERNMENT getGovernment();
+    void setGovernment(GOVERNMENT government);
+
     Collection<Vendor> get();
     default Collection<Vendor> get(boolean withTransit){
         if (withTransit){

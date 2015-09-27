@@ -17,6 +17,8 @@ import ru.trader.model.StationModel;
 import ru.trader.model.SystemModel;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.model.support.ChangeMarketListener;
+import ru.trader.view.support.FactionStringConverter;
+import ru.trader.view.support.GovernmentStringConverter;
 import ru.trader.view.support.ViewUtils;
 
 import java.util.List;
@@ -38,6 +40,10 @@ public class OffersController {
     private TableView<OfferModel> tblSell;
     @FXML
     private TableView<OfferModel> tblBuy;
+    @FXML
+    private Label faction;
+    @FXML
+    private Label government;
     @FXML
     private Label distance;
     @FXML
@@ -137,6 +143,8 @@ public class OffersController {
         sells.clear();
         buys.clear();
         distance.setText("");
+        government.setText("");
+        faction.setText("");
         cbMarket.setSelected(false);
         cbBlackMarket.setSelected(false);
         cbMunition.setSelected(false);
@@ -146,6 +154,8 @@ public class OffersController {
         cbMediumLandpad.setSelected(false);
         cbLargeLandpad.setSelected(false);
         if (station != null){
+            faction.setText(FactionStringConverter.toLocalizationString(station.getFaction()));
+            government.setText(GovernmentStringConverter.toLocalizationString(station.getGovernment()));
             distance.setText(String.valueOf(station.getDistance()));
             cbMarket.setSelected(station.hasService(SERVICE_TYPE.MARKET));
             cbBlackMarket.setSelected(station.hasService(SERVICE_TYPE.BLACK_MARKET));

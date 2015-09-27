@@ -4,7 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class StationModel {
@@ -40,6 +41,24 @@ public class StationModel {
         if (getName().equals(value)) return;
         LOG.info("Change name station {} to {}", station, value);
         station.setName(value);
+    }
+
+    public FACTION getFaction() {return station.getFaction();}
+
+    public void setFaction(FACTION faction) {
+        FACTION oldFaction = getFaction();
+        if (oldFaction != null && oldFaction.equals(faction) || faction == null) return;
+        LOG.info("Change faction station {} to {}", station, faction);
+        station.setFaction(faction);
+    }
+
+    public GOVERNMENT getGovernment() {return station.getGovernment();}
+
+    public void setGovernment(GOVERNMENT government) {
+        GOVERNMENT oldGovernment = getGovernment();
+        if (oldGovernment != null && oldGovernment.equals(government) || government == null) return;
+        LOG.info("Change government station {} to {}", station, government);
+        station.setGovernment(government);
     }
 
     public double getDistance(){

@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.controllers.MainController;
+import ru.trader.core.FACTION;
+import ru.trader.core.GOVERNMENT;
 import ru.trader.core.OFFER_TYPE;
 import ru.trader.core.SERVICE_TYPE;
 import ru.trader.model.*;
@@ -17,6 +19,8 @@ public class StationUpdater {
     private final static SERVICE_TYPE[] SERVICE_TYPES = SERVICE_TYPE.values();
     private final ObservableList<FakeOffer> offers;
     private final StringProperty name;
+    private final ObjectProperty<FACTION> faction;
+    private final ObjectProperty<GOVERNMENT> government;
     private final DoubleProperty distance;
     private final BooleanProperty[] services;
     private final MarketModel market;
@@ -30,6 +34,8 @@ public class StationUpdater {
         this.offers = BindingsHelper.observableList(MainController.getMarket().itemsProperty(), FakeOffer::new);
         this.name = new SimpleStringProperty();
         this.distance = new SimpleDoubleProperty(0);
+        this.faction = new SimpleObjectProperty<>(FACTION.NONE);
+        this.government = new SimpleObjectProperty<>(GOVERNMENT.NONE);
         this.services = new BooleanProperty[SERVICE_TYPES.length];
         for (int i = 0; i < services.length; i++) {
             services[i] = new SimpleBooleanProperty();
@@ -54,6 +60,8 @@ public class StationUpdater {
         }
         if (station != null){
             name.setValue(station.getName());
+            faction.setValue(station.getFaction());
+            government.setValue(station.getGovernment());
             distance.setValue(station.getDistance());
             for (SERVICE_TYPE service : station.getServices()) {
                 serviceProperty(service).set(true);
@@ -62,6 +70,8 @@ public class StationUpdater {
             station.getBuys().forEach(this::fillOffer);
         } else {
             name.setValue("");
+            faction.setValue(FACTION.NONE);
+            government.setValue(GOVERNMENT.NONE);
             distance.setValue(0);
         }
     }
@@ -106,6 +116,30 @@ public class StationUpdater {
         this.name.set(name);
     }
 
+    public FACTION getFaction() {
+        return faction.get();
+    }
+
+    public ObjectProperty<FACTION> factionProperty() {
+        return faction;
+    }
+
+    public void setFaction(FACTION faction) {
+        this.faction.set(faction);
+    }
+
+    public GOVERNMENT getGovernment() {
+        return government.get();
+    }
+
+    public ObjectProperty<GOVERNMENT> governmentProperty() {
+        return government;
+    }
+
+    public void setGovernment(GOVERNMENT government) {
+        this.government.set(government);
+    }
+
     public double getDistance() {
         return distance.get();
     }
@@ -132,6 +166,8 @@ public class StationUpdater {
             Notificator notificator = market.getNotificator();
             notificator.setAlert(false);
             station = system.add(name.get());
+            station.setFaction(faction.get());
+            station.setGovernment(government.get());
             station.setDistance(distance.get());
             for (int i = 0; i < services.length; i++) {
                 if (services[i].get()){
@@ -143,6 +179,8 @@ public class StationUpdater {
             notificator.sendAdd(station);
         } else {
             station.setName(name.get());
+            station.setFaction(faction.get());
+            station.setGovernment(government.get());
             station.setDistance(distance.get());
             for (int i = 0; i < services.length; i++) {
                 if (services[i].get()){
