@@ -81,7 +81,7 @@ public class ProfileModel {
             profile.getShip().setEngine(n);
         });
 
-
+        route.addListener((ov, o, n) -> LOG.debug("Change route, old: {}, new: {}", o, n));
     }
 
     Profile getProfile() {

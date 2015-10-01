@@ -176,7 +176,7 @@ public class RouterController {
         RouteModel r = market.getPath(s, sS, t, tS);
         if (r == null) return;
         if (route != null){
-            route.add(r);
+            route = route.add(r);
         } else {
             route = r;
         }
@@ -203,7 +203,7 @@ public class RouterController {
         if (!select.isEmpty()){
             int index = select.getSelectedIndex();
             if (index > 0){
-                route.remove(select.getSelectedItem());
+                route = route.remove(select.getSelectedItem());
             } else {
                 route = null;
             }
@@ -298,14 +298,14 @@ public class RouterController {
         if (this.route == null){
             this.route = route;
         } else {
-            this.route.add(route);
+            this.route = this.route.add(route);
         }
         refreshPath();
     }
 
     private void addOrderToPath(OrderModel order){
         if (route != null){
-            route.add(order);
+            route = route.add(order);
         } else {
             route = market.getPath(order);
         }
