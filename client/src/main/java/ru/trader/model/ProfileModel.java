@@ -52,7 +52,7 @@ public class ProfileModel {
         system.addListener((ov, o, n) -> {
             LOG.debug("Change system, old: {}, new: {}", o, n);
             profile.setSystem(n != null && n != ModelFabric.NONE_SYSTEM ? n.getSystem() : null);
-            if (route.getValue() != null) {getRoute().updateCurrentEntry(n, null);}
+            if (route.getValue() != null) {getRoute().updateCurrentEntry(n);}
         });
         station.addListener((ov, o, n) -> {
             LOG.debug("Change station, old: {}, new: {}", o, n);
@@ -62,6 +62,7 @@ public class ProfileModel {
         docked.addListener((ov, o, n) -> {
             LOG.debug("Change docked, old: {}, new: {}", o, n);
             profile.setDocked(n);
+            if (!n && route.getValue() != null) {getRoute().updateCurrentEntry(getSystem(), getStation(), true);}
         });
         shipMass.addListener((ov, o, n) -> {
             LOG.debug("Change ship mass, old: {}, new: {}", o, n);

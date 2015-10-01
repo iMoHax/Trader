@@ -226,24 +226,33 @@ public class RouteModel {
         this.currentEntry.set(currentEntry);
     }
 
+
+    public void updateCurrentEntry(SystemModel system) {
+        updateCurrentEntry(system, null, false);
+    }
+
     public void updateCurrentEntry(SystemModel system, StationModel station) {
-        for (int i = getCurrentEntry()+1; i < entries.size(); i++) {
-            RouteEntryModel entry = entries.get(i);
-            if (system.equals(entry.getStation().getSystem())
-                && (station == null || station == ModelFabric.NONE_STATION ||
-                    station.equals(entry.getStation()))
-                )
-            {
-                setCurrentEntry(i);
+        updateCurrentEntry(system, station, false);
+    }
+
+    public void updateCurrentEntry(SystemModel system, StationModel station, boolean undock) {
+        if (undock){
+            int index = getCurrentEntry();
+            RouteEntryModel entry = entries.get(index);
+            if (index < entries.size()-1 && system.equals(entry.getStation().getSystem()) && entry.getStation().equals(station)){
+                setCurrentEntry(index+1);
+            }
+        } else {
+            int index = getCurrentEntry();
+            RouteEntryModel entry = entries.get(index);
+            if (entry.isTransit() && index < entries.size()-1 && system.equals(entry.getStation().getSystem())){
+                setCurrentEntry(index+1);
                 return;
             }
-            if (!entry.isTransit()) return;
-        }
-        if (isLoop()){
-            for (int i = 0; i < getCurrentEntry()-1; i++) {
-                RouteEntryModel entry = entries.get(i);
+            for (int i = index+1; i < entries.size(); i++) {
+                entry = entries.get(i);
                 if (system.equals(entry.getStation().getSystem())
-                        && (station == null || station == ModelFabric.NONE_STATION ||
+                    && (station == null || station == ModelFabric.NONE_STATION ||
                         station.equals(entry.getStation()))
                     )
                 {
@@ -251,6 +260,20 @@ public class RouteModel {
                     return;
                 }
                 if (!entry.isTransit()) return;
+            }
+            if (isLoop()){
+                for (int i = 0; i < index-1; i++) {
+                    entry = entries.get(i);
+                    if (system.equals(entry.getStation().getSystem())
+                            && (station == null || station == ModelFabric.NONE_STATION ||
+                            station.equals(entry.getStation()))
+                        )
+                    {
+                        setCurrentEntry(i);
+                        return;
+                    }
+                    if (!entry.isTransit()) return;
+                }
             }
         }
     }

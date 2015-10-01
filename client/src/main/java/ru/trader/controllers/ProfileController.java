@@ -5,6 +5,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
@@ -27,6 +28,8 @@ public class ProfileController {
     private TextField systemText;
     @FXML
     private ComboBox<StationModel> station;
+    @FXML
+    private CheckBox docked;
     @FXML
     private NumberField mass;
     @FXML
@@ -79,6 +82,7 @@ public class ProfileController {
             consumeChanges(() -> {profile.setSystem(n); profile.setStation(ModelFabric.NONE_STATION);});
         });
         station.valueProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setStation(n)));
+        docked.selectedProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setDocked(n)));
         mass.numberProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setShipMass(n.doubleValue())));
         tank.numberProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setShipTank(n.doubleValue())));
         cargo.numberProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setShipCargo(n.intValue())));
@@ -90,14 +94,17 @@ public class ProfileController {
             unbind();
         }
         this.profile = profile;
+        ignoreChanges = true;
         name.setText(profile.getName());
         balance.setValue(profile.getBalance());
         system.setValue(profile.getSystem());
         station.setValue(profile.getStation());
+        docked.setSelected(profile.isDocked());
         mass.setValue(profile.getShipMass());
         tank.setValue(profile.getShipTank());
         cargo.setValue(profile.getShipCargo());
         engine.setValue(profile.getShipEngine());
+        ignoreChanges = false;
         bind();
     }
 
@@ -106,6 +113,7 @@ public class ProfileController {
         profile.balanceProperty().addListener(balanceListener);
         profile.systemProperty().addListener(systemListener);
         profile.stationProperty().addListener(stationListener);
+        profile.dockedProperty().addListener(dockedListener);
         profile.shipMassProperty().addListener(massListener);
         profile.shipTankProperty().addListener(tankListener);
         profile.shipCargoProperty().addListener(cargoListener);
@@ -117,6 +125,7 @@ public class ProfileController {
         profile.balanceProperty().removeListener(balanceListener);
         profile.systemProperty().removeListener(systemListener);
         profile.stationProperty().removeListener(stationListener);
+        profile.dockedProperty().removeListener(dockedListener);
         profile.shipMassProperty().removeListener(massListener);
         profile.shipTankProperty().removeListener(tankListener);
         profile.shipCargoProperty().removeListener(cargoListener);
@@ -128,6 +137,7 @@ public class ProfileController {
     private final ChangeListener<Number> balanceListener = (ov, o, n) -> consumeChanges(() -> balance.setValue(n));
     private final ChangeListener<SystemModel> systemListener = (ov, o, n) -> consumeChanges(()  -> system.setValue(n));
     private final ChangeListener<StationModel> stationListener = (ov, o, n) -> consumeChanges(() -> station.setValue(n));
+    private final ChangeListener<Boolean> dockedListener = (ov, o, n) -> consumeChanges(() -> docked.setSelected(n));
     private final ChangeListener<Number> massListener = (ov, o, n) -> consumeChanges(() -> mass.setValue(n));
     private final ChangeListener<Number> tankListener = (ov, o, n) -> consumeChanges(() -> tank.setValue(n));
     private final ChangeListener<Number> cargoListener = (ov, o, n) -> consumeChanges(() -> cargo.setValue(n));

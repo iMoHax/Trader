@@ -19,6 +19,8 @@
     <Label text="Станция:" />
     <ComboBox fx:id="station" />
     <Button fx:id="btnAddStation"/>
+    <Label text="В доке:" />
+    <CheckBox fx:id="docked" />
     <VBox>
         <HBox>
             <Label text="Трюм:" />

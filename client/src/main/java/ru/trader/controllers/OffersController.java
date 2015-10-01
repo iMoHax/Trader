@@ -11,10 +11,7 @@ import org.controlsfx.control.SegmentedButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.SERVICE_TYPE;
-import ru.trader.model.MarketModel;
-import ru.trader.model.OfferModel;
-import ru.trader.model.StationModel;
-import ru.trader.model.SystemModel;
+import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.model.support.ChangeMarketListener;
 import ru.trader.view.support.FactionStringConverter;
@@ -83,7 +80,7 @@ public class OffersController {
             if (n != null){
                 fillTables((StationModel) n.getUserData());
             } else {
-                fillTables(null);
+                fillTables(ModelFabric.NONE_STATION);
             }
         });
         stationsBar.setToggleGroup(stationsGrp);
@@ -126,9 +123,9 @@ public class OffersController {
         stations.forEach(s -> stationsBar.getButtons().add(buildStationNode(s)));
         if (!stations.isEmpty()){
             stationsBar.getButtons().get(0).setSelected(true);
+        } else {
+            fillTables(ModelFabric.NONE_STATION);
         }
-
-        fillTables(stations.isEmpty() ? null : stations.get(0));
     }
 
     private ToggleButton buildStationNode(StationModel station){
@@ -153,7 +150,7 @@ public class OffersController {
         cbShipyard.setSelected(false);
         cbMediumLandpad.setSelected(false);
         cbLargeLandpad.setSelected(false);
-        if (station != null){
+        if (station != ModelFabric.NONE_STATION){
             faction.setText(FactionStringConverter.toLocalizationString(station.getFaction()));
             government.setText(GovernmentStringConverter.toLocalizationString(station.getGovernment()));
             distance.setText(String.valueOf(station.getDistance()));
