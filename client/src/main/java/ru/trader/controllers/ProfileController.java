@@ -60,6 +60,11 @@ public class ProfileController {
         initListeners();
     }
 
+    @FXML
+    private void showHelper(){
+        Screeners.showHelper();
+    }
+
     private void consumeChanges(Runnable runnable){
         if (ignoreChanges) return;
         ignoreChanges = true;

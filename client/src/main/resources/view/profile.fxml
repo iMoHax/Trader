@@ -6,6 +6,7 @@
 <?import ru.trader.view.support.cells.OfferListCell?>
 <?import javafx.geometry.Insets?>
 <?import ru.trader.view.support.NumberField?>
+<?import org.controlsfx.glyphfont.Glyph?>
 <HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.ProfileController"
       spacing="4" >
@@ -21,6 +22,9 @@
     <Button fx:id="btnAddStation"/>
     <Label text="В доке:" />
     <CheckBox fx:id="docked" />
+    <Button prefWidth="30" onAction="#showHelper">
+        <graphic><Glyph text="FontAwesome|ROCKET"/></graphic>
+    </Button>
     <VBox>
         <HBox>
             <Label text="Трюм:" />
