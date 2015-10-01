@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import ru.trader.view.support.cells.OfferListCell?>
+<?import javafx.geometry.Insets?>
+<?import ru.trader.view.support.NumberField?>
+<?import org.controlsfx.glyphfont.Glyph?>
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ru.trader.controllers.RouteTrackController"
+      spacing="4" >
+        <fx:include fx:id="missions" source="missions.fxml"/>
+        <HBox>
+            <ListView fx:id="missionsList" />
+            <Button prefWidth="30" onAction="#removeMission"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
+            <Button prefWidth="80" text="Добавить" onAction="#addMissions" />
+        </HBox>
+</VBox>

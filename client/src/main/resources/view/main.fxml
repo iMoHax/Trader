@@ -64,6 +64,9 @@
            <Tab text="Маршрут">
                <fx:include source="routeSearch.fxml"/>
            </Tab>
+           <Tab text="Миссии">
+               <fx:include source="routeTrack.fxml"/>
+           </Tab>
        </TabPane>
    </center>
 

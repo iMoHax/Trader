@@ -43,7 +43,8 @@ public class MissionsController {
 
     private final ObservableList<MissionModel> missions;
     private StationModel station;
-
+    private StationsProvider receiverProvider;
+    private StationsProvider buyerProvider;
 
     public MissionsController() {
         missions = FXCollections.observableArrayList();
@@ -52,10 +53,10 @@ public class MissionsController {
     @FXML
     private void initialize(){
         MarketModel world = MainController.getWorld();
-        StationsProvider provider = new StationsProvider(world);
-        receiver = new AutoCompletion<>(receiverText, provider, ModelFabric.NONE_STATION, provider.getConverter());
-        provider = new StationsProvider(world);
-        buyer = new AutoCompletion<>(buyerText, provider, ModelFabric.NONE_STATION, provider.getConverter());
+        receiverProvider = new StationsProvider(world);
+        receiver = new AutoCompletion<>(receiverText, receiverProvider, ModelFabric.NONE_STATION, receiverProvider.getConverter());
+        buyerProvider = new StationsProvider(world);
+        buyer = new AutoCompletion<>(buyerText, buyerProvider, ModelFabric.NONE_STATION, buyerProvider.getConverter());
         item.setItems(world.itemsProperty());
         addCourierBtn.disableProperty().bind(Bindings.createBooleanBinding(() -> receiver.getCompletion() == null, receiver.completionProperty())
                 .or(courierProfit.wrongProperty())
@@ -68,6 +69,18 @@ public class MissionsController {
                 .or(supplyCount.wrongProperty())
                 .or(supplyProfit.wrongProperty())
         );
+    }
+
+    StationsProvider getReceiverProvider() {
+        return receiverProvider;
+    }
+
+    StationsProvider getBuyerProvider() {
+        return buyerProvider;
+    }
+
+    ComboBox<ItemModel> getItem() {
+        return item;
     }
 
     @FXML

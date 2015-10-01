@@ -12,12 +12,19 @@ import java.util.concurrent.locks.ReentrantLock;
 public abstract class CachedSuggestionProvider<T> implements Callback<AutoCompletionBinding.ISuggestionRequest, Collection<T>> {
     private final List<T> cache = new ArrayList<>();
     private final ReentrantLock lock = new ReentrantLock();
-    private final ObservableList<T> possibleSuggestions;
+    private ObservableList<T> possibleSuggestions;
     private AutoCompletionBinding.ISuggestionRequest lastRequest;
 
     protected CachedSuggestionProvider(ObservableList<T> possibleSuggestions) {
         this.possibleSuggestions = possibleSuggestions;
         possibleSuggestions.addListener(listChangeListener);
+    }
+
+    public void setPossibleSuggestions(ObservableList<T> possibleSuggestions){
+        this.possibleSuggestions.removeListener(listChangeListener);
+        this.possibleSuggestions = possibleSuggestions;
+        cache.clear();
+        this.possibleSuggestions.addListener(listChangeListener);
     }
 
     @Override
