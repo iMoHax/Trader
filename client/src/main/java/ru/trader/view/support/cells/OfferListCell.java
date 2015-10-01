@@ -7,6 +7,15 @@ import ru.trader.model.OfferModel;
 import ru.trader.model.support.ModelBindings;
 
 public class OfferListCell implements Callback<ListView<OfferModel>, ListCell<OfferModel>> {
+    private final boolean asItem;
+
+    public OfferListCell(){
+        this(false);
+    }
+
+    public OfferListCell(boolean toItemString){
+        asItem = toItemString;
+    }
 
     @Override
     public ListCell<OfferModel> call(ListView<OfferModel> param){
@@ -19,7 +28,7 @@ public class OfferListCell implements Callback<ListView<OfferModel>, ListCell<Of
                 if (!empty){
                     if (o != offer){
                         textProperty().unbind();
-                        textProperty().bind(ModelBindings.asString(offer));
+                        textProperty().bind(asItem ? ModelBindings.asItemString(offer) : ModelBindings.asString(offer));
                         o = offer;
                     }
                 } else {

@@ -21,6 +21,7 @@ public class ProfileModel {
     private final DoubleProperty shipTank;
     private final IntegerProperty shipCargo;
     private final ObjectProperty<Engine> shipEngine;
+    private final ObjectProperty<RouteModel> route;
 
     public ProfileModel(Profile profile, MarketModel market) {
         this.market = market;
@@ -34,6 +35,7 @@ public class ProfileModel {
         shipTank = new SimpleDoubleProperty();
         shipCargo = new SimpleIntegerProperty();
         shipEngine = new SimpleObjectProperty<>();
+        route = new SimpleObjectProperty<>();
         refresh();
         initListeners();
     }
@@ -50,10 +52,12 @@ public class ProfileModel {
         system.addListener((ov, o, n) -> {
             LOG.debug("Change system, old: {}, new: {}", o, n);
             profile.setSystem(n != null && n != ModelFabric.NONE_SYSTEM ? n.getSystem() : null);
+            if (route.getValue() != null) {getRoute().updateCurrentEntry(n, null);}
         });
         station.addListener((ov, o, n) -> {
             LOG.debug("Change station, old: {}, new: {}", o, n);
             profile.setStation(n != null && n != ModelFabric.NONE_STATION ? n.getStation() : null);
+            if (route.getValue() != null) {getRoute().updateCurrentEntry(getSystem(), n);}
         });
         docked.addListener((ov, o, n) -> {
             LOG.debug("Change docked, old: {}, new: {}", o, n);
@@ -193,6 +197,18 @@ public class ProfileModel {
 
     public void setShipEngine(Engine engine) {
         this.shipEngine.set(engine);
+    }
+
+    public RouteModel getRoute() {
+        return route.get();
+    }
+
+    public ObjectProperty<RouteModel> routeProperty() {
+        return route;
+    }
+
+    public void setRoute(RouteModel route) {
+        this.route.set(route);
     }
 
     private void refresh(){

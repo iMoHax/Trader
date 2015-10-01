@@ -247,8 +247,8 @@ public class Screeners {
         return dialog.showAndWait();
     }
 
-    public static void showHelper(RouteModel route){
-        helperController.show(helperScreen, route);
+    public static void showHelper(){
+        helperController.show(helperScreen);
     }
 
     public static void reinitAll() {

@@ -83,7 +83,8 @@ public class RouteSearchController {
             if (path.isPresent()){
                 RouteModel route = path.get();
                 route.addAll(0, missionsList.getItems());
-                Screeners.showHelper(route);
+                profile.setRoute(route);
+                Screeners.showHelper();
             }
         });
     }

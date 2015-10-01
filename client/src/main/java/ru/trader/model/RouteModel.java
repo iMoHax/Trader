@@ -1,8 +1,6 @@
 package ru.trader.model;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
 import ru.trader.analysis.Route;
 import ru.trader.analysis.RouteEntry;
 import ru.trader.analysis.RouteFiller;
@@ -11,9 +9,7 @@ import ru.trader.core.Offer;
 import ru.trader.core.Order;
 import ru.trader.model.support.BindingsHelper;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RouteModel {
@@ -22,6 +18,7 @@ public class RouteModel {
     private final DoubleProperty profit;
     private final DoubleProperty profitByTime;
     private final List<RouteEntryModel> entries;
+    private final IntegerProperty currentEntry;
 
     RouteModel(Route route, MarketModel market) {
         this.market = market;
@@ -32,6 +29,7 @@ public class RouteModel {
         profitByTime = new SimpleDoubleProperty();
         profitByTime.bind(profit.divide(_route.getTime()));
         fillSellOrders();
+        currentEntry = new SimpleIntegerProperty(0);
     }
 
     private void fillSellOrders(){
@@ -71,6 +69,10 @@ public class RouteModel {
 
     public Route getRoute() {
         return _route;
+    }
+
+    public boolean isLoop(){
+        return _route.isLoop();
     }
 
     public int getLands() {
@@ -187,4 +189,69 @@ public class RouteModel {
         fillSellOrders();
     }
 
+    public Collection<StationModel> getStations(int offset){
+        Collection<StationModel> res = new HashSet<>();
+        int startIndex = _route.isLoop() ? 1 : offset+1;
+        if (startIndex >= entries.size()) return res;
+        entries.subList(startIndex, entries.size()).stream().map(RouteEntryModel::getStation)
+                .filter(station -> station != ModelFabric.NONE_STATION)
+                .forEach(res::add);
+        return res;
+    }
+
+    public Collection<OfferModel> getSellOffers(int offset){
+        Map<ItemModel, OfferModel> res = new HashMap<>();
+        for (StationModel station : getStations(offset)) {
+            for (OfferModel offer : station.getSells()) {
+                if (offer.getItem().isMarketItem()){
+                    OfferModel old = res.get(offer.getItem());
+                    if (old == null || old.getPrice() > offer.getPrice()){
+                        res.put(offer.getItem(), offer);
+                    }
+                }
+            }
+        }
+        return res.values();
+    }
+
+    public int getCurrentEntry() {
+        return currentEntry.get();
+    }
+
+    public IntegerProperty currentEntryProperty() {
+        return currentEntry;
+    }
+
+    public void setCurrentEntry(int currentEntry) {
+        this.currentEntry.set(currentEntry);
+    }
+
+    public void updateCurrentEntry(SystemModel system, StationModel station) {
+        for (int i = getCurrentEntry()+1; i < entries.size(); i++) {
+            RouteEntryModel entry = entries.get(i);
+            if (system.equals(entry.getStation().getSystem())
+                && (station == null || station == ModelFabric.NONE_STATION ||
+                    station.equals(entry.getStation()))
+                )
+            {
+                setCurrentEntry(i);
+                return;
+            }
+            if (!entry.isTransit()) return;
+        }
+        if (isLoop()){
+            for (int i = 0; i < getCurrentEntry()-1; i++) {
+                RouteEntryModel entry = entries.get(i);
+                if (system.equals(entry.getStation().getSystem())
+                        && (station == null || station == ModelFabric.NONE_STATION ||
+                        station.equals(entry.getStation()))
+                    )
+                {
+                    setCurrentEntry(i);
+                    return;
+                }
+                if (!entry.isTransit()) return;
+            }
+        }
+    }
 }

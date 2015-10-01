@@ -1,10 +1,9 @@
 package ru.trader.controllers;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,11 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import ru.trader.KeyBinding;
-import ru.trader.model.MissionModel;
-import ru.trader.model.OrderModel;
-import ru.trader.model.RouteEntryModel;
-import ru.trader.model.RouteModel;
+import ru.trader.model.*;
 import ru.trader.view.support.ViewUtils;
+import ru.trader.view.support.cells.OfferListCell;
 import ru.trader.view.support.cells.OrderListCell;
 
 import javax.swing.*;
@@ -39,28 +36,29 @@ public class HelperController {
     private ListView<OrderModel> sellOrders;
     @FXML
     private ListView<MissionModel> missions;
+    @FXML
+    private ListView<StationModel> stations;
+    @FXML
+    private ListView<OfferModel> sellOffers;
 
     private Stage stage;
     private RouteModel route;
     private final BooleanProperty docked;
-    private final IntegerProperty currentEntry;
 
     public HelperController() {
-        currentEntry = new SimpleIntegerProperty(-1);
         docked = new SimpleBooleanProperty(true);
     }
 
     @FXML
     private void initialize(){
-        currentEntry.addListener(routeEntryListener);
+        MainController.getProfile().routeProperty().addListener(routeListener);
         buyOrders.setCellFactory(new OrderListCell(false));
         sellOrders.setCellFactory(new OrderListCell(true));
+        sellOffers.setCellFactory(new OfferListCell(true));
         bindKeys();
     }
 
-    public void show(Parent content, RouteModel route) {
-        this.route = route;
-        currentEntry.setValue(0);
+    public void show(Parent content) {
         if (stage == null){
             stage = new Stage();
             stage.setScene(new Scene(content));
@@ -76,6 +74,15 @@ public class HelperController {
         }
     }
 
+    private void setRoute(RouteModel route){
+        if (this.route != null){
+            this.route.currentEntryProperty().removeListener(currentEntryListener);
+        }
+        this.route = route;
+        setRouteEntry(route.getCurrentEntry());
+        this.route.currentEntryProperty().addListener(currentEntryListener);
+    }
+
     private void setRouteEntry(int index){
         RouteEntryModel entry = route.get(index);
         station.setText(entry.getStation().getName());
@@ -85,13 +92,19 @@ public class HelperController {
         buyOrders.setItems(entry.orders());
         sellOrders.setItems(entry.sellOrders());
         missions.setItems(entry.missions());
+        stations.setItems(FXCollections.observableArrayList(route.getStations(index)));
+        sellOffers.setItems(FXCollections.observableArrayList(route.getSellOffers(index)));
     }
 
     @FXML
     private void next(){
-        int index = currentEntry.get();
+        int index = route.getCurrentEntry();
         if (index < route.getJumps() - 1){
-            currentEntry.setValue(index+1);
+            route.setCurrentEntry(index+1);
+        } else {
+            if (route.isLoop()){
+                route.setCurrentEntry(0);
+            }
         }
     }
 
@@ -102,16 +115,19 @@ public class HelperController {
 
     @FXML
     private void previous(){
-        int index = currentEntry.get();
+        int index = route.getCurrentEntry();
         if (index > 0){
-            currentEntry.setValue(index-1);
+            route.setCurrentEntry(index-1);
         }
     }
-
-    private final ChangeListener<Number> routeEntryListener = (ov, o, n) -> ViewUtils.doFX(() -> setRouteEntry(n.intValue()));
 
     private void bindKeys(){
         KeyBinding.bind(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD4, KeyEvent.CTRL_MASK | KeyEvent.ALT_MASK), k -> ViewUtils.doFX(this::previous));
         KeyBinding.bind(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD6, KeyEvent.CTRL_MASK | KeyEvent.ALT_MASK), k -> ViewUtils.doFX(this::next));
     }
+
+    private final ChangeListener<? super Number> currentEntryListener = (ov, o, n) -> ViewUtils.doFX(() -> setRouteEntry(n.intValue()));
+    private final ChangeListener<RouteModel> routeListener = (ov, o, n) -> ViewUtils.doFX(() -> setRoute(n));
+
+
 }

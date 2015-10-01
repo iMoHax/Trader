@@ -70,6 +70,10 @@ public class RouteEntryModel {
         return entry.getRefill();
     }
 
+    public boolean isTransit(){
+        return entry.isTransit();
+    }
+
     public ObservableList<OrderModel> orders() {
         return orders;
     }

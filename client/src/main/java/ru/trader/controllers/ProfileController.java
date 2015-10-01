@@ -57,43 +57,32 @@ public class ProfileController {
         initListeners();
     }
 
+    private void consumeChanges(Runnable runnable){
+        if (ignoreChanges) return;
+        ignoreChanges = true;
+        ViewUtils.doFX(runnable);
+        ignoreChanges = false;
+    }
+
+    private void doAndConsumeChanges(Runnable runnable){
+        boolean old = ignoreChanges;
+        ignoreChanges = true;
+        ViewUtils.doFX(runnable);
+        ignoreChanges = old;
+    }
+
     private void initListeners(){
-        name.textProperty().addListener((ov, o, n) -> {
-            if (!ignoreChanges)
-                profile.setName(n);
-        });
-        balance.numberProperty().addListener((ov, o, n) -> {
-            if (!ignoreChanges)
-                profile.setBalance(n.doubleValue());
-        });
+        name.textProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setName(n)));
+        balance.numberProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setBalance(n.doubleValue())));
         system.completionProperty().addListener((ov, o , n) -> {
-            if (!ignoreChanges){
-                ignoreChanges = true;
-                profile.setSystem(n);
-            }
-            station.setItems(n.getStationsList());
-            ignoreChanges = false;
+            doAndConsumeChanges(() -> station.setItems(n.getStationsList()));
+            consumeChanges(() -> {profile.setSystem(n); profile.setStation(ModelFabric.NONE_STATION);});
         });
-        station.valueProperty().addListener((ov, o, n) -> {
-            if (!ignoreChanges)
-                profile.setStation(n);
-        });
-        mass.numberProperty().addListener((ov, o, n) -> {
-            if (!ignoreChanges)
-                profile.setShipMass(n.doubleValue());
-        });
-        tank.numberProperty().addListener((ov, o, n) -> {
-            if (!ignoreChanges)
-                profile.setShipTank(n.doubleValue());
-        });
-        cargo.numberProperty().addListener((ov, o, n) -> {
-            if (!ignoreChanges)
-                profile.setShipCargo(n.intValue());
-        });
-        engine.valueProperty().addListener((ov, o, n) -> {
-            if (!ignoreChanges)
-                profile.setShipEngine(n);
-        });
+        station.valueProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setStation(n)));
+        mass.numberProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setShipMass(n.doubleValue())));
+        tank.numberProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setShipTank(n.doubleValue())));
+        cargo.numberProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setShipCargo(n.intValue())));
+        engine.valueProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setShipEngine(n)));
     }
 
     public void setProfile(ProfileModel profile){
@@ -101,7 +90,6 @@ public class ProfileController {
             unbind();
         }
         this.profile = profile;
-        ignoreChanges = true;
         name.setText(profile.getName());
         balance.setValue(profile.getBalance());
         system.setValue(profile.getSystem());
@@ -111,7 +99,6 @@ public class ProfileController {
         cargo.setValue(profile.getShipCargo());
         engine.setValue(profile.getShipEngine());
         bind();
-        ignoreChanges = false;
     }
 
     private void bind(){
@@ -137,17 +124,14 @@ public class ProfileController {
     }
 
 
-    private final ChangeListener<String> nameListener = (ov, o, n) -> ViewUtils.doFX(() -> name.setText(n));
-    private final ChangeListener<Number> balanceListener = (ov, o, n) -> ViewUtils.doFX(() -> balance.setValue(n));
-    private final ChangeListener<SystemModel> systemListener = (ov, o, n) -> {
-        if (!ignoreChanges)
-            ViewUtils.doFX(() -> system.setValue(n));
-    };
-    private final ChangeListener<StationModel> stationListener = (ov, o, n) -> ViewUtils.doFX(() -> station.setValue(n));
-    private final ChangeListener<Number> massListener = (ov, o, n) -> ViewUtils.doFX(() -> mass.setValue(n));
-    private final ChangeListener<Number> tankListener = (ov, o, n) -> ViewUtils.doFX(() -> tank.setValue(n));
-    private final ChangeListener<Number> cargoListener = (ov, o, n) -> ViewUtils.doFX(() -> cargo.setValue(n));
-    private final ChangeListener<Engine> engineListener = (ov, o, n) -> ViewUtils.doFX(() -> engine.setValue(n));
+    private final ChangeListener<String> nameListener = (ov, o, n) -> consumeChanges(() -> name.setText(n));
+    private final ChangeListener<Number> balanceListener = (ov, o, n) -> consumeChanges(() -> balance.setValue(n));
+    private final ChangeListener<SystemModel> systemListener = (ov, o, n) -> consumeChanges(()  -> system.setValue(n));
+    private final ChangeListener<StationModel> stationListener = (ov, o, n) -> consumeChanges(() -> station.setValue(n));
+    private final ChangeListener<Number> massListener = (ov, o, n) -> consumeChanges(() -> mass.setValue(n));
+    private final ChangeListener<Number> tankListener = (ov, o, n) -> consumeChanges(() -> tank.setValue(n));
+    private final ChangeListener<Number> cargoListener = (ov, o, n) -> consumeChanges(() -> cargo.setValue(n));
+    private final ChangeListener<Engine> engineListener = (ov, o, n) -> consumeChanges(() -> engine.setValue(n));
 
     private class EngineStringConverter extends StringConverter<Engine> {
         @Override

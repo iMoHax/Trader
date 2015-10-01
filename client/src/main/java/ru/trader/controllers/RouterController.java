@@ -275,7 +275,8 @@ public class RouterController {
             if (path.isPresent()){
                 orders.addAll(path.get().getOrders());
                 addRouteToPath(path.get());
-                Screeners.showHelper(path.get());
+                MainController.getProfile().setRoute(path.get());
+                Screeners.showHelper();
             }
         });
     }
