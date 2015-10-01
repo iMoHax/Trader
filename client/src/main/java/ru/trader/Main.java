@@ -2,6 +2,8 @@ package ru.trader;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
 import org.apache.log4j.PropertyConfigurator;
 import org.controlsfx.control.action.Action;
@@ -114,5 +116,11 @@ public class Main extends Application {
         return Main.class.getResource("/view/"+filename);
     }
 
+    public static void copyToClipboard(String string){
+        final Clipboard clipboard = Clipboard.getSystemClipboard();
+        final ClipboardContent content = new ClipboardContent();
+        content.putString(string);
+        clipboard.setContent(content);
+    }
 
 }

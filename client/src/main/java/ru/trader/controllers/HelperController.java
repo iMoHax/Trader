@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import ru.trader.KeyBinding;
+import ru.trader.Main;
 import ru.trader.model.*;
 import ru.trader.view.support.ViewUtils;
 import ru.trader.view.support.cells.OfferListCell;
@@ -94,6 +95,7 @@ public class HelperController {
         missions.setItems(entry.missions());
         stations.setItems(FXCollections.observableArrayList(route.getStations(index)));
         sellOffers.setItems(FXCollections.observableArrayList(route.getSellOffers(index)));
+        Main.copyToClipboard(system.getText());
     }
 
     @FXML
@@ -119,6 +121,11 @@ public class HelperController {
         if (index > 0){
             route.setCurrentEntry(index-1);
         }
+    }
+
+    @FXML
+    private void copy(){
+        Main.copyToClipboard(system.getText());
     }
 
     private void bindKeys(){

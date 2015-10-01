@@ -48,5 +48,8 @@
         <Button prefWidth="30" onAction="#next">
             <graphic><Glyph text="FontAwesome|ARROW_RIGHT"/></graphic>
         </Button>
+        <Button prefWidth="30" onAction="#copy">
+            <graphic><Glyph text="FontAwesome|COPY"/></graphic>
+        </Button>
     </HBox>
 </VBox>
