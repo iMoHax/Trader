@@ -39,10 +39,10 @@
                     <ColumnConstraints minWidth="170" maxWidth="170"/>
                 </columnConstraints>
                 <Label text="%router.pane.route.from" />
-                <ComboBox fx:id="source" prefWidth="170" GridPane.columnIndex="1" />
+                <TextField fx:id="sourceText" prefWidth="170" GridPane.columnIndex="1" />
                 <ComboBox fx:id="sStation" prefWidth="170" GridPane.rowIndex="1" GridPane.columnIndex="1" />
                 <Label text="%router.pane.route.to" GridPane.rowIndex="2"/>
-                <ComboBox fx:id="target" prefWidth="170" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <TextField fx:id="targetText" prefWidth="170" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                 <ComboBox fx:id="tStation" prefWidth="170" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                 <Label text="%router.pane.route.jumps" GridPane.rowIndex="4" />
                 <NumberField fx:id="jumps" GridPane.columnIndex="1" GridPane.rowIndex="4" />

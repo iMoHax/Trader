@@ -121,6 +121,14 @@ public class ModelFabric {
     public static StationModel NONE_STATION = new FAKE_STATION_MODEL();
     public static ItemModel NONE_ITEM = new FAKE_ITEM_MODEL();
 
+    public static boolean isFake(StationModel station) {
+        return station == null || station instanceof FAKE_STATION_MODEL;
+    }
+
+    public static boolean isFake(SystemModel system) {
+        return system == null || system instanceof FAKE_SYSTEM_MODEL;
+    }
+
     private static class FAKE_SYSTEM_MODEL extends SystemModel {
         FAKE_SYSTEM_MODEL() {
             super();

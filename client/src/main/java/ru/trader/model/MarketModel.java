@@ -244,9 +244,21 @@ public class MarketModel {
         return analyzer.getPath(order.getOrder());
     }
 
-    public RouteModel getPath(StationModel from, StationModel to) {
-        Route p = analyzer.getPath(from.getStation(), to.getStation());
+    private RouteModel getPath(Vendor from, Vendor to) {
+        Route p = analyzer.getPath(from, to);
         return modeler.get(p);
+    }
+
+    public RouteModel getPath(StationModel from, StationModel to) {
+        return getPath(from.getStation(), to.getStation());
+    }
+
+    public RouteModel getPath(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo){
+        if (ModelFabric.isFake(stationFrom)){
+            return getPath(from.getSystem().asTransit(), ModelFabric.isFake(stationTo) ? to.getSystem().asTransit() : stationTo.getStation());
+        } else {
+            return getPath(stationFrom.getStation(), ModelFabric.isFake(stationTo) ? to.getSystem().asTransit() : stationTo.getStation());
+        }
     }
 
     public RouteModel getPath(OrderModel order) {

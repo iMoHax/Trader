@@ -6,16 +6,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import ru.trader.Main;
 import ru.trader.analysis.CrawlerSpecificator;
 import ru.trader.model.*;
 import ru.trader.model.support.ChangeMarketListener;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.RouteNode;
+import ru.trader.view.support.autocomplete.AutoCompletion;
+import ru.trader.view.support.autocomplete.SystemsProvider;
 
 import java.util.Optional;
 
@@ -46,13 +45,15 @@ public class RouterController {
     private Button removeBtn;
 
     @FXML
-    private ComboBox<SystemModel> source;
+    private TextField sourceText;
+    private AutoCompletion<SystemModel> source;
 
     @FXML
     private ComboBox<StationModel> sStation;
 
     @FXML
-    private ComboBox<SystemModel> target;
+    private TextField targetText;
+    private AutoCompletion<SystemModel> target;
 
     @FXML
     private ComboBox<StationModel> tStation;
@@ -80,14 +81,14 @@ public class RouterController {
         cargo.numberProperty().addListener((ov, o, n) -> Main.SETTINGS.setCargo(n.intValue()));
         tank.numberProperty().addListener((ov, o, n) -> Main.SETTINGS.setTank(n.doubleValue()));
         jumps.numberProperty().addListener((ov, o, n) -> Main.SETTINGS.setJumps(n.intValue()));
-        source.valueProperty().addListener((ov, o, n) -> {
+        source.completionProperty().addListener((ov, o, n) -> {
             if (n != null) {
                 sStation.setItems(n.getStationsList());
             } else {
                 sStation.setItems(FXCollections.emptyObservableList());
             }
         });
-        target.valueProperty().addListener((ov, o, n) -> {
+        target.completionProperty().addListener((ov, o, n) -> {
             if (n != null) {
                 tStation.setItems(n.getStationsList());
             } else {
@@ -108,9 +109,9 @@ public class RouterController {
         jumps.setValue(Main.SETTINGS.getJumps());
 
         addBtn.disableProperty().bind(Bindings.createBooleanBinding(()-> {
-            StationModel st = tStation.getValue();
-            return st == null || st == ModelFabric.NONE_STATION;
-        }, tStation.valueProperty()));
+            SystemModel system = target.getCompletion();
+            return ModelFabric.isFake(system);
+        }, target.completionProperty()));
 
         editBtn.disableProperty().bind(tblOrders.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
         removeBtn.disableProperty().bind(Bindings.createBooleanBinding(()-> {
@@ -135,10 +136,12 @@ public class RouterController {
     void init(){
         market = MainController.getMarket();
         market.getNotificator().add(new RouterChangeListener());
-        source.setItems(market.systemsProperty());
-        source.getSelectionModel().selectFirst();
-        target.setItems(market.systemsListProperty());
-        target.getSelectionModel().selectFirst();
+        SystemsProvider provider = new SystemsProvider(market);
+        if (source != null) source.dispose();
+        source = new AutoCompletion<>(sourceText, provider, ModelFabric.NONE_SYSTEM, provider.getConverter());
+        if (target != null) target.dispose();
+        provider = new SystemsProvider(market);
+        target = new AutoCompletion<>(targetText, provider, ModelFabric.NONE_SYSTEM, provider.getConverter());
         orders.clear();
         totalBalance.setValue(balance.getValue());
         totalProfit.setValue(0);
@@ -162,14 +165,15 @@ public class RouterController {
         target.setValue(ModelFabric.NONE_SYSTEM);
         if (orders.isEmpty()) {
             balance.setDisable(false);
-            source.setDisable(false);
         }
     }
 
     public void addStationToRoute(){
+        SystemModel s = source.getCompletion();
+        SystemModel t = target.getCompletion();
         StationModel sS = sStation.getValue();
         StationModel tS = tStation.getValue();
-        RouteModel r = market.getPath(sS, tS);
+        RouteModel r = market.getPath(s, sS, t, tS);
         if (r == null) return;
         if (route != null){
             route.add(r);
@@ -177,7 +181,7 @@ public class RouterController {
             route = r;
         }
         refreshPath();
-        source.setValue(tS.getSystem());
+        source.setValue(target.getCompletion());
         sStation.setValue(tS);
     }
 
@@ -252,8 +256,8 @@ public class RouterController {
     }
 
     public void showOrders(){
-        SystemModel s = source.getValue();
-        SystemModel t = target.getValue();
+        SystemModel s = source.getCompletion();
+        SystemModel t = target.getCompletion();
         StationModel sS = sStation.getValue();
         StationModel tS = tStation.getValue();
         market.getOrders(s, sS, t, tS, totalBalance.getValue().doubleValue(), result -> {
@@ -266,8 +270,8 @@ public class RouterController {
     }
 
     public void showRoutes(){
-        SystemModel s = source.getValue();
-        SystemModel t = target.getValue();
+        SystemModel s = source.getCompletion();
+        SystemModel t = target.getCompletion();
         StationModel sS = sStation.getValue();
         StationModel tS = tStation.getValue();
         market.getRoutes(s, sS, t, tS, totalBalance.getValue().doubleValue(), new CrawlerSpecificator(), routes -> {
@@ -275,7 +279,6 @@ public class RouterController {
             if (path.isPresent()){
                 orders.addAll(path.get().getOrders());
                 addRouteToPath(path.get());
-                MainController.getProfile().setRoute(path.get());
                 Screeners.showHelper();
             }
         });
@@ -310,6 +313,7 @@ public class RouterController {
     }
 
     private void refreshPath(){
+        MainController.getProfile().setRoute(route);
         if (route != null)
             path.setContent(new RouteNode(route).getNode());
         else
@@ -320,20 +324,20 @@ public class RouterController {
 
         @Override
         public void add(StationModel station) {
-            if (station.getSystem().equals(source.getValue())){
+            if (station.getSystem().equals(source.getCompletion())){
                 sStation.getItems().add(station);
             }
-            if (station.getSystem().equals(target.getValue())){
+            if (station.getSystem().equals(target.getCompletion())){
                 tStation.getItems().add(station);
             }
         }
 
         @Override
         public void remove(StationModel station) {
-            if (station.getSystem().equals(source.getValue())){
+            if (station.getSystem().equals(source.getCompletion())){
                 sStation.getItems().remove(station);
             }
-            if (station.getSystem().equals(target.getValue())){
+            if (station.getSystem().equals(target.getCompletion())){
                 tStation.getItems().remove(station);
             }
         }
