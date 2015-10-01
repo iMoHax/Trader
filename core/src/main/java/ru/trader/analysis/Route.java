@@ -256,7 +256,7 @@ public class Route implements Comparable<Route> {
 
     public LoopIterator loopIterator(int from){
         return new LoopIterator() {
-            private final int size = entries.size() - (isLoop() ? 1 : from);
+            private final int size = entries.size() - (isLoop() ? 1 : 0);
             private int i = -1;
 
             @Override

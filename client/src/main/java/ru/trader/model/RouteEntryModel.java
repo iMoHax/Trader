@@ -9,6 +9,7 @@ import ru.trader.analysis.RouteEntry;
 import ru.trader.core.Order;
 import ru.trader.model.support.BindingsHelper;
 
+import java.util.Collection;
 import java.util.List;
 
 public class RouteEntryModel {
@@ -36,6 +37,10 @@ public class RouteEntryModel {
 
     void add(MissionModel mission){
         missions.add(mission);
+    }
+
+    void addAll(Collection<MissionModel> missions){
+        this.missions.addAll(missions);
     }
 
     void remove(MissionModel mission){

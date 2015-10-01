@@ -134,7 +134,11 @@ public class HelperController {
     }
 
     private final ChangeListener<? super Number> currentEntryListener = (ov, o, n) -> ViewUtils.doFX(() -> setRouteEntry(n.intValue()));
-    private final ChangeListener<RouteModel> routeListener = (ov, o, n) -> ViewUtils.doFX(() -> setRoute(n));
+    private final ChangeListener<RouteModel> routeListener = (ov, o, n) -> {
+        if (n != null){
+            ViewUtils.doFX(() -> setRoute(n));
+        }
+    };
 
 
 }

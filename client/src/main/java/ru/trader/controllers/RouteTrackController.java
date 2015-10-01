@@ -55,7 +55,7 @@ public class RouteTrackController {
 
     @FXML
     private void addMissions(){
-        int startIndex = route.isLoop() ? 1 : index+1;
+        int startIndex = route.isLoop() ? 0 : index;
         route.addAll(startIndex, missionsList.getItems());
     }
 
@@ -68,6 +68,10 @@ public class RouteTrackController {
     }
 
     private final ChangeListener<? super Number> currentEntryListener = (ov, o, n) -> ViewUtils.doFX(() -> setIndex(n.intValue()));
-    private final ChangeListener<RouteModel> routeListener = (ov, o, n) -> ViewUtils.doFX(() -> setRoute(n));
+    private final ChangeListener<RouteModel> routeListener = (ov, o, n) -> {
+       if (n != null){
+         ViewUtils.doFX(() -> setRoute(n));
+       }
+    };
 
 }

@@ -47,6 +47,18 @@ public class RouteModel {
         }
     }
 
+    private RouteModel getCopy(){
+        RouteModel res = new RouteModel(_route, market);
+        res.setCurrentEntry(getCurrentEntry());
+        int size = Math.min(entries.size(), res.entries.size());
+        for (int i = 0; i < size; i++) {
+            RouteEntryModel entry = entries.get(i);
+            RouteEntryModel rEntry = res.entries.get(i);
+            rEntry.addAll(entry.missions());
+        }
+        return res;
+    }
+
     public RouteEntryModel get(int index){
         return entries.get(index);
     }
@@ -110,17 +122,17 @@ public class RouteModel {
         Route path = market._getPath(order);
         if (path == null) return this;
         _route.join(path);
-        return new RouteModel(_route, market);
+        return getCopy();
     }
 
     public RouteModel add(RouteModel route){
         _route.join(route.getRoute());
-        return new RouteModel(_route, market);
+        return getCopy();
     }
 
     public RouteModel remove(OrderModel order) {
         _route.dropTo(order.getStation().getStation());
-        return new RouteModel(_route, market);
+        return getCopy();
     }
 
     public void add(int offset, MissionModel mission){
