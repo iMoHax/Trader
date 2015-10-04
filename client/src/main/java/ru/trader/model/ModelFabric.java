@@ -238,7 +238,7 @@ public class ModelFabric {
 
         @Override
         public boolean hasService(SERVICE_TYPE service) {
-            throw  new UnsupportedOperationException("Is fake system, unsupported");
+            return false;
         }
 
         @Override
@@ -283,12 +283,12 @@ public class ModelFabric {
 
         @Override
         public boolean hasSell(ItemModel item) {
-            throw  new UnsupportedOperationException("Is fake system, unsupported");
+            return false;
         }
 
         @Override
         public boolean hasBuy(ItemModel item) {
-            throw  new UnsupportedOperationException("Is fake system, unsupported");
+            return false;
         }
 
         @Override
@@ -389,7 +389,7 @@ public class ModelFabric {
 
         @Override
         public boolean isMarketItem() {
-            throw new UnsupportedOperationException("Is fake item, unsupported");
+            return false;
         }
 
         @Override
