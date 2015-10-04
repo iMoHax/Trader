@@ -69,7 +69,7 @@ public class EDCE {
                 if (profile.isDocked()) {
                     checkStarport(packet.getLastStarport());
                 } else {
-                    profile.setSystem(ModelFabric.NONE_SYSTEM);
+                    profile.setStation(ModelFabric.NONE_STATION);
                 }
             }
             checkShip(packet.getShip());
