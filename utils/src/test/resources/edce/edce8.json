@@ -1,0 +1,4952 @@
+{
+  "commander": {
+    "id": 126367,
+    "name": "MoHax",
+    "credits": 15153775,
+    "debt": 0,
+    "currentShipId": 4,
+    "alive": true,
+    "docked": true,
+    "rank": {
+      "combat": 4,
+      "trade": 4,
+      "explore": 3,
+      "crime": 0,
+      "service": 0,
+      "empire": 0,
+      "federation": 2,
+      "power": 1,
+      "cqc": 0
+    }
+  },
+  "lastSystem": {
+    "id": "1780",
+    "name": "Euryale",
+    "faction": "Federation"
+  },
+  "lastStarport": {
+    "id": "128032512",
+    "name": "EG Main HQ",
+    "faction": "Federation",
+    "commodities": [
+      {
+        "id": "128049204",
+        "name": "Explosives",
+        "cost_min": 300,
+        "cost_max": 456,
+        "cost_mean": "378.00",
+        "homebuy": "60",
+        "homesell": "56",
+        "consumebuy": "4",
+        "baseCreationQty": 37,
+        "baseConsumptionQty": 0,
+        "capacity": 1894,
+        "buyPrice": 223,
+        "sellPrice": 208,
+        "meanPrice": 378,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 1894,
+        "consumptionQty": 0,
+        "targetStock": 1894,
+        "stock": 1060,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Chemicals",
+        "volumescale": "1.1400"
+      },
+      {
+        "id": "128049202",
+        "name": "Hydrogen Fuel",
+        "cost_min": 125,
+        "cost_max": 168,
+        "cost_mean": "147.00",
+        "homebuy": "74",
+        "homesell": "71",
+        "consumebuy": "3",
+        "baseCreationQty": 200,
+        "baseConsumptionQty": 200,
+        "capacity": 25590,
+        "buyPrice": 111,
+        "sellPrice": 107,
+        "meanPrice": 147,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 20471,
+        "consumptionQty": 5119,
+        "targetStock": 21750,
+        "stock": 12743,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Chemicals",
+        "volumescale": "1.3000"
+      },
+      {
+        "id": "128049205",
+        "name": "Pesticides",
+        "cost_min": 223,
+        "cost_max": 361,
+        "cost_mean": "292.00",
+        "homebuy": "52",
+        "homesell": "47",
+        "consumebuy": "5",
+        "baseCreationQty": 527,
+        "baseConsumptionQty": 0,
+        "capacity": 13486,
+        "buyPrice": 117,
+        "sellPrice": 106,
+        "meanPrice": 292,
+        "demandBracket": 0,
+        "stockBracket": 3,
+        "creationQty": 13486,
+        "consumptionQty": 0,
+        "targetStock": 13486,
+        "stock": 13486,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Chemicals",
+        "volumescale": "1.0700"
+      },
+      {
+        "id": "128049241",
+        "name": "Clothing",
+        "cost_min": 315,
+        "cost_max": 474,
+        "cost_mean": "395.00",
+        "homebuy": "61",
+        "homesell": "57",
+        "consumebuy": "4",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 350,
+        "capacity": 8957,
+        "buyPrice": 0,
+        "sellPrice": 318,
+        "meanPrice": 395,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 8957,
+        "targetStock": 2239,
+        "stock": 0,
+        "demand": 1679.5,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Consumer Items",
+        "volumescale": "1.1500"
+      },
+      {
+        "id": "128049240",
+        "name": "Consumer Technology",
+        "cost_min": 6561,
+        "cost_max": 7500,
+        "cost_mean": "7031.00",
+        "homebuy": "93",
+        "homesell": "92",
+        "consumebuy": "1",
+        "baseCreationQty": 135,
+        "baseConsumptionQty": 1,
+        "capacity": 3482,
+        "buyPrice": 6539,
+        "sellPrice": 6469,
+        "meanPrice": 7031,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 3455,
+        "consumptionQty": 27,
+        "targetStock": 3461,
+        "stock": 1937,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Consumer Items",
+        "volumescale": "1.1000"
+      },
+      {
+        "id": "128049238",
+        "name": "Domestic Appliances",
+        "cost_min": 527,
+        "cost_max": 734,
+        "cost_mean": "631.00",
+        "homebuy": "70",
+        "homesell": "67",
+        "consumebuy": "3",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 209,
+        "capacity": 3744,
+        "buyPrice": 0,
+        "sellPrice": 740,
+        "meanPrice": 631,
+        "demandBracket": 3,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 3744,
+        "targetStock": 936,
+        "stock": 0,
+        "demand": 2808,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Consumer Items",
+        "volumescale": "1.2500"
+      },
+      {
+        "id": "128049182",
+        "name": "Animal Meat",
+        "cost_min": 1286,
+        "cost_max": 1633,
+        "cost_mean": "1460.00",
+        "homebuy": "81",
+        "homesell": "79",
+        "consumebuy": "2",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 97,
+        "capacity": 1434,
+        "buyPrice": 0,
+        "sellPrice": 1296,
+        "meanPrice": 1460,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 1434,
+        "targetStock": 358,
+        "stock": 0,
+        "demand": 269,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Foods",
+        "volumescale": "1.4000"
+      },
+      {
+        "id": "128049189",
+        "name": "Coffee",
+        "cost_min": 1286,
+        "cost_max": 1633,
+        "cost_mean": "1460.00",
+        "homebuy": "81",
+        "homesell": "79",
+        "consumebuy": "2",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 97,
+        "capacity": 1217,
+        "buyPrice": 0,
+        "sellPrice": 1480,
+        "meanPrice": 1460,
+        "demandBracket": 2,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 1217,
+        "targetStock": 304,
+        "stock": 0,
+        "demand": 595,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Foods",
+        "volumescale": "1.4000"
+      },
+      {
+        "id": "128049183",
+        "name": "Fish",
+        "cost_min": 403,
+        "cost_max": 583,
+        "cost_mean": "493.00",
+        "homebuy": "66",
+        "homesell": "63",
+        "consumebuy": "3",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 271,
+        "capacity": 5371,
+        "buyPrice": 0,
+        "sellPrice": 560,
+        "meanPrice": 493,
+        "demandBracket": 2,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 5371,
+        "targetStock": 1342,
+        "stock": 0,
+        "demand": 3578,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Foods",
+        "volumescale": "1.2000"
+      },
+      {
+        "id": "128049184",
+        "name": "Food Cartridges",
+        "cost_min": 141,
+        "cost_max": 270,
+        "cost_mean": "206.00",
+        "homebuy": "31",
+        "homesell": "24",
+        "consumebuy": "7",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 452,
+        "capacity": 3128,
+        "buyPrice": 0,
+        "sellPrice": 143,
+        "meanPrice": 206,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 3128,
+        "targetStock": 782,
+        "stock": 0,
+        "demand": 586.5,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Foods",
+        "volumescale": "1.0000"
+      },
+      {
+        "id": "128049178",
+        "name": "Fruit And Vegetables",
+        "cost_min": 315,
+        "cost_max": 474,
+        "cost_mean": "395.00",
+        "homebuy": "61",
+        "homesell": "57",
+        "consumebuy": "4",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 350,
+        "capacity": 4389,
+        "buyPrice": 0,
+        "sellPrice": 439,
+        "meanPrice": 395,
+        "demandBracket": 2,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 4389,
+        "targetStock": 1097,
+        "stock": 0,
+        "demand": 2707,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Foods",
+        "volumescale": "1.1500"
+      },
+      {
+        "id": "128049180",
+        "name": "Grain",
+        "cost_min": 207,
+        "cost_max": 342,
+        "cost_mean": "275.00",
+        "homebuy": "50",
+        "homesell": "45",
+        "consumebuy": "5",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 584,
+        "capacity": 14945,
+        "buyPrice": 0,
+        "sellPrice": 209,
+        "meanPrice": 275,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 14945,
+        "targetStock": 3736,
+        "stock": 0,
+        "demand": 2802.25,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Foods",
+        "volumescale": "1.0500"
+      },
+      {
+        "id": "128049185",
+        "name": "Synthetic Meat",
+        "cost_min": 252,
+        "cost_max": 396,
+        "cost_mean": "324.00",
+        "homebuy": "56",
+        "homesell": "52",
+        "consumebuy": "4",
+        "baseCreationQty": 452,
+        "baseConsumptionQty": 2,
+        "capacity": 46291,
+        "buyPrice": 178,
+        "sellPrice": 165,
+        "meanPrice": 324,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 46265,
+        "consumptionQty": 26,
+        "targetStock": 46271,
+        "stock": 25912,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Foods",
+        "volumescale": "1.1000"
+      },
+      {
+        "id": "128049188",
+        "name": "Tea",
+        "cost_min": 1459,
+        "cost_max": 1833,
+        "cost_mean": "1646.00",
+        "homebuy": "82",
+        "homesell": "80",
+        "consumebuy": "2",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 88,
+        "capacity": 1442,
+        "buyPrice": 0,
+        "sellPrice": 1705,
+        "meanPrice": 1646,
+        "demandBracket": 2,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 1442,
+        "targetStock": 360,
+        "stock": 0,
+        "demand": 781,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Foods",
+        "volumescale": "1.4200"
+      },
+      {
+        "id": "128049200",
+        "name": "Superconductors",
+        "cost_min": 6561,
+        "cost_max": 7500,
+        "cost_mean": "7031.00",
+        "homebuy": "93",
+        "homesell": "92",
+        "consumebuy": "1",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 40,
+        "capacity": 4095,
+        "buyPrice": 0,
+        "sellPrice": 6612,
+        "meanPrice": 7031,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 4095,
+        "targetStock": 1023,
+        "stock": 0,
+        "demand": 768,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Industrial Materials",
+        "volumescale": "1.1000"
+      },
+      {
+        "id": "128049220",
+        "name": "Heliostatic Furnaces",
+        "cost_min": 199,
+        "cost_max": 333,
+        "cost_mean": "266.00",
+        "homebuy": "48",
+        "homesell": "43",
+        "consumebuy": "5",
+        "baseCreationQty": 61,
+        "baseConsumptionQty": 0,
+        "capacity": 4683,
+        "buyPrice": 125,
+        "sellPrice": 112,
+        "meanPrice": 266,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 4683,
+        "consumptionQty": 0,
+        "targetStock": 4683,
+        "stock": 2621,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Machinery",
+        "volumescale": "1.0400"
+      },
+      {
+        "id": "128049217",
+        "name": "Power Generators",
+        "cost_min": 527,
+        "cost_max": 734,
+        "cost_mean": "631.00",
+        "homebuy": "70",
+        "homesell": "67",
+        "consumebuy": "3",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 21,
+        "capacity": 2150,
+        "buyPrice": 0,
+        "sellPrice": 532,
+        "meanPrice": 631,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 2150,
+        "targetStock": 537,
+        "stock": 0,
+        "demand": 403.25,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Machinery",
+        "volumescale": "1.2500"
+      },
+      {
+        "id": "128049218",
+        "name": "Water Purifiers",
+        "cost_min": 300,
+        "cost_max": 456,
+        "cost_mean": "378.00",
+        "homebuy": "60",
+        "homesell": "56",
+        "consumebuy": "4",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 37,
+        "capacity": 3788,
+        "buyPrice": 0,
+        "sellPrice": 303,
+        "meanPrice": 378,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 3788,
+        "targetStock": 947,
+        "stock": 0,
+        "demand": 710.25,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Machinery",
+        "volumescale": "1.1400"
+      },
+      {
+        "id": "128049208",
+        "name": "Agricultural Medicines",
+        "cost_min": 1004,
+        "cost_max": 1303,
+        "cost_mean": "1154.00",
+        "homebuy": "79",
+        "homesell": "77",
+        "consumebuy": "2",
+        "baseCreationQty": 119,
+        "baseConsumptionQty": 0,
+        "capacity": 12181,
+        "buyPrice": 904,
+        "sellPrice": 881,
+        "meanPrice": 1154,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 12181,
+        "consumptionQty": 0,
+        "targetStock": 12181,
+        "stock": 6822,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Medicines",
+        "volumescale": "1.3600"
+      },
+      {
+        "id": "128049210",
+        "name": "Basic Medicines",
+        "cost_min": 315,
+        "cost_max": 474,
+        "cost_mean": "395.00",
+        "homebuy": "61",
+        "homesell": "57",
+        "consumebuy": "4",
+        "baseCreationQty": 35,
+        "baseConsumptionQty": 0,
+        "capacity": 896,
+        "buyPrice": 237,
+        "sellPrice": 222,
+        "meanPrice": 395,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 896,
+        "consumptionQty": 0,
+        "targetStock": 896,
+        "stock": 500,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Medicines",
+        "volumescale": "1.1500"
+      },
+      {
+        "id": "128049670",
+        "name": "Combat Stabilisers",
+        "cost_min": 2778,
+        "cost_max": 3331,
+        "cost_mean": "3055.00",
+        "homebuy": "88",
+        "homesell": "87",
+        "consumebuy": "1",
+        "baseCreationQty": 524,
+        "baseConsumptionQty": 3,
+        "capacity": 13420,
+        "buyPrice": 2464,
+        "sellPrice": 2436,
+        "meanPrice": 3055,
+        "demandBracket": 0,
+        "stockBracket": 3,
+        "creationQty": 13409,
+        "consumptionQty": 11,
+        "targetStock": 13411,
+        "stock": 12162.458843,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Medicines",
+        "volumescale": "1.3600"
+      },
+      {
+        "id": "128049209",
+        "name": "Performance Enhancers",
+        "cost_min": 6561,
+        "cost_max": 7500,
+        "cost_mean": "7031.00",
+        "homebuy": "93",
+        "homesell": "92",
+        "consumebuy": "1",
+        "baseCreationQty": 269,
+        "baseConsumptionQty": 1,
+        "capacity": 6895,
+        "buyPrice": 6534,
+        "sellPrice": 6464,
+        "meanPrice": 7031,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 6884,
+        "consumptionQty": 11,
+        "targetStock": 6886,
+        "stock": 3856,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Medicines",
+        "volumescale": "1.1000"
+      },
+      {
+        "id": "128049669",
+        "name": "Progenitor Cells",
+        "cost_min": 6561,
+        "cost_max": 7500,
+        "cost_mean": "7031.00",
+        "homebuy": "93",
+        "homesell": "92",
+        "consumebuy": "1",
+        "baseCreationQty": 269,
+        "baseConsumptionQty": 1,
+        "capacity": 6896,
+        "buyPrice": 6546,
+        "sellPrice": 6475,
+        "meanPrice": 7031,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 6884,
+        "consumptionQty": 12,
+        "targetStock": 6887,
+        "stock": 3807,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Medicines",
+        "volumescale": "1.1000"
+      },
+      {
+        "id": "128049168",
+        "name": "Beryllium",
+        "cost_min": 8282,
+        "cost_max": 8815,
+        "cost_mean": "8549.00",
+        "homebuy": "94",
+        "homesell": "93",
+        "consumebuy": "1",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 2,
+        "capacity": 205,
+        "buyPrice": 0,
+        "sellPrice": 8346,
+        "meanPrice": 8549,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 205,
+        "targetStock": 51,
+        "stock": 0,
+        "demand": 0,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Metals",
+        "volumescale": "1.0400"
+      },
+      {
+        "id": "128049162",
+        "name": "Cobalt",
+        "cost_min": 701,
+        "cost_max": 944,
+        "cost_mean": "823.00",
+        "homebuy": "74",
+        "homesell": "71",
+        "consumebuy": "3",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 162,
+        "capacity": 16582,
+        "buyPrice": 0,
+        "sellPrice": 707,
+        "meanPrice": 823,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 16582,
+        "targetStock": 4145,
+        "stock": 0,
+        "demand": 3109.25,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Metals",
+        "volumescale": "1.3000"
+      },
+      {
+        "id": "128049170",
+        "name": "Gallium",
+        "cost_min": 5028,
+        "cost_max": 5824,
+        "cost_mean": "5426.00",
+        "homebuy": "92",
+        "homesell": "91",
+        "consumebuy": "1",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 165,
+        "capacity": 16889,
+        "buyPrice": 0,
+        "sellPrice": 5067,
+        "meanPrice": 5426,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 16889,
+        "targetStock": 4222,
+        "stock": 0,
+        "demand": 3166.75,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Metals",
+        "volumescale": "1.1800"
+      },
+      {
+        "id": "128049154",
+        "name": "Gold",
+        "cost_min": 9164,
+        "cost_max": 10320,
+        "cost_mean": "9742.00",
+        "homebuy": "95",
+        "homesell": "95",
+        "consumebuy": "0",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 21,
+        "capacity": 2150,
+        "buyPrice": 0,
+        "sellPrice": 9235,
+        "meanPrice": 9742,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 2150,
+        "targetStock": 537,
+        "stock": 0,
+        "demand": 403.25,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Metals",
+        "volumescale": "1.0000"
+      },
+      {
+        "id": "128049169",
+        "name": "Indium",
+        "cost_min": 5743,
+        "cost_max": 6607,
+        "cost_mean": "6175.00",
+        "homebuy": "93",
+        "homesell": "92",
+        "consumebuy": "1",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 75,
+        "capacity": 7677,
+        "buyPrice": 0,
+        "sellPrice": 5787,
+        "meanPrice": 6175,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 7677,
+        "targetStock": 1919,
+        "stock": 0,
+        "demand": 1439.5,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Metals",
+        "volumescale": "1.1400"
+      },
+      {
+        "id": "128049173",
+        "name": "Lithium",
+        "cost_min": 1555,
+        "cost_max": 1943,
+        "cost_mean": "1749.00",
+        "homebuy": "83",
+        "homesell": "81",
+        "consumebuy": "2",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 416,
+        "capacity": 42580,
+        "buyPrice": 0,
+        "sellPrice": 1567,
+        "meanPrice": 1749,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 42580,
+        "targetStock": 10645,
+        "stock": 0,
+        "demand": 7983.75,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Metals",
+        "volumescale": "1.4300"
+      },
+      {
+        "id": "128671118",
+        "name": "Osmium",
+        "cost_min": 6561,
+        "cost_max": 7500,
+        "cost_mean": "7031.00",
+        "homebuy": "93",
+        "homesell": "92",
+        "consumebuy": "1",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 269,
+        "capacity": 27534,
+        "buyPrice": 0,
+        "sellPrice": 7558,
+        "meanPrice": 7031,
+        "demandBracket": 3,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 27534,
+        "targetStock": 6883,
+        "stock": 0,
+        "demand": 20651,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Metals",
+        "volumescale": "1.1000"
+      },
+      {
+        "id": "128049153",
+        "name": "Palladium",
+        "cost_min": 12815,
+        "cost_max": 14239,
+        "cost_mean": "13527.00",
+        "homebuy": "97",
+        "homesell": "97",
+        "consumebuy": "0",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 16,
+        "capacity": 1638,
+        "buyPrice": 0,
+        "sellPrice": 12954,
+        "meanPrice": 13527,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 1638,
+        "targetStock": 409,
+        "stock": 0,
+        "demand": 353,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Metals",
+        "volumescale": "1.0000"
+      },
+      {
+        "id": "128049152",
+        "name": "Platinum",
+        "cost_min": 17936,
+        "cost_max": 19691,
+        "cost_mean": "18814.00",
+        "homebuy": "98",
+        "homesell": "98",
+        "consumebuy": "0",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 12,
+        "capacity": 1229,
+        "buyPrice": 0,
+        "sellPrice": 19842,
+        "meanPrice": 18814,
+        "demandBracket": 3,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 1229,
+        "targetStock": 307,
+        "stock": 0,
+        "demand": 922,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Metals",
+        "volumescale": "1.0000"
+      },
+      {
+        "id": "128049155",
+        "name": "Silver",
+        "cost_min": 4705,
+        "cost_max": 5470,
+        "cost_mean": "5088.00",
+        "homebuy": "91",
+        "homesell": "90",
+        "consumebuy": "1",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 35,
+        "capacity": 3583,
+        "buyPrice": 0,
+        "sellPrice": 4741,
+        "meanPrice": 5088,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 3583,
+        "targetStock": 895,
+        "stock": 0,
+        "demand": 672,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Metals",
+        "volumescale": "1.2000"
+      },
+      {
+        "id": "128049171",
+        "name": "Tantalum",
+        "cost_min": 3858,
+        "cost_max": 4534,
+        "cost_mean": "4196.00",
+        "homebuy": "90",
+        "homesell": "89",
+        "consumebuy": "1",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 203,
+        "capacity": 20778,
+        "buyPrice": 0,
+        "sellPrice": 3888,
+        "meanPrice": 4196,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 20778,
+        "targetStock": 5194,
+        "stock": 0,
+        "demand": 3896,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Metals",
+        "volumescale": "1.2600"
+      },
+      {
+        "id": "128049172",
+        "name": "Uranium",
+        "cost_min": 2603,
+        "cost_max": 3134,
+        "cost_mean": "2869.00",
+        "homebuy": "87",
+        "homesell": "86",
+        "consumebuy": "1",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 276,
+        "capacity": 28250,
+        "buyPrice": 0,
+        "sellPrice": 2829,
+        "meanPrice": 2869,
+        "demandBracket": 2,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 28250,
+        "targetStock": 7062,
+        "stock": 0,
+        "demand": 11610,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Metals",
+        "volumescale": "1.3800"
+      },
+      {
+        "id": "128049158",
+        "name": "Gallite",
+        "cost_min": 1883,
+        "cost_max": 2319,
+        "cost_mean": "2101.00",
+        "homebuy": "85",
+        "homesell": "84",
+        "consumebuy": "2",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 71,
+        "capacity": 7268,
+        "buyPrice": 0,
+        "sellPrice": 1898,
+        "meanPrice": 2101,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 7268,
+        "targetStock": 1817,
+        "stock": 0,
+        "demand": 1362.75,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Minerals",
+        "volumescale": "1.4600"
+      },
+      {
+        "id": "128668550",
+        "name": "Painite",
+        "cost_min": 31500,
+        "cost_max": 34500,
+        "cost_mean": "33000.00",
+        "homebuy": "100",
+        "homesell": "100",
+        "consumebuy": "1",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 15,
+        "capacity": 384,
+        "buyPrice": 0,
+        "sellPrice": 34764,
+        "meanPrice": 33000,
+        "demandBracket": 3,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 384,
+        "targetStock": 96,
+        "stock": 0,
+        "demand": 288,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Minerals",
+        "volumescale": "1.0000"
+      },
+      {
+        "id": "128049163",
+        "name": "Rutile",
+        "cost_min": 330,
+        "cost_max": 493,
+        "cost_mean": "412.00",
+        "homebuy": "62",
+        "homesell": "58",
+        "consumebuy": "4",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 332,
+        "capacity": 33982,
+        "buyPrice": 0,
+        "sellPrice": 333,
+        "meanPrice": 412,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 33982,
+        "targetStock": 8495,
+        "stock": 0,
+        "demand": 6371.75,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Minerals",
+        "volumescale": "1.1600"
+      },
+      {
+        "id": "128049212",
+        "name": "Basic Narcotics",
+        "cost_min": 9453,
+        "cost_max": 10031,
+        "cost_mean": "9742.00",
+        "homebuy": "95",
+        "homesell": "95",
+        "consumebuy": "0",
+        "baseCreationQty": 42,
+        "baseConsumptionQty": 0,
+        "capacity": 323,
+        "buyPrice": 9128,
+        "sellPrice": 9128,
+        "meanPrice": 9742,
+        "demandBracket": 0,
+        "stockBracket": 3,
+        "creationQty": 323,
+        "consumptionQty": 0,
+        "targetStock": 323,
+        "stock": 233.278947,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Narcotics",
+        "volumescale": "1.0000"
+      },
+      {
+        "id": "128049214",
+        "name": "Beer",
+        "cost_min": 175,
+        "cost_max": 304,
+        "cost_mean": "240.00",
+        "homebuy": "43",
+        "homesell": "37",
+        "consumebuy": "6",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 755,
+        "capacity": 9661,
+        "buyPrice": 0,
+        "sellPrice": 276,
+        "meanPrice": 240,
+        "demandBracket": 2,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 9661,
+        "targetStock": 2415,
+        "stock": 0,
+        "demand": 5992,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Narcotics",
+        "volumescale": "1.0000"
+      },
+      {
+        "id": "128049216",
+        "name": "Liquor",
+        "cost_min": 624,
+        "cost_max": 852,
+        "cost_mean": "738.00",
+        "homebuy": "73",
+        "homesell": "70",
+        "consumebuy": "3",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 179,
+        "capacity": 1123,
+        "buyPrice": 0,
+        "sellPrice": 859,
+        "meanPrice": 738,
+        "demandBracket": 3,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 1123,
+        "targetStock": 280,
+        "stock": 0,
+        "demand": 843,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Narcotics",
+        "volumescale": "1.2800"
+      },
+      {
+        "id": "128049213",
+        "name": "Tobacco",
+        "cost_min": 4705,
+        "cost_max": 5470,
+        "cost_mean": "5088.00",
+        "homebuy": "91",
+        "homesell": "90",
+        "consumebuy": "1",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 174,
+        "capacity": 1500,
+        "buyPrice": 0,
+        "sellPrice": 5512,
+        "meanPrice": 5088,
+        "demandBracket": 3,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 1500,
+        "targetStock": 375,
+        "stock": 0,
+        "demand": 1125,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Narcotics",
+        "volumescale": "1.2000"
+      },
+      {
+        "id": "128049215",
+        "name": "Wine",
+        "cost_min": 252,
+        "cost_max": 396,
+        "cost_mean": "324.00",
+        "homebuy": "56",
+        "homesell": "52",
+        "consumebuy": "4",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 452,
+        "capacity": 7403,
+        "buyPrice": 0,
+        "sellPrice": 373,
+        "meanPrice": 324,
+        "demandBracket": 2,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 7403,
+        "targetStock": 1850,
+        "stock": 0,
+        "demand": 4801,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Narcotics",
+        "volumescale": "1.1000"
+      },
+      {
+        "id": "128066403",
+        "name": "Drones",
+        "cost_min": 100,
+        "cost_max": 100,
+        "cost_mean": "100.00",
+        "homebuy": "100",
+        "homesell": "100",
+        "consumebuy": "1",
+        "baseCreationQty": 200,
+        "baseConsumptionQty": 0,
+        "capacity": 5119,
+        "buyPrice": 101,
+        "sellPrice": 101,
+        "meanPrice": 100,
+        "demandBracket": 0,
+        "stockBracket": 3,
+        "creationQty": 5119,
+        "consumptionQty": 0,
+        "targetStock": 5119,
+        "stock": 5119,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "NonMarketable",
+        "volumescale": "1.0000"
+      },
+      {
+        "id": "128667728",
+        "name": "Imperial Slaves",
+        "cost_min": 15678,
+        "cost_max": 17292,
+        "cost_mean": "16485.00",
+        "homebuy": "98",
+        "homesell": "98",
+        "consumebuy": "0",
+        "baseCreationQty": 3,
+        "baseConsumptionQty": 7,
+        "capacity": 1025,
+        "buyPrice": 0,
+        "sellPrice": 15798,
+        "meanPrice": 16485,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 308,
+        "consumptionQty": 717,
+        "targetStock": 487,
+        "stock": 0,
+        "demand": 0,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Slaves",
+        "volumescale": "1.0000"
+      },
+      {
+        "id": "128049231",
+        "name": "Advanced Catalysers",
+        "cost_min": 2778,
+        "cost_max": 3331,
+        "cost_mean": "3055.00",
+        "homebuy": "88",
+        "homesell": "87",
+        "consumebuy": "1",
+        "baseCreationQty": 524,
+        "baseConsumptionQty": 0,
+        "capacity": 40226,
+        "buyPrice": 2678,
+        "sellPrice": 2647,
+        "meanPrice": 3055,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 40226,
+        "consumptionQty": 0,
+        "targetStock": 40226,
+        "stock": 22524,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Technology",
+        "volumescale": "1.3600"
+      },
+      {
+        "id": "128049229",
+        "name": "Animal Monitors",
+        "cost_min": 300,
+        "cost_max": 456,
+        "cost_mean": "378.00",
+        "homebuy": "60",
+        "homesell": "56",
+        "consumebuy": "4",
+        "baseCreationQty": 37,
+        "baseConsumptionQty": 0,
+        "capacity": 2841,
+        "buyPrice": 223,
+        "sellPrice": 208,
+        "meanPrice": 378,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 2841,
+        "consumptionQty": 0,
+        "targetStock": 2841,
+        "stock": 1591,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Technology",
+        "volumescale": "1.1400"
+      },
+      {
+        "id": "128049230",
+        "name": "Aquaponic Systems",
+        "cost_min": 274,
+        "cost_max": 424,
+        "cost_mean": "349.00",
+        "homebuy": "58",
+        "homesell": "54",
+        "consumebuy": "4",
+        "baseCreationQty": 41,
+        "baseConsumptionQty": 0,
+        "capacity": 3148,
+        "buyPrice": 199,
+        "sellPrice": 185,
+        "meanPrice": 349,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 3148,
+        "consumptionQty": 0,
+        "targetStock": 3148,
+        "stock": 1763,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Technology",
+        "volumescale": "1.1200"
+      },
+      {
+        "id": "128049228",
+        "name": "Auto Fabricators",
+        "cost_min": 3612,
+        "cost_max": 4261,
+        "cost_mean": "3937.00",
+        "homebuy": "90",
+        "homesell": "89",
+        "consumebuy": "1",
+        "baseCreationQty": 17,
+        "baseConsumptionQty": 0,
+        "capacity": 1306,
+        "buyPrice": 3533,
+        "sellPrice": 3494,
+        "meanPrice": 3937,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 1306,
+        "consumptionQty": 0,
+        "targetStock": 1306,
+        "stock": 731,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Technology",
+        "volumescale": "1.2800"
+      },
+      {
+        "id": "128049672",
+        "name": "Bio Reducing Lichen",
+        "cost_min": 944,
+        "cost_max": 1233,
+        "cost_mean": "1089.00",
+        "homebuy": "78",
+        "homesell": "76",
+        "consumebuy": "2",
+        "baseCreationQty": 125,
+        "baseConsumptionQty": 0,
+        "capacity": 9596,
+        "buyPrice": 842,
+        "sellPrice": 820,
+        "meanPrice": 1089,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 9596,
+        "consumptionQty": 0,
+        "targetStock": 9596,
+        "stock": 5373,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Technology",
+        "volumescale": "1.3500"
+      },
+      {
+        "id": "128049225",
+        "name": "Computer Components",
+        "cost_min": 527,
+        "cost_max": 734,
+        "cost_mean": "631.00",
+        "homebuy": "70",
+        "homesell": "67",
+        "consumebuy": "3",
+        "baseCreationQty": 0,
+        "baseConsumptionQty": 1047,
+        "capacity": 26794,
+        "buyPrice": 0,
+        "sellPrice": 560,
+        "meanPrice": 631,
+        "demandBracket": 1,
+        "stockBracket": 0,
+        "creationQty": 0,
+        "consumptionQty": 26794,
+        "targetStock": 6698,
+        "stock": 0,
+        "demand": 7387,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Technology",
+        "volumescale": "1.2500"
+      },
+      {
+        "id": "128049226",
+        "name": "Hazardous Environment Suits",
+        "cost_min": 274,
+        "cost_max": 424,
+        "cost_mean": "349.00",
+        "homebuy": "58",
+        "homesell": "54",
+        "consumebuy": "4",
+        "baseCreationQty": 204,
+        "baseConsumptionQty": 0,
+        "capacity": 15661,
+        "buyPrice": 199,
+        "sellPrice": 185,
+        "meanPrice": 349,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 15661,
+        "consumptionQty": 0,
+        "targetStock": 15661,
+        "stock": 8767,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Technology",
+        "volumescale": "1.1200"
+      },
+      {
+        "id": "128049671",
+        "name": "Resonating Separators",
+        "cost_min": 5743,
+        "cost_max": 6607,
+        "cost_mean": "6175.00",
+        "homebuy": "93",
+        "homesell": "92",
+        "consumebuy": "1",
+        "baseCreationQty": 12,
+        "baseConsumptionQty": 0,
+        "capacity": 922,
+        "buyPrice": 5740,
+        "sellPrice": 5678,
+        "meanPrice": 6175,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 922,
+        "consumptionQty": 0,
+        "targetStock": 922,
+        "stock": 514,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Technology",
+        "volumescale": "1.1400"
+      },
+      {
+        "id": "128049227",
+        "name": "Robotics",
+        "cost_min": 1766,
+        "cost_max": 2185,
+        "cost_mean": "1976.00",
+        "homebuy": "84",
+        "homesell": "82",
+        "consumebuy": "2",
+        "baseCreationQty": 750,
+        "baseConsumptionQty": 0,
+        "capacity": 57575,
+        "buyPrice": 1650,
+        "sellPrice": 1611,
+        "meanPrice": 1976,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 57575,
+        "consumptionQty": 0,
+        "targetStock": 57575,
+        "stock": 32241,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Technology",
+        "volumescale": "1.4500"
+      },
+      {
+        "id": "128049232",
+        "name": "Terrain Enrichment Systems",
+        "cost_min": 4705,
+        "cost_max": 5470,
+        "cost_mean": "5088.00",
+        "homebuy": "91",
+        "homesell": "90",
+        "consumebuy": "1",
+        "baseCreationQty": 174,
+        "baseConsumptionQty": 0,
+        "capacity": 13358,
+        "buyPrice": 4621,
+        "sellPrice": 4570,
+        "meanPrice": 5088,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 13358,
+        "consumptionQty": 0,
+        "targetStock": 13358,
+        "stock": 7481,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Technology",
+        "volumescale": "1.2000"
+      },
+      {
+        "id": "128049244",
+        "name": "Biowaste",
+        "cost_min": 50,
+        "cost_max": 98,
+        "cost_mean": "74.00",
+        "homebuy": "27",
+        "homesell": "20",
+        "consumebuy": "7",
+        "baseCreationQty": 162,
+        "baseConsumptionQty": 0,
+        "capacity": 1862,
+        "buyPrice": 20,
+        "sellPrice": 15,
+        "meanPrice": 74,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 1862,
+        "consumptionQty": 0,
+        "targetStock": 1862,
+        "stock": 1043,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Waste ",
+        "volumescale": "1.0000"
+      },
+      {
+        "id": "128049248",
+        "name": "Scrap",
+        "cost_min": 70,
+        "cost_max": 122,
+        "cost_mean": "96.00",
+        "homebuy": "43",
+        "homesell": "37",
+        "consumebuy": "6",
+        "baseCreationQty": 151,
+        "baseConsumptionQty": 0,
+        "capacity": 6943,
+        "buyPrice": 41,
+        "sellPrice": 35,
+        "meanPrice": 96,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 6943,
+        "consumptionQty": 0,
+        "targetStock": 6943,
+        "stock": 3887,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Waste ",
+        "volumescale": "1.0000"
+      },
+      {
+        "id": "128049234",
+        "name": "Battle Weapons",
+        "cost_min": 6795,
+        "cost_max": 7266,
+        "cost_mean": "7031.00",
+        "homebuy": "93",
+        "homesell": "92",
+        "consumebuy": "1",
+        "baseCreationQty": 11,
+        "baseConsumptionQty": 0,
+        "capacity": 282,
+        "buyPrice": 6810,
+        "sellPrice": 6736,
+        "meanPrice": 7031,
+        "demandBracket": 0,
+        "stockBracket": 1,
+        "creationQty": 282,
+        "consumptionQty": 0,
+        "targetStock": 282,
+        "stock": 35,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Weapons",
+        "volumescale": "1.1000"
+      },
+      {
+        "id": "128049236",
+        "name": "Non Lethal Weapons",
+        "cost_min": 1870,
+        "cost_max": 2081,
+        "cost_mean": "1976.00",
+        "homebuy": "84",
+        "homesell": "82",
+        "consumebuy": "2",
+        "baseCreationQty": 8,
+        "baseConsumptionQty": 0,
+        "capacity": 205,
+        "buyPrice": 1663,
+        "sellPrice": 1623,
+        "meanPrice": 1976,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 205,
+        "consumptionQty": 0,
+        "targetStock": 205,
+        "stock": 114,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Weapons",
+        "volumescale": "1.4500"
+      },
+      {
+        "id": "128049233",
+        "name": "Personal Weapons",
+        "cost_min": 4298,
+        "cost_max": 4650,
+        "cost_mean": "4474.00",
+        "homebuy": "90",
+        "homesell": "89",
+        "consumebuy": "1",
+        "baseCreationQty": 15,
+        "baseConsumptionQty": 0,
+        "capacity": 39,
+        "buyPrice": 4035,
+        "sellPrice": 3990,
+        "meanPrice": 4474,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 39,
+        "consumptionQty": 0,
+        "targetStock": 39,
+        "stock": 22,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Weapons",
+        "volumescale": "1.2400"
+      },
+      {
+        "id": "128049235",
+        "name": "Reactive Armour",
+        "cost_min": 2121,
+        "cost_max": 2348,
+        "cost_mean": "2235.00",
+        "homebuy": "85",
+        "homesell": "84",
+        "consumebuy": "1",
+        "baseCreationQty": 7,
+        "baseConsumptionQty": 0,
+        "capacity": 180,
+        "buyPrice": 1908,
+        "sellPrice": 1885,
+        "meanPrice": 2235,
+        "demandBracket": 0,
+        "stockBracket": 2,
+        "creationQty": 180,
+        "consumptionQty": 0,
+        "targetStock": 180,
+        "stock": 98,
+        "demand": 1,
+        "rare_min_stock": "0",
+        "rare_max_stock": "0",
+        "market_id": null,
+        "parent_id": null,
+        "statusFlags": [],
+        "categoryname": "Weapons",
+        "volumescale": "1.4600"
+      }
+    ],
+    "ships": {
+      "shipyard_list": {
+        "Viper": {
+          "id": 128049273,
+          "name": "Viper",
+          "basevalue": 142930
+        },
+        "CobraMkIII": {
+          "id": 128049279,
+          "name": "CobraMkIII",
+          "basevalue": 379720
+        },
+        "SideWinder": {
+          "id": 128049249,
+          "name": "SideWinder",
+          "basevalue": 32000
+        },
+        "Asp": {
+          "id": 128049303,
+          "name": "Asp",
+          "basevalue": 6661150
+        },
+        "Python": {
+          "id": 128049339,
+          "name": "Python",
+          "basevalue": 56978180
+        },
+        "Anaconda": {
+          "id": 128049363,
+          "name": "Anaconda",
+          "basevalue": 146969450
+        }
+      },
+      "unavailable_list": []
+    },
+    "modules": {
+      "128049509": {
+        "id": 128049509,
+        "category": "weapon",
+        "name": "Hpt_AdvancedTorpPylon_Fixed_Small",
+        "cost": 11200,
+        "sku": null
+      },
+      "128666725": {
+        "id": 128666725,
+        "category": "weapon",
+        "name": "Hpt_DumbfireMissileRack_Fixed_Medium",
+        "cost": 240400,
+        "sku": null
+      },
+      "128666724": {
+        "id": 128666724,
+        "category": "weapon",
+        "name": "Hpt_DumbfireMissileRack_Fixed_Small",
+        "cost": 32180,
+        "sku": null
+      },
+      "128049493": {
+        "id": 128049493,
+        "category": "weapon",
+        "name": "Hpt_BasicMissileRack_Fixed_Medium",
+        "cost": 512400,
+        "sku": null
+      },
+      "128049492": {
+        "id": 128049492,
+        "category": "weapon",
+        "name": "Hpt_BasicMissileRack_Fixed_Small",
+        "cost": 72600,
+        "sku": null
+      },
+      "128049501": {
+        "id": 128049501,
+        "category": "weapon",
+        "name": "Hpt_MineLauncher_Fixed_Medium",
+        "cost": 294080,
+        "sku": null
+      },
+      "128049500": {
+        "id": 128049500,
+        "category": "weapon",
+        "name": "Hpt_MineLauncher_Fixed_Small",
+        "cost": 24260,
+        "sku": null
+      },
+      "128049467": {
+        "id": 128049467,
+        "category": "weapon",
+        "name": "Hpt_PlasmaAccelerator_Fixed_Huge",
+        "cost": 13793600,
+        "sku": null
+      },
+      "128049466": {
+        "id": 128049466,
+        "category": "weapon",
+        "name": "Hpt_PlasmaAccelerator_Fixed_Large",
+        "cost": 3051200,
+        "sku": null
+      },
+      "128049465": {
+        "id": 128049465,
+        "category": "weapon",
+        "name": "Hpt_PlasmaAccelerator_Fixed_Medium",
+        "cost": 834200,
+        "sku": null
+      },
+      "128049434": {
+        "id": 128049434,
+        "category": "weapon",
+        "name": "Hpt_BeamLaser_Gimbal_Large",
+        "cost": 2396160,
+        "sku": null
+      },
+      "128049437": {
+        "id": 128049437,
+        "category": "weapon",
+        "name": "Hpt_BeamLaser_Turret_Large",
+        "cost": 19399600,
+        "sku": null
+      },
+      "128049430": {
+        "id": 128049430,
+        "category": "weapon",
+        "name": "Hpt_BeamLaser_Fixed_Large",
+        "cost": 1177600,
+        "sku": null
+      },
+      "128049433": {
+        "id": 128049433,
+        "category": "weapon",
+        "name": "Hpt_BeamLaser_Gimbal_Medium",
+        "cost": 500600,
+        "sku": null
+      },
+      "128049436": {
+        "id": 128049436,
+        "category": "weapon",
+        "name": "Hpt_BeamLaser_Turret_Medium",
+        "cost": 2099900,
+        "sku": null
+      },
+      "128049390": {
+        "id": 128049390,
+        "category": "weapon",
+        "name": "Hpt_PulseLaser_Turret_Large",
+        "cost": 400400,
+        "sku": null
+      },
+      "128049389": {
+        "id": 128049389,
+        "category": "weapon",
+        "name": "Hpt_PulseLaser_Turret_Medium",
+        "cost": 132800,
+        "sku": null
+      },
+      "128049387": {
+        "id": 128049387,
+        "category": "weapon",
+        "name": "Hpt_PulseLaser_Gimbal_Large",
+        "cost": 140600,
+        "sku": null
+      },
+      "128049386": {
+        "id": 128049386,
+        "category": "weapon",
+        "name": "Hpt_PulseLaser_Gimbal_Medium",
+        "cost": 35400,
+        "sku": null
+      },
+      "128049385": {
+        "id": 128049385,
+        "category": "weapon",
+        "name": "Hpt_PulseLaser_Gimbal_Small",
+        "cost": 6600,
+        "sku": null
+      },
+      "128049407": {
+        "id": 128049407,
+        "category": "weapon",
+        "name": "Hpt_PulseLaserBurst_Turret_Small",
+        "cost": 52800,
+        "sku": null
+      },
+      "128049406": {
+        "id": 128049406,
+        "category": "weapon",
+        "name": "Hpt_PulseLaserBurst_Gimbal_Large",
+        "cost": 281600,
+        "sku": null
+      },
+      "128049404": {
+        "id": 128049404,
+        "category": "weapon",
+        "name": "Hpt_PulseLaserBurst_Gimbal_Small",
+        "cost": 8600,
+        "sku": null
+      },
+      "128049405": {
+        "id": 128049405,
+        "category": "weapon",
+        "name": "Hpt_PulseLaserBurst_Gimbal_Medium",
+        "cost": 48500,
+        "sku": null
+      },
+      "128049489": {
+        "id": 128049489,
+        "category": "weapon",
+        "name": "Hpt_Railgun_Fixed_Medium",
+        "cost": 412800,
+        "sku": null
+      },
+      "128049488": {
+        "id": 128049488,
+        "category": "weapon",
+        "name": "Hpt_Railgun_Fixed_Small",
+        "cost": 51600,
+        "sku": null
+      },
+      "128049463": {
+        "id": 128049463,
+        "category": "weapon",
+        "name": "Hpt_MultiCannon_Turret_Medium",
+        "cost": 1292800,
+        "sku": null
+      },
+      "128049459": {
+        "id": 128049459,
+        "category": "weapon",
+        "name": "Hpt_MultiCannon_Gimbal_Small",
+        "cost": 14250,
+        "sku": null
+      },
+      "128049460": {
+        "id": 128049460,
+        "category": "weapon",
+        "name": "Hpt_MultiCannon_Gimbal_Medium",
+        "cost": 57000,
+        "sku": null
+      },
+      "128671321": {
+        "id": 128671321,
+        "category": "weapon",
+        "name": "Hpt_Slugshot_Gimbal_Large",
+        "cost": 1751040,
+        "sku": null
+      },
+      "128049454": {
+        "id": 128049454,
+        "category": "weapon",
+        "name": "Hpt_Slugshot_Turret_Medium",
+        "cost": 1459200,
+        "sku": null
+      },
+      "128049453": {
+        "id": 128049453,
+        "category": "weapon",
+        "name": "Hpt_Slugshot_Turret_Small",
+        "cost": 182400,
+        "sku": null
+      },
+      "128049447": {
+        "id": 128049447,
+        "category": "weapon",
+        "name": "Hpt_Cannon_Turret_Large",
+        "cost": 16204800,
+        "sku": null
+      },
+      "128671120": {
+        "id": 128671120,
+        "category": "weapon",
+        "name": "Hpt_Cannon_Gimbal_Large",
+        "cost": 1350400,
+        "sku": null
+      },
+      "128049549": {
+        "id": 128049549,
+        "category": "utility",
+        "name": "Int_DockingComputer_Standard",
+        "cost": 4500,
+        "sku": null
+      },
+      "128662527": {
+        "id": 128662527,
+        "category": "utility",
+        "name": "Hpt_CloudScanner_Size0_Class3",
+        "cost": 121900,
+        "sku": null
+      },
+      "128662526": {
+        "id": 128662526,
+        "category": "utility",
+        "name": "Hpt_CloudScanner_Size0_Class2",
+        "cost": 40630,
+        "sku": null
+      },
+      "128662529": {
+        "id": 128662529,
+        "category": "utility",
+        "name": "Hpt_CloudScanner_Size0_Class5",
+        "cost": 1097100,
+        "sku": null
+      },
+      "128662534": {
+        "id": 128662534,
+        "category": "utility",
+        "name": "Hpt_CrimeScanner_Size0_Class5",
+        "cost": 1097100,
+        "sku": null
+      },
+      "128662533": {
+        "id": 128662533,
+        "category": "utility",
+        "name": "Hpt_CrimeScanner_Size0_Class4",
+        "cost": 365700,
+        "sku": null
+      },
+      "128662532": {
+        "id": 128662532,
+        "category": "utility",
+        "name": "Hpt_CrimeScanner_Size0_Class3",
+        "cost": 121900,
+        "sku": null
+      },
+      "128662531": {
+        "id": 128662531,
+        "category": "utility",
+        "name": "Hpt_CrimeScanner_Size0_Class2",
+        "cost": 40630,
+        "sku": null
+      },
+      "128662524": {
+        "id": 128662524,
+        "category": "utility",
+        "name": "Hpt_CargoScanner_Size0_Class5",
+        "cost": 1097100,
+        "sku": null
+      },
+      "128662522": {
+        "id": 128662522,
+        "category": "utility",
+        "name": "Hpt_CargoScanner_Size0_Class3",
+        "cost": 121900,
+        "sku": null
+      },
+      "128662521": {
+        "id": 128662521,
+        "category": "utility",
+        "name": "Hpt_CargoScanner_Size0_Class2",
+        "cost": 40630,
+        "sku": null
+      },
+      "128662520": {
+        "id": 128662520,
+        "category": "utility",
+        "name": "Hpt_CargoScanner_Size0_Class1",
+        "cost": 13540,
+        "sku": null
+      },
+      "128049519": {
+        "id": 128049519,
+        "category": "utility",
+        "name": "Hpt_HeatSinkLauncher_Turret_Tiny",
+        "cost": 3500,
+        "sku": null
+      },
+      "128049522": {
+        "id": 128049522,
+        "category": "utility",
+        "name": "Hpt_PlasmaPointDefence_Turret_Tiny",
+        "cost": 18550,
+        "sku": null
+      },
+      "128049513": {
+        "id": 128049513,
+        "category": "utility",
+        "name": "Hpt_ChaffLauncher_Tiny",
+        "cost": 8500,
+        "sku": null
+      },
+      "128049526": {
+        "id": 128049526,
+        "category": "utility",
+        "name": "Hpt_MiningLaser_Fixed_Medium",
+        "cost": 22580,
+        "sku": null
+      },
+      "128049525": {
+        "id": 128049525,
+        "category": "utility",
+        "name": "Hpt_MiningLaser_Fixed_Small",
+        "cost": 6800,
+        "sku": null
+      },
+      "128049516": {
+        "id": 128049516,
+        "category": "utility",
+        "name": "Hpt_ElectronicCountermeasure_Tiny",
+        "cost": 12500,
+        "sku": null
+      },
+      "128049276": {
+        "id": 128049276,
+        "category": "module",
+        "name": "Viper_Armour_Grade3",
+        "cost": 128640,
+        "sku": null
+      },
+      "128049275": {
+        "id": 128049275,
+        "category": "module",
+        "name": "Viper_Armour_Grade2",
+        "cost": 57170,
+        "sku": null
+      },
+      "128049274": {
+        "id": 128049274,
+        "category": "module",
+        "name": "Viper_Armour_Grade1",
+        "cost": 0,
+        "sku": null
+      },
+      "128049277": {
+        "id": 128049277,
+        "category": "module",
+        "name": "Viper_Armour_Mirrored",
+        "cost": 304010,
+        "sku": null
+      },
+      "128049278": {
+        "id": 128049278,
+        "category": "module",
+        "name": "Viper_Armour_Reactive",
+        "cost": 336890,
+        "sku": null
+      },
+      "128049282": {
+        "id": 128049282,
+        "category": "module",
+        "name": "CobraMkIII_Armour_Grade3",
+        "cost": 341750,
+        "sku": null
+      },
+      "128049281": {
+        "id": 128049281,
+        "category": "module",
+        "name": "CobraMkIII_Armour_Grade2",
+        "cost": 151890,
+        "sku": null
+      },
+      "128049280": {
+        "id": 128049280,
+        "category": "module",
+        "name": "CobraMkIII_Armour_Grade1",
+        "cost": 0,
+        "sku": null
+      },
+      "128049283": {
+        "id": 128049283,
+        "category": "module",
+        "name": "CobraMkIII_Armour_Mirrored",
+        "cost": 797410,
+        "sku": null
+      },
+      "128049284": {
+        "id": 128049284,
+        "category": "module",
+        "name": "CobraMkIII_Armour_Reactive",
+        "cost": 895000,
+        "sku": null
+      },
+      "128049252": {
+        "id": 128049252,
+        "category": "module",
+        "name": "SideWinder_Armour_Grade3",
+        "cost": 80320,
+        "sku": null
+      },
+      "128049251": {
+        "id": 128049251,
+        "category": "module",
+        "name": "SideWinder_Armour_Grade2",
+        "cost": 25600,
+        "sku": null
+      },
+      "128049250": {
+        "id": 128049250,
+        "category": "module",
+        "name": "SideWinder_Armour_Grade1",
+        "cost": 0,
+        "sku": null
+      },
+      "128049253": {
+        "id": 128049253,
+        "category": "module",
+        "name": "SideWinder_Armour_Mirrored",
+        "cost": 132060,
+        "sku": null
+      },
+      "128049254": {
+        "id": 128049254,
+        "category": "module",
+        "name": "SideWinder_Armour_Reactive",
+        "cost": 139420,
+        "sku": null
+      },
+      "128049306": {
+        "id": 128049306,
+        "category": "module",
+        "name": "Asp_Armour_Grade3",
+        "cost": 5995040,
+        "sku": null
+      },
+      "128049305": {
+        "id": 128049305,
+        "category": "module",
+        "name": "Asp_Armour_Grade2",
+        "cost": 2664460,
+        "sku": null
+      },
+      "128049304": {
+        "id": 128049304,
+        "category": "module",
+        "name": "Asp_Armour_Grade1",
+        "cost": 0,
+        "sku": null
+      },
+      "128049307": {
+        "id": 128049307,
+        "category": "module",
+        "name": "Asp_Armour_Mirrored",
+        "cost": 14168270,
+        "sku": null
+      },
+      "128049308": {
+        "id": 128049308,
+        "category": "module",
+        "name": "Asp_Armour_Reactive",
+        "cost": 15700340,
+        "sku": null
+      },
+      "128049342": {
+        "id": 128049342,
+        "category": "module",
+        "name": "Python_Armour_Grade3",
+        "cost": 51280360,
+        "sku": null
+      },
+      "128049341": {
+        "id": 128049341,
+        "category": "module",
+        "name": "Python_Armour_Grade2",
+        "cost": 22791270,
+        "sku": null
+      },
+      "128049340": {
+        "id": 128049340,
+        "category": "module",
+        "name": "Python_Armour_Grade1",
+        "cost": 0,
+        "sku": null
+      },
+      "128049343": {
+        "id": 128049343,
+        "category": "module",
+        "name": "Python_Armour_Mirrored",
+        "cost": 121192590,
+        "sku": null
+      },
+      "128049344": {
+        "id": 128049344,
+        "category": "module",
+        "name": "Python_Armour_Reactive",
+        "cost": 134297570,
+        "sku": null
+      },
+      "128049366": {
+        "id": 128049366,
+        "category": "module",
+        "name": "Anaconda_Armour_Grade3",
+        "cost": 132272510,
+        "sku": null
+      },
+      "128049365": {
+        "id": 128049365,
+        "category": "module",
+        "name": "Anaconda_Armour_Grade2",
+        "cost": 58787780,
+        "sku": null
+      },
+      "128049364": {
+        "id": 128049364,
+        "category": "module",
+        "name": "Anaconda_Armour_Grade1",
+        "cost": 0,
+        "sku": null
+      },
+      "128049368": {
+        "id": 128049368,
+        "category": "module",
+        "name": "Anaconda_Armour_Reactive",
+        "cost": 346407000,
+        "sku": null
+      },
+      "128049367": {
+        "id": 128049367,
+        "category": "module",
+        "name": "Anaconda_Armour_Mirrored",
+        "cost": 312604020,
+        "sku": null
+      },
+      "128662535": {
+        "id": 128662535,
+        "category": "module",
+        "name": "Int_StellarBodyDiscoveryScanner_Standard",
+        "cost": 1000,
+        "sku": null
+      },
+      "128064338": {
+        "id": 128064338,
+        "category": "module",
+        "name": "Int_CargoRack_Size1_Class1",
+        "cost": 1000,
+        "sku": null
+      },
+      "128666684": {
+        "id": 128666684,
+        "category": "module",
+        "name": "Int_Refinery_Size1_Class1",
+        "cost": 6000,
+        "sku": null
+      },
+      "128666644": {
+        "id": 128666644,
+        "category": "module",
+        "name": "Int_FuelScoop_Size1_Class1",
+        "cost": 310,
+        "sku": null
+      },
+      "128666704": {
+        "id": 128666704,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size1_Class1",
+        "cost": 12000,
+        "sku": null
+      },
+      "128066532": {
+        "id": 128066532,
+        "category": "module",
+        "name": "Int_DroneControl_ResourceSiphon_Size1_Class1",
+        "cost": 600,
+        "sku": null
+      },
+      "128064263": {
+        "id": 128064263,
+        "category": "module",
+        "name": "Int_ShieldGenerator_Size2_Class1",
+        "cost": 1980,
+        "sku": null
+      },
+      "128666717": {
+        "id": 128666717,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size2_Class4",
+        "cost": 907200,
+        "sku": null
+      },
+      "128666713": {
+        "id": 128666713,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size2_Class3",
+        "cost": 302400,
+        "sku": null
+      },
+      "128666720": {
+        "id": 128666720,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size1_Class5",
+        "cost": 972000,
+        "sku": null
+      },
+      "128666716": {
+        "id": 128666716,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size1_Class4",
+        "cost": 324000,
+        "sku": null
+      },
+      "128666712": {
+        "id": 128666712,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size1_Class3",
+        "cost": 108000,
+        "sku": null
+      },
+      "128666709": {
+        "id": 128666709,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size2_Class2",
+        "cost": 100800,
+        "sku": null
+      },
+      "128666708": {
+        "id": 128666708,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size1_Class2",
+        "cost": 36000,
+        "sku": null
+      },
+      "128666705": {
+        "id": 128666705,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size2_Class1",
+        "cost": 33600,
+        "sku": null
+      },
+      "128666701": {
+        "id": 128666701,
+        "category": "module",
+        "name": "Int_Refinery_Size2_Class5",
+        "cost": 1020600,
+        "sku": null
+      },
+      "128666697": {
+        "id": 128666697,
+        "category": "module",
+        "name": "Int_Refinery_Size2_Class4",
+        "cost": 340200,
+        "sku": null
+      },
+      "128666700": {
+        "id": 128666700,
+        "category": "module",
+        "name": "Int_Refinery_Size1_Class5",
+        "cost": 486000,
+        "sku": null
+      },
+      "128666693": {
+        "id": 128666693,
+        "category": "module",
+        "name": "Int_Refinery_Size2_Class3",
+        "cost": 113400,
+        "sku": null
+      },
+      "128666689": {
+        "id": 128666689,
+        "category": "module",
+        "name": "Int_Refinery_Size2_Class2",
+        "cost": 37800,
+        "sku": null
+      },
+      "128666692": {
+        "id": 128666692,
+        "category": "module",
+        "name": "Int_Refinery_Size1_Class3",
+        "cost": 54000,
+        "sku": null
+      },
+      "128666688": {
+        "id": 128666688,
+        "category": "module",
+        "name": "Int_Refinery_Size1_Class2",
+        "cost": 18000,
+        "sku": null
+      },
+      "128666685": {
+        "id": 128666685,
+        "category": "module",
+        "name": "Int_Refinery_Size2_Class1",
+        "cost": 12600,
+        "sku": null
+      },
+      "128064042": {
+        "id": 128064042,
+        "category": "module",
+        "name": "Int_Powerplant_Size3_Class5",
+        "cost": 507910,
+        "sku": null
+      },
+      "128064037": {
+        "id": 128064037,
+        "category": "module",
+        "name": "Int_Powerplant_Size2_Class5",
+        "cost": 160220,
+        "sku": null
+      },
+      "128064041": {
+        "id": 128064041,
+        "category": "module",
+        "name": "Int_Powerplant_Size3_Class4",
+        "cost": 169300,
+        "sku": null
+      },
+      "128064036": {
+        "id": 128064036,
+        "category": "module",
+        "name": "Int_Powerplant_Size2_Class4",
+        "cost": 53410,
+        "sku": null
+      },
+      "128064040": {
+        "id": 128064040,
+        "category": "module",
+        "name": "Int_Powerplant_Size3_Class3",
+        "cost": 56440,
+        "sku": null
+      },
+      "128064035": {
+        "id": 128064035,
+        "category": "module",
+        "name": "Int_Powerplant_Size2_Class3",
+        "cost": 17800,
+        "sku": null
+      },
+      "128064039": {
+        "id": 128064039,
+        "category": "module",
+        "name": "Int_Powerplant_Size3_Class2",
+        "cost": 18810,
+        "sku": null
+      },
+      "128064034": {
+        "id": 128064034,
+        "category": "module",
+        "name": "Int_Powerplant_Size2_Class2",
+        "cost": 5930,
+        "sku": null
+      },
+      "128064038": {
+        "id": 128064038,
+        "category": "module",
+        "name": "Int_Powerplant_Size3_Class1",
+        "cost": 6270,
+        "sku": null
+      },
+      "128064033": {
+        "id": 128064033,
+        "category": "module",
+        "name": "Int_Powerplant_Size2_Class1",
+        "cost": 1980,
+        "sku": null
+      },
+      "128666678": {
+        "id": 128666678,
+        "category": "module",
+        "name": "Int_FuelScoop_Size3_Class5",
+        "cost": 902950,
+        "sku": null
+      },
+      "128666677": {
+        "id": 128666677,
+        "category": "module",
+        "name": "Int_FuelScoop_Size2_Class5",
+        "cost": 284840,
+        "sku": null
+      },
+      "128666662": {
+        "id": 128666662,
+        "category": "module",
+        "name": "Int_FuelScoop_Size3_Class3",
+        "cost": 56440,
+        "sku": null
+      },
+      "128666676": {
+        "id": 128666676,
+        "category": "module",
+        "name": "Int_FuelScoop_Size1_Class5",
+        "cost": 82270,
+        "sku": null
+      },
+      "128666668": {
+        "id": 128666668,
+        "category": "module",
+        "name": "Int_FuelScoop_Size1_Class4",
+        "cost": 20570,
+        "sku": null
+      },
+      "128666661": {
+        "id": 128666661,
+        "category": "module",
+        "name": "Int_FuelScoop_Size2_Class3",
+        "cost": 17800,
+        "sku": null
+      },
+      "128666660": {
+        "id": 128666660,
+        "category": "module",
+        "name": "Int_FuelScoop_Size1_Class3",
+        "cost": 5140,
+        "sku": null
+      },
+      "128666654": {
+        "id": 128666654,
+        "category": "module",
+        "name": "Int_FuelScoop_Size3_Class2",
+        "cost": 14110,
+        "sku": null
+      },
+      "128666653": {
+        "id": 128666653,
+        "category": "module",
+        "name": "Int_FuelScoop_Size2_Class2",
+        "cost": 4450,
+        "sku": null
+      },
+      "128666646": {
+        "id": 128666646,
+        "category": "module",
+        "name": "Int_FuelScoop_Size3_Class1",
+        "cost": 3390,
+        "sku": null
+      },
+      "128666652": {
+        "id": 128666652,
+        "category": "module",
+        "name": "Int_FuelScoop_Size1_Class2",
+        "cost": 1290,
+        "sku": null
+      },
+      "128666645": {
+        "id": 128666645,
+        "category": "module",
+        "name": "Int_FuelScoop_Size2_Class1",
+        "cost": 1070,
+        "sku": null
+      },
+      "128064217": {
+        "id": 128064217,
+        "category": "module",
+        "name": "Int_PowerDistributor_Size8_Class5",
+        "cost": 27249390,
+        "sku": null
+      },
+      "128064212": {
+        "id": 128064212,
+        "category": "module",
+        "name": "Int_PowerDistributor_Size7_Class5",
+        "cost": 9731930,
+        "sku": null
+      },
+      "128064216": {
+        "id": 128064216,
+        "category": "module",
+        "name": "Int_PowerDistributor_Size8_Class4",
+        "cost": 10899760,
+        "sku": null
+      },
+      "128064215": {
+        "id": 128064215,
+        "category": "module",
+        "name": "Int_PowerDistributor_Size8_Class3",
+        "cost": 4359900,
+        "sku": null
+      },
+      "128064210": {
+        "id": 128064210,
+        "category": "module",
+        "name": "Int_PowerDistributor_Size7_Class3",
+        "cost": 1557110,
+        "sku": null
+      },
+      "128064214": {
+        "id": 128064214,
+        "category": "module",
+        "name": "Int_PowerDistributor_Size8_Class2",
+        "cost": 1743960,
+        "sku": null
+      },
+      "128064213": {
+        "id": 128064213,
+        "category": "module",
+        "name": "Int_PowerDistributor_Size8_Class1",
+        "cost": 697580,
+        "sku": null
+      },
+      "128064208": {
+        "id": 128064208,
+        "category": "module",
+        "name": "Int_PowerDistributor_Size7_Class1",
+        "cost": 249140,
+        "sku": null
+      },
+      "128671252": {
+        "id": 128671252,
+        "category": "module",
+        "name": "Int_DroneControl_FuelTransfer_Size1_Class4",
+        "cost": 4800,
+        "sku": null
+      },
+      "128671264": {
+        "id": 128671264,
+        "category": "module",
+        "name": "Int_DroneControl_FuelTransfer_Size7_Class1",
+        "cost": 437400,
+        "sku": null
+      },
+      "128671260": {
+        "id": 128671260,
+        "category": "module",
+        "name": "Int_DroneControl_FuelTransfer_Size5_Class2",
+        "cost": 97200,
+        "sku": null
+      },
+      "128671256": {
+        "id": 128671256,
+        "category": "module",
+        "name": "Int_DroneControl_FuelTransfer_Size3_Class3",
+        "cost": 21600,
+        "sku": null
+      },
+      "128671251": {
+        "id": 128671251,
+        "category": "module",
+        "name": "Int_DroneControl_FuelTransfer_Size1_Class3",
+        "cost": 2400,
+        "sku": null
+      },
+      "128671259": {
+        "id": 128671259,
+        "category": "module",
+        "name": "Int_DroneControl_FuelTransfer_Size5_Class1",
+        "cost": 48600,
+        "sku": null
+      },
+      "128671255": {
+        "id": 128671255,
+        "category": "module",
+        "name": "Int_DroneControl_FuelTransfer_Size3_Class2",
+        "cost": 10800,
+        "sku": null
+      },
+      "128671250": {
+        "id": 128671250,
+        "category": "module",
+        "name": "Int_DroneControl_FuelTransfer_Size1_Class2",
+        "cost": 1200,
+        "sku": null
+      },
+      "128671254": {
+        "id": 128671254,
+        "category": "module",
+        "name": "Int_DroneControl_FuelTransfer_Size3_Class1",
+        "cost": 5400,
+        "sku": null
+      },
+      "128671249": {
+        "id": 128671249,
+        "category": "module",
+        "name": "Int_DroneControl_FuelTransfer_Size1_Class1",
+        "cost": 600,
+        "sku": null
+      },
+      "128663561": {
+        "id": 128663561,
+        "category": "module",
+        "name": "Int_StellarBodyDiscoveryScanner_Advanced",
+        "cost": 1545000,
+        "sku": null
+      },
+      "128663560": {
+        "id": 128663560,
+        "category": "module",
+        "name": "Int_StellarBodyDiscoveryScanner_Intermediate",
+        "cost": 505000,
+        "sku": null
+      },
+      "128666634": {
+        "id": 128666634,
+        "category": "module",
+        "name": "Int_DetailedSurfaceScanner_Tiny",
+        "cost": 250000,
+        "sku": null
+      },
+      "128064077": {
+        "id": 128064077,
+        "category": "module",
+        "name": "Int_Engine_Size3_Class5",
+        "cost": 507910,
+        "sku": null
+      },
+      "128064076": {
+        "id": 128064076,
+        "category": "module",
+        "name": "Int_Engine_Size3_Class4",
+        "cost": 169300,
+        "sku": null
+      },
+      "128064071": {
+        "id": 128064071,
+        "category": "module",
+        "name": "Int_Engine_Size2_Class4",
+        "cost": 53410,
+        "sku": null
+      },
+      "128064075": {
+        "id": 128064075,
+        "category": "module",
+        "name": "Int_Engine_Size3_Class3",
+        "cost": 56440,
+        "sku": null
+      },
+      "128064070": {
+        "id": 128064070,
+        "category": "module",
+        "name": "Int_Engine_Size2_Class3",
+        "cost": 17800,
+        "sku": null
+      },
+      "128064074": {
+        "id": 128064074,
+        "category": "module",
+        "name": "Int_Engine_Size3_Class2",
+        "cost": 18810,
+        "sku": null
+      },
+      "128064069": {
+        "id": 128064069,
+        "category": "module",
+        "name": "Int_Engine_Size2_Class2",
+        "cost": 5930,
+        "sku": null
+      },
+      "128064073": {
+        "id": 128064073,
+        "category": "module",
+        "name": "Int_Engine_Size3_Class1",
+        "cost": 6270,
+        "sku": null
+      },
+      "128064068": {
+        "id": 128064068,
+        "category": "module",
+        "name": "Int_Engine_Size2_Class1",
+        "cost": 1980,
+        "sku": null
+      },
+      "128671272": {
+        "id": 128671272,
+        "category": "module",
+        "name": "Int_DroneControl_Prospector_Size1_Class4",
+        "cost": 4800,
+        "sku": null
+      },
+      "128671284": {
+        "id": 128671284,
+        "category": "module",
+        "name": "Int_DroneControl_Prospector_Size7_Class1",
+        "cost": 437400,
+        "sku": null
+      },
+      "128671280": {
+        "id": 128671280,
+        "category": "module",
+        "name": "Int_DroneControl_Prospector_Size5_Class2",
+        "cost": 97200,
+        "sku": null
+      },
+      "128671276": {
+        "id": 128671276,
+        "category": "module",
+        "name": "Int_DroneControl_Prospector_Size3_Class3",
+        "cost": 21600,
+        "sku": null
+      },
+      "128671271": {
+        "id": 128671271,
+        "category": "module",
+        "name": "Int_DroneControl_Prospector_Size1_Class3",
+        "cost": 2400,
+        "sku": null
+      },
+      "128671279": {
+        "id": 128671279,
+        "category": "module",
+        "name": "Int_DroneControl_Prospector_Size5_Class1",
+        "cost": 48600,
+        "sku": null
+      },
+      "128671275": {
+        "id": 128671275,
+        "category": "module",
+        "name": "Int_DroneControl_Prospector_Size3_Class2",
+        "cost": 10800,
+        "sku": null
+      },
+      "128671270": {
+        "id": 128671270,
+        "category": "module",
+        "name": "Int_DroneControl_Prospector_Size1_Class2",
+        "cost": 1200,
+        "sku": null
+      },
+      "128671274": {
+        "id": 128671274,
+        "category": "module",
+        "name": "Int_DroneControl_Prospector_Size3_Class1",
+        "cost": 5400,
+        "sku": null
+      },
+      "128671269": {
+        "id": 128671269,
+        "category": "module",
+        "name": "Int_DroneControl_Prospector_Size1_Class1",
+        "cost": 600,
+        "sku": null
+      },
+      "128064267": {
+        "id": 128064267,
+        "category": "module",
+        "name": "Int_ShieldGenerator_Size2_Class5",
+        "cost": 160220,
+        "sku": null
+      },
+      "128064271": {
+        "id": 128064271,
+        "category": "module",
+        "name": "Int_ShieldGenerator_Size3_Class4",
+        "cost": 169300,
+        "sku": null
+      },
+      "128064266": {
+        "id": 128064266,
+        "category": "module",
+        "name": "Int_ShieldGenerator_Size2_Class4",
+        "cost": 53410,
+        "sku": null
+      },
+      "128064270": {
+        "id": 128064270,
+        "category": "module",
+        "name": "Int_ShieldGenerator_Size3_Class3",
+        "cost": 56440,
+        "sku": null
+      },
+      "128064265": {
+        "id": 128064265,
+        "category": "module",
+        "name": "Int_ShieldGenerator_Size2_Class3",
+        "cost": 17800,
+        "sku": null
+      },
+      "128064269": {
+        "id": 128064269,
+        "category": "module",
+        "name": "Int_ShieldGenerator_Size3_Class2",
+        "cost": 18810,
+        "sku": null
+      },
+      "128064264": {
+        "id": 128064264,
+        "category": "module",
+        "name": "Int_ShieldGenerator_Size2_Class2",
+        "cost": 5930,
+        "sku": null
+      },
+      "128064268": {
+        "id": 128064268,
+        "category": "module",
+        "name": "Int_ShieldGenerator_Size3_Class1",
+        "cost": 6270,
+        "sku": null
+      },
+      "128064112": {
+        "id": 128064112,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size3_Class5",
+        "cost": 507910,
+        "sku": null
+      },
+      "128064107": {
+        "id": 128064107,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size2_Class5",
+        "cost": 160220,
+        "sku": null
+      },
+      "128064106": {
+        "id": 128064106,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size2_Class4",
+        "cost": 53410,
+        "sku": null
+      },
+      "128064110": {
+        "id": 128064110,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size3_Class3",
+        "cost": 56440,
+        "sku": null
+      },
+      "128064105": {
+        "id": 128064105,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size2_Class3",
+        "cost": 17800,
+        "sku": null
+      },
+      "128064109": {
+        "id": 128064109,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size3_Class2",
+        "cost": 18810,
+        "sku": null
+      },
+      "128064104": {
+        "id": 128064104,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size2_Class2",
+        "cost": 5930,
+        "sku": null
+      },
+      "128064108": {
+        "id": 128064108,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size3_Class1",
+        "cost": 6270,
+        "sku": null
+      },
+      "128064103": {
+        "id": 128064103,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size2_Class1",
+        "cost": 1980,
+        "sku": null
+      },
+      "128671273": {
+        "id": 128671273,
+        "category": "module",
+        "name": "Int_DroneControl_Prospector_Size1_Class5",
+        "cost": 9600,
+        "sku": null
+      },
+      "128671287": {
+        "id": 128671287,
+        "category": "module",
+        "name": "Int_DroneControl_Prospector_Size7_Class4",
+        "cost": 3499200,
+        "sku": null
+      },
+      "128671282": {
+        "id": 128671282,
+        "category": "module",
+        "name": "Int_DroneControl_Prospector_Size5_Class4",
+        "cost": 388800,
+        "sku": null
+      },
+      "128671277": {
+        "id": 128671277,
+        "category": "module",
+        "name": "Int_DroneControl_Prospector_Size3_Class4",
+        "cost": 43200,
+        "sku": null
+      },
+      "128671285": {
+        "id": 128671285,
+        "category": "module",
+        "name": "Int_DroneControl_Prospector_Size7_Class2",
+        "cost": 874800,
+        "sku": null
+      },
+      "128671281": {
+        "id": 128671281,
+        "category": "module",
+        "name": "Int_DroneControl_Prospector_Size5_Class3",
+        "cost": 194400,
+        "sku": null
+      },
+      "128064312": {
+        "id": 128064312,
+        "category": "module",
+        "name": "Int_ShieldCellBank_Size3_Class5",
+        "cost": 158330,
+        "sku": null
+      },
+      "128064307": {
+        "id": 128064307,
+        "category": "module",
+        "name": "Int_ShieldCellBank_Size2_Class5",
+        "cost": 56550,
+        "sku": null
+      },
+      "128064311": {
+        "id": 128064311,
+        "category": "module",
+        "name": "Int_ShieldCellBank_Size3_Class4",
+        "cost": 63330,
+        "sku": null
+      },
+      "128064301": {
+        "id": 128064301,
+        "category": "module",
+        "name": "Int_ShieldCellBank_Size1_Class4",
+        "cost": 8080,
+        "sku": null
+      },
+      "128064306": {
+        "id": 128064306,
+        "category": "module",
+        "name": "Int_ShieldCellBank_Size2_Class4",
+        "cost": 22620,
+        "sku": null
+      },
+      "128064310": {
+        "id": 128064310,
+        "category": "module",
+        "name": "Int_ShieldCellBank_Size3_Class3",
+        "cost": 25330,
+        "sku": null
+      },
+      "128064305": {
+        "id": 128064305,
+        "category": "module",
+        "name": "Int_ShieldCellBank_Size2_Class3",
+        "cost": 9050,
+        "sku": null
+      },
+      "128064300": {
+        "id": 128064300,
+        "category": "module",
+        "name": "Int_ShieldCellBank_Size1_Class3",
+        "cost": 3230,
+        "sku": null
+      },
+      "128064309": {
+        "id": 128064309,
+        "category": "module",
+        "name": "Int_ShieldCellBank_Size3_Class2",
+        "cost": 10130,
+        "sku": null
+      },
+      "128064299": {
+        "id": 128064299,
+        "category": "module",
+        "name": "Int_ShieldCellBank_Size1_Class2",
+        "cost": 1290,
+        "sku": null
+      },
+      "128064304": {
+        "id": 128064304,
+        "category": "module",
+        "name": "Int_ShieldCellBank_Size2_Class2",
+        "cost": 3620,
+        "sku": null
+      },
+      "128666723": {
+        "id": 128666723,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size4_Class5",
+        "cost": 21337340,
+        "sku": null
+      },
+      "128666719": {
+        "id": 128666719,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size4_Class4",
+        "cost": 7112450,
+        "sku": null
+      },
+      "128666715": {
+        "id": 128666715,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size4_Class3",
+        "cost": 2370820,
+        "sku": null
+      },
+      "128666722": {
+        "id": 128666722,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size3_Class5",
+        "cost": 7620480,
+        "sku": null
+      },
+      "128666714": {
+        "id": 128666714,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size3_Class3",
+        "cost": 846720,
+        "sku": null
+      },
+      "128666711": {
+        "id": 128666711,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size4_Class2",
+        "cost": 790270,
+        "sku": null
+      },
+      "128666707": {
+        "id": 128666707,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size4_Class1",
+        "cost": 263420,
+        "sku": null
+      },
+      "128666710": {
+        "id": 128666710,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size3_Class2",
+        "cost": 282240,
+        "sku": null
+      },
+      "128666706": {
+        "id": 128666706,
+        "category": "module",
+        "name": "Int_FSDInterdictor_Size3_Class1",
+        "cost": 94080,
+        "sku": null
+      },
+      "128066541": {
+        "id": 128066541,
+        "category": "module",
+        "name": "Int_DroneControl_ResourceSiphon_Size3_Class5",
+        "cost": 86400,
+        "sku": null
+      },
+      "128066536": {
+        "id": 128066536,
+        "category": "module",
+        "name": "Int_DroneControl_ResourceSiphon_Size1_Class5",
+        "cost": 9600,
+        "sku": null
+      },
+      "128066540": {
+        "id": 128066540,
+        "category": "module",
+        "name": "Int_DroneControl_ResourceSiphon_Size3_Class4",
+        "cost": 43200,
+        "sku": null
+      },
+      "128066535": {
+        "id": 128066535,
+        "category": "module",
+        "name": "Int_DroneControl_ResourceSiphon_Size1_Class4",
+        "cost": 4800,
+        "sku": null
+      },
+      "128066539": {
+        "id": 128066539,
+        "category": "module",
+        "name": "Int_DroneControl_ResourceSiphon_Size3_Class3",
+        "cost": 21600,
+        "sku": null
+      },
+      "128066534": {
+        "id": 128066534,
+        "category": "module",
+        "name": "Int_DroneControl_ResourceSiphon_Size1_Class3",
+        "cost": 2400,
+        "sku": null
+      },
+      "128066538": {
+        "id": 128066538,
+        "category": "module",
+        "name": "Int_DroneControl_ResourceSiphon_Size3_Class2",
+        "cost": 10800,
+        "sku": null
+      },
+      "128066533": {
+        "id": 128066533,
+        "category": "module",
+        "name": "Int_DroneControl_ResourceSiphon_Size1_Class2",
+        "cost": 1200,
+        "sku": null
+      },
+      "128066537": {
+        "id": 128066537,
+        "category": "module",
+        "name": "Int_DroneControl_ResourceSiphon_Size3_Class1",
+        "cost": 5400,
+        "sku": null
+      },
+      "128666683": {
+        "id": 128666683,
+        "category": "module",
+        "name": "Int_FuelScoop_Size8_Class5",
+        "cost": 289042640,
+        "sku": null
+      },
+      "128666667": {
+        "id": 128666667,
+        "category": "module",
+        "name": "Int_FuelScoop_Size8_Class3",
+        "cost": 18065170,
+        "sku": null
+      },
+      "128666666": {
+        "id": 128666666,
+        "category": "module",
+        "name": "Int_FuelScoop_Size7_Class3",
+        "cost": 5698790,
+        "sku": null
+      },
+      "128666659": {
+        "id": 128666659,
+        "category": "module",
+        "name": "Int_FuelScoop_Size8_Class2",
+        "cost": 4516290,
+        "sku": null
+      },
+      "128666658": {
+        "id": 128666658,
+        "category": "module",
+        "name": "Int_FuelScoop_Size7_Class2",
+        "cost": 1424700,
+        "sku": null
+      },
+      "128666651": {
+        "id": 128666651,
+        "category": "module",
+        "name": "Int_FuelScoop_Size8_Class1",
+        "cost": 1083910,
+        "sku": null
+      },
+      "128666650": {
+        "id": 128666650,
+        "category": "module",
+        "name": "Int_FuelScoop_Size7_Class1",
+        "cost": 341930,
+        "sku": null
+      },
+      "128667605": {
+        "id": 128667605,
+        "category": "module",
+        "name": "Int_Repairer_Size8_Class1",
+        "cost": 612220,
+        "sku": null
+      },
+      "128667611": {
+        "id": 128667611,
+        "category": "module",
+        "name": "Int_Repairer_Size6_Class2",
+        "cost": 566870,
+        "sku": null
+      },
+      "128667604": {
+        "id": 128667604,
+        "category": "module",
+        "name": "Int_Repairer_Size7_Class1",
+        "cost": 340120,
+        "sku": null
+      },
+      "128667610": {
+        "id": 128667610,
+        "category": "module",
+        "name": "Int_Repairer_Size5_Class2",
+        "cost": 314930,
+        "sku": null
+      },
+      "128667616": {
+        "id": 128667616,
+        "category": "module",
+        "name": "Int_Repairer_Size3_Class3",
+        "cost": 291600,
+        "sku": null
+      },
+      "128667623": {
+        "id": 128667623,
+        "category": "module",
+        "name": "Int_Repairer_Size2_Class4",
+        "cost": 486000,
+        "sku": null
+      },
+      "128667615": {
+        "id": 128667615,
+        "category": "module",
+        "name": "Int_Repairer_Size2_Class3",
+        "cost": 162000,
+        "sku": null
+      },
+      "128667622": {
+        "id": 128667622,
+        "category": "module",
+        "name": "Int_Repairer_Size1_Class4",
+        "cost": 270000,
+        "sku": null
+      },
+      "128667609": {
+        "id": 128667609,
+        "category": "module",
+        "name": "Int_Repairer_Size4_Class2",
+        "cost": 174960,
+        "sku": null
+      },
+      "128064332": {
+        "id": 128064332,
+        "category": "module",
+        "name": "Int_ShieldCellBank_Size7_Class5",
+        "cost": 9731930,
+        "sku": null
+      },
+      "128064336": {
+        "id": 128064336,
+        "category": "module",
+        "name": "Int_ShieldCellBank_Size8_Class4",
+        "cost": 10899760,
+        "sku": null
+      },
+      "128064335": {
+        "id": 128064335,
+        "category": "module",
+        "name": "Int_ShieldCellBank_Size8_Class3",
+        "cost": 4359900,
+        "sku": null
+      },
+      "128064329": {
+        "id": 128064329,
+        "category": "module",
+        "name": "Int_ShieldCellBank_Size7_Class2",
+        "cost": 622840,
+        "sku": null
+      },
+      "128064333": {
+        "id": 128064333,
+        "category": "module",
+        "name": "Int_ShieldCellBank_Size8_Class1",
+        "cost": 697580,
+        "sku": null
+      },
+      "128064328": {
+        "id": 128064328,
+        "category": "module",
+        "name": "Int_ShieldCellBank_Size7_Class1",
+        "cost": 249140,
+        "sku": null
+      },
+      "128064127": {
+        "id": 128064127,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size6_Class5",
+        "cost": 16179530,
+        "sku": null
+      },
+      "128064122": {
+        "id": 128064122,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size5_Class5",
+        "cost": 5103950,
+        "sku": null
+      },
+      "128064117": {
+        "id": 128064117,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size4_Class5",
+        "cost": 1610080,
+        "sku": null
+      },
+      "128064126": {
+        "id": 128064126,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size6_Class4",
+        "cost": 5393180,
+        "sku": null
+      },
+      "128064116": {
+        "id": 128064116,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size4_Class4",
+        "cost": 536690,
+        "sku": null
+      },
+      "128064125": {
+        "id": 128064125,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size6_Class3",
+        "cost": 1797730,
+        "sku": null
+      },
+      "128064124": {
+        "id": 128064124,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size6_Class2",
+        "cost": 599240,
+        "sku": null
+      },
+      "128064120": {
+        "id": 128064120,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size5_Class3",
+        "cost": 567110,
+        "sku": null
+      },
+      "128064232": {
+        "id": 128064232,
+        "category": "module",
+        "name": "Int_Sensors_Size3_Class5",
+        "cost": 158330,
+        "sku": null
+      },
+      "128064227": {
+        "id": 128064227,
+        "category": "module",
+        "name": "Int_Sensors_Size2_Class5",
+        "cost": 56550,
+        "sku": null
+      },
+      "128064222": {
+        "id": 128064222,
+        "category": "module",
+        "name": "Int_Sensors_Size1_Class5",
+        "cost": 20200,
+        "sku": null
+      },
+      "128064231": {
+        "id": 128064231,
+        "category": "module",
+        "name": "Int_Sensors_Size3_Class4",
+        "cost": 63330,
+        "sku": null
+      },
+      "128064221": {
+        "id": 128064221,
+        "category": "module",
+        "name": "Int_Sensors_Size1_Class4",
+        "cost": 8080,
+        "sku": null
+      },
+      "128064226": {
+        "id": 128064226,
+        "category": "module",
+        "name": "Int_Sensors_Size2_Class4",
+        "cost": 22620,
+        "sku": null
+      },
+      "128064230": {
+        "id": 128064230,
+        "category": "module",
+        "name": "Int_Sensors_Size3_Class3",
+        "cost": 25330,
+        "sku": null
+      },
+      "128064152": {
+        "id": 128064152,
+        "category": "module",
+        "name": "Int_LifeSupport_Size3_Class5",
+        "cost": 158330,
+        "sku": null
+      },
+      "128064147": {
+        "id": 128064147,
+        "category": "module",
+        "name": "Int_LifeSupport_Size2_Class5",
+        "cost": 56550,
+        "sku": null
+      },
+      "128064142": {
+        "id": 128064142,
+        "category": "module",
+        "name": "Int_LifeSupport_Size1_Class5",
+        "cost": 20200,
+        "sku": null
+      },
+      "128064151": {
+        "id": 128064151,
+        "category": "module",
+        "name": "Int_LifeSupport_Size3_Class4",
+        "cost": 63330,
+        "sku": null
+      },
+      "128064141": {
+        "id": 128064141,
+        "category": "module",
+        "name": "Int_LifeSupport_Size1_Class4",
+        "cost": 8080,
+        "sku": null
+      },
+      "128064146": {
+        "id": 128064146,
+        "category": "module",
+        "name": "Int_LifeSupport_Size2_Class4",
+        "cost": 22620,
+        "sku": null
+      },
+      "128066551": {
+        "id": 128066551,
+        "category": "module",
+        "name": "Int_DroneControl_ResourceSiphon_Size7_Class5",
+        "cost": 6998400,
+        "sku": null
+      },
+      "128066546": {
+        "id": 128066546,
+        "category": "module",
+        "name": "Int_DroneControl_ResourceSiphon_Size5_Class5",
+        "cost": 777600,
+        "sku": null
+      },
+      "128066550": {
+        "id": 128066550,
+        "category": "module",
+        "name": "Int_DroneControl_ResourceSiphon_Size7_Class4",
+        "cost": 3499200,
+        "sku": null
+      },
+      "128066545": {
+        "id": 128066545,
+        "category": "module",
+        "name": "Int_DroneControl_ResourceSiphon_Size5_Class4",
+        "cost": 388800,
+        "sku": null
+      },
+      "128066548": {
+        "id": 128066548,
+        "category": "module",
+        "name": "Int_DroneControl_ResourceSiphon_Size7_Class2",
+        "cost": 874800,
+        "sku": null
+      },
+      "128066544": {
+        "id": 128066544,
+        "category": "module",
+        "name": "Int_DroneControl_ResourceSiphon_Size5_Class3",
+        "cost": 194400,
+        "sku": null
+      },
+      "128064177": {
+        "id": 128064177,
+        "category": "module",
+        "name": "Int_LifeSupport_Size8_Class5",
+        "cost": 27249390,
+        "sku": null
+      },
+      "128064172": {
+        "id": 128064172,
+        "category": "module",
+        "name": "Int_LifeSupport_Size7_Class5",
+        "cost": 9731930,
+        "sku": null
+      },
+      "128064171": {
+        "id": 128064171,
+        "category": "module",
+        "name": "Int_LifeSupport_Size7_Class4",
+        "cost": 3892770,
+        "sku": null
+      },
+      "128064175": {
+        "id": 128064175,
+        "category": "module",
+        "name": "Int_LifeSupport_Size8_Class3",
+        "cost": 4359900,
+        "sku": null
+      },
+      "128064174": {
+        "id": 128064174,
+        "category": "module",
+        "name": "Int_LifeSupport_Size8_Class2",
+        "cost": 1743960,
+        "sku": null
+      },
+      "128064067": {
+        "id": 128064067,
+        "category": "module",
+        "name": "Int_Powerplant_Size8_Class5",
+        "cost": 162586490,
+        "sku": null
+      },
+      "128064066": {
+        "id": 128064066,
+        "category": "module",
+        "name": "Int_Powerplant_Size8_Class4",
+        "cost": 54195500,
+        "sku": null
+      },
+      "128064061": {
+        "id": 128064061,
+        "category": "module",
+        "name": "Int_Powerplant_Size7_Class4",
+        "cost": 17096370,
+        "sku": null
+      },
+      "128064065": {
+        "id": 128064065,
+        "category": "module",
+        "name": "Int_Powerplant_Size8_Class3",
+        "cost": 18065170,
+        "sku": null
+      },
+      "128064064": {
+        "id": 128064064,
+        "category": "module",
+        "name": "Int_Powerplant_Size8_Class2",
+        "cost": 6021720,
+        "sku": null
+      },
+      "128064101": {
+        "id": 128064101,
+        "category": "module",
+        "name": "Int_Engine_Size8_Class4",
+        "cost": 54195500,
+        "sku": null
+      },
+      "128064099": {
+        "id": 128064099,
+        "category": "module",
+        "name": "Int_Engine_Size8_Class2",
+        "cost": 6021720,
+        "sku": null
+      },
+      "128064094": {
+        "id": 128064094,
+        "category": "module",
+        "name": "Int_Engine_Size7_Class2",
+        "cost": 1899600,
+        "sku": null
+      },
+      "128064098": {
+        "id": 128064098,
+        "category": "module",
+        "name": "Int_Engine_Size8_Class1",
+        "cost": 2007240,
+        "sku": null
+      },
+      "128064132": {
+        "id": 128064132,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size7_Class5",
+        "cost": 51289110,
+        "sku": null
+      },
+      "128064136": {
+        "id": 128064136,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size8_Class4",
+        "cost": 54195500,
+        "sku": null
+      },
+      "128064135": {
+        "id": 128064135,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size8_Class3",
+        "cost": 18065170,
+        "sku": null
+      },
+      "128064129": {
+        "id": 128064129,
+        "category": "module",
+        "name": "Int_Hyperdrive_Size7_Class2",
+        "cost": 1899600,
+        "sku": null
+      },
+      "128064297": {
+        "id": 128064297,
+        "category": "module",
+        "name": "Int_ShieldGenerator_Size8_Class5",
+        "cost": 162586490,
+        "sku": null
+      },
+      "128064292": {
+        "id": 128064292,
+        "category": "module",
+        "name": "Int_ShieldGenerator_Size7_Class5",
+        "cost": 51289110,
+        "sku": null
+      },
+      "128064291": {
+        "id": 128064291,
+        "category": "module",
+        "name": "Int_ShieldGenerator_Size7_Class4",
+        "cost": 17096370,
+        "sku": null
+      },
+      "128064187": {
+        "id": 128064187,
+        "category": "module",
+        "name": "Int_PowerDistributor_Size2_Class5",
+        "cost": 56550,
+        "sku": null
+      },
+      "128064182": {
+        "id": 128064182,
+        "category": "module",
+        "name": "Int_PowerDistributor_Size1_Class5",
+        "cost": 20200,
+        "sku": null
+      },
+      "128064345": {
+        "id": 128064345,
+        "category": "module",
+        "name": "Int_CargoRack_Size8_Class1",
+        "cost": 3829870,
+        "sku": null
+      },
+      "128667727": {
+        "id": 128667727,
+        "category": "paintjob",
+        "name": "paintjob_CobraMkiii_Default_52",
+        "cost": 0,
+        "sku": null
+      },
+      "128667729": {
+        "id": 128667729,
+        "category": "paintjob",
+        "name": "PaintJob_CobraMkIII_Faction1_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128667730": {
+        "id": 128667730,
+        "category": "paintjob",
+        "name": "PaintJob_Eagle_Faction1_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128667731": {
+        "id": 128667731,
+        "category": "paintjob",
+        "name": "PaintJob_FedDropship_Faction1_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128667732": {
+        "id": 128667732,
+        "category": "paintjob",
+        "name": "PaintJob_SideWinder_Faction1_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128667733": {
+        "id": 128667733,
+        "category": "paintjob",
+        "name": "PaintJob_Viper_Faction1_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128667734": {
+        "id": 128667734,
+        "category": "paintjob",
+        "name": "PaintJob_Python_Faction1_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066428": {
+        "id": 128066428,
+        "category": "paintjob",
+        "name": "paintjob_cobramkiii_wireframe_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128667638": {
+        "id": 128667638,
+        "category": "paintjob",
+        "name": "PaintJob_Sidewinder_Merc",
+        "cost": 0,
+        "sku": null
+      },
+      "128667639": {
+        "id": 128667639,
+        "category": "paintjob",
+        "name": "PaintJob_CobraMkIII_Merc",
+        "cost": 0,
+        "sku": null
+      },
+      "128066405": {
+        "id": 128066405,
+        "category": "paintjob",
+        "name": "paintjob_eagle_stripe1_02",
+        "cost": 0,
+        "sku": null
+      },
+      "128066406": {
+        "id": 128066406,
+        "category": "paintjob",
+        "name": "paintjob_eagle_doublestripe_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066416": {
+        "id": 128066416,
+        "category": "paintjob",
+        "name": "paintjob_eagle_thirds_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066419": {
+        "id": 128066419,
+        "category": "paintjob",
+        "name": "paintjob_eagle_stripe1_03",
+        "cost": 0,
+        "sku": null
+      },
+      "128668019": {
+        "id": 128668019,
+        "category": "paintjob",
+        "name": "PaintJob_Eagle_Crimson",
+        "cost": 0,
+        "sku": null
+      },
+      "128066420": {
+        "id": 128066420,
+        "category": "paintjob",
+        "name": "paintjob_eagle_thirds_02",
+        "cost": 0,
+        "sku": null
+      },
+      "128066430": {
+        "id": 128066430,
+        "category": "paintjob",
+        "name": "paintjob_eagle_stripe1_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066436": {
+        "id": 128066436,
+        "category": "paintjob",
+        "name": "paintjob_eagle_camo_03",
+        "cost": 0,
+        "sku": null
+      },
+      "128066437": {
+        "id": 128066437,
+        "category": "paintjob",
+        "name": "paintjob_eagle_thirds_03",
+        "cost": 0,
+        "sku": null
+      },
+      "128066441": {
+        "id": 128066441,
+        "category": "paintjob",
+        "name": "paintjob_eagle_camo_02",
+        "cost": 0,
+        "sku": null
+      },
+      "128066449": {
+        "id": 128066449,
+        "category": "paintjob",
+        "name": "paintjob_eagle_doublestripe_02",
+        "cost": 0,
+        "sku": null
+      },
+      "128066453": {
+        "id": 128066453,
+        "category": "paintjob",
+        "name": "paintjob_eagle_doublestripe_03",
+        "cost": 0,
+        "sku": null
+      },
+      "128066456": {
+        "id": 128066456,
+        "category": "paintjob",
+        "name": "paintjob_eagle_camo_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066404": {
+        "id": 128066404,
+        "category": "paintjob",
+        "name": "paintjob_sidewinder_default_02",
+        "cost": 0,
+        "sku": null
+      },
+      "128066408": {
+        "id": 128066408,
+        "category": "paintjob",
+        "name": "paintjob_sidewinder_default_03",
+        "cost": 0,
+        "sku": null
+      },
+      "128066414": {
+        "id": 128066414,
+        "category": "paintjob",
+        "name": "paintjob_sidewinder_doublestripe_08",
+        "cost": 0,
+        "sku": null
+      },
+      "128066423": {
+        "id": 128066423,
+        "category": "paintjob",
+        "name": "paintjob_sidewinder_doublestripe_05",
+        "cost": 0,
+        "sku": null
+      },
+      "128066431": {
+        "id": 128066431,
+        "category": "paintjob",
+        "name": "paintjob_sidewinder_thirds_07",
+        "cost": 0,
+        "sku": null
+      },
+      "128066432": {
+        "id": 128066432,
+        "category": "paintjob",
+        "name": "paintjob_sidewinder_thirds_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066433": {
+        "id": 128066433,
+        "category": "paintjob",
+        "name": "paintjob_sidewinder_doublestripe_07",
+        "cost": 0,
+        "sku": null
+      },
+      "128066440": {
+        "id": 128066440,
+        "category": "paintjob",
+        "name": "paintjob_sidewinder_camo_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066444": {
+        "id": 128066444,
+        "category": "paintjob",
+        "name": "paintjob_sidewinder_thirds_06",
+        "cost": 0,
+        "sku": null
+      },
+      "128066447": {
+        "id": 128066447,
+        "category": "paintjob",
+        "name": "paintjob_sidewinder_camo_03",
+        "cost": 0,
+        "sku": null
+      },
+      "128066448": {
+        "id": 128066448,
+        "category": "paintjob",
+        "name": "paintjob_sidewinder_default_04",
+        "cost": 0,
+        "sku": null
+      },
+      "128066454": {
+        "id": 128066454,
+        "category": "paintjob",
+        "name": "paintjob_sidewinder_camo_02",
+        "cost": 0,
+        "sku": null
+      },
+      "128667667": {
+        "id": 128667667,
+        "category": "paintjob",
+        "name": "PaintJob_Viper_Merc",
+        "cost": 0,
+        "sku": null
+      },
+      "128666726": {
+        "id": 128666726,
+        "category": "paintjob",
+        "name": "PaintJob_CobraMkIII_Camo1_02",
+        "cost": 0,
+        "sku": null
+      },
+      "128066407": {
+        "id": 128066407,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_switzerland_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128666727": {
+        "id": 128666727,
+        "category": "paintjob",
+        "name": "PaintJob_CobraMkIII_Camo2_03",
+        "cost": 0,
+        "sku": null
+      },
+      "128666728": {
+        "id": 128666728,
+        "category": "paintjob",
+        "name": "PaintJob_CobraMkIII_Stripe1_02",
+        "cost": 0,
+        "sku": null
+      },
+      "128066409": {
+        "id": 128066409,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_belgium_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128666729": {
+        "id": 128666729,
+        "category": "paintjob",
+        "name": "PaintJob_CobraMkIII_Stripe1_03",
+        "cost": 0,
+        "sku": null
+      },
+      "128066410": {
+        "id": 128066410,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_australia_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128666730": {
+        "id": 128666730,
+        "category": "paintjob",
+        "name": "PaintJob_CobraMkIII_Stripe2_02",
+        "cost": 0,
+        "sku": null
+      },
+      "128066411": {
+        "id": 128066411,
+        "category": "paintjob",
+        "name": "paintjob_viper_default_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128666731": {
+        "id": 128666731,
+        "category": "paintjob",
+        "name": "PaintJob_CobraMkIII_Stripe2_03",
+        "cost": 0,
+        "sku": null
+      },
+      "128066412": {
+        "id": 128066412,
+        "category": "paintjob",
+        "name": "paintjob_viper_stripe2_02",
+        "cost": 0,
+        "sku": null
+      },
+      "128666732": {
+        "id": 128666732,
+        "category": "paintjob",
+        "name": "PaintJob_Hauler_Doublestripe_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066413": {
+        "id": 128066413,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_austria_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128666733": {
+        "id": 128666733,
+        "category": "paintjob",
+        "name": "PaintJob_Hauler_Doublestripe_02",
+        "cost": 0,
+        "sku": null
+      },
+      "128666734": {
+        "id": 128666734,
+        "category": "paintjob",
+        "name": "PaintJob_Hauler_Doublestripe_03",
+        "cost": 0,
+        "sku": null
+      },
+      "128066415": {
+        "id": 128066415,
+        "category": "paintjob",
+        "name": "paintjob_viper_stripe1_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128666735": {
+        "id": 128666735,
+        "category": "paintjob",
+        "name": "PaintJob_Hauler_Stripe1_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128666736": {
+        "id": 128666736,
+        "category": "paintjob",
+        "name": "PaintJob_Hauler_Stripe1_02",
+        "cost": 0,
+        "sku": null
+      },
+      "128066417": {
+        "id": 128066417,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_spain_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128666737": {
+        "id": 128666737,
+        "category": "paintjob",
+        "name": "PaintJob_Hauler_Stripe1_03",
+        "cost": 0,
+        "sku": null
+      },
+      "128066418": {
+        "id": 128066418,
+        "category": "paintjob",
+        "name": "paintjob_viper_stripe1_02",
+        "cost": 0,
+        "sku": null
+      },
+      "128666738": {
+        "id": 128666738,
+        "category": "paintjob",
+        "name": "PaintJob_CobraMkIII_Hotrod_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128666739": {
+        "id": 128666739,
+        "category": "paintjob",
+        "name": "PaintJob_CobraMkIII_Hotrod_03",
+        "cost": 0,
+        "sku": null
+      },
+      "128666740": {
+        "id": 128666740,
+        "category": "paintjob",
+        "name": "PaintJob_Eagle_Hotrod_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066421": {
+        "id": 128066421,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_denmark_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128666741": {
+        "id": 128666741,
+        "category": "paintjob",
+        "name": "PaintJob_Eagle_Hotrod_03",
+        "cost": 0,
+        "sku": null
+      },
+      "128066422": {
+        "id": 128066422,
+        "category": "paintjob",
+        "name": "paintjob_viper_police_federation_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128666742": {
+        "id": 128666742,
+        "category": "paintjob",
+        "name": "PaintJob_Sidewinder_Hotrod_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128666743": {
+        "id": 128666743,
+        "category": "paintjob",
+        "name": "PaintJob_Sidewinder_Hotrod_03",
+        "cost": 0,
+        "sku": null
+      },
+      "128066424": {
+        "id": 128066424,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_newzealand_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128666744": {
+        "id": 128666744,
+        "category": "paintjob",
+        "name": "PaintJob_Viper_Stripe2_51",
+        "cost": 0,
+        "sku": null
+      },
+      "128066425": {
+        "id": 128066425,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_italy_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128666745": {
+        "id": 128666745,
+        "category": "paintjob",
+        "name": "PaintJob_Viper_Stripe2_52",
+        "cost": 0,
+        "sku": null
+      },
+      "128066426": {
+        "id": 128066426,
+        "category": "paintjob",
+        "name": "paintjob_viper_stripe2_04",
+        "cost": 0,
+        "sku": null
+      },
+      "128066427": {
+        "id": 128066427,
+        "category": "paintjob",
+        "name": "paintjob_viper_police_independent_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066429": {
+        "id": 128066429,
+        "category": "paintjob",
+        "name": "paintjob_viper_default_03",
+        "cost": 0,
+        "sku": null
+      },
+      "128066434": {
+        "id": 128066434,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_uk_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066435": {
+        "id": 128066435,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_germany_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066438": {
+        "id": 128066438,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_netherlands_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066439": {
+        "id": 128066439,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_usa_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066442": {
+        "id": 128066442,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_russia_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066443": {
+        "id": 128066443,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_canada_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066445": {
+        "id": 128066445,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_sweden_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066446": {
+        "id": 128066446,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_poland_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066450": {
+        "id": 128066450,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_finland_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066451": {
+        "id": 128066451,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_france_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066452": {
+        "id": 128066452,
+        "category": "paintjob",
+        "name": "paintjob_viper_police_empire_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128066455": {
+        "id": 128066455,
+        "category": "paintjob",
+        "name": "paintjob_viper_flag_norway_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128667720": {
+        "id": 128667720,
+        "category": "paintjob",
+        "name": "PaintJob_Asp_Default_02",
+        "cost": 0,
+        "sku": null
+      },
+      "128667721": {
+        "id": 128667721,
+        "category": "paintjob",
+        "name": "PaintJob_Asp_Default_03",
+        "cost": 0,
+        "sku": null
+      },
+      "128667722": {
+        "id": 128667722,
+        "category": "paintjob",
+        "name": "PaintJob_Asp_Default_04",
+        "cost": 0,
+        "sku": null
+      },
+      "128667723": {
+        "id": 128667723,
+        "category": "paintjob",
+        "name": "PaintJob_Asp_Faction1_01",
+        "cost": 0,
+        "sku": null
+      },
+      "128667724": {
+        "id": 128667724,
+        "category": "paintjob",
+        "name": "PaintJob_Asp_Stripe1_02",
+        "cost": 0,
+        "sku": null
+      },
+      "128667725": {
+        "id": 128667725,
+        "category": "paintjob",
+        "name": "PaintJob_Asp_Stripe1_03",
+        "cost": 0,
+        "sku": null
+      },
+      "128667726": {
+        "id": 128667726,
+        "category": "paintjob",
+        "name": "PaintJob_Asp_Stripe1_04",
+        "cost": 0,
+        "sku": null
+      },
+      "128667655": {
+        "id": 128667655,
+        "category": "decal",
+        "name": "Decal_Skull3",
+        "cost": 0,
+        "sku": "ELITE_SPECIFIC_V_MERCENARY_DECAL_1000"
+      },
+      "128667736": {
+        "id": 128667736,
+        "category": "decal",
+        "name": "Decal_Combat_Mostly_Harmless",
+        "cost": 0,
+        "sku": "ELITE_SPECIFIC_V_COMBAT_DECAL_1001"
+      },
+      "128667737": {
+        "id": 128667737,
+        "category": "decal",
+        "name": "Decal_Combat_Novice",
+        "cost": 0,
+        "sku": "ELITE_SPECIFIC_V_COMBAT_DECAL_1002"
+      },
+      "128667738": {
+        "id": 128667738,
+        "category": "decal",
+        "name": "Decal_Combat_Competent",
+        "cost": 0,
+        "sku": "ELITE_SPECIFIC_V_COMBAT_DECAL_1003"
+      },
+      "128667739": {
+        "id": 128667739,
+        "category": "decal",
+        "name": "Decal_Combat_Expert",
+        "cost": 0,
+        "sku": "ELITE_SPECIFIC_V_COMBAT_DECAL_1004"
+      },
+      "128667744": {
+        "id": 128667744,
+        "category": "decal",
+        "name": "Decal_Trade_Mostly_Penniless",
+        "cost": 0,
+        "sku": "ELITE_SPECIFIC_V_TRADE_DECAL_1001"
+      },
+      "128667745": {
+        "id": 128667745,
+        "category": "decal",
+        "name": "Decal_Trade_Peddler",
+        "cost": 0,
+        "sku": "ELITE_SPECIFIC_V_TRADE_DECAL_1002"
+      },
+      "128667746": {
+        "id": 128667746,
+        "category": "decal",
+        "name": "Decal_Trade_Dealer",
+        "cost": 0,
+        "sku": "ELITE_SPECIFIC_V_TRADE_DECAL_1003"
+      },
+      "128667747": {
+        "id": 128667747,
+        "category": "decal",
+        "name": "Decal_Trade_Merchant",
+        "cost": 0,
+        "sku": "ELITE_SPECIFIC_V_TRADE_DECAL_1004"
+      },
+      "128667752": {
+        "id": 128667752,
+        "category": "decal",
+        "name": "Decal_Explorer_Mostly_Aimless",
+        "cost": 0,
+        "sku": "ELITE_SPECIFIC_V_EXPLORE_DECAL_1001"
+      },
+      "128667753": {
+        "id": 128667753,
+        "category": "decal",
+        "name": "Decal_Explorer_Scout",
+        "cost": 0,
+        "sku": "ELITE_SPECIFIC_V_EXPLORE_DECAL_1002"
+      },
+      "128667754": {
+        "id": 128667754,
+        "category": "decal",
+        "name": "Decal_Explorer_Surveyor",
+        "cost": 0,
+        "sku": "ELITE_SPECIFIC_V_EXPLORE_DECAL_1003"
+      }
+    }
+  },
+  "ship": {
+    "name": "Asp",
+    "modules": {
+      "TinyHardpoint1": [],
+      "TinyHardpoint2": [],
+      "TinyHardpoint3": [],
+      "TinyHardpoint4": [],
+      "SmallHardpoint1": {
+        "module": {
+          "name": "Hpt_PulseLaser_Fixed_Small",
+          "id": 128049381,
+          "value": 2200,
+          "unloaned": 2200,
+          "free": false,
+          "health": 1000000,
+          "on": true,
+          "priority": 1
+        }
+      },
+      "SmallHardpoint2": {
+        "module": {
+          "name": "Hpt_PulseLaser_Fixed_Small",
+          "id": 128049381,
+          "value": 2200,
+          "unloaned": 2200,
+          "free": false,
+          "health": 1000000,
+          "on": true,
+          "priority": 1
+        }
+      },
+      "SmallHardpoint3": [],
+      "SmallHardpoint4": [],
+      "MediumHardpoint1": [],
+      "MediumHardpoint2": [],
+      "PaintJob": [],
+      "Armour": {
+        "module": {
+          "id": 128049304,
+          "name": "Asp_Armour_Grade1",
+          "value": 0,
+          "unloaned": 0,
+          "free": false,
+          "health": 1000000,
+          "on": true,
+          "priority": 1
+        }
+      },
+      "PowerPlant": {
+        "module": {
+          "id": 128064048,
+          "name": "Int_PowerPlant_Size5_Class1",
+          "value": 63010,
+          "unloaned": 63010,
+          "free": false,
+          "health": 1000000,
+          "on": true,
+          "priority": 1
+        }
+      },
+      "MainEngines": {
+        "module": {
+          "id": 128064083,
+          "name": "Int_Engine_Size5_Class1",
+          "value": 63010,
+          "unloaned": 63010,
+          "free": false,
+          "health": 1000000,
+          "on": true,
+          "priority": 1
+        }
+      },
+      "FrameShiftDrive": {
+        "module": {
+          "id": 128064118,
+          "name": "Int_Hyperdrive_Size5_Class1",
+          "value": 63010,
+          "unloaned": 63010,
+          "free": false,
+          "health": 1000000,
+          "on": true,
+          "priority": 1
+        }
+      },
+      "LifeSupport": {
+        "module": {
+          "id": 128064153,
+          "name": "Int_LifeSupport_Size4_Class1",
+          "value": 11350,
+          "unloaned": 11350,
+          "free": false,
+          "health": 1000000,
+          "on": true,
+          "priority": 1
+        }
+      },
+      "PowerDistributor": {
+        "module": {
+          "id": 128064193,
+          "name": "Int_PowerDistributor_Size4_Class1",
+          "value": 11350,
+          "unloaned": 11350,
+          "free": false,
+          "health": 1000000,
+          "on": true,
+          "priority": 1
+        }
+      },
+      "Radar": {
+        "module": {
+          "id": 128064238,
+          "name": "Int_Sensors_Size5_Class1",
+          "value": 31780,
+          "unloaned": 31780,
+          "free": false,
+          "health": 1000000,
+          "on": true,
+          "priority": 1
+        }
+      },
+      "FuelTank": {
+        "module": {
+          "id": 128064350,
+          "name": "Int_FuelTank_Size5_Class3",
+          "value": 97750,
+          "unloaned": 97750,
+          "free": false,
+          "health": 1000000,
+          "on": true,
+          "priority": 1
+        }
+      },
+      "Decal1": [],
+      "Decal2": [],
+      "Decal3": [],
+      "Slot01_Size6": {
+        "module": {
+          "id": 128064342,
+          "name": "Int_CargoRack_Size5_Class1",
+          "value": 111570,
+          "unloaned": 111570,
+          "free": false,
+          "health": 1000000,
+          "on": true,
+          "priority": 1
+        }
+      },
+      "Slot02_Size5": {
+        "module": {
+          "id": 128064278,
+          "name": "Int_ShieldGenerator_Size5_Class1",
+          "value": 63010,
+          "unloaned": 63010,
+          "free": false,
+          "health": 1000000,
+          "on": true,
+          "priority": 1
+        }
+      },
+      "Slot03_Size3": {
+        "module": {
+          "id": 128064339,
+          "name": "Int_CargoRack_Size2_Class1",
+          "value": 3250,
+          "unloaned": 3250,
+          "free": false,
+          "health": 1000000,
+          "on": true,
+          "priority": 1
+        }
+      },
+      "Slot04_Size3": [],
+      "Slot05_Size3": [],
+      "Slot06_Size2": {
+        "module": {
+          "id": 128064338,
+          "name": "Int_CargoRack_Size1_Class1",
+          "value": 1000,
+          "unloaned": 1000,
+          "free": false,
+          "health": 1000000,
+          "on": true,
+          "priority": 1
+        }
+      },
+      "Slot07_Size2": {
+        "module": {
+          "id": 128662535,
+          "name": "Int_StellarBodyDiscoveryScanner_Standard",
+          "value": 1000,
+          "unloaned": 1000,
+          "free": false,
+          "health": 1000000,
+          "on": true,
+          "priority": 1
+        }
+      }
+    },
+    "value": {
+      "hull": 6135660,
+      "modules": 525490,
+      "cargo": 0,
+      "total": 6661150,
+      "unloaned": 525490
+    },
+    "free": false,
+    "health": {
+      "hull": 1000000,
+      "shield": 1000000,
+      "shieldup": true,
+      "integrity": 0,
+      "paintwork": 0
+    },
+    "wear": {
+      "dirt": 0,
+      "fade": 0,
+      "tear": 0,
+      "game": 0
+    },
+    "cockpitBreached": false,
+    "oxygenRemaining": 60000,
+    "fuel": {
+      "capacity": 32,
+      "lvl": 32
+    },
+    "reserve": {
+      "lvl": 1
+    },
+    "cargo": {
+      "capacity": 38,
+      "qty": 0,
+      "items": []
+    },
+    "passengers": [],
+    "variant": "_Starter"
+  },
+  "ships": {
+    "0": {
+      "name": "SideWinder",
+      "station": {
+        "id": "3228338688",
+        "name": "Nicollet City"
+      },
+      "starsystem": {
+        "id": "8055378940618",
+        "name": "Chang Yeh",
+        "systemaddress": "8055378940618"
+      }
+    },
+    "2": {
+      "name": "CobraMkIII",
+      "station": {
+        "id": "128032512",
+        "name": "EG Main HQ"
+      },
+      "starsystem": {
+        "id": "1780",
+        "name": "Euryale",
+        "systemaddress": "79213611371"
+      }
+    },
+    "3": {
+      "name": "DiamondBack",
+      "station": {
+        "id": "3223873280",
+        "name": "Meade Ring"
+      },
+      "starsystem": {
+        "id": "63318",
+        "name": "CD-58 538",
+        "systemaddress": "5031721931474"
+      }
+    },
+    "4": {
+      "name": "Asp",
+      "station": {
+        "id": "128032512",
+        "name": "EG Main HQ"
+      },
+      "starsystem": {
+        "id": "1780",
+        "name": "Euryale",
+        "systemaddress": "79213611371"
+      }
+    }
+  }
+}
