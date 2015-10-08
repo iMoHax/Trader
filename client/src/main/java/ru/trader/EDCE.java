@@ -66,9 +66,11 @@ public class EDCE {
             }
             checkCmd(packet.getCommander());
             if (checkSystem(packet.getLastSystem())){
-                if (profile.isDocked()) {
+                if (packet.getCommander().isDocked()) {
                     checkStarport(packet.getLastStarport());
+                    profile.setDocked(true);
                 } else {
+                    profile.setDocked(false);
                     profile.setStation(ModelFabric.NONE_STATION);
                 }
             }
@@ -87,7 +89,6 @@ public class EDCE {
         }
         profile.setName(commander.getName());
         profile.setBalance(commander.getCredits());
-        profile.setDocked(commander.isDocked());
     }
 
     private boolean checkSystem(System system){
