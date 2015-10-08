@@ -1,28 +1,42 @@
 package ru.trader.controllers;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import ru.trader.KeyBinding;
 import ru.trader.Main;
 import ru.trader.model.*;
 import ru.trader.view.support.ViewUtils;
 import ru.trader.view.support.cells.OfferListCell;
 import ru.trader.view.support.cells.OrderListCell;
+import ru.trader.view.support.cells.StationListCell;
 
-import javax.swing.*;
+import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 
 
 public class HelperController {
 
+    @FXML
+    private Node refuelGroup;
+    @FXML
+    private Node ordersGroup;
+    @FXML
+    private Node missionsGroup;
+    @FXML
+    private Node infoGroup;
     @FXML
     private Label station;
     @FXML
@@ -41,29 +55,85 @@ public class HelperController {
     private ListView<StationModel> stations;
     @FXML
     private ListView<OfferModel> sellOffers;
+    @FXML
+    private ToggleButton infoBtn;
+
 
     private Stage stage;
     private RouteModel route;
-    private final BooleanProperty docked;
-
-    public HelperController() {
-        docked = new SimpleBooleanProperty(true);
-    }
+    private RouteEntryModel entry;
 
     @FXML
     private void initialize(){
-        MainController.getProfile().routeProperty().addListener(routeListener);
+        ProfileModel profile = MainController.getProfile();
+        profile.routeProperty().addListener(routeListener);
+        profile.dockedProperty().addListener(dockedListener);
         buyOrders.setCellFactory(new OrderListCell(false));
         sellOrders.setCellFactory(new OrderListCell(true));
         sellOffers.setCellFactory(new OfferListCell(true));
+        stations.setCellFactory(new StationListCell());
+        infoBtn.selectedProperty().addListener((ov, o, n) -> {
+            if (n) showInfo();
+                else hideInfo();
+        });
+        refuelGroup.managedProperty().bind(refuelGroup.visibleProperty());
+        missionsGroup.managedProperty().bind(missionsGroup.visibleProperty());
+        ordersGroup.managedProperty().bind(ordersGroup.visibleProperty());
+        infoGroup.managedProperty().bind(infoGroup.visibleProperty());
+        hideInfo();
+        hideStationInfo();
         bindKeys();
+    }
+
+    private void resize(){
+        if (stage == null) return;
+        Pane root = (Pane)stage.getScene().getRoot();
+        root.autosize();
+        Bounds bounds = root.getLayoutBounds();
+        stage.setWidth(bounds.getWidth());
+        stage.setHeight(bounds.getHeight());
+    }
+
+    private void setDocked(boolean docked){
+        if (docked && MainController.getProfile().getStation().equals(entry.getStation())){
+            showStationInfo();
+        } else {
+            hideStationInfo();
+            hideInfo();
+        }
+    }
+
+    private void showStationInfo(){
+        refuelGroup.setVisible(entry.getRefill() > 0);
+        ordersGroup.setVisible(!buyOrders.getItems().isEmpty() || !sellOrders.getItems().isEmpty());
+        missionsGroup.setVisible(!missions.getItems().isEmpty());
+        resize();
+    }
+
+    private void hideStationInfo(){
+        refuelGroup.setVisible(false);
+        ordersGroup.setVisible(false);
+        missionsGroup.setVisible(false);
+        resize();
+    }
+
+    private void showInfo(){
+        infoGroup.setVisible(true);
+        resize();
+    }
+
+    private void hideInfo(){
+        infoGroup.setVisible(false);
+        resize();
     }
 
     public void show(Parent content) {
         if (stage == null){
             stage = new Stage();
             stage.setScene(new Scene(content));
+            stage.initStyle(StageStyle.UNDECORATED);
             stage.setAlwaysOnTop(true);
+            addDragListeners(content);
             stage.show();
         } else {
             stage.show();
@@ -83,10 +153,11 @@ public class HelperController {
         this.route = route;
         setRouteEntry(route.getCurrentEntry());
         this.route.currentEntryProperty().addListener(currentEntryListener);
+        showStationInfo();
     }
 
     private void setRouteEntry(int index){
-        RouteEntryModel entry = route.get(index);
+        entry = route.get(index);
         station.setText(entry.getStation().getName());
         system.setText(entry.getStation().getSystem().getName());
         time.setText(ViewUtils.timeToString(entry.getTime()));
@@ -135,11 +206,33 @@ public class HelperController {
     }
 
     private final ChangeListener<? super Number> currentEntryListener = (ov, o, n) -> ViewUtils.doFX(() -> setRouteEntry(n.intValue()));
+    private final ChangeListener<Boolean> dockedListener = (ov, o, n) -> ViewUtils.doFX(() -> setDocked(n));
     private final ChangeListener<RouteModel> routeListener = (ov, o, n) -> {
         if (n != null){
             ViewUtils.doFX(() -> setRoute(n));
         }
     };
 
+    private void addDragListeners(final Node node){
+        new DragListener(node);
+    }
 
+    private class DragListener {
+        private final EventHandler<MouseEvent> pressedListener;
+        private final EventHandler<MouseEvent> draggedListener;
+        double x, y;
+
+        private DragListener(Node node) {
+            pressedListener = (MouseEvent mouseEvent) -> {
+                x = mouseEvent.getSceneX();
+                y = mouseEvent.getSceneY();
+            };
+            draggedListener = (MouseEvent mouseEvent) -> {
+                node.getScene().getWindow().setX(mouseEvent.getScreenX()-x);
+                node.getScene().getWindow().setY(mouseEvent.getScreenY()-y);
+            };
+            node.setOnMousePressed(pressedListener);
+            node.setOnMouseDragged(draggedListener);
+        }
+    }
 }

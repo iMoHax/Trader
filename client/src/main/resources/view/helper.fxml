@@ -13,8 +13,8 @@
     <HBox><Label text="Система:" /><Label fx:id="system" /></HBox>
     <HBox><Label text="Станция:" /><Label fx:id="station" /></HBox>
     <HBox><Label text="Время:" /><Label fx:id="time" /></HBox>
-    <HBox><Label text="Заправить:" /><Label fx:id="refuel" /></HBox>
-    <HBox maxHeight="100">
+    <HBox fx:id="refuelGroup"><Label text="Заправить:" /><Label fx:id="refuel" /></HBox>
+    <HBox fx:id="ordersGroup" maxHeight="100">
         <VBox>
             <Label text="Продать:" />
             <ListView fx:id="sellOrders"/>
@@ -24,11 +24,11 @@
             <ListView fx:id="buyOrders"/>
         </VBox>
     </HBox>
-    <VBox maxHeight="100">
+    <VBox fx:id="missionsGroup" maxHeight="100">
         <Label text="Сдать миссии:" />
         <ListView fx:id="missions"/>
     </VBox>
-    <HBox>
+    <HBox fx:id="infoGroup">
         <VBox maxHeight="100">
             <Label text="Станции:" />
             <ListView fx:id="stations"/>
@@ -51,5 +51,8 @@
         <Button prefWidth="30" onAction="#copy">
             <graphic><Glyph text="FontAwesome|COPY"/></graphic>
         </Button>
+        <ToggleButton fx:id="infoBtn" prefWidth="30">
+            <graphic><Glyph text="FontAwesome|HELP"/></graphic>
+        </ToggleButton>
     </HBox>
 </VBox>
