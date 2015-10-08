@@ -63,6 +63,7 @@ public class HelperController {
         if (stage == null){
             stage = new Stage();
             stage.setScene(new Scene(content));
+            stage.setAlwaysOnTop(true);
             stage.show();
         } else {
             stage.show();
