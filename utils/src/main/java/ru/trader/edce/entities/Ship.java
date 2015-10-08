@@ -2,15 +2,13 @@ package ru.trader.edce.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Ship {
     private String name;
     private Fuel fuel;
     private Cargo cargo;
-    private Map<String, Slot> modules = new LinkedHashMap<>();
+    private Map<String, List<Slot>> modules = new LinkedHashMap<>();
 
     public String getName() {
         return name;
@@ -36,11 +34,11 @@ public class Ship {
         this.cargo = cargo;
     }
 
-    public Map<String, Slot> getModules() {
+    public Map<String, List<Slot>> getModules() {
         return modules;
     }
 
-    public void setModules(Map<String, Slot> modules) {
+    public void setModules(Map<String, List<Slot>> modules) {
         this.modules = modules;
     }
 
@@ -67,7 +65,7 @@ public class Ship {
     @JsonIgnore
     public Module getFSD(){
         if (modules == null) return null;
-        Slot fsd = modules.get("FrameShiftDrive");
+        Slot fsd = modules.get("FrameShiftDrive").get(0);
         return fsd != null ? fsd.getModule() : null;
     }
 

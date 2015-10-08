@@ -167,4 +167,23 @@ public class ParseTest extends Assert {
         assertEquals(128064117L, fsd.getId());
         assertEquals("Int_Hyperdrive_Size4_Class5", fsd.getName());
     }
+
+    @Test
+    public void testParse8() throws Exception {
+        LOG.info("Test parse json8");
+        InputStream is = getClass().getResourceAsStream("/edce/edce8.json");
+        String json = read(is);
+        LOG.trace("Parse json:");
+        LOG.trace("{}", json);
+        EDPacket packet = EDCEParser.parseJSON(json);
+        Commander commander = packet.getCommander();
+        assertNotNull(commander);
+        System system = packet.getLastSystem();
+        assertNotNull(system);
+        Starport starport = packet.getLastStarport();
+        assertNotNull(starport);
+        Ship ship = packet.getShip();
+        assertNotNull(ship);
+    }
+
 }
