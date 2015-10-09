@@ -38,10 +38,10 @@
             <Label fx:id="jumpRange"/>
         </HBox>
     </StackPane>
-    <ToggleButton prefWidth="30" onAction="#toggleShipInfo">
+    <ToggleButton minWidth="30" onAction="#toggleShipInfo">
         <graphic><Glyph text="FontAwesome|SPACE_SHUTTLE"/></graphic>
     </ToggleButton>
-    <ToggleButton prefWidth="30" onAction="#toggleHelper">
+    <ToggleButton minWidth="30" onAction="#toggleHelper">
         <graphic><Glyph text="FontAwesome|ROCKET"/></graphic>
     </ToggleButton>
 </HBox>

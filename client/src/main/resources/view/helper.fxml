@@ -9,49 +9,38 @@
 <?import org.controlsfx.glyphfont.Glyph?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.HelperController"
-      spacing="4" >
+      spacing="4" maxWidth="160">
     <HBox><Label text="Система:" /><Label fx:id="system" /></HBox>
     <HBox><Label text="Станция:" /><Label fx:id="station" /></HBox>
     <HBox><Label text="Время:" /><Label fx:id="time" /></HBox>
     <HBox fx:id="refuelGroup"><Label text="Заправить:" /><Label fx:id="refuel" /></HBox>
-    <HBox fx:id="ordersGroup" maxHeight="100">
-        <VBox>
-            <Label text="Продать:" />
-            <ListView fx:id="sellOrders"/>
-        </VBox>
-        <VBox>
-            <Label text="Купить:" />
-            <ListView fx:id="buyOrders"/>
-        </VBox>
-    </HBox>
-    <VBox fx:id="missionsGroup" maxHeight="100">
+    <VBox fx:id="ordersGroup" maxHeight="240">
+        <Label text="Продать:" />
+        <ListView fx:id="sellOrders"/>
+        <Label text="Купить:" />
+        <ListView fx:id="buyOrders"/>
+    </VBox>
+    <VBox fx:id="missionsGroup" maxHeight="120">
         <Label text="Сдать миссии:" />
         <ListView fx:id="missions"/>
     </VBox>
-    <HBox fx:id="infoGroup">
-        <VBox maxHeight="100">
-            <Label text="Станции:" />
-            <ListView fx:id="stations"/>
-        </VBox>
-        <VBox maxHeight="100">
-            <Label text="Товары:" />
-            <ListView fx:id="sellOffers"/>
-        </VBox>
-    </HBox>
+    <VBox fx:id="infoGroup" maxHeight="240">
+        <Label text="Станции:" />
+        <ListView fx:id="stations"/>
+        <Label text="Товары:" />
+        <ListView fx:id="sellOffers"/>
+    </VBox>
     <HBox>
-        <Button prefWidth="30" onAction="#previous">
+        <Button minWidth="30" onAction="#previous">
             <graphic><Glyph text="FontAwesome|ARROW_LEFT"/></graphic>
         </Button>
-        <Button prefWidth="30" onAction="#pause">
-            <graphic><Glyph text="FontAwesome|PAUSE"/></graphic>
-        </Button>
-        <Button prefWidth="30" onAction="#next">
+        <Button minWidth="30" onAction="#next">
             <graphic><Glyph text="FontAwesome|ARROW_RIGHT"/></graphic>
         </Button>
-        <Button prefWidth="30" onAction="#copy">
+        <Button minWidth="30" onAction="#copy">
             <graphic><Glyph text="FontAwesome|COPY"/></graphic>
         </Button>
-        <ToggleButton fx:id="infoBtn" prefWidth="30">
+        <ToggleButton fx:id="infoBtn" minWidth="30">
             <graphic><Glyph text="FontAwesome|HELP"/></graphic>
         </ToggleButton>
     </HBox>

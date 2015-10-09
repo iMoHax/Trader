@@ -188,11 +188,6 @@ public class HelperController {
     }
 
     @FXML
-    private void pause(){
-
-    }
-
-    @FXML
     private void previous(){
         int index = route.getCurrentEntry();
         if (index > 0){
