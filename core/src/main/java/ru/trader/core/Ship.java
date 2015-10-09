@@ -35,7 +35,7 @@ public class Ship {
 
     public void setCargo(int cargo) {
         this.cargo = cargo;
-        fuelTable = null;
+        clearCache();
     }
 
     public Engine getEngine() {
@@ -48,7 +48,7 @@ public class Ship {
 
     public void setEngine(Engine engine) {
         this.engine = engine;
-        fuelTable = null;
+        clearCache();
     }
 
     public double getTank() {
@@ -57,6 +57,7 @@ public class Ship {
 
     public void setTank(double tank) {
         this.tank = tank;
+        clearCache();
     }
 
     public double getMass() {
@@ -65,7 +66,7 @@ public class Ship {
 
     public void setMass(double mass) {
         this.mass = mass;
-        fuelTable = null;
+        clearCache();
     }
 
     public double getLadenMass(){
@@ -165,6 +166,12 @@ public class Ship {
             fuel = fuel - FUEL_TABLE_STEP;
         }
         this.fuelTable = fuelTable;
+    }
+
+    private void clearCache(){
+        fuelTable = null;
+        maxJumpRange = Double.NaN;
+        ladenJumpRange = Double.NaN;
     }
 
     public double getMaxFuel(double distance){
