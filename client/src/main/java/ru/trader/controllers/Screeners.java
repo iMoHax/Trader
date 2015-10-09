@@ -247,8 +247,8 @@ public class Screeners {
         return dialog.showAndWait();
     }
 
-    public static void showHelper(){
-        helperController.show(helperScreen);
+    public static void toggleHelper(){
+        helperController.show(helperScreen, true);
     }
 
     public static void reinitAll() {

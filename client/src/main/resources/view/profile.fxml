@@ -12,35 +12,36 @@
       spacing="4" >
     <Label text="Имя:" />
     <TextField fx:id="name" />
-    <Label text="Баланс:" />
-    <NumberField fx:id="balance" />
-    <Label text="Система:" />
-    <TextField fx:id="systemText" />
-    <Button fx:id="btnAddSystem"/>
-    <Label text="Станция:" />
-    <ComboBox fx:id="station" />
-    <Button fx:id="btnAddStation"/>
-    <Label text="В доке:" />
-    <CheckBox fx:id="docked" />
-    <Button prefWidth="30" onAction="#showHelper">
-        <graphic><Glyph text="FontAwesome|ROCKET"/></graphic>
-    </Button>
-    <VBox>
-        <HBox>
+    <StackPane>
+        <HBox fx:id="profileInfo">
+            <Label text="Баланс:" />
+            <NumberField fx:id="balance" />
+            <Label text="Система:" />
+            <TextField fx:id="systemText" />
+            <Button fx:id="btnAddSystem"/>
+            <Label text="Станция:" />
+            <ComboBox fx:id="station" />
+            <Button fx:id="btnAddStation"/>
+            <Label text="В доке:" />
+            <CheckBox fx:id="docked" />
+        </HBox>
+        <HBox fx:id="shipInfo">
             <Label text="Трюм:" />
-            <NumberField fx:id="cargo" />
-        </HBox>
-        <HBox>
+            <NumberField fx:id="cargo" maxWidth="60"/>
             <Label text="Топливный бак:" />
-            <NumberField fx:id="tank" />
-        </HBox>
-        <HBox>
+            <NumberField fx:id="tank"  maxWidth="60"/>
             <Label text="Масса:" />
-            <NumberField fx:id="mass" />
-        </HBox>
-        <HBox>
+            <NumberField fx:id="mass" maxWidth="60"/>
             <Label text="Двигатель:" />
-            <ComboBox fx:id="engine" />
+            <ComboBox fx:id="engine" maxWidth="60"/>
+            <Label text="Дальность прыжка, LY:" />
+            <Label fx:id="jumpRange"/>
         </HBox>
-    </VBox>
+    </StackPane>
+    <ToggleButton prefWidth="30" onAction="#toggleShipInfo">
+        <graphic><Glyph text="FontAwesome|SPACE_SHUTTLE"/></graphic>
+    </ToggleButton>
+    <ToggleButton prefWidth="30" onAction="#toggleHelper">
+        <graphic><Glyph text="FontAwesome|ROCKET"/></graphic>
+    </ToggleButton>
 </HBox>

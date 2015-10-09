@@ -279,7 +279,7 @@ public class RouterController {
             if (path.isPresent()){
                 orders.addAll(path.get().getOrders());
                 addRouteToPath(path.get());
-                Screeners.showHelper();
+                Screeners.toggleHelper();
             }
         });
     }

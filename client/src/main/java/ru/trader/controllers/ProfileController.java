@@ -1,13 +1,12 @@
 package ru.trader.controllers;
 
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
 import ru.trader.core.Engine;
 import ru.trader.model.*;
@@ -39,6 +38,12 @@ public class ProfileController {
     @FXML
     private ComboBox<Engine> engine;
     @FXML
+    private Label jumpRange;
+    @FXML
+    private Pane profileInfo;
+    @FXML
+    private Pane shipInfo;
+    @FXML
     private Button btnAddSystem;
     @FXML
     private Button btnAddStation;
@@ -55,14 +60,32 @@ public class ProfileController {
         system = new AutoCompletion<>(systemText, provider, ModelFabric.NONE_SYSTEM, provider.getConverter());
         engine.setItems(FXCollections.observableList(Engine.getEngines()));
         engine.setConverter(new EngineStringConverter());
-        btnAddSystem.setOnAction(e -> Screeners.showSystemsEditor(null));
-        btnAddStation.setOnAction(e -> Screeners.showAddStation(profile.getSystem()));
+        btnAddSystem.setOnAction(e -> {
+            if (ModelFabric.isFake(profile.getSystem())) Screeners.showSystemsEditor(null);
+                else Screeners.showSystemsEditor(profile.getSystem());
+        });
+        btnAddStation.setOnAction(e -> {
+            if (ModelFabric.isFake(profile.getStation())) Screeners.showAddStation(profile.getSystem());
+                else Screeners.showEditStation(profile.getStation());
+        });
+        shipInfo.setVisible(false);
         initListeners();
     }
 
     @FXML
-    private void showHelper(){
-        Screeners.showHelper();
+    private void toggleShipInfo(){
+        if (shipInfo.isVisible()){
+            profileInfo.setVisible(true);
+            shipInfo.setVisible(false);
+        } else {
+            profileInfo.setVisible(false);
+            shipInfo.setVisible(true);
+        }
+    }
+
+    @FXML
+    private void toggleHelper(){
+        Screeners.toggleHelper();
     }
 
     private void consumeChanges(Runnable runnable){
@@ -123,6 +146,11 @@ public class ProfileController {
         profile.shipTankProperty().addListener(tankListener);
         profile.shipCargoProperty().addListener(cargoListener);
         profile.shipEngineProperty().addListener(engineListener);
+        jumpRange.textProperty().bind(Bindings.createStringBinding(()-> {
+            return String.format("%.1f - %.1f", profile.getShipJumpRange(), profile.getMaxShipJumpRange());
+        },
+                    profile.shipMassProperty(), profile.shipCargoProperty(), profile.shipTankProperty(), profile.shipEngineProperty()
+        ));
     }
 
     private void unbind(){
@@ -135,6 +163,7 @@ public class ProfileController {
         profile.shipTankProperty().removeListener(tankListener);
         profile.shipCargoProperty().removeListener(cargoListener);
         profile.shipEngineProperty().removeListener(engineListener);
+        jumpRange.textProperty().unbind();
     }
 
 

@@ -84,7 +84,7 @@ public class RouteSearchController {
                 RouteModel route = path.get();
                 route.addAll(0, missionsList.getItems());
                 profile.setRoute(route);
-                Screeners.showHelper();
+                Screeners.toggleHelper();
             }
         });
     }

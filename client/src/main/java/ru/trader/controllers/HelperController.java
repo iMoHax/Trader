@@ -95,6 +95,7 @@ public class HelperController {
     }
 
     private void setDocked(boolean docked){
+        if (route == null) return;
         if (docked && MainController.getProfile().getStation().equals(entry.getStation())){
             showStationInfo();
         } else {
@@ -127,7 +128,7 @@ public class HelperController {
         resize();
     }
 
-    public void show(Parent content) {
+    public void show(Parent content, boolean toggle) {
         if (stage == null){
             stage = new Stage();
             stage.setScene(new Scene(content));
@@ -136,7 +137,11 @@ public class HelperController {
             addDragListeners(content);
             stage.show();
         } else {
-            stage.show();
+            if (toggle && stage.isShowing()){
+                stage.hide();
+            } else {
+                stage.show();
+            }
         }
     }
 

@@ -41,46 +41,24 @@ public class ProfileModel {
     }
 
     private void initListeners() {
-        name.addListener((ov, o, n) -> {
-            LOG.debug("Change name, old: {}, new: {}", o, n);
-            profile.setName(n);
-        });
-        balance.addListener((ov, o, n) -> {
-            LOG.debug("Change balance, old: {}, new: {}", o, n);
-            profile.setBalance(n.doubleValue());
-        });
+        name.addListener((ov, o, n) -> LOG.debug("Change name, old: {}, new: {}", o, n));
+        balance.addListener((ov, o, n) -> LOG.debug("Change balance, old: {}, new: {}", o, n));
         system.addListener((ov, o, n) -> {
             LOG.debug("Change system, old: {}, new: {}", o, n);
-            profile.setSystem(n != null && n != ModelFabric.NONE_SYSTEM ? n.getSystem() : null);
             if (route.getValue() != null) {getRoute().updateCurrentEntry(n);}
         });
         station.addListener((ov, o, n) -> {
             LOG.debug("Change station, old: {}, new: {}", o, n);
-            profile.setStation(n != null && n != ModelFabric.NONE_STATION ? n.getStation() : null);
             if (route.getValue() != null) {getRoute().updateCurrentEntry(getSystem(), n);}
         });
         docked.addListener((ov, o, n) -> {
             LOG.debug("Change docked, old: {}, new: {}", o, n);
-            profile.setDocked(n);
             if (!n && route.getValue() != null) {getRoute().updateCurrentEntry(getSystem(), getStation(), true);}
         });
-        shipMass.addListener((ov, o, n) -> {
-            LOG.debug("Change ship mass, old: {}, new: {}", o, n);
-            profile.getShip().setMass(n.doubleValue());
-        });
-        shipTank.addListener((ov, o, n) -> {
-            LOG.debug("Change ship tank, old: {}, new: {}", o, n);
-            profile.getShip().setTank(n.doubleValue());
-        });
-        shipCargo.addListener((ov, o, n) -> {
-            LOG.debug("Change ship cargo, old: {}, new: {}", o, n);
-            profile.getShip().setCargo(n.intValue());
-        });
-        shipEngine.addListener((ov, o, n) -> {
-            LOG.debug("Change ship engine, old: {}, new: {}", o, n);
-            profile.getShip().setEngine(n);
-        });
-
+        shipMass.addListener((ov, o, n) -> LOG.debug("Change ship mass, old: {}, new: {}", o, n));
+        shipTank.addListener((ov, o, n) -> LOG.debug("Change ship tank, old: {}, new: {}", o, n));
+        shipCargo.addListener((ov, o, n) -> LOG.debug("Change ship cargo, old: {}, new: {}", o, n));
+        shipEngine.addListener((ov, o, n) -> LOG.debug("Change ship engine, old: {}, new: {}", o, n));
         route.addListener((ov, o, n) -> LOG.debug("Change route, old: {}, new: {}", o, n));
     }
 
@@ -101,6 +79,7 @@ public class ProfileModel {
     }
 
     public void setName(String name) {
+        profile.setName(name);
         this.name.set(name);
     }
 
@@ -113,6 +92,7 @@ public class ProfileModel {
     }
 
     public void setBalance(double balance) {
+        profile.setBalance(balance);
         this.balance.set(balance);
     }
 
@@ -125,6 +105,7 @@ public class ProfileModel {
     }
 
     public void setSystem(SystemModel system) {
+        profile.setSystem(ModelFabric.isFake(system) ? null : system.getSystem());
         this.system.set(system);
     }
 
@@ -137,6 +118,7 @@ public class ProfileModel {
     }
 
     public void setStation(StationModel station) {
+        profile.setStation(ModelFabric.isFake(station) ? null : station.getStation());
         this.station.set(station);
     }
 
@@ -149,6 +131,7 @@ public class ProfileModel {
     }
 
     public void setDocked(boolean docked) {
+        profile.setDocked(docked);
         this.docked.set(docked);
     }
 
@@ -161,6 +144,7 @@ public class ProfileModel {
     }
 
     public void setShipMass(double shipMass) {
+        profile.getShip().setMass(shipMass);
         this.shipMass.set(shipMass);
     }
 
@@ -173,6 +157,7 @@ public class ProfileModel {
     }
 
     public void setShipTank(double shipTank) {
+        profile.getShip().setTank(shipTank);
         this.shipTank.set(shipTank);
     }
 
@@ -185,6 +170,7 @@ public class ProfileModel {
     }
 
     public void setShipCargo(int shipCargo) {
+        profile.getShip().setCargo(shipCargo);
         this.shipCargo.set(shipCargo);
     }
 
@@ -197,6 +183,7 @@ public class ProfileModel {
     }
 
     public void setShipEngine(Engine engine) {
+        profile.getShip().setEngine(engine);
         this.shipEngine.set(engine);
     }
 
@@ -210,6 +197,14 @@ public class ProfileModel {
 
     public void setRoute(RouteModel route) {
         this.route.set(route);
+    }
+
+    public double getShipJumpRange(){
+        return profile.getShip().getJumpRange();
+    }
+
+    public double getMaxShipJumpRange(){
+        return profile.getShip().getMaxJumpRange();
     }
 
     private void refresh(){
