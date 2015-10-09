@@ -64,18 +64,20 @@ public class EDCE {
             if (cache.size() > CACHE_LIMIT){
                 cache.remove(0);
             }
-            checkCmd(packet.getCommander());
-            if (checkSystem(packet.getLastSystem())){
-                if (packet.getCommander().isDocked()) {
-                    checkStarport(packet.getLastStarport());
-                    profile.setDocked(true);
-                } else {
-                    profile.setDocked(false);
-                    profile.setStation(ModelFabric.NONE_STATION);
+            Platform.runLater(() -> {
+                checkCmd(packet.getCommander());
+                if (checkSystem(packet.getLastSystem())){
+                    if (packet.getCommander().isDocked()) {
+                        checkStarport(packet.getLastStarport());
+                        profile.setDocked(true);
+                    } else {
+                        profile.setDocked(false);
+                        profile.setStation(ModelFabric.NONE_STATION);
+                    }
                 }
-            }
-            checkShip(packet.getShip());
-            forceUpdate = false;
+                checkShip(packet.getShip());
+                forceUpdate = false;
+            });
         } catch (IOException e) {
             LOG.warn("Error on parse json:");
             LOG.warn("{}", json);
