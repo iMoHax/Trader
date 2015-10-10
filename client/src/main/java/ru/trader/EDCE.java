@@ -28,6 +28,7 @@ public class EDCE {
     private static ScheduledExecutorService executor;
     private static ScheduledFuture<?> checker;
 
+    private final static int MAX_ERRORS = 5;
     private final static int CACHE_LIMIT = 8;
     private List<EDPacket> cache = new LinkedList<>();
 
@@ -35,6 +36,7 @@ public class EDCE {
     private final MarketModel world;
     private final StationUpdater updater;
     private final EDSession session;
+    private int errors;
     private long interval;
     private boolean forceUpdate;
 
@@ -200,7 +202,7 @@ public class EDCE {
             LOG.trace("EDCE check, waiting {}", waiting);
             try {
                 if (waiting) return;
-                if (session.getLastStatus() == ED_SESSION_STATUS.OK) {
+                if (session.getLastStatus() == ED_SESSION_STATUS.OK || session.getLastStatus() == ED_SESSION_STATUS.ERROR) {
                     LOG.trace("Read profile from ED");
                     session.readProfile(EDCE.this::parseAndCheck);
                 }
@@ -241,6 +243,15 @@ public class EDCE {
                         }
                         waiting = false;
                     });
+                }
+                if (session.getLastStatus() == ED_SESSION_STATUS.ERROR) {
+                    errors++;
+                    LOG.debug("Error on read response, errors count {}", errors);
+                    if (errors >= MAX_ERRORS) {
+                        stop();
+                    }
+                } else {
+                    errors = 0;
                 }
             } catch (Exception ex){
                 LOG.error("",ex);
