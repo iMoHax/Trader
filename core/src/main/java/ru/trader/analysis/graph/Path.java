@@ -96,6 +96,10 @@ public class Path<T extends Connectable<T>> {
         return res;
     }
 
+    public T getSource(){
+        return entries.get(entries.size()-1).getSource().getEntry();
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");

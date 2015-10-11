@@ -2,8 +2,14 @@ package ru.trader.analysis;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.trader.analysis.graph.*;
-import ru.trader.core.*;
+import ru.trader.analysis.graph.ConnectibleGraph;
+import ru.trader.analysis.graph.Edge;
+import ru.trader.analysis.graph.Path;
+import ru.trader.analysis.graph.Vertex;
+import ru.trader.core.Order;
+import ru.trader.core.Profile;
+import ru.trader.core.TransitVendor;
+import ru.trader.core.Vendor;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -269,18 +275,18 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             super(source, target);
             if (path == null) throw new IllegalArgumentException("Path must be no-null");
             paths.add(path);
-            update(path);
+            setFuel(path.getMinFuel(), path.getMaxFuel());
         }
 
         protected VendorsBuildEdge(BuildEdge edge) {
             super(edge.getSource(), edge.getTarget());
             Path<Vendor> path = new Path<>(Collections.singleton(edge));
             paths.add(path);
-            update(path);
+            setFuel(path.getMinFuel(), path.getMaxFuel());
         }
 
         private void update(Path<Vendor> path){
-            setFuel(path.getMinFuel(), path.getMaxFuel());
+            setFuel(Math.min(getMinFuel(), path.getMinFuel()), Math.max(getMaxFuel(), path.getMaxFuel()));
         }
 
         protected void setOrders(List<Order> orders){
@@ -307,7 +313,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         public Path<Vendor> getPath(double fuel){
             Path<Vendor> res = null;
             for (Path<Vendor> p : paths) {
-                if (fuel >= p.getMinFuel() && fuel <= p.getMaxFuel() || getSource().getEntry().canRefill()) {
+                if ((fuel >= p.getMinFuel() || getSource().getEntry().canRefill()) && fuel <= p.getMaxFuel()) {
                     if (getProfile().getPathPriority().equals(Profile.PATH_PRIORITY.FAST)) {
                         if (res == null || (p.getSize() < res.getSize() || p.getSize() == res.getSize() && p.getFuelCost() < res.getFuelCost()) && p.getRefillCount(fuel) <= res.getRefillCount(fuel)) {
                             res = p;
@@ -325,26 +331,27 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
 
         private boolean isRemove(Path<Vendor> path, Path<Vendor> best){
             if (profile.getPathPriority() == Profile.PATH_PRIORITY.FAST){
-                return path.getSize() > best.getSize() || (path.getSize() == best.getSize() && path.getFuelCost() >= best.getFuelCost()) && path.getMinFuel() >= best.getMinFuel() && path.getRefillCount() >= best.getRefillCount();
+                return (path.getSize() > best.getSize() || (path.getSize() == best.getSize() && path.getFuelCost() >= best.getFuelCost()))
+                        && (path.getSource().canRefill() || path.getMinFuel() >= best.getMinFuel() && path.getRefillCount() >= best.getRefillCount())
+                        && path.getMaxFuel() <= best.getMaxFuel();
             }
-            return path.getMinFuel() >= best.getMinFuel() && path.getFuelCost() >= best.getFuelCost() && path.getRefillCount() >= best.getRefillCount();
+            return (path.getSource().canRefill() || path.getMinFuel() >= best.getMinFuel() && path.getRefillCount() >= best.getRefillCount())
+                    && path.getMaxFuel() <= best.getMaxFuel() && path.getFuelCost() >= best.getFuelCost();
         }
 
         public void add(Path<Vendor> path) {
             for (Iterator<Path<Vendor>> iterator = paths.iterator(); iterator.hasNext(); ) {
                 Path<Vendor> p = iterator.next();
-                if (isRemove(p, path)) {
-                    iterator.remove();
+                if (isRemove(path, p)) {
+                    return;
                 } else {
-                    if (isRemove(path, p)) {
-                        return;
+                    if (isRemove(p, path)) {
+                        iterator.remove();
                     }
                 }
             }
             paths.add(path);
-            if (getMinFuel() > path.getMinFuel()) {
-                update(path);
-            }
+            update(path);
         }
     }
 
