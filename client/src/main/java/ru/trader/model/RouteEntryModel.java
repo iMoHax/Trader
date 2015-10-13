@@ -79,6 +79,18 @@ public class RouteEntryModel {
         return entry.isTransit();
     }
 
+    public boolean isBuy(){
+        return !orders.isEmpty();
+    }
+
+    public boolean isSell(){
+        return !sellOrders.isEmpty();
+    }
+
+    public boolean isMissionTarget(){
+        return !missions.isEmpty();
+    }
+
     public ObservableList<OrderModel> orders() {
         return orders;
     }

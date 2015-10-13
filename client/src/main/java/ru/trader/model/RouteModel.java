@@ -63,6 +63,10 @@ public class RouteModel {
         return entries.get(index);
     }
 
+    public Collection<RouteEntryModel> getEntries(){
+        return entries;
+    }
+
     public double getDistance() {
         return _route.getDistance();
     }

@@ -55,45 +55,50 @@ HBox.fields-group hbox-margin{
 
 
 /*   Path      */
-.path {
+.route, .path {
     -fx-alignment: center-left;
     -fx-spacing: 5px;
     -fx-fill-height: true;
 }
 
-.path-system {
+.route-system, .path-system {
     -fx-alignment: center-left;
     -fx-text-alignment: left;
 }
 
-.path-text {
+.route-text, .path-text {
     -fx-alignment: center;
 }
 
-.path-system-text {
+.route-system-text, .path-system-text {
 }
 
-.path-station-text {
+.route-station-text, .path-station-text {
     -fx-font-size: 8pt;
 }
 
-.path-icons {
+.route-icons, .path-icons {
     -fx-alignment: center;
 }
 
-.path-track {
+.route-track, .path-track {
     -fx-padding: 0 8;
     -fx-alignment: center;
 }
 
-.path-track .glyph-font {
+.route-track .glyph-font, .path-track .glyph-font {
     -fx-font-family: FontAwesome;
     -fx-font-size: 16pt;
 }
 
 
-.path-track-text {
+.route-track-text, .path-track-text {
     -fx-font-size: 7pt;
+}
+
+.route-active {
+    -fx-border-style: solid;
+    -fx-background-color: lightskyblue;
 }
 
 .path-pane {

@@ -10,10 +10,38 @@
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.RouteTrackController"
       spacing="4" >
-        <fx:include fx:id="missions" source="missions.fxml"/>
-        <HBox>
-            <ListView fx:id="missionsList" />
-            <Button prefWidth="30" onAction="#removeMission"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
-            <Button prefWidth="80" text="Добавить" onAction="#addMissions" />
-        </HBox>
+    <HBox fx:id="track" minHeight="100"/>
+    <ToggleButton minWidth="30" onAction="#toggleEdit">
+        <graphic><Glyph text="FontAwesome|EDIT"/></graphic>
+    </ToggleButton>
+    <StackPane>
+        <VBox fx:id="editGroup">
+            <fx:include fx:id="missions" source="missions.fxml"/>
+            <HBox>
+                <ListView fx:id="addMissionsList" maxHeight="150"/>
+                <Button prefWidth="30" onAction="#removeMission"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
+                <Button prefWidth="80" text="Добавить" onAction="#addMissions" />
+            </HBox>
+        </VBox>
+        <VBox fx:id="infoGroup">
+            <HBox><Label text="Система:" /><Label fx:id="system" /></HBox>
+            <HBox><Label text="Станция:" /><Label fx:id="station" /></HBox>
+            <HBox><Label text="Время:" /><Label fx:id="time" /></HBox>
+            <HBox fx:id="refuelGroup"><Label text="Заправить:" /><Label fx:id="refuel" /></HBox>
+            <HBox fx:id="ordersGroup" maxHeight="120">
+                <VBox>
+                    <Label text="Продать:" />
+                    <ListView fx:id="sellOrders"/>
+                </VBox>
+                <VBox>
+                    <Label text="Купить:" />
+                    <ListView fx:id="buyOrders"/>
+                </VBox>
+            </HBox>
+            <VBox fx:id="missionsGroup" maxHeight="120">
+                <Label text="Сдать миссии:" />
+                <ListView fx:id="missionsList" maxHeight="150"/>
+            </VBox>
+        </VBox>
+    </StackPane>
 </VBox>
