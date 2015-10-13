@@ -120,16 +120,24 @@
             <item name="Hauler" id="i82"/>
             <item name="Eagle" id="i83"/>
             <item name="Adder" id="i84"/>
+            <item name="Imperial Eagle" id="i252"/>
             <item name="Viper" id="i85"/>
             <item name="Cobra MK3" id="i86"/>
+            <item name="Diamondback Scout" id="i247"/>
             <item name="TYPE-6" id="i87"/>
-            <item name="TYPE-7" id="i88"/>
-            <item name="TYPE-9" id="i89"/>
+            <item name="Diamondback Explorer" id="i246"/>
+            <item name="Vulture" id="i253"/>
             <item name="ASP" id="i90"/>
-            <item name="Python" id="i91"/>
-            <item name="Orca" id="i92"/>
+            <item name="TYPE-7" id="i88"/>
             <item name="Imperial Clipper" id="i93"/>
+            <item name="Imperial Courier" id="i251"/>
             <item name="Federal Dropship" id="i94"/>
+            <item name="Federal Assault Ship" id="i248"/>
+            <item name="Federal Gunship" id="i249"/>
+            <item name="Orca" id="i92"/>
+            <item name="Fer-de-Lance" id="i250"/>
+            <item name="Python" id="i91"/>
+            <item name="TYPE-9" id="i89"/>
             <item name="Anaconda" id="i95"/>
         </group>
         <group name="powerplant" type="OUTFIT">

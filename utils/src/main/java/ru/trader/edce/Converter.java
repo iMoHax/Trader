@@ -9,6 +9,7 @@ public class Converter {
 
     private final static Map<Long, String> ITEM_ID = new HashMap<>(85, 0.9f);
     private final static Map<String, String> GROUP_ID = new HashMap<>(10, 0.9f);
+    private final static Map<Long, String> SHIP_ID = new HashMap<>(30, 0.9f);
 
     static {
         ITEM_ID.put(128049204L, "explosives");
@@ -112,6 +113,30 @@ public class Converter {
         GROUP_ID.put("Waste ", "waste");
         GROUP_ID.put("Weapons", "weapons");
 
+
+        SHIP_ID.put(128049249L,"Sidewinder");
+        SHIP_ID.put(128049261L, "Hauler");
+        SHIP_ID.put(128049255L, "Eagle");
+        SHIP_ID.put(128049267L, "Adder");
+ //       SHIP_ID.put("Imperial Eagle");
+        SHIP_ID.put(128049273L, "Viper");
+        SHIP_ID.put(128049279L, "Cobra MK3");
+        SHIP_ID.put(128671217L, "Diamondback Scout");
+        SHIP_ID.put(128049285L, "TYPE-6");
+ //       SHIP_ID.put("Diamondback Explorer");
+        SHIP_ID.put(128049309L, "Vulture");
+        SHIP_ID.put(128049303L, "ASP");
+ //       SHIP_ID.put("TYPE-7");
+ //       SHIP_ID.put("Imperial Clipper");
+ //       SHIP_ID.put("Imperial Courier");
+        SHIP_ID.put(128049321L, "Federal Dropship");
+ //       SHIP_ID.put("Federal Assault Ship");
+ //       SHIP_ID.put("Federal Gunship");
+ //       SHIP_ID.put("Orca");
+ //       SHIP_ID.put("Fer-de-Lance");
+        SHIP_ID.put(128049339L, "Python");
+ //       SHIP_ID.put("TYPE-9");
+        SHIP_ID.put(128049363L, "Anaconda");
     }
 
     public static String getItemId(Commodity commodity){
