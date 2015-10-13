@@ -116,29 +116,29 @@
             <item name="reactivearmour" id="i80"/>
         </group>
         <group name="ships" type="SHIP">
-            <item name="Sidewinder" id="i81"/>
-            <item name="Hauler" id="i82"/>
-            <item name="Eagle" id="i83"/>
-            <item name="Adder" id="i84"/>
-            <item name="Imperial Eagle" id="i252"/>
-            <item name="Viper" id="i85"/>
-            <item name="Cobra MK3" id="i86"/>
-            <item name="Diamondback Scout" id="i247"/>
-            <item name="TYPE-6" id="i87"/>
-            <item name="Diamondback Explorer" id="i246"/>
-            <item name="Vulture" id="i253"/>
-            <item name="ASP" id="i90"/>
-            <item name="TYPE-7" id="i88"/>
-            <item name="Imperial Clipper" id="i93"/>
-            <item name="Imperial Courier" id="i251"/>
-            <item name="Federal Dropship" id="i94"/>
-            <item name="Federal Assault Ship" id="i248"/>
-            <item name="Federal Gunship" id="i249"/>
-            <item name="Orca" id="i92"/>
-            <item name="Fer-de-Lance" id="i250"/>
-            <item name="Python" id="i91"/>
-            <item name="TYPE-9" id="i89"/>
-            <item name="Anaconda" id="i95"/>
+            <item name="sidewinder" id="i81"/>
+            <item name="eagle" id="i83"/>
+            <item name="hauler" id="i82"/>
+            <item name="adder" id="i84"/>
+            <item name="imperial_eagle" id="i252"/>
+            <item name="viper" id="i85"/>
+            <item name="cobraMk3" id="i86"/>
+            <item name="diamondback_scout" id="i247"/>
+            <item name="type6" id="i87"/>
+            <item name="diamondback_explorer" id="i246"/>
+            <item name="imperial_courier" id="i251"/>
+            <item name="vulture" id="i253"/>
+            <item name="asp" id="i90"/>
+            <item name="federal_dropship" id="i94"/>
+            <item name="type7" id="i88"/>
+            <item name="federal_assault ship" id="i248"/>
+            <item name="imperial_clipper" id="i93"/>
+            <item name="federal_gunship" id="i249"/>
+            <item name="orca" id="i92"/>
+            <item name="fer_de_lance" id="i250"/>
+            <item name="python" id="i91"/>
+            <item name="type9" id="i89"/>
+            <item name="anaconda" id="i95"/>
         </group>
         <group name="powerplant" type="OUTFIT">
             <item name="Power Plant A1" id="i96"/>
