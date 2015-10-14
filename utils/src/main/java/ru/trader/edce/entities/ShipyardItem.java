@@ -28,4 +28,13 @@ public class ShipyardItem {
     public void setBasevalue(long basevalue) {
         this.basevalue = basevalue;
     }
+
+    @Override
+    public String toString() {
+        return "ShipyardItem{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", basevalue=" + basevalue +
+                "} ";
+    }
 }

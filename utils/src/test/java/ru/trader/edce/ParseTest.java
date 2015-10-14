@@ -186,4 +186,23 @@ public class ParseTest extends Assert {
         assertNotNull(ship);
     }
 
+    @Test
+    public void testParseShipyard() throws Exception {
+        LOG.info("Test parse json9");
+        InputStream is = getClass().getResourceAsStream("/edce/edce9.json");
+        String json = read(is);
+        LOG.trace("Parse json:");
+        LOG.trace("{}", json);
+        EDPacket packet = EDCEParser.parseJSON(json);
+        Commander commander = packet.getCommander();
+        assertNotNull(commander);
+        System system = packet.getLastSystem();
+        assertNotNull(system);
+        Starport starport = packet.getLastStarport();
+        assertNotNull(starport);
+        Shipyard shipyard = starport.getShips();
+        assertNotNull(shipyard);
+        assertEquals(23, shipyard.getShips().size());
+    }
+
 }

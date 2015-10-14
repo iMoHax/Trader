@@ -1,6 +1,7 @@
 package ru.trader.edce;
 
 import ru.trader.edce.entities.Commodity;
+import ru.trader.edce.entities.ShipyardItem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -114,29 +115,29 @@ public class Converter {
         GROUP_ID.put("Weapons", "weapons");
 
 
-        SHIP_ID.put(128049249L,"Sidewinder");
-        SHIP_ID.put(128049261L, "Hauler");
-        SHIP_ID.put(128049255L, "Eagle");
-        SHIP_ID.put(128049267L, "Adder");
- //       SHIP_ID.put("Imperial Eagle");
-        SHIP_ID.put(128049273L, "Viper");
-        SHIP_ID.put(128049279L, "Cobra MK3");
-        SHIP_ID.put(128671217L, "Diamondback Scout");
-        SHIP_ID.put(128049285L, "TYPE-6");
- //       SHIP_ID.put("Diamondback Explorer");
-        SHIP_ID.put(128049309L, "Vulture");
-        SHIP_ID.put(128049303L, "ASP");
- //       SHIP_ID.put("TYPE-7");
- //       SHIP_ID.put("Imperial Clipper");
- //       SHIP_ID.put("Imperial Courier");
-        SHIP_ID.put(128049321L, "Federal Dropship");
- //       SHIP_ID.put("Federal Assault Ship");
- //       SHIP_ID.put("Federal Gunship");
- //       SHIP_ID.put("Orca");
- //       SHIP_ID.put("Fer-de-Lance");
-        SHIP_ID.put(128049339L, "Python");
- //       SHIP_ID.put("TYPE-9");
-        SHIP_ID.put(128049363L, "Anaconda");
+        SHIP_ID.put(128049249L,"sidewinder");
+        SHIP_ID.put(128049261L, "hauler");
+        SHIP_ID.put(128049255L, "eagle");
+        SHIP_ID.put(128049267L, "adder");
+        SHIP_ID.put(128672138L, "imperial_eagle");
+        SHIP_ID.put(128049273L, "viper");
+        SHIP_ID.put(128049279L, "cobraMk3");
+        SHIP_ID.put(128671217L, "diamondback_scout");
+        SHIP_ID.put(128049285L, "type6");
+        SHIP_ID.put(128671831L, "diamondback_explorer");
+        SHIP_ID.put(128049309L, "vulture");
+        SHIP_ID.put(128049303L, "asp");
+        SHIP_ID.put(128049297L, "type7");
+        SHIP_ID.put(128049315L, "imperial_clipper");
+        SHIP_ID.put(128671223L, "imperial_courier");
+        SHIP_ID.put(128049321L, "federal_dropship");
+        SHIP_ID.put(128672145L, "federal_assault_ship");
+        SHIP_ID.put(128672152L, "federal_gunship");
+        SHIP_ID.put(128049327L, "orca");
+        SHIP_ID.put(128049351L, "fer_de_lance");
+        SHIP_ID.put(128049339L, "python");
+        SHIP_ID.put(128049333L, "type9");
+        SHIP_ID.put(128049363L, "anaconda");
     }
 
     public static String getItemId(Commodity commodity){
@@ -149,6 +150,10 @@ public class Converter {
 
     public static String getGroupId(String edName){
         return GROUP_ID.get(edName);
+    }
+
+    public static String getShipId(ShipyardItem ship){
+        return SHIP_ID.get(ship.getId());
     }
 
 }

@@ -8,6 +8,7 @@ public class Starport {
     private String faction;
     private List<Commodity> commodities = new ArrayList<>();
     private Map<String, Module> modules = new LinkedHashMap<>();
+    private Shipyard ships;
 
     public long getId() {
         return id;
@@ -47,6 +48,14 @@ public class Starport {
 
     public void setModules(Map<String, Module> modules) {
         this.modules = modules;
+    }
+
+    public Shipyard getShips() {
+        return ships;
+    }
+
+    public void setShips(Shipyard ships) {
+        this.ships = ships;
     }
 
     @Override

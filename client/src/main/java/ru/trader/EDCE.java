@@ -150,6 +150,27 @@ public class EDCE {
                 LOG.warn("Not found {}, id={}", commodity, id);
             }
         }
+        Shipyard shipyard = starport.getShips();
+        if (shipyard != null){
+            for (ShipyardItem ship : shipyard.getShips()) {
+                String id = Converter.getShipId(ship);
+                if (id.isEmpty()){
+                    LOG.debug("{} is ignored, skip", ship.getName());
+                    continue;
+                }
+                Optional<ItemModel> item = world.getItem(id);
+                if (item.isPresent()){
+                    Optional<StationUpdater.FakeOffer> offer = updater.getOffer(item.get());
+                    if (offer.isPresent()){
+                        fillShipOffer(offer.get(), ship);
+                    } else {
+                        LOG.error("Not found offer in updater, item: {}", item.get());
+                    }
+                } else {
+                    LOG.warn("Not found {}, id={}", ship, id);
+                }
+            }
+        }
         StationModel res = updater.commit();
         updater.reset();
         return res;
@@ -157,9 +178,16 @@ public class EDCE {
 
     private void fillOffers(StationUpdater.FakeOffer offer, Commodity commodity){
         offer.setSprice(commodity.getBuyPrice());
+        offer.setSupply(commodity.getStock());
         offer.setBprice(commodity.getSellPrice());
         offer.setDemand(commodity.getDemand());
-        offer.setSupply(commodity.getStock());
+    }
+
+    private void fillShipOffer(StationUpdater.FakeOffer offer, ShipyardItem ship){
+        offer.setSprice(ship.getBasevalue());
+        offer.setSupply(1);
+        offer.setBprice(0);
+        offer.setDemand(0);
     }
 
     private void checkShip(Ship ship){
