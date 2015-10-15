@@ -7,6 +7,7 @@ import ru.trader.core.Profile;
 import ru.trader.core.Ship;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class ConnectibleGraph<T extends Connectable<T>> extends AbstractGraph<T> {
     private final static Logger LOG = LoggerFactory.getLogger(ConnectibleGraph.class);
@@ -33,6 +34,12 @@ public class ConnectibleGraph<T extends Connectable<T>> extends AbstractGraph<T>
 
     public void build(T start, Collection<T> set){
         super.build(start, set, profile.getJumps(), getShip().getTank());
+    }
+
+    @Override
+    protected Collection<T> filtered(Collection<T> set) {
+        final double maxDistance = getShip().getMaxJumpRange() * profile.getJumps();
+        return set.parallelStream().filter(v -> root.getEntry().getDistance(v) <= maxDistance).collect(Collectors.toList());
     }
 
     protected class ConnectibleGraphBuilder extends GraphBuilder {

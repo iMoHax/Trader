@@ -28,10 +28,15 @@ public abstract class AbstractGraph<T> implements Graph<T> {
         callback.startBuild(start);
         minJumps = 1;
         root = getInstance(start, maxDeep, maxDeep);
-        GraphBuilder builder = createGraphBuilder(root, set, maxDeep - 1, limit);
+        Collection<T> filteredSet = filtered(set);
+        GraphBuilder builder = createGraphBuilder(root, filteredSet, maxDeep - 1, limit);
         builder.compute();
         onEnd();
         callback.endBuild();
+    }
+
+    protected Collection<T> filtered(Collection<T> set){
+        return set;
     }
 
     protected void onEnd(){
