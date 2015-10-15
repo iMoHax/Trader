@@ -1,6 +1,5 @@
 package ru.trader.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -15,6 +14,9 @@ import ru.trader.model.SystemModel;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.view.support.Localization;
 import ru.trader.view.support.NumberField;
+import ru.trader.view.support.autocomplete.AutoCompletion;
+import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
+import ru.trader.view.support.autocomplete.SystemsProvider;
 import ru.trader.view.support.cells.CustomListCell;
 import java.util.Optional;
 
@@ -22,15 +24,17 @@ public class FilterController {
     private final static Logger LOG = LoggerFactory.getLogger(FilterController.class);
 
     @FXML
-    private ComboBox<SystemModel> center;
+    private TextField centerText;
+    private AutoCompletion<SystemModel> center;
     @FXML
     private NumberField radius;
     @FXML
     private NumberField distance;
     @FXML
-    private ComboBox<SystemModel> system;
+    private TextField systemText;
+    private AutoCompletion<SystemModel> system;
     @FXML
-    private ComboBox<StationModel> station;
+    private ComboBox<String> station;
     @FXML
     private CheckBox cbMarket;
     @FXML
@@ -56,15 +60,29 @@ public class FilterController {
 
     @FXML
     private void initialize(){
-        system.valueProperty().addListener((ov, o, n) -> station.setItems(n.getStationsList()));
-        excludes.setCellFactory(new CustomListCell<>(s -> String.format("%s (%s)", s.getSystem().getName(), s.getName())));
         init();
+        excludes.setCellFactory(new CustomListCell<>(s -> String.format("%s (%s)", s.getSystem().getName(), s.getName())));
+        system.valueProperty().addListener((ov, o, n) -> {
+            station.setItems(n.getStationNamesList());
+            station.getSelectionModel().selectFirst();
+        });
     }
 
     void init(){
         market = MainController.getMarket();
-        center.setItems(market.systemsListProperty());
-        system.setItems(market.systemsProperty());
+        SystemsProvider provider = market.getSystemsProvider();
+        if (system == null){
+            system = new AutoCompletion<>(systemText, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
+        } else {
+            system.setSuggestions(provider.getPossibleSuggestions());
+            system.setConverter(provider.getConverter());
+        }
+        if (center == null){
+            center = new AutoCompletion<>(centerText, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
+        } else {
+            center.setSuggestions(provider.getPossibleSuggestions());
+            center.setConverter(provider.getConverter());
+        }
     }
 
     private void createDialog(Parent owner, Parent content){
@@ -102,7 +120,7 @@ public class FilterController {
 
     private void clear(){
         this.filter = null;
-        center.getSelectionModel().clearSelection();
+        center.setValue(ModelFabric.NONE_SYSTEM);
         radius.clear();
         distance.clear();
         excludes.getItems().clear();
@@ -111,7 +129,7 @@ public class FilterController {
     private void save() {
         SystemModel s = center.getValue();
         LOG.trace("Old filter", filter);
-        filter.setCenter(s == ModelFabric.NONE_SYSTEM ? null : market.getModeler().get(s));
+        filter.setCenter(ModelFabric.isFake(s) ? null : market.getModeler().get(s));
         filter.setRadius(radius.getValue().doubleValue());
         filter.setDistance(distance.getValue().doubleValue());
         if (cbMarket.isSelected()) filter.add(SERVICE_TYPE.MARKET); else filter.remove(SERVICE_TYPE.MARKET);
@@ -145,11 +163,12 @@ public class FilterController {
         return result;
     }
 
-    public void add(ActionEvent actionEvent) {
+    @FXML
+    private void add() {
         SystemModel s = system.getValue();
         if (s != null){
-            StationModel st = station.getValue();
-            if (st != null && st != ModelFabric.NONE_STATION){
+            StationModel st = s.get(station.getValue());
+            if (!ModelFabric.isFake(st)){
                 excludes.getItems().add(st);
             } else {
                 excludes.getItems().addAll(s.getStations());
@@ -157,14 +176,16 @@ public class FilterController {
         }
     }
 
-    public void remove(ActionEvent actionEvent) {
+    @FXML
+    private void remove() {
         int index = excludes.getSelectionModel().getSelectedIndex();
         if (index >= 0){
             excludes.getItems().remove(index);
         }
     }
 
-    public void clean(ActionEvent actionEvent) {
+    @FXML
+    private void clean() {
         excludes.getItems().clear();
     }
 

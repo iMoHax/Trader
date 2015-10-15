@@ -18,7 +18,7 @@ public class StationStringConverter extends StringConverter<StationModel> {
 
     @Override
     public String toString(StationModel station) {
-        return station.getSystem().getName()+": "+station.getName();
+        return station.getFullName();
     }
 
     @Override

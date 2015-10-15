@@ -17,6 +17,9 @@ import ru.trader.model.support.ChangeMarketListener;
 import ru.trader.view.support.FactionStringConverter;
 import ru.trader.view.support.GovernmentStringConverter;
 import ru.trader.view.support.ViewUtils;
+import ru.trader.view.support.autocomplete.AutoCompletion;
+import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
+import ru.trader.view.support.autocomplete.SystemsProvider;
 
 import java.util.List;
 
@@ -25,12 +28,12 @@ public class OffersController {
     private final static Logger LOG = LoggerFactory.getLogger(OffersController.class);
 
     private StationModel station;
-    private SystemModel system;
 
     @FXML
     private Insets stationsMargin;
     @FXML
-    private ListView<SystemModel> systems;
+    private TextField systemText;
+    private AutoCompletion<SystemModel> system;
     @FXML
     private SegmentedButton stationsBar;
     @FXML
@@ -68,13 +71,10 @@ public class OffersController {
     // инициализируем форму данными
     @FXML
     private void initialize() {
-        systems.getSelectionModel().selectedItemProperty().addListener((ob, oldValue, newValue) ->{
-            if (newValue != null){
-                LOG.info("Change system to {}", newValue);
-                fillDetails(newValue);
-            } else {
-                systems.getSelectionModel().select(oldValue);
-            }
+        init();
+        system.valueProperty().addListener((ob, oldValue, newValue) -> {
+            LOG.info("Change system to {}", newValue);
+            fillDetails(newValue);
         });
         stationsGrp.selectedToggleProperty().addListener((v, o, n) -> {
             if (n != null){
@@ -103,23 +103,26 @@ public class OffersController {
         });
         BindingsHelper.setTableViewItems(tblSell, sells);
         BindingsHelper.setTableViewItems(tblBuy, buys);
-
-        init();
     }
 
     void init(){
         station = null;
-        system = null;
         MarketModel market = MainController.getMarket();
-        market.getNotificator().add(new OffersChangeListener());
-        systems.setItems(market.systemsProperty());
-        systems.getSelectionModel().selectFirst();
+        //TODO: create global notificator
+        market.getNotificator().add(offersChangeListener);
+        SystemsProvider provider = market.getSystemsProvider();
+        if (system == null){
+            system = new AutoCompletion<>(systemText, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
+        } else {
+            system.setSuggestions(provider.getPossibleSuggestions());
+            system.setConverter(provider.getConverter());
+        }
     }
 
     private void fillDetails(SystemModel system){
-        this.system = system;
-        List<StationModel> stations = system.getStations();
+        if (ModelFabric.isFake(system)) return;
         stationsBar.getButtons().clear();
+        List<StationModel> stations = system.getStations();
         stations.forEach(s -> stationsBar.getButtons().add(buildStationNode(s)));
         if (!stations.isEmpty()){
             stationsBar.getButtons().get(0).setSelected(true);
@@ -186,19 +189,21 @@ public class OffersController {
     }
 
     public SystemModel getSystem() {
-        return system;
+        return system.getValue();
     }
 
     public StationModel getStation() {
         return station;
     }
 
-    public void addStation(ActionEvent actionEvent) {
-        Screeners.showAddStation(system);
+    @FXML
+    private void addStation() {
+        Screeners.showAddStation(getSystem());
     }
 
-    public void editStation(ActionEvent actionEvent) {
-        Screeners.showEditStation(station);
+    @FXML
+    private void editStation() {
+        Screeners.showEditStation(getStation());
     }
 
 
@@ -226,10 +231,11 @@ public class OffersController {
         tblBuy.getItems().forEach(OfferModel::refresh);
     }
 
-    private class OffersChangeListener extends ChangeMarketListener {
+    private final ChangeMarketListener offersChangeListener = new ChangeMarketListener() {
 
         @Override
         public void priceChange(OfferModel offer, double oldPrice, double newPrice) {
+            StationModel station = getStation();
             if (station.hasBuy(offer.getItem()) || station.hasSell(offer.getItem())){
                 ViewUtils.doFX(OffersController.this::sort);
             }
@@ -237,7 +243,7 @@ public class OffersController {
 
         @Override
         public void add(OfferModel offer) {
-            if (offer.getStation().equals(station)){
+            if (offer.getStation().equals(getStation())){
                 ViewUtils.doFX(()-> addOffer(offer));
             }
         }
@@ -253,7 +259,7 @@ public class OffersController {
 
         @Override
         public void remove(OfferModel offer) {
-            if (offer.getStation().equals(station)){
+            if (offer.getStation().equals(getStation())){
                 ViewUtils.doFX(() -> removeOffer(offer));
             }
         }
@@ -267,6 +273,5 @@ public class OffersController {
                 sort();
             });
         }
-
-    }
+    };
 }

@@ -1,11 +1,8 @@
 package ru.trader.model;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
-import ru.trader.model.support.ModelBindings;
 
 import java.util.Collection;
 import java.util.List;
@@ -44,6 +41,10 @@ public class StationModel {
         if (getName().equals(value)) return;
         LOG.info("Change name station {} to {}", station, value);
         station.setName(value);
+    }
+
+    public String getFullName(){
+        return station.getFullName();
     }
 
     public FACTION getFaction() {return station.getFaction();}
@@ -131,10 +132,6 @@ public class StationModel {
 
     public double getDistance(StationModel other){
         return station.getDistance(other.station);
-    }
-
-    public StringBinding asString(){
-        return Bindings.createStringBinding(() -> getSystem().getName()+": "+getName());
     }
 
     @Override

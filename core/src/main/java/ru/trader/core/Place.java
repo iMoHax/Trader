@@ -5,6 +5,7 @@ import ru.trader.analysis.graph.Connectable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public interface Place extends Connectable<Place> {
 
@@ -32,6 +33,9 @@ public interface Place extends Connectable<Place> {
         } else {
             return get();
         }
+    }
+    default Collection<String> getVendorNames(){
+        return get().stream().map(Vendor::getName).collect(Collectors.toList());
     }
 
     default Vendor get(String name){

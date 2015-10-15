@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import ru.trader.analysis.CrawlerSpecificator;
 import ru.trader.model.*;
 import ru.trader.view.support.autocomplete.AutoCompletion;
+import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
 
 import java.util.Optional;
@@ -18,12 +19,12 @@ public class RouteSearchController {
     private TextField fromSystemText;
     private AutoCompletion<SystemModel> fromSystem;
     @FXML
-    private ComboBox<StationModel> fromStation;
+    private ComboBox<String> fromStation;
     @FXML
     private TextField toSystemText;
     private AutoCompletion<SystemModel> toSystem;
     @FXML
-    private ComboBox<StationModel> toStation;
+    private ComboBox<String> toStation;
     @FXML
     private CheckBox cbFast;
     @FXML
@@ -37,43 +38,60 @@ public class RouteSearchController {
     @FXML
     private void initialize(){
         init();
+        profile = MainController.getProfile();
         missionsList.setItems(missionsController.getMissions());
         initListeners();
     }
 
     private void init(){
         market = MainController.getMarket();
-        profile = MainController.getProfile();
-        SystemsProvider provider = new SystemsProvider(market);
-        fromSystem = new AutoCompletion<>(fromSystemText, provider, ModelFabric.NONE_SYSTEM, provider.getConverter());
-        provider = new SystemsProvider(market);
-        toSystem = new AutoCompletion<>(toSystemText, provider, ModelFabric.NONE_SYSTEM, provider.getConverter());
+        SystemsProvider provider = market.getSystemsProvider();
+        if (fromSystem == null){
+            fromSystem = new AutoCompletion<>(fromSystemText, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
+        } else {
+            fromSystem.setSuggestions(provider.getPossibleSuggestions());
+            fromSystem.setConverter(provider.getConverter());
+        }
+        if (toSystem == null){
+            toSystem = new AutoCompletion<>(toSystemText, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
+        } else {
+            toSystem.setSuggestions(provider.getPossibleSuggestions());
+            toSystem.setConverter(provider.getConverter());
+        }
+        fromStation.setValue(ModelFabric.NONE_STATION.getName());
+        toStation.setValue(ModelFabric.NONE_STATION.getName());
     }
 
     private void initListeners(){
-        fromSystem.completionProperty().addListener((ov, o , n) -> fromStation.setItems(n.getStationsList()));
-        fromStation.valueProperty().addListener((ov, o , n) -> missionsController.setStation(n));
-        toSystem.completionProperty().addListener((ov, o , n) -> toStation.setItems(n.getStationsList()));
+        fromSystem.valueProperty().addListener((ov, o , n) -> {
+            fromStation.setItems(n.getStationNamesList());
+            fromStation.getSelectionModel().selectFirst();
+        });
+        fromStation.valueProperty().addListener((ov, o , n) -> missionsController.setStation(fromSystem.getValue().get(n)));
+        toSystem.valueProperty().addListener((ov, o , n) -> {
+            toStation.setItems(n.getStationNamesList());
+            toStation.getSelectionModel().selectFirst();
+        });
     }
 
     @FXML
     private void currentAsFrom(){
         fromSystem.setValue(profile.getSystem());
-        fromStation.setValue(profile.getStation());
+        fromStation.setValue(profile.getStation().getName());
     }
 
     @FXML
     private void loop(){
-        toSystem.setValue(fromSystem.getCompletion());
+        toSystem.setValue(fromSystem.getValue());
         toStation.setValue(fromStation.getValue());
     }
 
     @FXML
     private void search(){
-        SystemModel f = fromSystem.getCompletion();
-        SystemModel t = toSystem.getCompletion();
-        StationModel fS = fromStation.getValue();
-        StationModel tS = toStation.getValue();
+        SystemModel f = fromSystem.getValue();
+        SystemModel t = toSystem.getValue();
+        StationModel fS = f != null ? f.get(fromStation.getValue()) : ModelFabric.NONE_STATION;
+        StationModel tS = t != null ? t.get(toStation.getValue()) : ModelFabric.NONE_STATION;
 
         CrawlerSpecificator specificator = new CrawlerSpecificator();
         specificator.setByTime(cbFast.isSelected());

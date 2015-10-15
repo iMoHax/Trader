@@ -23,12 +23,12 @@
     </columnConstraints>
 
     <Label text="%sEditor.text.orientates" prefWidth="170" GridPane.rowSpan="2"/>
-    <ComboBox fx:id="system1" prefWidth="160" GridPane.columnIndex="1" />
-    <ComboBox fx:id="system2" prefWidth="160" GridPane.columnIndex="2" />
-    <ComboBox fx:id="system3" prefWidth="160" GridPane.columnIndex="3" />
-    <ComboBox fx:id="system4" prefWidth="160" GridPane.rowIndex="1" GridPane.columnIndex="1" />
-    <ComboBox fx:id="system5" prefWidth="160" GridPane.rowIndex="1" GridPane.columnIndex="2" />
-    <ComboBox fx:id="system6" prefWidth="160" GridPane.rowIndex="1" GridPane.columnIndex="3" />
+    <TextField fx:id="system1Text" prefWidth="160" GridPane.columnIndex="1" />
+    <TextField fx:id="system2Text" prefWidth="160" GridPane.columnIndex="2" />
+    <TextField fx:id="system3Text" prefWidth="160" GridPane.columnIndex="3" />
+    <TextField fx:id="system4Text" prefWidth="160" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+    <TextField fx:id="system5Text" prefWidth="160" GridPane.rowIndex="1" GridPane.columnIndex="2" />
+    <TextField fx:id="system6Text" prefWidth="160" GridPane.rowIndex="1" GridPane.columnIndex="3" />
 
     <HBox GridPane.rowIndex="2" spacing="4">
         <Button prefWidth="30" onAction="#add">

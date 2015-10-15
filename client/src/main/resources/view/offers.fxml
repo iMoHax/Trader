@@ -18,16 +18,7 @@
     </columnConstraints>
 
     <TitledPane GridPane.rowSpan="3" text="%market.systems" minWidth="270" prefHeight="590" collapsible="false">
-        <ListView fx:id="systems">
-            <contextMenu>
-                <ContextMenu>
-                    <items>
-                        <MenuItem text="%main.menu.edit.addStation" onAction="#addStation" />
-                        <MenuItem text="%main.menu.edit.editStation" onAction="#editStation" />
-                    </items>
-                </ContextMenu>
-            </contextMenu>
-        </ListView>
+        <TextField fx:id="systemText" />
     </TitledPane>
 
     <TitledPane GridPane.columnIndex="1" text="%market.stations" maxHeight="60" collapsible="false">

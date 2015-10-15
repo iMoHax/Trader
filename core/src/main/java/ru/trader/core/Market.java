@@ -1,9 +1,7 @@
 package ru.trader.core;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public interface Market {
 
@@ -28,11 +26,17 @@ public interface Market {
     }
 
     Collection<Place> get();
+    default Collection<String> getPlaceNames(){
+        return get() .stream().map(Place::getName).collect(Collectors.toList());
+    }
     default Collection<Vendor> getVendors(){
         return getVendors(false);
     }
     default Collection<Vendor> getVendors(boolean includeTransit){
         return new PlacesWrapper(get(), includeTransit);
+    }
+    default Collection<String> getVendorNames(){
+        return getVendors() .stream().map(Vendor::getFullName).collect(Collectors.toList());
     }
     Collection<Group> getGroups();
     Collection<Item> getItems();

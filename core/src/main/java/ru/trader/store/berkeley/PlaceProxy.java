@@ -148,6 +148,11 @@ public class PlaceProxy extends AbstractPlace {
     }
 
     @Override
+    public Collection<String> getVendorNames() {
+        return store.getVendorAccessor().getNamesByPlace(place.getId());
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PlaceProxy)) return false;

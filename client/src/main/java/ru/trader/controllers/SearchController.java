@@ -15,6 +15,9 @@ import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.model.support.ChangeMarketListener;
 import ru.trader.view.support.NumberField;
+import ru.trader.view.support.autocomplete.AutoCompletion;
+import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
+import ru.trader.view.support.autocomplete.SystemsProvider;
 import ru.trader.view.support.cells.CustomListCell;
 
 import java.util.Collection;
@@ -25,7 +28,8 @@ public class SearchController {
     private final static Logger LOG = LoggerFactory.getLogger(SearchController.class);
 
     @FXML
-    private ComboBox<SystemModel> source;
+    private TextField sourceText;
+    private AutoCompletion<SystemModel> source;
     @FXML
     private RadioButton rbSeller;
     @FXML
@@ -61,6 +65,7 @@ public class SearchController {
 
     @FXML
     private void initialize() {
+        init();
         rbBuyer.setToggleGroup(offerType);
         rbBuyer.setUserData(OFFER_TYPE.BUY);
         rbSeller.setToggleGroup(offerType);
@@ -80,17 +85,18 @@ public class SearchController {
         });
         BindingsHelper.setTableViewItems(tblResults, results);
         items.setItems(itemsList);
-        init();
     }
 
     void init(){
+        if (market != null) market.getNotificator().remove(searchChangeListener);
         market = MainController.getMarket();
-        market.getNotificator().add(new SearchChangeListener());
-        source.setItems(market.systemsProperty());
+        market.getNotificator().add(searchChangeListener);
+        SystemsProvider provider = market.getSystemsProvider();
+        if (source != null) source.dispose();
+        source = new AutoCompletion<>(sourceText, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
         itemsList.clear();
         itemsList.add(ModelFabric.NONE_ITEM);
         itemsList.addAll(market.itemsProperty().get());
-        source.getSelectionModel().selectFirst();
     }
 
 
@@ -105,6 +111,7 @@ public class SearchController {
     @FXML
     private void searchStations(){
         MarketFilter filter = new MarketFilter();
+        //TODO: set center = source
         filter.setDistance(distance.getValue().doubleValue());
         if (cbMarket.isSelected()) filter.add(SERVICE_TYPE.MARKET); else filter.remove(SERVICE_TYPE.MARKET);
         if (cbBlackMarket.isSelected()) filter.add(SERVICE_TYPE.BLACK_MARKET); else filter.remove(SERVICE_TYPE.BLACK_MARKET);
@@ -195,8 +202,7 @@ public class SearchController {
 
     }
 
-    private class SearchChangeListener extends ChangeMarketListener {
-
+    private final ChangeMarketListener searchChangeListener = new ChangeMarketListener() {
         @Override
         public void add(ItemModel item) {
             addItem(item);
@@ -206,6 +212,6 @@ public class SearchController {
         public void remove(ItemModel item) {
             removeItem(item);
         }
-    }
+    };
 
 }

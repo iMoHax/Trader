@@ -10,7 +10,10 @@ import javafx.scene.control.TextField;
 import ru.trader.model.*;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.autocomplete.AutoCompletion;
+import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.StationsProvider;
+
+import java.util.Collection;
 
 public class MissionsController {
 
@@ -43,8 +46,6 @@ public class MissionsController {
 
     private final ObservableList<MissionModel> missions;
     private StationModel station;
-    private StationsProvider receiverProvider;
-    private StationsProvider buyerProvider;
 
     public MissionsController() {
         missions = FXCollections.observableArrayList();
@@ -52,16 +53,11 @@ public class MissionsController {
 
     @FXML
     private void initialize(){
-        MarketModel world = MainController.getWorld();
-        receiverProvider = new StationsProvider(world);
-        receiver = new AutoCompletion<>(receiverText, receiverProvider, ModelFabric.NONE_STATION, receiverProvider.getConverter());
-        buyerProvider = new StationsProvider(world);
-        buyer = new AutoCompletion<>(buyerText, buyerProvider, ModelFabric.NONE_STATION, buyerProvider.getConverter());
-        item.setItems(world.itemsProperty());
-        addCourierBtn.disableProperty().bind(Bindings.createBooleanBinding(() -> receiver.getCompletion() == null, receiver.completionProperty())
+        init();
+        addCourierBtn.disableProperty().bind(Bindings.createBooleanBinding(() -> receiver.getValue() == null, receiver.valueProperty())
                 .or(courierProfit.wrongProperty())
         );
-        addDeliveryBtn.disableProperty().bind(Bindings.createBooleanBinding(() -> buyer.getCompletion() == null, buyer.completionProperty())
+        addDeliveryBtn.disableProperty().bind(Bindings.createBooleanBinding(() -> buyer.getValue() == null, buyer.valueProperty())
                 .or(deliveryCount.wrongProperty())
                 .or(deliveryProfit.wrongProperty())
         );
@@ -71,21 +67,36 @@ public class MissionsController {
         );
     }
 
-    StationsProvider getReceiverProvider() {
-        return receiverProvider;
+    void init(){
+        MarketModel world = MainController.getWorld();
+        item.setItems(world.itemsProperty());
+        StationsProvider provider = new StationsProvider(world);
+        if (receiver == null){
+            receiver = new AutoCompletion<>(receiverText, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_STATION, provider.getConverter());
+        } else {
+            receiver.setSuggestions(provider.getPossibleSuggestions());
+            receiver.setConverter(provider.getConverter());
+        }
+        if (buyer == null){
+            buyer = new AutoCompletion<>(buyerText, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_STATION, provider.getConverter());
+        } else {
+            buyer.setSuggestions(provider.getPossibleSuggestions());
+            buyer.setConverter(provider.getConverter());
+        }
     }
 
-    StationsProvider getBuyerProvider() {
-        return buyerProvider;
+    void setStations(ObservableList<String> stationNames) {
+        receiver.setSuggestions(stationNames);
+        buyer.setSuggestions(stationNames);
     }
 
-    ComboBox<ItemModel> getItem() {
-        return item;
+    void setItems(ObservableList<ItemModel> items){
+        item.setItems(items);
     }
 
     @FXML
     private void addCourier(){
-        StationModel station = receiver.getCompletion();
+        StationModel station = receiver.getValue();
         double profit = courierProfit.getValue().doubleValue();
         if (station != null && profit > 0){
             missions.add(new MissionModel(station, profit));
@@ -94,7 +105,7 @@ public class MissionsController {
 
     @FXML
     private void addDelivery(){
-        StationModel station = buyer.getCompletion();
+        StationModel station = buyer.getValue();
         long count = deliveryCount.getValue().longValue();
         double profit = deliveryProfit.getValue().doubleValue();
         if (station != null && profit > 0){

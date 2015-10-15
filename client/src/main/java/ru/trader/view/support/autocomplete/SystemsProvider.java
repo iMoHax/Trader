@@ -7,27 +7,27 @@ import ru.trader.model.SystemModel;
 
 import java.util.Comparator;
 
-public class SystemsProvider extends CachedSuggestionProvider<SystemModel> {
+public class SystemsProvider extends AbstractSuggestionProvider<String> {
 
     private final StringConverter<SystemModel> converter;
-    private final Comparator<SystemModel> comparator;
+    private final Comparator<String> comparator;
 
 
     public SystemsProvider(MarketModel market) {
-        super(market.systemsProperty());
+        super(market.getSystemNames());
         converter = new SystemsStringConverter(market);
-        comparator = (s1, s2) -> converter.toString(s1).toLowerCase().compareTo(converter.toString(s2).toLowerCase());
+        comparator = (s1, s2) -> s1.toLowerCase().compareTo(s2.toLowerCase());
     }
 
     @Override
-    protected Comparator<SystemModel> getComparator() {
+    protected Comparator<String> getComparator() {
         return comparator;
     }
 
     @Override
-    protected boolean isMatch(SystemModel suggestion, AutoCompletionBinding.ISuggestionRequest request) {
-        String s = converter.toString(suggestion).toLowerCase();
-        return s.contains(request.getUserText().toLowerCase());
+    protected boolean isMatch(String suggestion, AutoCompletionBinding.ISuggestionRequest request) {
+        String s = suggestion.toLowerCase();
+        return s.startsWith(request.getUserText().toLowerCase());
     }
 
     public StringConverter<SystemModel> getConverter() {

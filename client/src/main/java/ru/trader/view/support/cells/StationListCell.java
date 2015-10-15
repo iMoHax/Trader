@@ -18,12 +18,10 @@ public class StationListCell implements Callback<ListView<StationModel>, ListCel
                 super.updateItem(station, empty);
                 if (!empty){
                     if (s != station){
-                        textProperty().unbind();
-                        textProperty().bind(station.asString());
+                        setText(station.getFullName());
                         s = station;
                     }
                 } else {
-                    textProperty().unbind();
                     s = null;
                     setText(null);
                     setGraphic(null);

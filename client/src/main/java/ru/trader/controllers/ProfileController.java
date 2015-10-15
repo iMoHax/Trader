@@ -13,6 +13,7 @@ import ru.trader.model.*;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.ViewUtils;
 import ru.trader.view.support.autocomplete.AutoCompletion;
+import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
 
 
@@ -26,7 +27,7 @@ public class ProfileController {
     @FXML
     private TextField systemText;
     @FXML
-    private ComboBox<StationModel> station;
+    private ComboBox<String> station;
     @FXML
     private CheckBox docked;
     @FXML
@@ -54,10 +55,15 @@ public class ProfileController {
 
     @FXML
     private void initialize() {
+        init();
         profile = MainController.getProfile();
-        MarketModel world = MainController.getWorld();
-        SystemsProvider provider = new SystemsProvider(world);
-        system = new AutoCompletion<>(systemText, provider, ModelFabric.NONE_SYSTEM, provider.getConverter());
+        system.valueProperty().addListener((ov, o , n) -> {
+            doAndConsumeChanges(() -> {
+                station.setItems(n.getStationNamesList());
+                station.getSelectionModel().selectFirst();
+            });
+            consumeChanges(() -> {profile.setSystem(n); profile.setStation(ModelFabric.NONE_STATION);});
+        });
         engine.setItems(FXCollections.observableList(Engine.getEngines()));
         engine.setConverter(new EngineStringConverter());
         btnAddSystem.setOnAction(e -> {
@@ -102,14 +108,21 @@ public class ProfileController {
         ignoreChanges = old;
     }
 
+    void init(){
+        MarketModel world = MainController.getWorld();
+        SystemsProvider provider = world.getSystemsProvider();
+        if (system == null){
+            system = new AutoCompletion<>(systemText, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
+        } else {
+            system.setSuggestions(provider.getPossibleSuggestions());
+            system.setConverter(provider.getConverter());
+        }
+    }
+
     private void initListeners(){
         name.textProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setName(n)));
         balance.numberProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setBalance(n.doubleValue())));
-        system.completionProperty().addListener((ov, o , n) -> {
-            doAndConsumeChanges(() -> station.setItems(n.getStationsList()));
-            consumeChanges(() -> {profile.setSystem(n); profile.setStation(ModelFabric.NONE_STATION);});
-        });
-        station.valueProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setStation(n)));
+        station.valueProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setStation(getStation(n))));
         docked.selectedProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setDocked(n)));
         mass.numberProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setShipMass(n.doubleValue())));
         tank.numberProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setShipTank(n.doubleValue())));
@@ -126,7 +139,7 @@ public class ProfileController {
         name.setText(profile.getName());
         balance.setValue(profile.getBalance());
         system.setValue(profile.getSystem());
-        station.setValue(profile.getStation());
+        station.setValue(profile.getStation().getName());
         docked.setSelected(profile.isDocked());
         mass.setValue(profile.getShipMass());
         tank.setValue(profile.getShipTank());
@@ -134,6 +147,11 @@ public class ProfileController {
         engine.setValue(profile.getShipEngine());
         ignoreChanges = false;
         bind();
+    }
+
+    private StationModel getStation(String name){
+        SystemModel s = system.getValue();
+        return s == null ? ModelFabric.NONE_STATION : s.get(name);
     }
 
     private void bind(){
@@ -146,9 +164,7 @@ public class ProfileController {
         profile.shipTankProperty().addListener(tankListener);
         profile.shipCargoProperty().addListener(cargoListener);
         profile.shipEngineProperty().addListener(engineListener);
-        jumpRange.textProperty().bind(Bindings.createStringBinding(()-> {
-            return String.format("%.1f - %.1f", profile.getShipJumpRange(), profile.getMaxShipJumpRange());
-        },
+        jumpRange.textProperty().bind(Bindings.createStringBinding(()-> String.format("%.1f - %.1f", profile.getShipJumpRange(), profile.getMaxShipJumpRange()),
                     profile.shipMassProperty(), profile.shipCargoProperty(), profile.shipTankProperty(), profile.shipEngineProperty()
         ));
     }
@@ -170,7 +186,7 @@ public class ProfileController {
     private final ChangeListener<String> nameListener = (ov, o, n) -> consumeChanges(() -> name.setText(n));
     private final ChangeListener<Number> balanceListener = (ov, o, n) -> consumeChanges(() -> balance.setValue(n));
     private final ChangeListener<SystemModel> systemListener = (ov, o, n) -> consumeChanges(()  -> system.setValue(n));
-    private final ChangeListener<StationModel> stationListener = (ov, o, n) -> consumeChanges(() -> station.setValue(n));
+    private final ChangeListener<StationModel> stationListener = (ov, o, n) -> consumeChanges(() -> station.setValue(n.getName()));
     private final ChangeListener<Boolean> dockedListener = (ov, o, n) -> consumeChanges(() -> docked.setSelected(n));
     private final ChangeListener<Number> massListener = (ov, o, n) -> consumeChanges(() -> mass.setValue(n));
     private final ChangeListener<Number> tankListener = (ov, o, n) -> consumeChanges(() -> tank.setValue(n));

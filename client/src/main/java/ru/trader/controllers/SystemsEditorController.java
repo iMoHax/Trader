@@ -13,9 +13,13 @@ import javafx.util.converter.DoubleStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.model.MarketModel;
+import ru.trader.model.ModelFabric;
 import ru.trader.model.SystemModel;
 import ru.trader.model.support.PositionComputer;
 import ru.trader.view.support.Localization;
+import ru.trader.view.support.autocomplete.AutoCompletion;
+import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
+import ru.trader.view.support.autocomplete.SystemsProvider;
 import ru.trader.view.support.cells.TextFieldCell;
 
 public class SystemsEditorController {
@@ -45,23 +49,30 @@ public class SystemsEditorController {
     @FXML
     private TableColumn<SystemData, Double> clnS6;
     @FXML
-    private ComboBox<SystemModel> system1;
+    private TextField system1Text;
+    private AutoCompletion<SystemModel> system1;
     @FXML
-    private ComboBox<SystemModel> system2;
+    private TextField system2Text;
+    private AutoCompletion<SystemModel> system2;
     @FXML
-    private ComboBox<SystemModel> system3;
+    private TextField system3Text;
+    private AutoCompletion<SystemModel> system3;
     @FXML
-    private ComboBox<SystemModel> system4;
+    private TextField system4Text;
+    private AutoCompletion<SystemModel> system4;
     @FXML
-    private ComboBox<SystemModel> system5;
+    private TextField system5Text;
+    private AutoCompletion<SystemModel> system5;
     @FXML
-    private ComboBox<SystemModel> system6;
+    private TextField system6Text;
+    private AutoCompletion<SystemModel> system6;
 
     private Dialog<ButtonType> dlg;
     private MarketModel market;
 
     @FXML
     private void initialize() {
+        init();
         clnName.setCellFactory(TextFieldCell.forTableColumn(new DefaultStringConverter()));
         clnX.setCellFactory(TextFieldCell.forTableColumn(new DoubleStringConverter()));
         clnY.setCellFactory(TextFieldCell.forTableColumn(new DoubleStringConverter()));
@@ -81,17 +92,47 @@ public class SystemsEditorController {
         system4.valueProperty().addListener((ov, o, n) -> clnS4.setText(n != null ? n.getName() : ""));
         system5.valueProperty().addListener((ov, o, n) -> clnS5.setText(n != null ? n.getName() : ""));
         system6.valueProperty().addListener((ov, o, n) -> clnS6.setText(n != null ? n.getName() : ""));
-        init();
     }
 
     void init(){
         market = MainController.getMarket();
-        system1.setItems(market.systemsProperty());
-        system2.setItems(market.systemsProperty());
-        system3.setItems(market.systemsProperty());
-        system4.setItems(market.systemsProperty());
-        system5.setItems(market.systemsProperty());
-        system6.setItems(market.systemsProperty());
+        SystemsProvider provider = market.getSystemsProvider();
+        if (system1 == null){
+            system1 = new AutoCompletion<>(system1Text, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
+        } else {
+            system1.setSuggestions(provider.getPossibleSuggestions());
+            system1.setConverter(provider.getConverter());
+        }
+        if (system2 == null){
+            system2 = new AutoCompletion<>(system2Text, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
+        } else {
+            system2.setSuggestions(provider.getPossibleSuggestions());
+            system2.setConverter(provider.getConverter());
+        }
+        if (system3 == null){
+            system3 = new AutoCompletion<>(system3Text, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
+        } else {
+            system3.setSuggestions(provider.getPossibleSuggestions());
+            system3.setConverter(provider.getConverter());
+        }
+        if (system4 == null){
+            system4 = new AutoCompletion<>(system4Text, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
+        } else {
+            system4.setSuggestions(provider.getPossibleSuggestions());
+            system4.setConverter(provider.getConverter());
+        }
+        if (system5 == null){
+            system5 = new AutoCompletion<>(system5Text, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
+        } else {
+            system5.setSuggestions(provider.getPossibleSuggestions());
+            system5.setConverter(provider.getConverter());
+        }
+        if (system6 == null){
+            system6 = new AutoCompletion<>(system6Text, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
+        } else {
+            system6.setSuggestions(provider.getPossibleSuggestions());
+            system6.setConverter(provider.getConverter());
+        }
     }
 
     private void createDialog(Parent owner, Parent content){

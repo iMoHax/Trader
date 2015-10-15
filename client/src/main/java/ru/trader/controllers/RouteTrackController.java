@@ -7,21 +7,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import ru.trader.analysis.CrawlerSpecificator;
 import ru.trader.model.*;
+import ru.trader.model.support.BindingsHelper;
 import ru.trader.view.support.Track;
 import ru.trader.view.support.ViewUtils;
-import ru.trader.view.support.autocomplete.AutoCompletion;
-import ru.trader.view.support.autocomplete.SystemsProvider;
-import ru.trader.view.support.cells.OfferListCell;
 import ru.trader.view.support.cells.OrderListCell;
-import ru.trader.view.support.cells.StationListCell;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class RouteTrackController {
@@ -93,11 +85,10 @@ public class RouteTrackController {
         if (index == -1) return;
         RouteEntryModel entry = route.get(index);
         missionsController.setStation(entry.getStation());
-        ObservableList<StationModel> stations = FXCollections.observableArrayList(route.getStations(index));
-        missionsController.getBuyerProvider().setPossibleSuggestions(stations);
-        missionsController.getReceiverProvider().setPossibleSuggestions(stations);
-        List<ItemModel> items = route.getSellOffers(index).stream().map(OfferModel::getItem).collect(Collectors.toList());
-        missionsController.getItem().getItems().setAll(items);
+        ObservableList<String> stations = BindingsHelper.observableList(route.getStations(index), StationModel::getFullName);
+        missionsController.setStations(stations);
+        ObservableList<ItemModel> items = FXCollections.observableList(route.getSellOffers(index).stream().map(OfferModel::getItem).collect(Collectors.toList()));
+        missionsController.setItems(items);
 
         station.setText(entry.getStation().getName());
         system.setText(entry.getStation().getSystem().getName());

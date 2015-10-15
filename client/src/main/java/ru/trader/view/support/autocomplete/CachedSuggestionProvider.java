@@ -1,30 +1,40 @@
 package ru.trader.view.support.autocomplete;
 
 
-import javafx.collections.ListChangeListener;
+import javafx.beans.InvalidationListener;
 import javafx.collections.ObservableList;
-import javafx.util.Callback;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 
-public abstract class CachedSuggestionProvider<T> implements Callback<AutoCompletionBinding.ISuggestionRequest, Collection<T>> {
+public class CachedSuggestionProvider<T> implements SuggestionProvider<T> {
     private final List<T> cache = new ArrayList<>();
     private final ReentrantLock lock = new ReentrantLock();
-    private ObservableList<T> possibleSuggestions;
+    private final AbstractSuggestionProvider<T> provider;
     private AutoCompletionBinding.ISuggestionRequest lastRequest;
 
-    protected CachedSuggestionProvider(ObservableList<T> possibleSuggestions) {
-        this.possibleSuggestions = possibleSuggestions;
-        possibleSuggestions.addListener(listChangeListener);
+    public CachedSuggestionProvider(AbstractSuggestionProvider<T> provider) {
+        this.provider = provider;
+        provider.getPossibleSuggestions().addListener(listChangeListener);
     }
 
+    @Override
+    public ObservableList<T> getPossibleSuggestions() {
+        return provider.getPossibleSuggestions();
+    }
+
+    @Override
     public void setPossibleSuggestions(ObservableList<T> possibleSuggestions){
-        this.possibleSuggestions.removeListener(listChangeListener);
-        this.possibleSuggestions = possibleSuggestions;
-        cache.clear();
-        this.possibleSuggestions.addListener(listChangeListener);
+        lock.lock();
+        try {
+            provider.getPossibleSuggestions().removeListener(listChangeListener);
+            provider.setPossibleSuggestions(possibleSuggestions);
+            cache.clear();
+            provider.getPossibleSuggestions().addListener(listChangeListener);
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
@@ -36,17 +46,12 @@ public abstract class CachedSuggestionProvider<T> implements Callback<AutoComple
                 boolean cached = lastRequest != null && isContinue(lastRequest, request);
                 if (!cached){
                     cache.clear();
-                    for (T possibleSuggestion : possibleSuggestions) {
-                        if (isMatch(possibleSuggestion, request)) {
-                            cache.add(possibleSuggestion);
-                        }
-                    }
-                    Collections.sort(cache, getComparator());
+                    cache.addAll(provider.call(request));
                 } else {
                     Iterator<T> iterator = cache.iterator();
                     while (iterator.hasNext()) {
                         T possibleSuggestion = iterator.next();
-                        if (!isMatch(possibleSuggestion, request)) {
+                        if (!provider.isMatch(possibleSuggestion, request)) {
                             iterator.remove();
                         }
                     }
@@ -66,14 +71,11 @@ public abstract class CachedSuggestionProvider<T> implements Callback<AutoComple
         return last != null && current != null && current.toLowerCase().startsWith(last.toLowerCase());
     }
 
-    protected abstract Comparator<T> getComparator();
-    protected abstract boolean isMatch(T suggestion, AutoCompletionBinding.ISuggestionRequest request);
-
     public void dispose(){
-        possibleSuggestions.removeListener(listChangeListener);
+        provider.getPossibleSuggestions().removeListener(listChangeListener);
     }
 
-    private final ListChangeListener<T> listChangeListener = c -> {
+    private final InvalidationListener listChangeListener = o -> {
         lock.lock();
         try {
             lastRequest = null;

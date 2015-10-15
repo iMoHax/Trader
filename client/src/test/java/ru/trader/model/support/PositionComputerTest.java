@@ -34,14 +34,14 @@ public class PositionComputerTest extends Assert {
         market.addPlace("System7",  -50.75, 50.0312, -13.2813);
         market.addPlace("Sol",  0, 0, 0);
         MarketModel marketModel = new MarketModel(market);
-        system1 = marketModel.systemsProperty().get(0);
-        system2 = marketModel.systemsProperty().get(1);
-        system3 = marketModel.systemsProperty().get(2);
-        system4 = marketModel.systemsProperty().get(3);
-        system5 = marketModel.systemsProperty().get(4);
-        system6 = marketModel.systemsProperty().get(5);
-        system7 = marketModel.systemsProperty().get(6);
-        system8 = marketModel.systemsProperty().get(7);
+        system1 = marketModel.get(marketModel.getSystemNames().get(0));
+        system2 = marketModel.get(marketModel.getSystemNames().get(1));
+        system3 = marketModel.get(marketModel.getSystemNames().get(2));
+        system4 = marketModel.get(marketModel.getSystemNames().get(3));
+        system5 = marketModel.get(marketModel.getSystemNames().get(4));
+        system6 = marketModel.get(marketModel.getSystemNames().get(5));
+        system7 = marketModel.get(marketModel.getSystemNames().get(6));
+        system8 = marketModel.get(marketModel.getSystemNames().get(7));
     }
 
     @Test

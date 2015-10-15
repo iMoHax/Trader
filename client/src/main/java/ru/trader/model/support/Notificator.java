@@ -29,6 +29,12 @@ public class Notificator {
         }
     }
 
+    public void remove(ChangeMarketListener listener){
+        synchronized (this.listener){
+            this.listener.remove(listener);
+        }
+    }
+
     public void clear() {
         synchronized (listener){
             listener.clear();

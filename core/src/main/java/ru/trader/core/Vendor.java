@@ -10,6 +10,10 @@ public interface Vendor extends Connectable<Vendor> {
     String getName();
     void setName(String name);
 
+    default String getFullName(){
+        return getPlace().getName()+": "+getName();
+    }
+
     Place getPlace();
 
     double getDistance();

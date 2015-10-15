@@ -209,7 +209,9 @@ public class RouteModel {
         Collection<StationModel> res = new HashSet<>();
         int startIndex = _route.isLoop() ? 1 : offset+1;
         if (startIndex >= entries.size()) return res;
-        entries.subList(startIndex, entries.size()).stream().map(RouteEntryModel::getStation)
+        entries.subList(startIndex, entries.size()).stream()
+                .filter(e -> !e.isTransit())
+                .map(RouteEntryModel::getStation)
                 .filter(station -> station != ModelFabric.NONE_STATION)
                 .forEach(res::add);
         return res;

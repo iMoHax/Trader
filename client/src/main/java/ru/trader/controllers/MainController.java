@@ -101,6 +101,7 @@ public class MainController {
     }
 
     public void setMarket(MarketModel market) {
+        market.getNotificator().clear();
         MainController.market = market;
         Screeners.reinitAll();
     }

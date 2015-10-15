@@ -6,6 +6,7 @@ import ru.trader.core.*;
 import ru.trader.store.berkeley.entities.BDBGroup;
 import ru.trader.store.berkeley.entities.BDBItem;
 import ru.trader.store.berkeley.entities.BDBPlace;
+import ru.trader.store.berkeley.entities.BDBVendor;
 
 import java.util.*;
 
@@ -134,6 +135,24 @@ public class BDBMarket extends AbstractMarket {
             store.getPlaceAccessor().getAll().stream().map(Place::asTransit).forEach(vendors::add);
         }
         return vendors;
+    }
+
+    @Override
+    public Collection<String> getPlaceNames() {
+        return store.getPlaceAccessor().getAllNames();
+    }
+
+    @Override
+    public Collection<String> getVendorNames() {
+        Collection<BDBPlace> places = store.getPlaceAccessor().getAllPlaces();
+        Collection<String> res = new LinkedList<>();
+        for (BDBPlace place : places) {
+            Collection<String> names = store.getVendorAccessor().getNamesByPlace(place.getId());
+            for (String name : names) {
+                res.add(place.getName()+": "+name);
+            }
+        }
+        return res;
     }
 
     @Override

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,17 +101,26 @@ public class SystemModel {
         return system.get().stream().map(this::asModel).collect(Collectors.toList());
     }
 
-    public ObservableList<StationModel> getStationsList() {
-        ObservableList<StationModel> res = FXCollections.observableArrayList(ModelFabric.NONE_STATION);
-        res.addAll(getStations());
+    public Collection<String> getStationNames() {
+        return system.getVendorNames();
+    }
+
+    public List<String> getStationFullNames() {
+        return system.get().stream().map(Vendor::getFullName).collect(Collectors.toList());
+    }
+
+    public ObservableList<String> getStationNamesList() {
+        ObservableList<String> res = FXCollections.observableArrayList(ModelFabric.NONE_STATION.getName());
+        res.addAll(getStationNames());
         return res;
     }
 
-    public List<StationModel> getStations(final SERVICE_TYPE service) {
-        return system.get().stream().filter(v -> v.has(service)).map(this::asModel).collect(Collectors.toList());
+    public List<String> getStationNames(final SERVICE_TYPE service) {
+        return system.get().stream().filter(v -> v.has(service)).map(Vendor::getName).collect(Collectors.toList());
     }
 
     public StationModel get(String name){
+        if (name == null) return ModelFabric.NONE_STATION;
         return asModel(system.get(name));
     }
 

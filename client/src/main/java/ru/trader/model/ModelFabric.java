@@ -10,6 +10,7 @@ import ru.trader.core.*;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -180,18 +181,23 @@ public class ModelFabric {
         }
 
         @Override
-        public List<StationModel> getStations() {
-            throw new UnsupportedOperationException("Is fake system, change unsupported");
+        public StationModel get(String name) {
+            return ModelFabric.NONE_STATION;
         }
 
         @Override
-        public ObservableList<StationModel> getStationsList() {
-            return FXCollections.observableArrayList(ModelFabric.NONE_STATION);
+        public List<String> getStationNames() {
+            return Collections.emptyList();
         }
 
         @Override
-        public List<StationModel> getStations(SERVICE_TYPE service) {
-            throw new UnsupportedOperationException("Is fake system, change unsupported");
+        public ObservableList<String> getStationNamesList() {
+            return FXCollections.observableArrayList(ModelFabric.NONE_STATION.getName());
+        }
+
+        @Override
+        public List<String> getStationNames(SERVICE_TYPE service) {
+            return Collections.emptyList();
         }
 
         @Override
@@ -213,7 +219,7 @@ public class ModelFabric {
 
         @Override
         Vendor getStation() {
-            throw new UnsupportedOperationException("Is fake system, unsupported");
+            throw new UnsupportedOperationException("Is fake station, unsupported");
         }
 
         @Override
@@ -222,18 +228,43 @@ public class ModelFabric {
         }
 
         @Override
+        public String getFullName() {
+            return "";
+        }
+
+        @Override
+        public FACTION getFaction() {
+            throw  new UnsupportedOperationException("Is fake station, unsupported");
+        }
+
+        @Override
+        public void setFaction(FACTION faction) {
+            throw  new UnsupportedOperationException("Is fake station, unsupported");
+        }
+
+        @Override
+        public GOVERNMENT getGovernment() {
+            throw  new UnsupportedOperationException("Is fake station, unsupported");
+        }
+
+        @Override
+        public void setGovernment(GOVERNMENT government) {
+            throw  new UnsupportedOperationException("Is fake station, unsupported");
+        }
+
+        @Override
         public void setName(String value) {
-            throw  new UnsupportedOperationException("Is fake system, unsupported");
+            throw  new UnsupportedOperationException("Is fake station, unsupported");
         }
 
         @Override
         public double getDistance() {
-            throw  new UnsupportedOperationException("Is fake system, unsupported");
+            throw  new UnsupportedOperationException("Is fake station, unsupported");
         }
 
         @Override
         public void setDistance(double value) {
-            throw  new UnsupportedOperationException("Is fake system, unsupported");
+            throw  new UnsupportedOperationException("Is fake station, unsupported");
         }
 
         @Override
@@ -243,42 +274,42 @@ public class ModelFabric {
 
         @Override
         public Collection<SERVICE_TYPE> getServices() {
-            throw  new UnsupportedOperationException("Is fake system, unsupported");
+            throw  new UnsupportedOperationException("Is fake station, unsupported");
         }
 
         @Override
         public void addService(SERVICE_TYPE service) {
-            throw  new UnsupportedOperationException("Is fake system, unsupported");
+            throw  new UnsupportedOperationException("Is fake station, unsupported");
         }
 
         @Override
         public void removeService(SERVICE_TYPE service) {
-            throw  new UnsupportedOperationException("Is fake system, unsupported");
+            throw  new UnsupportedOperationException("Is fake station, unsupported");
         }
 
         @Override
         public SystemModel getSystem() {
-            throw  new UnsupportedOperationException("Is fake system, unsupported");
+            throw  new UnsupportedOperationException("Is fake station, unsupported");
         }
 
         @Override
         public List<OfferModel> getSells() {
-            throw  new UnsupportedOperationException("Is fake system, unsupported");
+            throw  new UnsupportedOperationException("Is fake station, unsupported");
         }
 
         @Override
         public List<OfferModel> getBuys() {
-            throw  new UnsupportedOperationException("Is fake system, unsupported");
+            throw  new UnsupportedOperationException("Is fake station, unsupported");
         }
 
         @Override
         public OfferModel add(OFFER_TYPE type, ItemModel item, double price, long count) {
-            throw  new UnsupportedOperationException("Is fake system, unsupported");
+            throw  new UnsupportedOperationException("Is fake station, unsupported");
         }
 
         @Override
         public void remove(OfferModel offer) {
-            throw  new UnsupportedOperationException("Is fake system, unsupported");
+            throw  new UnsupportedOperationException("Is fake station, unsupported");
         }
 
         @Override
@@ -293,7 +324,7 @@ public class ModelFabric {
 
         @Override
         public double getDistance(StationModel other) {
-            throw  new UnsupportedOperationException("Is fake system, unsupported");
+            throw  new UnsupportedOperationException("Is fake station, unsupported");
         }
 
         @Override

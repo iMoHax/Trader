@@ -121,9 +121,9 @@ public class EMDNUpdater {
 
         @Override
         public void run() {
-            market.systemsProperty().get().forEach(system -> {
+            market.getSystemNames().forEach(system -> {
                 LOG.trace("Auto update {}", system);
-                Station emdnData = emdn.pop(system.getName());
+                Station emdnData = emdn.pop(system);
                 if (emdnData != null){
                     //TODO: implement new model
                     //updater.init(system);

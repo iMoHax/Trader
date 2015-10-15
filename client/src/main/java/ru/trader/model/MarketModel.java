@@ -5,7 +5,6 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +20,8 @@ import ru.trader.model.support.Notificator;
 import ru.trader.services.OrdersSearchTask;
 import ru.trader.services.RoutesSearchTask;
 import ru.trader.view.support.Localization;
+import ru.trader.view.support.autocomplete.StationsProvider;
+import ru.trader.view.support.autocomplete.SystemsProvider;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -34,10 +35,10 @@ public class MarketModel {
     private final ModelFabric modeler;
     private final Notificator notificator;
 
-    private final ListProperty<SystemModel> systems;
-    private final ListProperty<StationModel> stations;
-    // with NONE_SYSTEM
-    private ListProperty<SystemModel> systemsList;
+    private final ObservableList<String> systemNames;
+    private final ObservableList<String> stationNames;
+    private final SystemsProvider systemsProvider;
+    private final StationsProvider stationsProvider;
     private final ListProperty<GroupModel> groups;
     private final ListProperty<ItemModel> items;
 
@@ -49,23 +50,11 @@ public class MarketModel {
         groups = new SimpleListProperty<>(BindingsHelper.observableList(market.getGroups(), modeler::get));
         items = new SimpleListProperty<>(BindingsHelper.observableList(market.getItems(), modeler::get));
         items.sort(ItemModel::compareTo);
-        systems = new SimpleListProperty<>(BindingsHelper.observableList(market.get(), modeler::get));
-        systemsList = new SimpleListProperty<>(FXCollections.observableArrayList(ModelFabric.NONE_SYSTEM));
-        systemsList.addAll(systems);
-        stations = new SimpleListProperty<>(BindingsHelper.observableList(market.getVendors(), modeler::get));
-        systems.addListener(SYSTEMS_CHANGE_LISTENER);
+        systemNames = new SimpleListProperty<>(FXCollections.observableArrayList(market.getPlaceNames()));
+        stationNames = new SimpleListProperty<>(FXCollections.observableArrayList(market.getVendorNames()));
+        systemsProvider = new SystemsProvider(this);
+        stationsProvider = new StationsProvider(this);
     }
-
-    private ListChangeListener<SystemModel> SYSTEMS_CHANGE_LISTENER = l -> {
-        while (l.next()) {
-            if (l.wasRemoved()) {
-                systemsList.removeAll(l.getRemoved());
-            }
-            if (l.wasAdded()) {
-                systemsList.addAll(l.getAddedSubList());
-            }
-        }
-    };
 
     public MarketAnalyzer getAnalyzer() {
         return analyzer;
@@ -79,15 +68,20 @@ public class MarketModel {
         return notificator;
     }
 
-    public ReadOnlyListProperty<SystemModel> systemsProperty() {
-        return systems;
-    }
-    public ReadOnlyListProperty<SystemModel> systemsListProperty() {
-        return systemsList;
+    public ObservableList<String> getSystemNames() {
+        return systemNames;
     }
 
-    public ReadOnlyListProperty<StationModel> stationsProperty() {
-        return stations;
+    public ObservableList<String> getStationNames() {
+        return stationNames;
+    }
+
+    public SystemsProvider getSystemsProvider() {
+        return systemsProvider;
+    }
+
+    public StationsProvider getStationsProvider() {
+        return stationsProvider;
     }
 
     public SystemModel get(String name){
@@ -102,23 +96,23 @@ public class MarketModel {
         SystemModel system = modeler.get(market.addPlace(name, x, y, z));
         LOG.info("Add system {} to market {}", system, this);
         notificator.sendAdd(system);
-        systems.add(system);
-        stations.addAll(system.getStations());
+        systemNames.add(system.getName());
+        stationNames.addAll(system.getStationFullNames());
         return system;
     }
 
     public void remove(SystemModel system) {
         LOG.info("Remove system {} from market {}", system, this);
         notificator.sendRemove(system);
-        stations.removeAll(system.getStations());
+        stationNames.removeAll(system.getStationFullNames());
         market.remove(system.getSystem());
-        systems.remove(system);
+        systemNames.remove(system.getName());
     }
 
     StationModel addStation(SystemModel system, String name) {
         StationModel station = modeler.get(system.getSystem().addVendor(name));
         LOG.info("Add station {} to system {}", station, system);
-        stations.add(station);
+        stationNames.add(station.getFullName());
         notificator.sendAdd(station);
         return station;
     }
@@ -126,7 +120,7 @@ public class MarketModel {
     void removeStation(StationModel station) {
         LOG.info("Remove station {} from system {}", station, station.getSystem());
         notificator.sendRemove(station);
-        stations.remove(station);
+        stationNames.remove(station.getFullName());
         station.getSystem().getSystem().remove(station.getStation());
     }
 

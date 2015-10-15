@@ -45,6 +45,14 @@ public class PlaceDA<T> {
         });
     }
 
+    public Collection<BDBPlace> getAllPlaces(){
+        return DAUtils.getAll(indexById, p -> p);
+    }
+
+    public Collection<String> getAllNames(){
+        return DAUtils.getAll(indexById, BDBPlace::getName);
+    }
+
     public BDBPlace put(BDBPlace place){
         return indexById.put(place);
     }

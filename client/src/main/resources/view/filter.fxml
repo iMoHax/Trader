@@ -12,6 +12,7 @@
 <?import org.controlsfx.glyphfont.Glyph?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.trader.controllers.FilterController"
               styleClass="dialog" vgap="4" hgap="8">
         <columnConstraints>
@@ -20,7 +21,7 @@
         </columnConstraints>
         <Label text="%filter.title" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"/>
         <Label text="%filter.center" GridPane.rowIndex="1"/>
-        <ComboBox fx:id="center" GridPane.columnIndex="1" GridPane.rowIndex="1" minWidth="250"/>
+        <TextField fx:id="centerText" GridPane.columnIndex="1" GridPane.rowIndex="1" minWidth="250"/>
         <Label text="%filter.radius" GridPane.rowIndex="2" />
         <NumberField fx:id="radius" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <Label text="%filter.distance" GridPane.rowIndex="3" />
@@ -38,7 +39,7 @@
         </TilePane>
         <Label text="%filter.excludes" GridPane.rowIndex="5" />
         <VBox GridPane.rowIndex="6" spacing="4">
-            <ComboBox fx:id="system" minWidth="180"/>
+            <TextField fx:id="systemText" minWidth="180"/>
             <ComboBox fx:id="station" minWidth="180"/>
             <HBox spacing="2" alignment="BASELINE_RIGHT">
                 <Button prefWidth="30" onAction="#add"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>

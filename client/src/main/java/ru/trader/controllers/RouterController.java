@@ -14,6 +14,7 @@ import ru.trader.model.support.ChangeMarketListener;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.RouteNode;
 import ru.trader.view.support.autocomplete.AutoCompletion;
+import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
 
 import java.util.Optional;
@@ -49,14 +50,14 @@ public class RouterController {
     private AutoCompletion<SystemModel> source;
 
     @FXML
-    private ComboBox<StationModel> sStation;
+    private ComboBox<String> sStation;
 
     @FXML
     private TextField targetText;
     private AutoCompletion<SystemModel> target;
 
     @FXML
-    private ComboBox<StationModel> tStation;
+    private ComboBox<String> tStation;
 
     @FXML
     private TableView<OrderModel> tblOrders;
@@ -81,19 +82,21 @@ public class RouterController {
         cargo.numberProperty().addListener((ov, o, n) -> Main.SETTINGS.setCargo(n.intValue()));
         tank.numberProperty().addListener((ov, o, n) -> Main.SETTINGS.setTank(n.doubleValue()));
         jumps.numberProperty().addListener((ov, o, n) -> Main.SETTINGS.setJumps(n.intValue()));
-        source.completionProperty().addListener((ov, o, n) -> {
+        source.valueProperty().addListener((ov, o, n) -> {
             if (n != null) {
-                sStation.setItems(n.getStationsList());
+                sStation.setItems(n.getStationNamesList());
             } else {
                 sStation.setItems(FXCollections.emptyObservableList());
             }
+            sStation.getSelectionModel().selectFirst();
         });
-        target.completionProperty().addListener((ov, o, n) -> {
+        target.valueProperty().addListener((ov, o, n) -> {
             if (n != null) {
-                tStation.setItems(n.getStationsList());
+                tStation.setItems(n.getStationNamesList());
             } else {
                 tStation.setItems(FXCollections.emptyObservableList());
             }
+            tStation.getSelectionModel().selectFirst();
         });
 
 
@@ -109,9 +112,9 @@ public class RouterController {
         jumps.setValue(Main.SETTINGS.getJumps());
 
         addBtn.disableProperty().bind(Bindings.createBooleanBinding(()-> {
-            SystemModel system = target.getCompletion();
+            SystemModel system = target.getValue();
             return ModelFabric.isFake(system);
-        }, target.completionProperty()));
+        }, target.valueProperty()));
 
         editBtn.disableProperty().bind(tblOrders.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
         removeBtn.disableProperty().bind(Bindings.createBooleanBinding(()-> {
@@ -134,15 +137,27 @@ public class RouterController {
 
 
     void init(){
+        if (market != null){
+            market.getNotificator().remove(routerChangeListener);
+        }
         market = MainController.getMarket();
-        market.getNotificator().add(new RouterChangeListener());
-        SystemsProvider provider = new SystemsProvider(market);
-        if (source != null) source.dispose();
-        source = new AutoCompletion<>(sourceText, provider, ModelFabric.NONE_SYSTEM, provider.getConverter());
-        if (target != null) target.dispose();
-        provider = new SystemsProvider(market);
-        target = new AutoCompletion<>(targetText, provider, ModelFabric.NONE_SYSTEM, provider.getConverter());
+        market.getNotificator().add(routerChangeListener);
+        SystemsProvider provider = market.getSystemsProvider();
+        if (source == null){
+            source = new AutoCompletion<>(sourceText, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
+        } else {
+            source.setSuggestions(provider.getPossibleSuggestions());
+            source.setConverter(provider.getConverter());
+        }
+        if (target == null){
+            target = new AutoCompletion<>(targetText, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
+        } else {
+            target.setSuggestions(provider.getPossibleSuggestions());
+            target.setConverter(provider.getConverter());
+        }
         orders.clear();
+        sStation.setValue(ModelFabric.NONE_STATION.getName());
+        tStation.setValue(ModelFabric.NONE_STATION.getName());
         totalBalance.setValue(balance.getValue());
         totalProfit.setValue(0);
     }
@@ -152,7 +167,7 @@ public class RouterController {
         totalProfit.add(order.getProfit());
         totalBalance.add(order.getProfit());
         source.setValue(order.getBuyer().getSystem());
-        sStation.setValue(order.getBuyer());
+        sStation.setValue(order.getBuyer().getName());
         target.setValue(ModelFabric.NONE_SYSTEM);
         balance.setDisable(true);
     }
@@ -161,7 +176,7 @@ public class RouterController {
         totalProfit.sub(order.getProfit());
         totalBalance.sub(order.getProfit());
         source.setValue(order.getSystem());
-        sStation.setValue(order.getStation());
+        sStation.setValue(order.getStation().getName());
         target.setValue(ModelFabric.NONE_SYSTEM);
         if (orders.isEmpty()) {
             balance.setDisable(false);
@@ -169,10 +184,10 @@ public class RouterController {
     }
 
     public void addStationToRoute(){
-        SystemModel s = source.getCompletion();
-        SystemModel t = target.getCompletion();
-        StationModel sS = sStation.getValue();
-        StationModel tS = tStation.getValue();
+        SystemModel s = source.getValue();
+        SystemModel t = target.getValue();
+        StationModel sS = s != null ? s.get(sStation.getValue()) : ModelFabric.NONE_STATION;
+        StationModel tS = t != null ? t.get(tStation.getValue()) : ModelFabric.NONE_STATION;
         RouteModel r = market.getPath(s, sS, t, tS);
         if (r == null) return;
         if (route != null){
@@ -181,8 +196,8 @@ public class RouterController {
             route = r;
         }
         refreshPath();
-        source.setValue(target.getCompletion());
-        sStation.setValue(tS);
+        source.setValue(target.getValue());
+        sStation.setValue(tS.getName());
     }
 
     public void editOrders(){
@@ -256,10 +271,10 @@ public class RouterController {
     }
 
     public void showOrders(){
-        SystemModel s = source.getCompletion();
-        SystemModel t = target.getCompletion();
-        StationModel sS = sStation.getValue();
-        StationModel tS = tStation.getValue();
+        SystemModel s = source.getValue();
+        SystemModel t = target.getValue();
+        StationModel sS = s != null ? s.get(sStation.getValue()) : ModelFabric.NONE_STATION;
+        StationModel tS = t != null ? t.get(tStation.getValue()) : ModelFabric.NONE_STATION;
         market.getOrders(s, sS, t, tS, totalBalance.getValue().doubleValue(), result -> {
             Optional<OrderModel> order = Screeners.showOrders(result);
             if (order.isPresent()){
@@ -270,10 +285,10 @@ public class RouterController {
     }
 
     public void showRoutes(){
-        SystemModel s = source.getCompletion();
-        SystemModel t = target.getCompletion();
-        StationModel sS = sStation.getValue();
-        StationModel tS = tStation.getValue();
+        SystemModel s = source.getValue();
+        SystemModel t = target.getValue();
+        StationModel sS = s != null ? s.get(sStation.getValue()) : ModelFabric.NONE_STATION;
+        StationModel tS = t != null ? t.get(tStation.getValue()) : ModelFabric.NONE_STATION;
         market.getRoutes(s, sS, t, tS, totalBalance.getValue().doubleValue(), new CrawlerSpecificator(), routes -> {
             Optional<RouteModel> path = Screeners.showRouters(routes);
             if (path.isPresent()){
@@ -319,26 +334,26 @@ public class RouterController {
             path.setContent(null);
     }
 
-    private class RouterChangeListener extends ChangeMarketListener {
+    private final ChangeMarketListener routerChangeListener = new ChangeMarketListener() {
 
         @Override
         public void add(StationModel station) {
-            if (station.getSystem().equals(source.getCompletion())){
-                sStation.getItems().add(station);
+            if (station.getSystem().equals(source.getValue())){
+                sStation.getItems().add(station.getName());
             }
-            if (station.getSystem().equals(target.getCompletion())){
-                tStation.getItems().add(station);
+            if (station.getSystem().equals(target.getValue())){
+                tStation.getItems().add(station.getName());
             }
         }
 
         @Override
         public void remove(StationModel station) {
-            if (station.getSystem().equals(source.getCompletion())){
-                sStation.getItems().remove(station);
+            if (station.getSystem().equals(source.getValue())){
+                sStation.getItems().remove(station.getName());
             }
-            if (station.getSystem().equals(target.getCompletion())){
-                tStation.getItems().remove(station);
+            if (station.getSystem().equals(target.getValue())){
+                tStation.getItems().remove(station.getName());
             }
         }
-    }
+    };
 }

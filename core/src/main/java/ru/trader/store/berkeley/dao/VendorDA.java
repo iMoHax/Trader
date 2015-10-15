@@ -29,6 +29,15 @@ public class VendorDA<T> {
         return DAUtils.getAll(indexByPlaceId, placeId, convertFunc);
     }
 
+    public Collection<BDBVendor> getAllVendors(){
+        return DAUtils.getAll(indexById, v -> v);
+    }
+
+    public Collection<String> getNamesByPlace(long placeId){
+        return DAUtils.getAll(indexByPlaceId, placeId, BDBVendor::getName);
+    }
+
+
     public boolean contains(long placeId){
         return indexByPlaceId.contains(placeId);
     }
