@@ -70,8 +70,10 @@ public class RouteSearcher {
         vGraph.build(source, vendors);
         LOG.trace("Graph is builds");
         RouteCollector collector = new RouteCollector();
-        Crawler<Vendor> crawler = vGraph.crawler(specificator.build(vendors, collector::add), callback);
-        crawler.setMaxSize(scorer.getProfile().getLands());
+        VendorsCrawlerSpecification specification = specificator.build(vendors, collector::add);
+        Crawler<Vendor> crawler = vGraph.crawler(specification, callback);
+        int lands = Math.max(scorer.getProfile().getLands(), specification.getMinLands());
+        crawler.setMaxSize(lands);
         crawler.findMin(target, count);
         return collector.get();
     }
@@ -84,11 +86,16 @@ public class RouteSearcher {
         LOG.trace("Graph is builds");
         RouteCollector collector = new RouteCollector();
         specificator.setGroupCount(vendors.size());
-        Crawler<Vendor> crawler = vGraph.crawler(specificator.build(vendors, collector::add, new LoopRouteSpecification<>(true), true), callback);
-        crawler.setMaxSize(scorer.getProfile().getLands());
+
+        VendorsCrawlerSpecification specification = specificator.build(vendors, collector::add, new LoopRouteSpecification<>(true), true);
+        int lands = Math.max(scorer.getProfile().getLands(), specification.getMinLands());
+        Crawler<Vendor> crawler = vGraph.crawler(specification, callback);
+        crawler.setMaxSize(lands);
         crawler.findMin(source, vendors.size());
-        crawler = vGraph.crawler(specificator.build(vendors, collector::add, new RouteSpecificationByTarget<>(source), false), callback);
-        crawler.setMaxSize(scorer.getProfile().getLands());
+        specification = specificator.build(vendors, collector::add, new RouteSpecificationByTarget<>(source), false);
+        lands = Math.max(scorer.getProfile().getLands(), specification.getMinLands());
+        crawler = vGraph.crawler(specification, callback);
+        crawler.setMaxSize(lands);
         crawler.findMin(source, 1);
         List<Route> routes = collector.get();
         routes.sort((r1, r2) -> {

@@ -15,4 +15,8 @@ public interface CrawlerSpecification<T> {
 
     public int getGroupCount();
 
+    public default int getMinLands(){
+        return routeSpecification() != null ? routeSpecification().matchCount() : 0;
+    }
+
 }
