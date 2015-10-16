@@ -23,12 +23,30 @@
     </columnConstraints>
 
     <Label text="%sEditor.text.orientates" prefWidth="170" GridPane.rowSpan="2"/>
-    <TextField fx:id="system1Text" prefWidth="160" GridPane.columnIndex="1" />
-    <TextField fx:id="system2Text" prefWidth="160" GridPane.columnIndex="2" />
-    <TextField fx:id="system3Text" prefWidth="160" GridPane.columnIndex="3" />
-    <TextField fx:id="system4Text" prefWidth="160" GridPane.rowIndex="1" GridPane.columnIndex="1" />
-    <TextField fx:id="system5Text" prefWidth="160" GridPane.rowIndex="1" GridPane.columnIndex="2" />
-    <TextField fx:id="system6Text" prefWidth="160" GridPane.rowIndex="1" GridPane.columnIndex="3" />
+    <HBox GridPane.columnIndex="1">
+        <TextField fx:id="system1Text" prefWidth="160"/>
+        <Button minWidth="30" onAction="#copySys1"><graphic><Glyph text="FontAwesome|COPY"/></graphic></Button>
+    </HBox>
+    <HBox GridPane.columnIndex="2">
+        <TextField fx:id="system2Text" prefWidth="160"/>
+        <Button minWidth="30" onAction="#copySys2"><graphic><Glyph text="FontAwesome|COPY"/></graphic></Button>
+    </HBox>
+    <HBox GridPane.columnIndex="3">
+        <TextField fx:id="system3Text" prefWidth="160"/>
+        <Button minWidth="30" onAction="#copySys3"><graphic><Glyph text="FontAwesome|COPY"/></graphic></Button>
+    </HBox>
+    <HBox GridPane.rowIndex="1" GridPane.columnIndex="1">
+        <TextField fx:id="system4Text" prefWidth="160"/>
+        <Button minWidth="30" onAction="#copySys4"><graphic><Glyph text="FontAwesome|COPY"/></graphic></Button>
+    </HBox>
+    <HBox GridPane.rowIndex="1" GridPane.columnIndex="2">
+        <TextField fx:id="system5Text" prefWidth="160"/>
+        <Button minWidth="30" onAction="#copySys5"><graphic><Glyph text="FontAwesome|COPY"/></graphic></Button>
+    </HBox>
+    <HBox GridPane.rowIndex="1" GridPane.columnIndex="3">
+        <TextField fx:id="system6Text" prefWidth="160"/>
+        <Button minWidth="30" onAction="#copySys6"><graphic><Glyph text="FontAwesome|COPY"/></graphic></Button>
+    </HBox>
 
     <HBox GridPane.rowIndex="2" spacing="4">
         <Button prefWidth="30" onAction="#add">

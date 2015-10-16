@@ -164,7 +164,7 @@ public class ProfileController {
         profile.shipTankProperty().addListener(tankListener);
         profile.shipCargoProperty().addListener(cargoListener);
         profile.shipEngineProperty().addListener(engineListener);
-        jumpRange.textProperty().bind(Bindings.createStringBinding(()-> String.format("%.1f - %.1f", profile.getShipJumpRange(), profile.getMaxShipJumpRange()),
+        jumpRange.textProperty().bind(Bindings.createStringBinding(()-> String.format("%.1f - %.1f - %.1f", profile.getShipJumpRange(), profile.getMaxShipJumpRange(), profile.getEmptyMaxShipJumpRange()),
                     profile.shipMassProperty(), profile.shipCargoProperty(), profile.shipTankProperty(), profile.shipEngineProperty()
         ));
     }

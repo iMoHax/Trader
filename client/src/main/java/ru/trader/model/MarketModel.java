@@ -92,6 +92,14 @@ public class MarketModel {
         return modeler.get(s);
     }
 
+    public SystemModel getNear(double x, double y, double z, double xlimit, double ylimit, double zlimit){
+        Place s = market.getNear(x, y, z, xlimit, ylimit, zlimit);
+        if (s == null){
+            return ModelFabric.NONE_SYSTEM;
+        }
+        return modeler.get(s);
+    }
+
     public SystemModel add(String name, double x, double y, double z) {
         SystemModel system = modeler.get(market.addPlace(name, x, y, z));
         LOG.info("Add system {} to market {}", system, this);

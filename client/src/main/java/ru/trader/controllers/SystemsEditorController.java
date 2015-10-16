@@ -12,8 +12,10 @@ import javafx.util.converter.DefaultStringConverter;
 import javafx.util.converter.DoubleStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.Main;
 import ru.trader.model.MarketModel;
 import ru.trader.model.ModelFabric;
+import ru.trader.model.ProfileModel;
 import ru.trader.model.SystemModel;
 import ru.trader.model.support.PositionComputer;
 import ru.trader.view.support.Localization;
@@ -168,10 +170,25 @@ public class SystemsEditorController {
     private void fill(SystemModel system){
         if (system != null){
             tblSystems.getItems().add(new SystemData(system));
+            ProfileModel profile = MainController.getProfile();
+            SystemModel s = profile.getPrevSystem();
+            if (!ModelFabric.isFake(s)){
+                searchLandMark(s, profile.getEmptyMaxShipJumpRange()*1.5);
+            }
         }
         for (int i = 0; i < 10; i++) {
             add();
         }
+    }
+
+    private void searchLandMark(SystemModel system, double maxDistance){
+        double x = system.getX(), y = system.getY(), z = system.getZ(), e = 6;
+        system1.setValue(market.getNear(x + maxDistance, y, z, Double.POSITIVE_INFINITY, e, e));
+        system2.setValue(market.getNear(x - maxDistance, y, z, Double.NEGATIVE_INFINITY, e, e));
+        system3.setValue(market.getNear(x, y + maxDistance, z, e, Double.POSITIVE_INFINITY, e));
+        system4.setValue(market.getNear(x, y - maxDistance, z, e, Double.NEGATIVE_INFINITY, e));
+        system5.setValue(market.getNear(x, y, z + maxDistance, e, e, Double.POSITIVE_INFINITY));
+        system6.setValue(market.getNear(x, y, z - maxDistance, e, e, Double.NEGATIVE_INFINITY));
     }
 
     public void add(){
@@ -200,6 +217,36 @@ public class SystemsEditorController {
             systemData.y.set(coord.getY());
             systemData.z.set(coord.getZ());
         }
+    }
+
+    @FXML
+    private void copySys1(){
+        Main.copyToClipboard(system1Text.getText());
+    }
+
+    @FXML
+    private void copySys2(){
+        Main.copyToClipboard(system2Text.getText());
+    }
+
+    @FXML
+    private void copySys3(){
+        Main.copyToClipboard(system3Text.getText());
+    }
+
+    @FXML
+    private void copySys4(){
+        Main.copyToClipboard(system4Text.getText());
+    }
+
+    @FXML
+    private void copySys5(){
+        Main.copyToClipboard(system5Text.getText());
+    }
+
+    @FXML
+    private void copySys6(){
+        Main.copyToClipboard(system6Text.getText());
     }
 
     private void commit(){

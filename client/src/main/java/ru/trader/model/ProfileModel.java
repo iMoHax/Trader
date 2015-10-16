@@ -14,6 +14,7 @@ public class ProfileModel {
     private final MarketModel market;
     private final StringProperty name;
     private final DoubleProperty balance;
+    private final ObjectProperty<SystemModel> prevSystem;
     private final ObjectProperty<SystemModel> system;
     private final ObjectProperty<StationModel> station;
     private final BooleanProperty docked;
@@ -29,6 +30,7 @@ public class ProfileModel {
         name = new SimpleStringProperty();
         balance = new SimpleDoubleProperty();
         system = new SimpleObjectProperty<>();
+        prevSystem = new SimpleObjectProperty<>();
         station = new SimpleObjectProperty<>();
         docked = new SimpleBooleanProperty();
         shipMass = new SimpleDoubleProperty();
@@ -45,7 +47,10 @@ public class ProfileModel {
         balance.addListener((ov, o, n) -> LOG.debug("Change balance, old: {}, new: {}", o, n));
         system.addListener((ov, o, n) -> {
             LOG.debug("Change system, old: {}, new: {}", o, n);
-            if (route.getValue() != null) {getRoute().updateCurrentEntry(n);}
+            if (!ModelFabric.isFake(o)) prevSystem.setValue(o);
+            if (!ModelFabric.isFake(n)){
+                if (route.getValue() != null) {getRoute().updateCurrentEntry(n);}
+            }
         });
         station.addListener((ov, o, n) -> {
             LOG.debug("Change station, old: {}, new: {}", o, n);
@@ -94,6 +99,14 @@ public class ProfileModel {
     public void setBalance(double balance) {
         profile.setBalance(balance);
         this.balance.set(balance);
+    }
+
+    public SystemModel getPrevSystem() {
+        return prevSystem.get();
+    }
+
+    public ReadOnlyObjectProperty<SystemModel> prevSystemProperty() {
+        return prevSystem;
     }
 
     public SystemModel getSystem() {
@@ -205,6 +218,10 @@ public class ProfileModel {
 
     public double getMaxShipJumpRange(){
         return profile.getShip().getMaxJumpRange();
+    }
+
+    public double getEmptyMaxShipJumpRange(){
+        return profile.getShip().getEmptyMaxJumpRange();
     }
 
     private void refresh(){

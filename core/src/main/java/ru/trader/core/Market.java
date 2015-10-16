@@ -27,8 +27,47 @@ public interface Market {
 
     Collection<Place> get();
     default Collection<String> getPlaceNames(){
-        return get() .stream().map(Place::getName).collect(Collectors.toList());
+        return get().stream().map(Place::getName).collect(Collectors.toList());
     }
+    default Place getNear(double x, double y, double z, double xlimit, double ylimit, double zlimit){
+        Optional<Place> place = get().stream()
+                .filter(p -> {
+                    boolean check = false;
+                    if (xlimit == Double.NEGATIVE_INFINITY){
+                        check = p.getX() < x;
+                    } else {
+                        if (xlimit == Double.POSITIVE_INFINITY){
+                            check = p.getX() > x;
+                        } else {
+                            check = Math.abs(p.getX() - x) < xlimit;
+                        }
+                    }
+                    if (!check) return false;
+                    if (ylimit == Double.NEGATIVE_INFINITY){
+                        check = p.getY() < y;
+                    } else {
+                        if (ylimit == Double.POSITIVE_INFINITY){
+                            check = p.getY() > y;
+                        } else {
+                            check = Math.abs(p.getY() - y) < ylimit;
+                        }
+                    }
+                    if (!check) return false;
+                    if (zlimit == Double.NEGATIVE_INFINITY){
+                        check = p.getZ() < z;
+                    } else {
+                        if (zlimit == Double.POSITIVE_INFINITY){
+                            check = p.getZ() > z;
+                        } else {
+                            check = Math.abs(p.getZ() - z) < zlimit;
+                        }
+                    }
+                    return check;
+                })
+                .findFirst();
+        return place.isPresent() ? place.get() : null;
+    }
+
     default Collection<Vendor> getVendors(){
         return getVendors(false);
     }
@@ -36,7 +75,7 @@ public interface Market {
         return new PlacesWrapper(get(), includeTransit);
     }
     default Collection<String> getVendorNames(){
-        return getVendors() .stream().map(Vendor::getFullName).collect(Collectors.toList());
+        return getVendors().stream().map(Vendor::getFullName).collect(Collectors.toList());
     }
     Collection<Group> getGroups();
     Collection<Item> getItems();
