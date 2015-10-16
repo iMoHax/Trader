@@ -127,6 +127,15 @@ public class Ship {
         return engine.getJumpRange(fuel, getLadenMass(fuel));
     }
 
+    public double getEmptyMaxJumpRange(){
+        return getEmptyJumpRange(Math.min(engine.getMaxFuel(), tank));
+    }
+
+    //Unladen jump range
+    public double getEmptyJumpRange(double fuel){
+        return engine.getJumpRange(fuel, mass + fuel);
+    }
+
     public double getFullTankJumpRange(){
         double fuel = tank;
         double range = 0;
