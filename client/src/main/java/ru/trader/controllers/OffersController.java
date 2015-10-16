@@ -236,7 +236,7 @@ public class OffersController {
         @Override
         public void priceChange(OfferModel offer, double oldPrice, double newPrice) {
             StationModel station = getStation();
-            if (station.hasBuy(offer.getItem()) || station.hasSell(offer.getItem())){
+            if (station != null && (station.hasBuy(offer.getItem()) || station.hasSell(offer.getItem()))){
                 ViewUtils.doFX(OffersController.this::sort);
             }
         }

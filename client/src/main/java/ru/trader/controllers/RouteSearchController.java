@@ -67,7 +67,14 @@ public class RouteSearchController {
             fromStation.setItems(n.getStationNamesList());
             fromStation.getSelectionModel().selectFirst();
         });
-        fromStation.valueProperty().addListener((ov, o , n) -> missionsController.setStation(fromSystem.getValue().get(n)));
+        fromStation.valueProperty().addListener((ov, o , n) -> {
+            SystemModel system = fromSystem.getValue();
+            if (system == null || n == null){
+                missionsController.setStation(ModelFabric.NONE_STATION);
+            } else {
+                missionsController.setStation(system.get(n));
+            }
+        });
         toSystem.valueProperty().addListener((ov, o , n) -> {
             toStation.setItems(n.getStationNamesList());
             toStation.getSelectionModel().selectFirst();
