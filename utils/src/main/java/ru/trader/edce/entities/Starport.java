@@ -64,7 +64,8 @@ public class Starport {
         if (o == null || getClass() != o.getClass()) return false;
         Starport starport = (Starport) o;
         return Objects.equals(id, starport.id) &&
-                Objects.equals(commodities, starport.commodities);
+                Objects.equals(commodities, starport.commodities) &&
+                Objects.equals(ships, starport.ships);
     }
 
     @Override

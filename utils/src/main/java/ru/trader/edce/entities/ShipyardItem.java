@@ -1,5 +1,7 @@
 package ru.trader.edce.entities;
 
+import java.util.Objects;
+
 public class ShipyardItem {
     private long id;
     private String name;
@@ -36,5 +38,19 @@ public class ShipyardItem {
                 ", name='" + name + '\'' +
                 ", basevalue=" + basevalue +
                 "} ";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ShipyardItem that = (ShipyardItem) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(basevalue, that.basevalue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

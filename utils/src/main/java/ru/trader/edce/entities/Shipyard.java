@@ -32,4 +32,18 @@ public class Shipyard {
         ships.addAll(unavailables);
         return ships;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Shipyard shipyard = (Shipyard) o;
+        return Objects.equals(items, shipyard.items) &&
+                Objects.equals(unavailables, shipyard.unavailables);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(items, unavailables);
+    }
 }
