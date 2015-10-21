@@ -13,6 +13,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import ru.trader.KeyBinding;
@@ -23,7 +24,7 @@ import ru.trader.view.support.cells.OfferListCell;
 import ru.trader.view.support.cells.OrderListCell;
 import ru.trader.view.support.cells.StationListCell;
 
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 
 
@@ -131,8 +132,10 @@ public class HelperController {
     public void show(Parent content, boolean toggle) {
         if (stage == null){
             stage = new Stage();
-            stage.setScene(new Scene(content));
-            stage.initStyle(StageStyle.UNDECORATED);
+            Scene scene = new Scene(content);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            scene.setFill(Color.TRANSPARENT);
             stage.setAlwaysOnTop(true);
             addDragListeners(content);
             stage.show();
