@@ -8,6 +8,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
+import ru.trader.Main;
+import ru.trader.ServicesManager;
 import ru.trader.core.Engine;
 import ru.trader.model.*;
 import ru.trader.view.support.NumberField;
@@ -48,6 +50,8 @@ public class ProfileController {
     private Button btnAddSystem;
     @FXML
     private Button btnAddStation;
+    @FXML
+    private ToggleButton btnEDCE;
 
     private AutoCompletion<SystemModel> system;
     private ProfileModel profile;
@@ -57,22 +61,25 @@ public class ProfileController {
     private void initialize() {
         init();
         profile = MainController.getProfile();
-        system.valueProperty().addListener((ov, o , n) -> {
+        system.valueProperty().addListener((ov, o, n) -> {
             doAndConsumeChanges(() -> {
                 station.setItems(n.getStationNamesList());
                 station.getSelectionModel().selectFirst();
             });
-            consumeChanges(() -> {profile.setSystem(n); profile.setStation(ModelFabric.NONE_STATION);});
+            consumeChanges(() -> {
+                profile.setSystem(n);
+                profile.setStation(ModelFabric.NONE_STATION);
+            });
         });
         engine.setItems(FXCollections.observableList(Engine.getEngines()));
         engine.setConverter(new EngineStringConverter());
         btnAddSystem.setOnAction(e -> {
             if (ModelFabric.isFake(profile.getSystem())) Screeners.showSystemsEditor(null);
-                else Screeners.showSystemsEditor(profile.getSystem());
+            else Screeners.showSystemsEditor(profile.getSystem());
         });
         btnAddStation.setOnAction(e -> {
             if (ModelFabric.isFake(profile.getStation())) Screeners.showAddStation(profile.getSystem());
-                else Screeners.showEditStation(profile.getStation());
+            else Screeners.showEditStation(profile.getStation());
         });
         shipInfo.setVisible(false);
         initListeners();
@@ -128,6 +135,29 @@ public class ProfileController {
         tank.numberProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setShipTank(n.doubleValue())));
         cargo.numberProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setShipCargo(n.intValue())));
         engine.valueProperty().addListener((ov, o, n) -> consumeChanges(() -> profile.setShipEngine(n)));
+    }
+
+    public void initEDCEBtn(){
+        btnEDCE.selectedProperty().bindBidirectional(Main.SETTINGS.getEdce().activeProperty());
+        setEDCEBtnStyles(btnEDCE.isSelected());
+        ServicesManager.getEdce().activeProperty().addListener((ov, o, n) -> {
+            setEDCEBtnStyles(n);
+        });
+
+    }
+
+    private void setEDCEBtnStyles(boolean active){
+        final String CSS_OK_CLASS = "service-ok";
+        final String CSS_WARNING_CLASS = "service-warning";
+        if (active) {
+            btnEDCE.getStyleClass().remove(CSS_WARNING_CLASS);
+            btnEDCE.getStyleClass().add(CSS_OK_CLASS);
+        } else {
+            btnEDCE.getStyleClass().remove(CSS_OK_CLASS);
+            if (btnEDCE.isSelected()) {
+                btnEDCE.getStyleClass().add(CSS_WARNING_CLASS);
+            }
+        }
     }
 
     public void setProfile(ProfileModel profile){

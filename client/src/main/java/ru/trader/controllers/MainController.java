@@ -112,6 +112,10 @@ public class MainController {
         routerController.init();
     }
 
+    public void initEDCE(){
+        profController.initEDCEBtn();
+    }
+
     public void save(ActionEvent actionEvent) {
         try {
             World.save();

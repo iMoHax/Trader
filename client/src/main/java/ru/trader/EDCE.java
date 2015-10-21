@@ -1,6 +1,9 @@
 package ru.trader;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +40,8 @@ public class EDCE {
     private final StationUpdater updater;
     private final EDSession session;
     private int errors;
-    private long interval;
+    private final Settings.EDCESettings settings;
+    private final BooleanProperty active;
     private boolean forceUpdate;
 
     public EDCE(ProfileModel profile, MarketModel world) throws IOException, ClassNotFoundException {
@@ -45,7 +49,17 @@ public class EDCE {
         this.world = world;
         this.session = new EDSession();
         this.updater = new StationUpdater(world);
-        interval = 20;
+        this.settings = Main.SETTINGS.getEdce();
+        active = new SimpleBooleanProperty(settings.isActive());
+        settings.activeProperty().addListener((ov, o, n) -> {
+            if (n) run();
+            else stop();
+        });
+        if (active.get()) run();
+    }
+
+    public ReadOnlyBooleanProperty activeProperty() {
+        return active;
     }
 
     public void setForceUpdate(boolean forceUpdate) {
@@ -201,11 +215,13 @@ public class EDCE {
 
     public void run(){
         if (executor == null) executor = Executors.newSingleThreadScheduledExecutor();
-        LOG.info("Start EDCE checker each {} sec", interval);
-        checker = executor.scheduleAtFixedRate(new EDCEChecker(), 1, interval, TimeUnit.SECONDS);
+        LOG.info("Start EDCE checker each {} sec", settings.getInterval());
+        active.set(true);
+        checker = executor.scheduleAtFixedRate(new EDCEChecker(), 1, settings.getInterval(), TimeUnit.SECONDS);
     }
     public void stop(){
         LOG.info("Stop EDCE checker");
+        active.set(false);
         if (checker != null){
             checker.cancel(false);
         }

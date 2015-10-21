@@ -3,6 +3,7 @@ package ru.trader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.controllers.MainController;
+import ru.trader.controllers.Screeners;
 
 import java.io.IOException;
 
@@ -10,7 +11,9 @@ public class ServicesManager {
     private final static Logger LOG = LoggerFactory.getLogger(ServicesManager.class);
     private static EDCE edce;
 
-
+    public static EDCE getEdce() {
+        return edce;
+    }
 
     public static void runAll(){
         runEDCE();
@@ -25,7 +28,7 @@ public class ServicesManager {
     private static void runEDCE() {
         try {
             edce = new EDCE(MainController.getProfile(), MainController.getWorld());
-            edce.run();
+            Screeners.getMainController().initEDCE();
         } catch (IOException | ClassNotFoundException e) {
             LOG.warn("Error on init EDCE", e);
         }

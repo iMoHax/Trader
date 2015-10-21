@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<?import ru.trader.view.support.cells.OfferListCell?>
-<?import javafx.geometry.Insets?>
-<?import ru.trader.view.support.NumberField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import org.controlsfx.glyphfont.Glyph?>
+<?import ru.trader.view.support.NumberField?>
 <HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.ProfileController"
       spacing="4" >
@@ -44,4 +42,5 @@
     <ToggleButton minWidth="30" onAction="#toggleHelper">
         <graphic><Glyph text="FontAwesome|ROCKET"/></graphic>
     </ToggleButton>
+    <ToggleButton fx:id="btnEDCE" text="EDCE"/>
 </HBox>

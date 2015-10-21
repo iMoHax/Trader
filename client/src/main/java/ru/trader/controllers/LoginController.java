@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.Main;
 import ru.trader.view.support.Localization;
 
 import java.util.Optional;
@@ -35,6 +36,7 @@ public class LoginController {
         loginButton.setDisable(true);
         email.textProperty().addListener((observable, oldValue, newValue) -> {
             loginButton.setDisable(newValue.trim().isEmpty());
+            Main.SETTINGS.getEdce().setEmail(newValue);
         });
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {

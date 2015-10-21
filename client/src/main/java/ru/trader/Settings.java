@@ -1,8 +1,12 @@
 package ru.trader;
 
+import javafx.beans.property.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.trader.core.*;
+import ru.trader.core.Market;
+import ru.trader.core.MarketFilter;
+import ru.trader.core.Profile;
+import ru.trader.core.Ship;
 
 import java.io.*;
 import java.util.Locale;
@@ -14,16 +18,19 @@ public class Settings {
     private final Properties values = new Properties();
     private final File file;
     private Profile profile;
+    private final EDCESettings edce;
 
 
     public Settings() {
         this.file = null;
         profile = new Profile(new Ship());
+        edce = new EDCESettings();
     }
 
     public Settings(File file) {
         this.file = file;
         profile = new Profile(new Ship());
+        edce = new EDCESettings();
     }
 
     public void load(Market market) {
@@ -35,12 +42,14 @@ public class Settings {
             LOG.error("Error on load settings", e);
         }
         profile = Profile.readFrom(values, market);
+        edce.readFrom(values);
     }
 
     public void save(){
         try (OutputStream os = new FileOutputStream(file)) {
             profile.writeTo(values);
-            values.store(os,"settings");
+            edce.writeTo(values);
+            values.store(os, "settings");
         } catch (IOException e) {
             LOG.error("Error on load settings", e);
         }
@@ -84,7 +93,7 @@ public class Settings {
     }
 
     public long getEMDNAutoUpdate(){
-        return Long.valueOf(values.getProperty("emdn.auto","0"));
+        return Long.valueOf(values.getProperty("emdn.auto", "0"));
     }
 
     public void setBalance(double balance){
@@ -137,5 +146,71 @@ public class Settings {
 
     public Profile getProfile() {
         return profile;
+    }
+
+    public EDCESettings getEdce(){
+        return edce;
+    }
+
+    public final class EDCESettings {
+        private final BooleanProperty active;
+        private final StringProperty email;
+        private final IntegerProperty interval;
+
+        public EDCESettings() {
+            interval = new SimpleIntegerProperty();
+            email = new SimpleStringProperty();
+            active = new SimpleBooleanProperty();
+        }
+
+        public boolean isActive() {
+            return active.get();
+        }
+
+        public BooleanProperty activeProperty() {
+            return active;
+        }
+
+        public void setActive(boolean active) {
+            this.active.set(active);
+        }
+
+        public String getEmail() {
+            return email.get();
+        }
+
+        public StringProperty emailProperty() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email.set(email);
+        }
+
+        public int getInterval() {
+            return interval.get();
+        }
+
+        public IntegerProperty intervalProperty() {
+            return interval;
+        }
+
+        public void setInterval(int interval) {
+            this.interval.set(interval);
+        }
+
+        public void readFrom(Properties values){
+            setActive(!"0".equals(values.getProperty("edce.active", "0")));
+            setEmail(values.getProperty("edce.mail", "example@mail.com"));
+            setInterval(Integer.valueOf(values.getProperty("edce.interval", "20")));
+        }
+
+        public void writeTo(Properties values){
+            values.setProperty("edce.active", isActive() ? "1":"0");
+            values.setProperty("edce.mail", getEmail());
+            values.setProperty("edce.interval", String.valueOf(getInterval()));
+        }
+
+
     }
 }

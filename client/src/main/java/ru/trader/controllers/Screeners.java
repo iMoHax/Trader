@@ -63,7 +63,7 @@ public class Screeners {
         return mainScreen;
     }
 
-    private static void addStylesheet(Parent screen){
+    private static void addStylesheet(Parent screen) {
         screen.getStylesheets().addAll(mainScreen.getStylesheets());
     }
 
@@ -186,6 +186,8 @@ public class Screeners {
     public static Parent getMainScreen(){
         return mainScreen;
     }
+
+    public static MainController getMainController(){return mainController;}
 
     public static void changeItemDesc(ItemModel item){
         itemDescController.setItemDesc(item);
