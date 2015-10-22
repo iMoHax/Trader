@@ -23,30 +23,32 @@ public class Path<T extends Connectable<T>> {
         Ship ship = entries.get(0).getShip();
         double fuel = ship.getTank();
         minFuel = 0; maxFuel = 0; fuelCost = 0; refillCount = 0;
-        boolean adding = true;
+        int minTo = 0;
         for (int i = entries.size() - 1; i >= 0; i--) {
             ConnectibleGraph<T>.BuildEdge edge = entries.get(i);
             if (i < entries.size() - 1 && edge.getSource().getEntry().canRefill()){
-                adding = false;
+                if (minTo == 0) minTo = i+1;
                 fuel = edge.getMaxFuel();
             }
             if (fuel < 0 || fuel < edge.getMinFuel()){
                 minFuel = ship.getTank()+1;
+                minTo = -1;
             }
             double cost = edge.getFuelCost(fuel);
             fuelCost += cost;
             fuel -= cost;
-            if (adding) {
-                minFuel += edge.getMinFuel();
-            }
         }
         maxFuel = -1;
-        for (ConnectibleGraph<T>.BuildEdge edge : entries) {
-            if (maxFuel != -1){
+        for (int i = 0; i < entries.size(); i++) {
+            ConnectibleGraph<T>.BuildEdge edge = entries.get(i);
+            if (maxFuel != -1) {
                 maxFuel += edge.getFuelCost(maxFuel + edge.getMinFuel());
             }
-            if (maxFuel == -1 || edge.getMaxFuel() < maxFuel){
+            if (maxFuel == -1 || edge.getMaxFuel() < maxFuel) {
                 maxFuel = edge.getMaxFuel();
+            }
+            if (minTo != -1 && i >= minTo) {
+                minFuel += edge.getFuelCost(minFuel + edge.getMinFuel());
             }
         }
         refillCount = getRefillCount(ship.getTank());
