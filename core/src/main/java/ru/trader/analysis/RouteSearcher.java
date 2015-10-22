@@ -11,6 +11,7 @@ import ru.trader.core.Vendor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RouteSearcher {
     private final static Logger LOG = LoggerFactory.getLogger(RouteSearcher.class);
@@ -48,6 +49,7 @@ public class RouteSearcher {
         LOG.trace("Start search path from {} to {} ", source, target);
         ConnectibleGraph<Place> graph = new ConnectibleGraph<>(profile, callback);
         LOG.trace("Build connectible graph");
+        places = filtered(source, places);
         graph.build(source, places);
         LOG.trace("Graph is builds");
         List<List<Edge<Place>>> paths = new ArrayList<>();
@@ -67,6 +69,7 @@ public class RouteSearcher {
         LOG.trace("Start search route  from {} to {}", source, target);
         VendorsGraph vGraph = new VendorsGraph(scorer, callback);
         LOG.trace("Build vendors graph");
+        vendors = filtered(source, vendors);
         vGraph.build(source, vendors);
         LOG.trace("Graph is builds");
         RouteCollector collector = new RouteCollector();
@@ -82,6 +85,7 @@ public class RouteSearcher {
         LOG.trace("Start search loops from {}", source);
         VendorsGraph vGraph = new VendorsGraph(scorer, callback);
         LOG.trace("Build vendors graph");
+        vendors = filtered(source, vendors);
         vGraph.build(source, vendors);
         LOG.trace("Graph is builds");
         RouteCollector collector = new RouteCollector();
@@ -104,6 +108,11 @@ public class RouteSearcher {
             return Double.compare(s2, s1);
         });
         return routes;
+    }
+
+    protected <T extends Connectable<T>> Collection<T> filtered(T from, Collection<T> set){
+        final double maxDistance = scorer.getProfile().getShip().getMaxJumpRange() * scorer.getProfile().getJumps();
+        return set.parallelStream().filter(v -> from.getDistance(v) <= maxDistance).collect(Collectors.toList());
     }
 
     private class RouteCollector {
