@@ -13,7 +13,6 @@ import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.StationsProvider;
 
-import java.util.Collection;
 
 public class MissionsController {
 
@@ -118,7 +117,7 @@ public class MissionsController {
         ItemModel item = this.item.getValue();
         long count = supplyCount.getValue().longValue();
         double profit = supplyProfit.getValue().doubleValue();
-        if (item != null && profit > 0){
+        if (station != null && item != null && profit > 0){
             missions.add(new MissionModel(station, item, count, profit));
         }
     }
