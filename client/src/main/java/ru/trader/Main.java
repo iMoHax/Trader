@@ -40,6 +40,9 @@ public class Main extends Application {
         loadMainScene();
         loadResources();
         primaryStage.show();
+        if (Main.SETTINGS.helper().isVisible()){
+            Screeners.showHelper();
+        }
         ServicesManager.runAll();
     }
 
@@ -67,10 +70,14 @@ public class Main extends Application {
     public static void changeLocale(Locale locale) throws IOException {
         Localization.setLocale(locale);
         primaryStage.hide();
+        Screeners.closeAll();
         MainController.getWorld().refresh();
         loadMainScene();
         loadResources();
         primaryStage.show();
+        if (Main.SETTINGS.helper().isVisible()){
+            Screeners.showHelper();
+        }
     }
 
     private static void loadMainScene() throws IOException {

@@ -19,18 +19,21 @@ public class Settings {
     private final File file;
     private Profile profile;
     private final EDCESettings edce;
+    private final HelperSettings helper;
 
 
     public Settings() {
         this.file = null;
         profile = new Profile(new Ship());
         edce = new EDCESettings();
+        helper = new HelperSettings();
     }
 
     public Settings(File file) {
         this.file = file;
         profile = new Profile(new Ship());
         edce = new EDCESettings();
+        helper = new HelperSettings();
     }
 
     public void load(Market market) {
@@ -43,12 +46,14 @@ public class Settings {
         }
         profile = Profile.readFrom(values, market);
         edce.readFrom(values);
+        helper.readFrom(values);
     }
 
     public void save(){
         try (OutputStream os = new FileOutputStream(file)) {
             profile.writeTo(values);
             edce.writeTo(values);
+            helper.writeTo(values);
             values.store(os, "settings");
         } catch (IOException e) {
             LOG.error("Error on load settings", e);
@@ -148,8 +153,12 @@ public class Settings {
         return profile;
     }
 
-    public EDCESettings getEdce(){
+    public EDCESettings edce(){
         return edce;
+    }
+
+    public HelperSettings helper(){
+        return helper;
     }
 
     public final class EDCESettings {
@@ -213,4 +222,65 @@ public class Settings {
 
 
     }
+
+    public final class HelperSettings {
+        private final IntegerProperty x;
+        private final IntegerProperty y;
+        private final BooleanProperty visible;
+
+        public HelperSettings() {
+            x = new SimpleIntegerProperty();
+            y = new SimpleIntegerProperty();
+            visible = new SimpleBooleanProperty();
+        }
+
+        public int getX() {
+            return x.get();
+        }
+
+        public IntegerProperty xProperty() {
+            return x;
+        }
+
+        public void setX(int x) {
+            this.x.set(x);
+        }
+
+        public int getY() {
+            return y.get();
+        }
+
+        public IntegerProperty yProperty() {
+            return y;
+        }
+
+        public void setY(int y) {
+            this.y.set(y);
+        }
+
+        public boolean isVisible() {
+            return visible.get();
+        }
+
+        public BooleanProperty visibleProperty() {
+            return visible;
+        }
+
+        public void setVisible(boolean visible) {
+            this.visible.set(visible);
+        }
+
+        public void readFrom(Properties values){
+            setVisible(!"0".equals(values.getProperty("helper.visible", "0")));
+            setX(Integer.valueOf(values.getProperty("helper.x", "100")));
+            setY(Integer.valueOf(values.getProperty("helper.y", "100")));
+        }
+
+        public void writeTo(Properties values){
+            values.setProperty("helper.visible", isVisible() ? "1":"0");
+            values.setProperty("helper.x", String.valueOf(getX()));
+            values.setProperty("helper.y", String.valueOf(getY()));
+        }
+    }
+
 }

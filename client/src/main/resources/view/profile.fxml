@@ -39,7 +39,7 @@
     <ToggleButton minWidth="30" onAction="#toggleShipInfo">
         <graphic><Glyph text="FontAwesome|SPACE_SHUTTLE"/></graphic>
     </ToggleButton>
-    <ToggleButton minWidth="30" onAction="#toggleHelper">
+    <ToggleButton fx:id="btnHelper" minWidth="30">
         <graphic><Glyph text="FontAwesome|ROCKET"/></graphic>
     </ToggleButton>
     <ToggleButton fx:id="btnEDCE" text="EDCE"/>

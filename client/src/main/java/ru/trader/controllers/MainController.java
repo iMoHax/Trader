@@ -110,6 +110,7 @@ public class MainController {
         itemsController.init();
         offersController.init();
         routerController.init();
+        //TODO: add init all controllers
     }
 
     public void initEDCE(){

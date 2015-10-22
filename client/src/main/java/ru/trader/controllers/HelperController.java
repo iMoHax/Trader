@@ -66,9 +66,6 @@ public class HelperController {
 
     @FXML
     private void initialize(){
-        ProfileModel profile = MainController.getProfile();
-        profile.routeProperty().addListener(routeListener);
-        profile.dockedProperty().addListener(dockedListener);
         buyOrders.setCellFactory(new OrderListCell(false));
         sellOrders.setCellFactory(new OrderListCell(true));
         sellOffers.setCellFactory(new OfferListCell(true));
@@ -83,7 +80,6 @@ public class HelperController {
         infoGroup.managedProperty().bind(infoGroup.visibleProperty());
         hideInfo();
         hideStationInfo();
-        bindKeys();
     }
 
     private void resize(){
@@ -138,11 +134,18 @@ public class HelperController {
             scene.setFill(Color.TRANSPARENT);
             stage.setAlwaysOnTop(true);
             addDragListeners(content);
+            stage.setX(Main.SETTINGS.helper().getX());
+            stage.setY(Main.SETTINGS.helper().getY());
+            bind();
+            Main.SETTINGS.helper().setVisible(true);
             stage.show();
+            setRoute(MainController.getProfile().getRoute());
         } else {
             if (toggle && stage.isShowing()){
+                Main.SETTINGS.helper().setVisible(false);
                 stage.hide();
             } else {
+                Main.SETTINGS.helper().setVisible(true);
                 stage.show();
             }
         }
@@ -151,7 +154,26 @@ public class HelperController {
     public void close(){
         if (stage != null){
             stage.close();
+            unbind();
+            stage = null;
         }
+    }
+
+    private void bind(){
+        ProfileModel profile = MainController.getProfile();
+        profile.routeProperty().addListener(routeListener);
+        profile.dockedProperty().addListener(dockedListener);
+        Main.SETTINGS.helper().xProperty().bind(stage.xProperty());
+        Main.SETTINGS.helper().yProperty().bind(stage.yProperty());
+        bindKeys();
+    }
+
+    private void unbind(){
+        ProfileModel profile = MainController.getProfile();
+        profile.routeProperty().removeListener(routeListener);
+        profile.dockedProperty().removeListener(dockedListener);
+        Main.SETTINGS.helper().xProperty().unbind();
+        Main.SETTINGS.helper().yProperty().unbind();
     }
 
     private void setRoute(RouteModel route){
@@ -246,8 +268,7 @@ public class HelperController {
     }
 
     private void bindKeys(){
-        KeyBinding.bind(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD4, KeyEvent.CTRL_MASK | KeyEvent.ALT_MASK), k -> ViewUtils.doFX(this::previous));
-        KeyBinding.bind(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD6, KeyEvent.CTRL_MASK | KeyEvent.ALT_MASK), k -> ViewUtils.doFX(this::next));
+        KeyBinding.bind(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_MASK), k -> ViewUtils.doFX(this::complete));
     }
 
     private final ChangeListener<? super Number> currentEntryListener = (ov, o, n) -> ViewUtils.doFX(() -> setRouteEntry(n.intValue()));

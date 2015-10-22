@@ -49,7 +49,7 @@ public class EDCE {
         this.world = world;
         this.session = new EDSession();
         this.updater = new StationUpdater(world);
-        this.settings = Main.SETTINGS.getEdce();
+        this.settings = Main.SETTINGS.edce();
         active = new SimpleBooleanProperty(settings.isActive());
         settings.activeProperty().addListener((ov, o, n) -> {
             if (n) run();

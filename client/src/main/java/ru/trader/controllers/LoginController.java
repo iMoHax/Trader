@@ -36,7 +36,7 @@ public class LoginController {
         loginButton.setDisable(true);
         email.textProperty().addListener((observable, oldValue, newValue) -> {
             loginButton.setDisable(newValue.trim().isEmpty());
-            Main.SETTINGS.getEdce().setEmail(newValue);
+            Main.SETTINGS.edce().setEmail(newValue);
         });
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {

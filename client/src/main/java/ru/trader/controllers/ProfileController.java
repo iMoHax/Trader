@@ -51,6 +51,8 @@ public class ProfileController {
     @FXML
     private Button btnAddStation;
     @FXML
+    private ToggleButton btnHelper;
+    @FXML
     private ToggleButton btnEDCE;
 
     private AutoCompletion<SystemModel> system;
@@ -81,6 +83,8 @@ public class ProfileController {
             if (ModelFabric.isFake(profile.getStation())) Screeners.showAddStation(profile.getSystem());
             else Screeners.showEditStation(profile.getStation());
         });
+        btnHelper.setOnAction(e -> toggleHelper());
+        btnHelper.setSelected(Main.SETTINGS.helper().isVisible());
         shipInfo.setVisible(false);
         initListeners();
     }
@@ -138,7 +142,7 @@ public class ProfileController {
     }
 
     public void initEDCEBtn(){
-        btnEDCE.selectedProperty().bindBidirectional(Main.SETTINGS.getEdce().activeProperty());
+        btnEDCE.selectedProperty().bindBidirectional(Main.SETTINGS.edce().activeProperty());
         setEDCEBtnStyles(btnEDCE.isSelected());
         ServicesManager.getEdce().activeProperty().addListener((ov, o, n) -> {
             setEDCEBtnStyles(n);

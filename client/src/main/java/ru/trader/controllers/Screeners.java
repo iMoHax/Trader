@@ -238,7 +238,7 @@ public class Screeners {
         return showTextDialog(Localization.getString("verify.title"),
                 Localization.getString("verify.header"),
                 Localization.getString("verify.content")
-                );
+        );
     }
 
     public static Optional<String> showTextDialog(String title, String header, String content){
@@ -247,6 +247,10 @@ public class Screeners {
         dialog.setHeaderText(header);
         dialog.setContentText(content);
         return dialog.showAndWait();
+    }
+
+    public static void showHelper(){
+        helperController.show(helperScreen, false);
     }
 
     public static void toggleHelper(){
