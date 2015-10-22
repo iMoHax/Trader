@@ -5,6 +5,7 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import ru.trader.analysis.RouteEntry;
 import ru.trader.core.Order;
 import ru.trader.model.support.BindingsHelper;
@@ -101,6 +102,10 @@ public class RouteEntryModel {
 
     public ObservableList<MissionModel> missions() {
         return missions;
+    }
+
+    public ObservableList<MissionModel> getCompletedMissions() {
+        return new FilteredList<>(missions, MissionModel::isCompleted);
     }
 
     void refresh(MarketModel market){

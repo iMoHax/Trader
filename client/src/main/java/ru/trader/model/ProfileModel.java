@@ -224,6 +224,10 @@ public class ProfileModel {
         return profile.getShip().getEmptyMaxJumpRange();
     }
 
+    public void clearRoute(){
+        route.setValue(null);
+    }
+
     private void refresh(){
         name.setValue(profile.getName());
         balance.setValue(profile.getBalance());

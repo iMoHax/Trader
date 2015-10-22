@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<?import ru.trader.view.support.cells.OfferListCell?>
-<?import javafx.geometry.Insets?>
-<?import ru.trader.view.support.NumberField?>
 <?import org.controlsfx.glyphfont.Glyph?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.HelperController"
-      spacing="4" maxWidth="160">
-    <HBox><Label text="Система:" /><Label fx:id="system" /></HBox>
-    <HBox><Label text="Станция:" /><Label fx:id="station" /></HBox>
-    <HBox><Label text="Время:" /><Label fx:id="time" /></HBox>
+      spacing="4" minWidth="200" fx:id="helper">
+    <HBox>
+        <VBox>
+            <HBox>
+                <Button onAction="#copy" minWidth="30">
+                    <graphic><Glyph text="FontAwesome|COPY" /></graphic>
+                </Button>
+                <Label fx:id="system" text="Breksta" prefWidth="130" maxWidth="130" styleClass="text-big" />
+                <Label fx:id="time" text="0:44:15" styleClass="text-small"/>
+            </HBox>
+            <Label fx:id="station" text="Pieres Market" styleClass="text-medium" />
+        </VBox>
+    </HBox>
     <HBox fx:id="refuelGroup"><Label text="Заправить:" /><Label fx:id="refuel" /></HBox>
+    <HBox>
+        <ToggleButton fx:id="infoBtn" minWidth="30">
+            <graphic><Glyph text="FontAwesome|INFO"/></graphic>
+        </ToggleButton>
+        <Button minWidth="30" onAction="#complete">
+            <graphic><Glyph text="FontAwesome|CHECK_CIRCLE"/></graphic>
+        </Button>
+    </HBox>
     <VBox fx:id="ordersGroup" maxHeight="240">
         <Label text="Продать:" />
         <ListView fx:id="sellOrders"/>
@@ -30,18 +44,7 @@
         <Label text="Товары:" />
         <ListView fx:id="sellOffers"/>
     </VBox>
-    <HBox>
-        <Button minWidth="30" onAction="#previous">
-            <graphic><Glyph text="FontAwesome|ARROW_LEFT"/></graphic>
-        </Button>
-        <Button minWidth="30" onAction="#next">
-            <graphic><Glyph text="FontAwesome|ARROW_RIGHT"/></graphic>
-        </Button>
-        <Button minWidth="30" onAction="#copy">
-            <graphic><Glyph text="FontAwesome|COPY"/></graphic>
-        </Button>
-        <ToggleButton fx:id="infoBtn" minWidth="30">
-            <graphic><Glyph text="FontAwesome|HELP"/></graphic>
-        </ToggleButton>
-    </HBox>
+    <padding>
+        <Insets top="5" left="5" right="5" bottom="5" />
+    </padding>
 </VBox>

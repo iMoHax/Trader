@@ -1,8 +1,11 @@
 package ru.trader.model;
 
 import ru.trader.analysis.CrawlerSpecificator;
+import ru.trader.analysis.RouteReserve;
 import ru.trader.core.Offer;
 import ru.trader.store.simple.SimpleOffer;
+
+import java.util.Collection;
 
 public class MissionModel {
     private final StationModel target;
@@ -10,6 +13,8 @@ public class MissionModel {
     private final long count;
     private final double profit;
     private final Offer offer;
+    private long need;
+    private Collection<RouteReserve> reserves;
 
     public MissionModel(StationModel target, double profit) {
         this.target = target;
@@ -17,6 +22,7 @@ public class MissionModel {
         item = null;
         count = 0;
         offer = null;
+        need = 0;
     }
 
     public MissionModel(StationModel target, long count, double profit) {
@@ -25,6 +31,7 @@ public class MissionModel {
         this.profit = profit;
         this.item = null;
         offer = null;
+        need = 0;
     }
 
 
@@ -34,6 +41,7 @@ public class MissionModel {
         this.count = count;
         this.profit = profit;
         offer = SimpleOffer.fakeBuy(target.getStation(), item.getItem(), profit/count, count);
+        need = count;
     }
 
     public StationModel getTarget() {
@@ -85,5 +93,32 @@ public class MissionModel {
 
     Offer getOffer(){
         return offer;
+    }
+
+    Collection<RouteReserve> getReserves() {
+        return reserves;
+    }
+
+    void setReserves(Collection<RouteReserve> reserves) {
+        assert this.reserves == null;
+        this.reserves = reserves;
+    }
+
+    void complete(Collection<OrderModel> orders){
+        if (isSupply()){
+            for (OrderModel order : orders) {
+                if (item.equals(order.getOffer().getItem()) && target.equals(order.getBuyer())){
+                    for (RouteReserve reserve : reserves) {
+                        if (order.getOffer().getOffer().equals(reserve.getOrder().getSell())){
+                            need -= order.getCount();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public boolean isCompleted(){
+        return need <= 0;
     }
 }

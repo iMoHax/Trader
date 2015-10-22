@@ -159,30 +159,72 @@ public class HelperController {
             this.route.currentEntryProperty().removeListener(currentEntryListener);
         }
         this.route = route;
-        setRouteEntry(route.getCurrentEntry());
-        this.route.currentEntryProperty().addListener(currentEntryListener);
-        showStationInfo();
+        if (route != null) {
+            setRouteEntry(route.getCurrentEntry());
+            this.route.currentEntryProperty().addListener(currentEntryListener);
+            showStationInfo();
+        } else {
+            setRouteEntry(-1);
+            hideStationInfo();
+        }
     }
 
     private void setRouteEntry(int index){
-        entry = route.get(index);
-        station.setText(entry.getStation().getName());
-        system.setText(entry.getStation().getSystem().getName());
-        time.setText(ViewUtils.timeToString(entry.getTime()));
-        refuel.setText(String.valueOf(entry.getRefill()));
-        buyOrders.setItems(entry.orders());
-        sellOrders.setItems(entry.sellOrders());
-        missions.setItems(entry.missions());
-        stations.setItems(FXCollections.observableArrayList(route.getStations(index)));
-        sellOffers.setItems(FXCollections.observableArrayList(route.getSellOffers(index)));
-        Main.copyToClipboard(system.getText());
+        if (index != -1) {
+            entry = route.get(index);
+            station.setText(entry.getStation().getName());
+            system.setText(entry.getStation().getSystem().getName());
+            time.setText(ViewUtils.timeToString(entry.getTime()));
+            refuel.setText(String.valueOf(entry.getRefill()));
+            buyOrders.setItems(entry.orders());
+            sellOrders.setItems(entry.sellOrders());
+            missions.setItems(entry.getCompletedMissions());
+            stations.setItems(FXCollections.observableArrayList(route.getStations(index)));
+            sellOffers.setItems(FXCollections.observableArrayList(route.getSellOffers(index)));
+            Main.copyToClipboard(system.getText());
+        } else {
+            entry = null;
+            station.setText("");
+            system.setText("No route");
+            time.setText("");
+            refuel.setText("");
+            buyOrders.setItems(FXCollections.emptyObservableList());
+            sellOrders.setItems(FXCollections.emptyObservableList());
+            missions.setItems(FXCollections.emptyObservableList());
+            stations.setItems(FXCollections.emptyObservableList());
+            sellOffers.setItems(FXCollections.emptyObservableList());
+        }
+    }
+
+    @FXML
+    private void complete(){
+        if (route == null) return;
+        ProfileModel profile = MainController.getProfile();
+        boolean isEnd = route.isEnd();
+        RouteEntryModel entry = this.entry;
+        if (profile.isDocked() && MainController.getProfile().getStation().equals(entry.getStation())) {
+            route.complete();
+            if (!isEnd)
+                profile.setDocked(false);
+            else {
+                if (!route.isLoop()) {
+                    profile.clearRoute();
+                }
+            }
+        } else {
+            profile.setSystem(entry.getStation().getSystem());
+            if (!entry.isTransit()) {
+                profile.setStation(entry.getStation());
+                profile.setDocked(true);
+            }
+        }
     }
 
     @FXML
     private void next(){
         int index = route.getCurrentEntry();
         if (index < route.getJumps() - 1){
-            route.setCurrentEntry(index+1);
+            route.setCurrentEntry(index + 1);
         } else {
             if (route.isLoop()){
                 route.setCurrentEntry(0);
@@ -194,7 +236,7 @@ public class HelperController {
     private void previous(){
         int index = route.getCurrentEntry();
         if (index > 0){
-            route.setCurrentEntry(index-1);
+            route.setCurrentEntry(index - 1);
         }
     }
 
@@ -210,11 +252,7 @@ public class HelperController {
 
     private final ChangeListener<? super Number> currentEntryListener = (ov, o, n) -> ViewUtils.doFX(() -> setRouteEntry(n.intValue()));
     private final ChangeListener<Boolean> dockedListener = (ov, o, n) -> ViewUtils.doFX(() -> setDocked(n));
-    private final ChangeListener<RouteModel> routeListener = (ov, o, n) -> {
-        if (n != null){
-            ViewUtils.doFX(() -> setRoute(n));
-        }
-    };
+    private final ChangeListener<RouteModel> routeListener = (ov, o, n) -> ViewUtils.doFX(() -> setRoute(n));
 
     private void addDragListeners(final Node node){
         new DragListener(node);

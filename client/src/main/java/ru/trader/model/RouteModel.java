@@ -146,6 +146,7 @@ public class RouteModel {
             Collection<RouteReserve> reserves = RouteFiller.getReserves(_route, offset, offer);
             if (!reserves.isEmpty()) {
                 _route.reserve(reserves);
+                mission.setReserves(reserves);
                 completeIndex = RouteReserve.getCompleteIndex(reserves, offset);
                 for (RouteEntryModel entry : entries) {
                     entry.sellOrders().clear();
@@ -158,6 +159,7 @@ public class RouteModel {
             RouteReserve reserve = RouteFiller.getReserves(_route, offset, mission.getTarget().getStation(), mission.getCount());
             if (reserve != null) {
                 _route.reserve(reserve);
+                mission.setReserves(Collections.singleton(reserve));
                 completeIndex = reserve.getToIndex();
                 for (RouteEntryModel entry : entries) {
                     entry.refresh(market);
@@ -180,6 +182,7 @@ public class RouteModel {
                 Collection<RouteReserve> reserves = RouteFiller.getReserves(_route, offset, offer);
                 if (!reserves.isEmpty()) {
                     _route.reserve(reserves);
+                    mission.setReserves(reserves);
                     completeIndex = RouteReserve.getCompleteIndex(reserves, offset);
                 }
             } else
@@ -187,6 +190,7 @@ public class RouteModel {
                 RouteReserve reserve = RouteFiller.getReserves(_route, offset, mission.getTarget().getStation(), mission.getCount());
                 if (reserve != null) {
                     _route.reserve(reserve);
+                    mission.setReserves(Collections.singleton(reserve));
                     completeIndex = reserve.getToIndex();
                 }
             } else
@@ -198,11 +202,7 @@ public class RouteModel {
                 entries.get(completeIndex).add(mission);
             }
         }
-        for (RouteEntryModel entry : entries) {
-            entry.sellOrders().clear();
-            entry.refresh(market);
-        }
-        fillSellOrders();
+        refresh();
     }
 
     public Collection<StationModel> getStations(int offset){
@@ -267,11 +267,10 @@ public class RouteModel {
                 setCurrentEntry(index+1);
                 return;
             }
-            for (int i = index+1; i < entries.size(); i++) {
+            for (int i = index; i < entries.size(); i++) {
                 entry = entries.get(i);
                 if (system.equals(entry.getStation().getSystem())
-                    && (station == null || station == ModelFabric.NONE_STATION ||
-                        station.equals(entry.getStation()))
+                    && (ModelFabric.isFake(station) || station.equals(entry.getStation()))
                     )
                 {
                     setCurrentEntry(i);
@@ -283,8 +282,7 @@ public class RouteModel {
                 for (int i = 0; i < index-1; i++) {
                     entry = entries.get(i);
                     if (system.equals(entry.getStation().getSystem())
-                            && (station == null || station == ModelFabric.NONE_STATION ||
-                            station.equals(entry.getStation()))
+                            && (ModelFabric.isFake(station) || station.equals(entry.getStation()))
                         )
                     {
                         setCurrentEntry(i);
@@ -294,5 +292,56 @@ public class RouteModel {
                 }
             }
         }
+    }
+
+    public void complete(){
+        int index = getCurrentEntry();
+        RouteEntryModel entry = entries.get(index);
+        Collection<OrderModel> orders = entry.orders();
+        for (int i = index+1; i < entries.size(); i++) {
+            RouteEntryModel e = entries.get(i);
+            for (MissionModel mission : e.missions()) {
+                mission.complete(orders);
+            }
+        }
+        if (isLoop()){
+            for (int i = 0; i < index; i++) {
+                RouteEntryModel e = entries.get(i);
+                for (MissionModel mission : e.missions()) {
+                    mission.complete(orders);
+                }
+            }
+        }
+        Collection<MissionModel> missions = new ArrayList<>(entry.missions());
+        boolean needRefresh = false;
+        for (MissionModel mission : missions) {
+            mission.complete(orders);
+            if (mission.isCompleted()){
+                Collection<RouteReserve> reserves = mission.getReserves();
+                if (reserves != null) {
+                    needRefresh = true;
+                    _route.unreserve(reserves);
+                }
+                entry.remove(mission);
+            }
+        }
+        if (needRefresh){
+            refresh();
+        }
+        if (index == entries.size()-1){
+            if (isLoop()) setCurrentEntry(0);
+        }
+    }
+
+    public boolean isEnd(){
+        return getCurrentEntry() == entries.size()-1;
+    }
+
+    private void refresh(){
+        for (RouteEntryModel entry : entries) {
+            entry.sellOrders().clear();
+            entry.refresh(market);
+        }
+        fillSellOrders();
     }
 }
