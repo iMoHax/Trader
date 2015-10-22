@@ -140,6 +140,7 @@ public class RouteModel {
     }
 
     public void add(int offset, MissionModel mission){
+        mission = mission.getCopy();
         int completeIndex = -1;
         Offer offer = mission.getOffer();
         if (offer != null){
@@ -176,6 +177,7 @@ public class RouteModel {
 
     public void addAll(int offset, Collection<MissionModel> missions){
         for (MissionModel mission : missions) {
+            mission = mission.getCopy();
             Offer offer = mission.getOffer();
             int completeIndex = -1;
             if (offer != null){
