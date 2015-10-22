@@ -31,6 +31,12 @@ public class RouteSpecificationByPair<T> implements RouteSpecification<T> {
     }
 
     @Override
+    public boolean content(Edge<T> edge, Traversal<T> entry) {
+        T obj = edge.getTarget().getEntry();
+        return second.equals(obj) || first.contains(obj);
+    }
+
+    @Override
     public int lastFound(Edge<T> edge, Traversal<T> entry) {
         return searchPair(edge, entry);
     }

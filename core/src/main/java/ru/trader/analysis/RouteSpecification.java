@@ -6,6 +6,7 @@ import ru.trader.analysis.graph.Traversal;
 public interface RouteSpecification<T> {
 
     public boolean specified(Edge<T> edge, Traversal<T> entry);
+           default boolean content(Edge<T> edge, Traversal<T> entry){return specified(edge, entry);}
     public default int lastFound(Edge<T> edge, Traversal<T> entry){
         return specified(edge, entry) ? 0 : matchCount();
     }
@@ -23,6 +24,11 @@ public interface RouteSpecification<T> {
             @Override
             public boolean specified(Edge<T> edge, Traversal<T> entry) {
                 return RouteSpecification.this.specified(edge, entry) && other.specified(edge, entry);
+            }
+
+            @Override
+            public boolean content(Edge<T> edge, Traversal<T> entry) {
+                return RouteSpecification.this.content(edge, entry) || other.content(edge, entry);
             }
 
             @Override
@@ -74,6 +80,11 @@ public interface RouteSpecification<T> {
             }
 
             @Override
+            public boolean content(Edge<T> edge, Traversal<T> entry) {
+                return RouteSpecification.this.content(edge, entry) || other.content(edge, entry);
+            }
+
+            @Override
             public int lastFound(Edge<T> edge, Traversal<T> entry) {
                 return Math.min(RouteSpecification.this.lastFound(edge, entry), other.lastFound(edge, entry));
             }
@@ -118,6 +129,12 @@ public interface RouteSpecification<T> {
             @Override
             public boolean specified(Edge<T> edge, Traversal<T> entry) {
                 return !RouteSpecification.this.specified(edge, entry);
+            }
+
+
+            @Override
+            public boolean content(Edge<T> edge, Traversal<T> entry) {
+                return !RouteSpecification.this.content(edge, entry);
             }
 
             @Override

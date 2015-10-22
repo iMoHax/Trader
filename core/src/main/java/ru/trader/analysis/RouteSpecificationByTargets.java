@@ -25,6 +25,11 @@ public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
     }
 
     @Override
+    public boolean content(Edge<T> edge, Traversal<T> entry) {
+        return targets.contains(edge.getTarget().getEntry());
+    }
+
+    @Override
     public int lastFound(Edge<T> edge, Traversal<T> entry) {
         return all ? containsAll(edge, entry) : containsAny(edge, entry);
     }

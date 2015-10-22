@@ -4,9 +4,7 @@ import ru.trader.analysis.graph.Edge;
 import ru.trader.core.Offer;
 import ru.trader.core.Vendor;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -87,6 +85,14 @@ public class CrawlerSpecificator {
             if (res) return true;
         }
         return false;
+    }
+
+    public Collection<Vendor> getVendors(Collection<Vendor> vendors){
+        Set<Vendor> v = new HashSet<>(containsAny);
+        v.addAll(any);
+        v.addAll(all);
+        v.addAll(vendors);
+        return v;
     }
 
     private RouteSpecification<Vendor> buildOffersSpec(Collection<Vendor> vendors){

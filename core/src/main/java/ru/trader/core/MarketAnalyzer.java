@@ -284,14 +284,16 @@ public class MarketAnalyzer {
         return market.get().collect(Collectors.toList());
     }
 
-    private List<Vendor> getVendors(CrawlerSpecificator specificator){
-        List<Vendor> vendors;
+    private Collection<Vendor> getVendors(CrawlerSpecificator specificator){
+        Collection<Vendor> vendors;
         if (specificator.getMinHop() >= profile.getLands()){
             vendors = market.get().map(Place::asTransit).collect(Collectors.toList());
             market.getVendors().filter(specificator::contains).forEach(vendors::add);
-            return vendors;
+        } else {
+            vendors = market.getMarkets(true).collect(Collectors.toList());
+            vendors = specificator.getVendors(vendors);
         }
-        return market.getMarkets(true).collect(Collectors.toList());
+        return vendors;
     }
 
     private List<Vendor> getVendors(Place place){

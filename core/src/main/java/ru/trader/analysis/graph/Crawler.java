@@ -61,6 +61,10 @@ public class Crawler<T> {
         return edge.isConnect(this.target);
     }
 
+    protected boolean isContent(Edge<T> edge, Traversal<T> head){
+        return specification.content(edge, head);
+    }
+
     protected boolean isFound(Edge<T> edge, Traversal<T> head){
         return specification.specified(edge, head);
     }
