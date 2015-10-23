@@ -21,7 +21,7 @@ public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
 
     @Override
     public boolean specified(Edge<T> edge, Traversal<T> entry) {
-        return all ? containsAll(edge, entry) == 0 : containsAny(edge, entry) == 0;
+        return targets.isEmpty() || (all ? containsAll(edge, entry) == 0 : containsAny(edge, entry) == 0);
     }
 
     @Override
@@ -31,11 +31,13 @@ public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
 
     @Override
     public int lastFound(Edge<T> edge, Traversal<T> entry) {
+        if (targets.isEmpty()) return 0;
         return all ? containsAll(edge, entry) : containsAny(edge, entry);
     }
 
     @Override
     public int matchCount() {
+        if (targets.isEmpty()) return 0;
         return all ? targets.size() : 1;
     }
 
