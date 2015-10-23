@@ -186,7 +186,7 @@ public class MarketAnalyzer {
     public Collection<Route> getTopRoutes(int limit){
         LOG.debug("Get top {}", limit);
         LimitedQueue<Route> top = new LimitedQueue<>(limit);
-        Collection<Vendor> vendors = getVendors(new CrawlerSpecificator());
+        Collection<Vendor> vendors = getVendors(new CrawlerSpecificator(), true);
         callback.start(vendors.size());
         Iterator<Vendor> iterator = market.getMarkets(false).iterator();
         while (iterator.hasNext()){
@@ -203,11 +203,11 @@ public class MarketAnalyzer {
     }
 
     public Collection<Route> getLoops(Vendor vendor, CrawlerSpecificator specificator){
-        return searcher.searchLoops(vendor, getVendors(specificator), specificator);
+        return searcher.searchLoops(vendor, getVendors(specificator, true), specificator);
     }
 
     public Collection<Route> getRoutes(Place from, CrawlerSpecificator specificator){
-        return getRoutes(getVendors(from), getVendors(specificator), specificator);
+        return getRoutes(getVendors(from), getVendors(specificator, true), specificator);
     }
 
     public Collection<Route> getRoutes(Place from, Place to){
@@ -220,14 +220,14 @@ public class MarketAnalyzer {
     }
 
     public Collection<Route> getRoutes(Vendor from, CrawlerSpecificator specificator){
-        Collection<Vendor> vendors = getVendors(specificator);
+        Collection<Vendor> vendors = getVendors(specificator, false);
         specificator.any(vendors);
-        return searcher.search(from, from, vendors, profile.getRoutesCount(), specificator);
+        return searcher.search(from, from, getVendors(specificator, true), profile.getRoutesCount(), specificator);
     }
 
     public Collection<Route> getRoutes(Vendor from, Place to, CrawlerSpecificator specificator){
         specificator.any(getVendors(to));
-        return searcher.search(from, from, getVendors(specificator), profile.getRoutesCount(), specificator);
+        return searcher.search(from, from, getVendors(specificator, true), profile.getRoutesCount(), specificator);
     }
 
     public Collection<Route> getRoutes(Vendor from, Vendor to){
@@ -237,7 +237,7 @@ public class MarketAnalyzer {
     }
 
     public Collection<Route> getRoutes(Vendor from, Vendor to, CrawlerSpecificator specificator){
-        return searcher.search(from, to, getVendors(specificator), profile.getRoutesCount(), specificator);
+        return searcher.search(from, to, getVendors(specificator, true), profile.getRoutesCount(), specificator);
     }
 
     public List<Route> getRoutes(Collection<Vendor> fVendors, Collection<Vendor> vendors, CrawlerSpecificator specificator){
@@ -284,13 +284,13 @@ public class MarketAnalyzer {
         return market.get().collect(Collectors.toList());
     }
 
-    private Collection<Vendor> getVendors(CrawlerSpecificator specificator){
+    private Collection<Vendor> getVendors(CrawlerSpecificator specificator, boolean withTransit){
         Collection<Vendor> vendors;
         if (specificator.getMinHop() >= profile.getLands()){
-            vendors = market.get().map(Place::asTransit).collect(Collectors.toList());
+            vendors = withTransit ? market.get().map(Place::asTransit).collect(Collectors.toList()) : new ArrayList<>();
             market.getVendors().filter(specificator::contains).forEach(vendors::add);
         } else {
-            vendors = market.getMarkets(true).collect(Collectors.toList());
+            vendors = market.getMarkets(withTransit).collect(Collectors.toList());
             vendors = specificator.getVendors(vendors);
         }
         return vendors;
