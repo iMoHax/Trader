@@ -196,7 +196,11 @@ public class HelperController {
             entry = route.get(index);
             station.setText(entry.getStation().getName());
             system.setText(entry.getStation().getSystem().getName());
-            time.setText(ViewUtils.timeToString(entry.getTime()));
+            if (index > 0){
+                time.setText(ViewUtils.timeToString(route.get(index-1).getTime()));
+            } else {
+                time.setText(ViewUtils.timeToString(0));
+            }
             refuel.setText(String.valueOf(entry.getRefill()));
             buyOrders.setItems(entry.orders());
             sellOrders.setItems(entry.sellOrders());

@@ -200,11 +200,12 @@ public class Route implements Comparable<Route> {
         profit = 0; distance = 0; lands = 0; fuel = 0; refills = 0; time = 0;
         if (entries.isEmpty()) return;
         RouteEntry entry = entries.get(0);
+        time = entry.getTime();
         for (int i = 1; i < entries.size(); i++) {
             RouteEntry next = entries.get(i);
             distance += entry.getVendor().getDistance(next.getVendor());
             profit += entry.getProfit();
-            time += entry.getFullTime();
+            time += next.getTime();
             fuel += entry.getFuel();
             if (entry.isLand()){
                 lands++;
