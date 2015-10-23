@@ -3,10 +3,7 @@ package ru.trader.analysis;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.analysis.graph.*;
-import ru.trader.core.Order;
-import ru.trader.core.Place;
-import ru.trader.core.Profile;
-import ru.trader.core.Vendor;
+import ru.trader.core.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -128,6 +125,16 @@ public class RouteSearcher {
         }
     }
 
+    private static RouteEntry find(Vendor vendor, List<RouteEntry> entries){
+        for (int i = entries.size() - 1; i >= 0; i--) {
+            RouteEntry entry = entries.get(i);
+            if (entry.getVendor().equals(vendor)){
+                return entry;
+            }
+        }
+        throw new IllegalStateException(String.format("Wrong route, vendor %s not found", vendor));
+    }
+
     public static Route toRoute(List<Edge<Vendor>> edges, final Scorer scorer){
         List<RouteEntry> entries = new ArrayList<>(edges.size()+1);
         Vendor buyer = null;
@@ -149,8 +156,20 @@ public class RouteSearcher {
                     entry.setFullTime(vEdge.getTime());
                     List<Order> orders = vEdge.getOrders();
                     if (!orders.isEmpty()) {
+                        Vendor seller = orders.get(0).getSeller();
+                        RouteEntry sellerEntry;
+                        if (entry.getVendor().equals(seller)){
+                            sellerEntry = entry;
+                        } else {
+                            sellerEntry = find(seller, entries);
+                            entry.setLand(true);
+                        }
                         buyer = orders.get(0).getBuyer();
-                        entry.addAll(orders);
+                        sellerEntry.addAll(orders);
+                    } else {
+                        if (!(vendor instanceof TransitVendor)){
+                            entry.setLand(true);
+                        }
                     }
                 }
                 if (prev != null){
@@ -162,7 +181,7 @@ public class RouteSearcher {
         }
         if (vEdge != null) {
             RouteEntry entry = new RouteEntry(vEdge.getTarget().getEntry(), 0, 0, 0);
-            if (buyer != null) entry.setLand(true);
+            if (!(entry.getVendor() instanceof TransitVendor)) entry.setLand(true);
             if (prev != null){
                 prev.setTime(scorer.getTime(entry, prev));
             }

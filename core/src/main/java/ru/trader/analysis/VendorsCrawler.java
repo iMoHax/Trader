@@ -3,10 +3,13 @@ package ru.trader.analysis;
 import org.jetbrains.annotations.NotNull;
 import ru.trader.analysis.graph.*;
 import ru.trader.core.Order;
+import ru.trader.core.SERVICE_TYPE;
 import ru.trader.core.Vendor;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class VendorsCrawler extends Crawler<Vendor> {
@@ -77,7 +80,16 @@ public class VendorsCrawler extends Crawler<Vendor> {
             Path<Vendor> path = edge.getPath(fuel);
             if (path == null) return null;
             VendorsEdge res = new VendorsEdge(edge.getSource(), edge.getTarget(), new TransitPath(path, fuel));
-            res.setOrders(MarketUtils.getStack(edge.getOrders(), balance, getScorer().getProfile().getShip().getCargo()));
+            List<Order> orders = Collections.emptyList();
+            if (edge.getSource().getEntry().has(SERVICE_TYPE.MARKET) || !edge.getTarget().getEntry().has(SERVICE_TYPE.MARKET)){
+                orders = edge.getOrders();
+            } else {
+                Vendor seller = findMarket();
+                if (seller != null) {
+                    orders = MarketUtils.getOrders(seller, edge.getTarget().getEntry());
+                }
+            }
+            res.setOrders(MarketUtils.getStack(orders, balance, getScorer().getProfile().getShip().getCargo()));
             return res;
         }
 
@@ -87,6 +99,18 @@ public class VendorsCrawler extends Crawler<Vendor> {
                 weight = specification.computeWeight(this);
             }
             return weight;
+        }
+
+
+        private Vendor findMarket(){
+            Optional<Traversal<Vendor>> head = getHead();
+            while (head.isPresent()) {
+                Traversal<Vendor> curr = head.get();
+                Vendor vendor = curr.getTarget().getEntry();
+                if (vendor.has(SERVICE_TYPE.MARKET)) return vendor;
+                head = curr.getHead();
+            }
+            return null;
         }
     }
 
