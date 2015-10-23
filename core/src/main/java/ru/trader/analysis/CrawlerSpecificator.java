@@ -9,17 +9,17 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class CrawlerSpecificator {
-    private final List<Vendor> any;
-    private final List<Vendor> containsAny;
-    private final List<Vendor> all;
+    private final Set<Vendor> any;
+    private final Set<Vendor> containsAny;
+    private final Set<Vendor> all;
     private final Collection<Offer> offers;
     private int groupCount;
     private boolean byTime;
 
     public CrawlerSpecificator() {
-        any = new ArrayList<>();
-        all = new ArrayList<>();
-        containsAny = new ArrayList<>();
+        any = new HashSet<>();
+        all = new HashSet<>();
+        containsAny = new HashSet<>();
         offers = new ArrayList<>();
         byTime = false;
     }
@@ -119,7 +119,7 @@ public class CrawlerSpecificator {
             res = spec;
         }
         if (!any.isEmpty()){
-            spec = any.size() > 1 ? RouteSpecificationByTargets.any(any) : new RouteSpecificationByTarget<>(any.get(0));
+            spec = any.size() > 1 ? RouteSpecificationByTargets.any(any) : new RouteSpecificationByTarget<>(any.iterator().next());
             if (res != null){
                 res = res.and(spec);
             } else {
