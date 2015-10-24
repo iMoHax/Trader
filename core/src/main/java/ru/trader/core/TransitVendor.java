@@ -122,6 +122,11 @@ public class TransitVendor implements Vendor {
     }
 
     @Override
+    public boolean canRefill() {
+        return getPlace().canRefill();
+    }
+
+    @Override
     public int hashCode() {
         return place.hashCode();
     }

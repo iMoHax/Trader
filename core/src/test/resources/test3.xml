@@ -296,7 +296,7 @@
     <places>
         <place name="39 Tauri" x="-7.328685945594771" y="-20.23681461041633" z="-50.80223617133015">
             <vendor name="Porta" distance="991.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -349,12 +349,12 @@
         <place name="74 K Orionis" x="19.776881602592766" y="-1.582406322722818" z="-59.604346769901895"></place>
         <place name="Achlys" x="1.194506188039668" y="-26.2312028413362" z="-70.99990952428925">
             <vendor name="Wallace Platform" distance="874.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="Al-Qaum" x="-8.020596363439836" y="-14.07212609628914" z="-69.66871675085713">
             <vendor name="Duke Hub" distance="575.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -462,7 +462,7 @@
                 <offer type="BUY" item="i35" price="7517.0" count="-1"/>
             </vendor>
             <vendor name="Shepard Ring" distance="867.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MEDIUM_LANDPAD"/>
@@ -552,7 +552,7 @@
                 <offer type="BUY" item="i35" price="7517.0" count="-1"/>
             </vendor>
             <vendor name="Cormack Orbital" distance="142600.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="MUNITION"/>
@@ -651,7 +651,7 @@
         </place>
         <place name="Amait" x="27.160596003250248" y="-13.688104573066084" z="-67.50026469189834">
             <vendor name="Lopez de Villalobos Prospect" distance="452.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MEDIUM_LANDPAD"/>
@@ -740,7 +740,7 @@
                 <offer type="BUY" item="i35" price="7071.0" count="292"/>
             </vendor>
             <vendor name="Oramus Legacy" distance="605.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                 </services>
@@ -831,7 +831,7 @@
         </place>
         <place name="Apollo" x="-11.228993927670672" y="-27.400024427697645" z="-45.498519167813356">
             <vendor name="Reisman Station" distance="13.8">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="MUNITION"/>
@@ -918,7 +918,7 @@
                 <offer type="BUY" item="i35" price="6607.0" count="199"/>
             </vendor>
             <vendor name="Fultion Landing" distance="14.3">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -1007,7 +1007,7 @@
         </place>
         <place name="Ashandras" x="-20.177366092957527" y="-9.1496063678278" z="-71.42192123501445">
             <vendor name="Bolger Vision" distance="1693.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -1093,7 +1093,7 @@
                 <offer type="BUY" item="i35" price="7347.0" count="287"/>
             </vendor>
             <vendor name="Alpers Refinery" distance="2348.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -1103,7 +1103,7 @@
         </place>
         <place name="BD+08 1303" x="25.53125" y="-1.875" z="-62.84375">
             <vendor name="Chomsky Ring" distance="5006.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -1245,7 +1245,7 @@
                 <offer type="BUY" item="i35" price="7047.0" count="-1"/>
             </vendor>
             <vendor name="Wescott Terminal" distance="6422.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MEDIUM_LANDPAD"/>
@@ -1345,15 +1345,15 @@
         </place>
         <place name="BD+14 831" x="9.913691944439051" y="-19.827996724689" z="-73.99104406422339">
             <vendor name="Strekalov Prospect" distance="3797.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Kondakova Orbital" distance="20424.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="BD+24 543" x="-14.517864589743112" y="-25.15134946015678" z="-56.26643697387408">
             <vendor name="Proteus Orbital" distance="260.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -1452,7 +1452,7 @@
                 <offer type="BUY" item="i35" price="6454.0" count="0"/>
             </vendor>
             <vendor name="Katzenstein Settlement" distance="6863.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -1544,7 +1544,7 @@
         </place>
         <place name="Bao Yan Luo" x="-31.43488168816475" y="-19.152539874903596" z="-42.52018379065703">
             <vendor name="Behnken Terminal" distance="292.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MEDIUM_LANDPAD"/>
@@ -1631,12 +1631,12 @@
                 <offer type="BUY" item="i35" price="7552.0" count="548"/>
             </vendor>
             <vendor name="Thuot Works" distance="491.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="Bhadaba" x="-18.994820073930896" y="-19.42721794212048" z="-49.76615329105698">
             <vendor name="Ayerohal City" distance="81.1">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -1730,7 +1730,7 @@
                 <offer type="BUY" item="i35" price="7462.0" count="-1"/>
             </vendor>
             <vendor name="Derleth Orbital" distance="136.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -1822,7 +1822,7 @@
                 <offer type="BUY" item="i35" price="7453.0" count="-1"/>
             </vendor>
             <vendor name="Maire Gateway" distance="232.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -1901,7 +1901,7 @@
                 <offer type="BUY" item="i35" price="7453.0" count="-1"/>
             </vendor>
             <vendor name="Roberts Hub" distance="658.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -1969,7 +1969,7 @@
                 <offer type="BUY" item="i27" price="4122.0" count="-1"/>
             </vendor>
             <vendor name="Dedman Gateway" distance="661.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -2033,7 +2033,7 @@
                 <offer type="BUY" item="i27" price="4122.0" count="-1"/>
             </vendor>
             <vendor name="Bailey Ring" distance="2015.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="MEDIUM_LANDPAD"/>
                 </services>
@@ -2108,7 +2108,7 @@
                 <offer type="BUY" item="i35" price="7434.0" count="-1"/>
             </vendor>
             <vendor name="Humphreys Enterprise" distance="426083.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -2189,7 +2189,7 @@
                 <offer type="BUY" item="i35" price="7434.0" count="-1"/>
             </vendor>
             <vendor name="Kandel Ring" distance="426463.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="MEDIUM_LANDPAD"/>
                 </services>
@@ -2264,7 +2264,7 @@
                 <offer type="BUY" item="i35" price="7453.0" count="-1"/>
             </vendor>
             <vendor name="Polya Enterprise" distance="426867.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -2349,7 +2349,7 @@
         </place>
         <place name="Bonde" x="-17.433511916351563" y="-12.95195642787803" z="-59.37289077883179">
             <vendor name="Aksyonov Platform" distance="144.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="MUNITION"/>
@@ -2438,7 +2438,7 @@
         </place>
         <place name="Breksta" x="29.4375" y="-6.71875" z="-70.46875">
             <vendor name="Pierres Ring" distance="148.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -2540,7 +2540,7 @@
                 <offer type="BUY" item="i35" price="7024.0" count="82357"/>
             </vendor>
             <vendor name="Grant Terminal" distance="257.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -2635,7 +2635,7 @@
                 <offer type="BUY" item="i35" price="7024.0" count="63793"/>
             </vendor>
             <vendor name="Narvaez Orbital" distance="368.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -2731,7 +2731,7 @@
                 <offer type="BUY" item="i35" price="7346.0" count="636793"/>
             </vendor>
             <vendor name="Perez Market" distance="492.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -2810,7 +2810,7 @@
                 <offer type="BUY" item="i27" price="4181.0" count="1565"/>
             </vendor>
             <vendor name="Legendre Ring" distance="999.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -2876,7 +2876,7 @@
                 <offer type="BUY" item="i27" price="4541.0" count="63536"/>
             </vendor>
             <vendor name="Brooks City" distance="3393.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                 </services>
@@ -2950,7 +2950,7 @@
                 <offer type="BUY" item="i35" price="7030.0" count="52087"/>
             </vendor>
             <vendor name="Wells Hub" distance="3442.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -3030,7 +3030,7 @@
                 <offer type="BUY" item="i35" price="7346.0" count="52087"/>
             </vendor>
             <vendor name="Barcelos City" distance="3564.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -3106,7 +3106,7 @@
                 <offer type="BUY" item="i35" price="7346.0" count="63793"/>
             </vendor>
             <vendor name="Popper Dock" distance="3642.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -3184,7 +3184,7 @@
         </place>
         <place name="Chang Yeh" x="25.6875" y="-4.8125" z="-50.53125">
             <vendor name="Nicollet City" distance="1715.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -3267,7 +3267,7 @@
                 <offer type="BUY" item="i35" price="7074.0" count="1961"/>
             </vendor>
             <vendor name="Blaschke Vision" distance="2270.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -3342,12 +3342,12 @@
         </place>
         <place name="Chonost" x="13.41676516321968" y="-18.147397152279154" z="-81.27474939456079">
             <vendor name="Savitskaya Hub" distance="866.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="Cosi" x="24.747896347798815" y="-14.68586120481632" z="-70.74569270907887">
             <vendor name="Henry Hub" distance="12622.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MEDIUM_LANDPAD"/>
@@ -3423,7 +3423,7 @@
                 <offer type="BUY" item="i35" price="7034.0" count="-1"/>
             </vendor>
             <vendor name="Ising Hub" distance="43.6">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -3522,7 +3522,7 @@
                 <offer type="BUY" item="i35" price="7034.0" count="-1"/>
             </vendor>
             <vendor name="Solovyov Orbital" distance="71.1">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -3610,7 +3610,7 @@
                 <offer type="BUY" item="i35" price="7039.0" count="-1"/>
             </vendor>
             <vendor name="Julian City" distance="211.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -3723,7 +3723,7 @@
                 <offer type="BUY" item="i35" price="7034.0" count="-1"/>
             </vendor>
             <vendor name="Arrhenius Hub" distance="277.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -3791,10 +3791,10 @@
                 <offer type="BUY" item="i27" price="4171.0" count="1184"/>
             </vendor>
             <vendor name="Worlidge Station" distance="652.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Marshall Hub" distance="13998.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MEDIUM_LANDPAD"/>
@@ -3879,7 +3879,7 @@
         <place name="Dewikum" x="19.375" y="-0.28125" z="-68.9375"></place>
         <place name="Flech" x="20.128454994573985" y="-10.348462138608738" z="-63.12525826397177">
             <vendor name="Parry Terminal" distance="330.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -3945,7 +3945,7 @@
                 <offer type="BUY" item="i27" price="4202.0" count="-1"/>
             </vendor>
             <vendor name="Saberhagen Port" distance="455.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MEDIUM_LANDPAD"/>
@@ -3999,7 +3999,7 @@
                 <offer type="BUY" item="i27" price="4844.0" count="-1"/>
             </vendor>
             <vendor name="Stafford Terminal" distance="819.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -4047,26 +4047,26 @@
                 <offer type="BUY" item="i1" price="200.0" count="0"/>
             </vendor>
             <vendor name="Escobar Ring" distance="1110.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Burgess Gateway" distance="1300.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="Fular" x="4.326152749945322" y="-18.06495119435567" z="-81.24344614016081">
             <vendor name="Kotov Orbital" distance="1350.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Marshburn Intallation" distance="1812.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Maclean Horizons" distance="2374.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="G 108-26" x="30.0625" y="0.25" z="-51.625">
             <vendor name="Ejeta Colony" distance="1095.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="MUNITION"/>
@@ -4164,7 +4164,7 @@
         <place name="HR 2251" x="26.21965800117323" y="-5.0924971611493675" z="-56.81293691704923"></place>
         <place name="Herishep" x="-11.237766266549443" y="-19.15871704431993" z="-66.09534260032888">
             <vendor name="Harris Platform" distance="8097.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="MEDIUM_LANDPAD"/>
                 </services>
@@ -4242,7 +4242,7 @@
         </place>
         <place name="Itza" x="-29.638792062178254" y="-14.1801255665996" z="-67.70644263979193">
             <vendor name="Ellision Station" distance="9.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -4333,7 +4333,7 @@
                 <offer type="BUY" item="i35" price="7499.0" count="-1"/>
             </vendor>
             <vendor name="Hennepin Enterprise" distance="17.3">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -4423,7 +4423,7 @@
                 <offer type="BUY" item="i35" price="7499.0" count="-1"/>
             </vendor>
             <vendor name="Luiken Port" distance="34.6">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -4513,7 +4513,7 @@
                 <offer type="BUY" item="i35" price="7499.0" count="-1"/>
             </vendor>
             <vendor name="Ore Terminal" distance="59.4">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -4581,7 +4581,7 @@
                 <offer type="BUY" item="i27" price="4122.0" count="-1"/>
             </vendor>
             <vendor name="McDaniel Station" distance="104.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MEDIUM_LANDPAD"/>
@@ -4657,7 +4657,7 @@
                 <offer type="BUY" item="i35" price="7499.0" count="-1"/>
             </vendor>
             <vendor name="Cochrane Terminal" distance="448.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -4738,7 +4738,7 @@
                 <offer type="BUY" item="i35" price="7499.0" count="-1"/>
             </vendor>
             <vendor name="McDonald Port" distance="6691.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="MEDIUM_LANDPAD"/>
                 </services>
@@ -4813,15 +4813,15 @@
                 <offer type="BUY" item="i35" price="7499.0" count="-1"/>
             </vendor>
             <vendor name="Fontenay Orbital" distance="398969.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Froude Station" distance="400398.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="Julianggarri" x="19.221636710517487" y="6.396842002868652" z="-64.66085906140506">
             <vendor name="Willis City" distance="443.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -4953,7 +4953,7 @@
                 <offer type="BUY" item="i35" price="7041.0" count="-1"/>
             </vendor>
             <vendor name="Romanenko Gateway" distance="7167.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MEDIUM_LANDPAD"/>
@@ -5051,18 +5051,18 @@
         </place>
         <place name="Kamchata" x="35.665714831338846" y="-15.71275278001849" z="-70.02489404239896">
             <vendor name="Schweickart Enterptise" distance="866.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Krikalev Gateway" distance="1216.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Tuan Platform" distance="1570.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="Kappa Fornacis" x="12.51711956665531" y="-66.71003891833607" z="-22.889939389733627">
             <vendor name="Harvest Port" distance="918.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -5131,7 +5131,7 @@
                 <offer type="BUY" item="i27" price="4530.0" count="-1"/>
             </vendor>
             <vendor name="Tshang Enterprise" distance="2009.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="REPAIR"/>
                     <service type="MEDIUM_LANDPAD"/>
                 </services>
@@ -5139,7 +5139,7 @@
         </place>
         <place name="Katocudatta" x="48.87259890037967" y="-13.770823035065405" z="-83.37564338380616">
             <vendor name="Burke Hub" distance="453.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -5255,12 +5255,12 @@
                 <offer type="BUY" item="i35" price="7068.0" count="-1"/>
             </vendor>
             <vendor name="Coles Horizons" distance="5510.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="Kp Tauri" x="-13.479665239719907" y="-22.50588519809753" z="-48.61668598759934">
             <vendor name="Spedding Orbital" distance="12.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -5366,7 +5366,7 @@
                 <offer type="BUY" item="i35" price="7281.0" count="-1"/>
             </vendor>
             <vendor name="Anders Orbital" distance="1432.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -5458,7 +5458,7 @@
                 <offer type="BUY" item="i35" price="7003.0" count="-1"/>
             </vendor>
             <vendor name="Mohmand Dock" distance="1973.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MEDIUM_LANDPAD"/>
@@ -5547,15 +5547,15 @@
         </place>
         <place name="Kungurutii" x="17.850110597191815" y="-17.56715184328641" z="-71.55682291131598">
             <vendor name="Lawrence Colony" distance="1127.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Jett Dock" distance="11253.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="LHS 1483" x="-29.31361128239587" y="-20.555198989404744" z="-50.05883251369596">
             <vendor name="Bykovsky Ring" distance="398.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="MUNITION"/>
@@ -5647,7 +5647,7 @@
                 <offer type="BUY" item="i35" price="7266.0" count="-1"/>
             </vendor>
             <vendor name="Vaucanson Settlement" distance="684.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -5737,7 +5737,7 @@
                 <offer type="BUY" item="i35" price="7180.0" count="-1"/>
             </vendor>
             <vendor name="Nicollier Ring" distance="700.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -5849,7 +5849,7 @@
         </place>
         <place name="LHS 1507" x="-27.50273282872513" y="-9.104549482435687" z="-42.50624031446932">
             <vendor name="Gibson Settlement" distance="653.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -5935,7 +5935,7 @@
                 <offer type="BUY" item="i35" price="7565.0" count="435"/>
             </vendor>
             <vendor name="Euler Port" distance="674.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MEDIUM_LANDPAD"/>
@@ -6022,7 +6022,7 @@
         <place name="LHS 1516" x="-17.24464721100958" y="-20.21341056770325" z="-40.82980078546825"></place>
         <place name="LHS 1541" x="-23.783123840712506" y="-10.803419219701027" z="-42.53599820058298">
             <vendor name="Henney City" distance="52.2">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -6083,7 +6083,7 @@
                 <offer type="BUY" item="i27" price="4511.0" count="-1"/>
             </vendor>
             <vendor name="Haller Port" distance="68.2">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -6173,7 +6173,7 @@
                 <offer type="BUY" item="i35" price="7510.0" count="-1"/>
             </vendor>
             <vendor name="Pennington City" distance="94.1">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -6233,7 +6233,7 @@
                 <offer type="BUY" item="i27" price="4503.0" count="-1"/>
             </vendor>
             <vendor name="Cabrera Dock" distance="115.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -6316,7 +6316,7 @@
                 <offer type="BUY" item="i35" price="7510.0" count="-1"/>
             </vendor>
             <vendor name="Foda Station" distance="169.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -6406,10 +6406,10 @@
                 <offer type="BUY" item="i35" price="7510.0" count="-1"/>
             </vendor>
             <vendor name="Archimedes Hub" distance="2858.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Stebler City" distance="2865.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="MEDIUM_LANDPAD"/>
                 </services>
@@ -6489,15 +6489,15 @@
                 <offer type="BUY" item="i35" price="7510.0" count="-1"/>
             </vendor>
             <vendor name="Strekalov Dock" distance="2876.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Ross Dock" distance="2880.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="LHS 1573" x="-15.089557049395808" y="-24.237022765282745" z="-53.233817962245666">
             <vendor name="DG-1 Refinery" distance="116.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -6582,7 +6582,7 @@
                 <offer type="BUY" item="i35" price="6856.0" count="77"/>
             </vendor>
             <vendor name="Blackman Terminal" distance="607.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MEDIUM_LANDPAD"/>
@@ -6669,7 +6669,7 @@
         <place name="LHS 1857" x="21.03125" y="1.96875" z="-55.3125"></place>
         <place name="LHS 197" x="-24.343013542420522" y="2.3351434357209655" z="-58.0731656230455">
             <vendor name="Yu Port" distance="855.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -6765,7 +6765,7 @@
         </place>
         <place name="LHS 21" x="-18.218352740132104" y="-12.803117952353205" z="-55.37033677101135">
             <vendor name="Quimper Ring" distance="605.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -6921,7 +6921,7 @@
                 <offer type="BUY" item="i35" price="6589.0" count="0"/>
             </vendor>
             <vendor name="Crook Orbital" distance="799.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -7026,7 +7026,7 @@
         </place>
         <place name="LP 356-106" x="-17.187412858038442" y="-24.51383852321669" z="-51.17894139248165">
             <vendor name="Carrier Dock" distance="1335.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -7121,28 +7121,28 @@
         </place>
         <place name="LP 417-213" x="9.443573789849324" y="-9.521442610912345" z="-55.1221728951532">
             <vendor name="Clark Hub" distance="14.3">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Gillekens Hub" distance="20.3">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Knipling Orbital" distance="30.6">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Vernadsky Dock" distance="55.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Camarda Hub" distance="68.7">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Bacon Station" distance="2786.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="LP 831-72" x="20.284721022653684" y="-57.61999637179542" z="-28.835197435546434"></place>
         <place name="LTT 11455" x="-17.82594421565591" y="-11.521492147494428" z="-72.84145673193052">
             <vendor name="Gdeschke Station" distance="604.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MEDIUM_LANDPAD"/>
@@ -7232,7 +7232,7 @@
                 <offer type="BUY" item="i35" price="7337.0" count="360"/>
             </vendor>
             <vendor name="Stebler Mines" distance="636.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="OUTFIT"/>
@@ -7325,7 +7325,7 @@
         </place>
         <place name="LTT 11503" x="-10.496413597138599" y="-13.082929976553714" z="-70.55756251620551">
             <vendor name="Fung Outpost" distance="23292.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="OUTFIT"/>
@@ -7393,15 +7393,15 @@
         </place>
         <place name="LTT 11519" x="-6.651059253817948" y="-16.825217790119495" z="-81.6802978515625">
             <vendor name="Jendrassik Dock" distance="10.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Edison Beacon" distance="1046.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="LTT 1349" x="17.236653373674926" y="-66.96247779782425" z="-29.28194747028101">
             <vendor name="Lundwall City" distance="120.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -7558,15 +7558,15 @@
                 <offer type="BUY" item="i35" price="6947.0" count="-1"/>
             </vendor>
             <vendor name="Aitken Vision" distance="358.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Gelfand Survey" distance="2125.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="LTT 17868" x="22.780440716451267" y="-12.902215212943702" z="-67.59722230508487">
             <vendor name="Giles Colony" distance="774.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                 </services>
@@ -7650,7 +7650,7 @@
                 <offer type="BUY" item="i35" price="7092.0" count="307"/>
             </vendor>
             <vendor name="Pierce Hanger" distance="793.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="MUNITION"/>
@@ -7744,7 +7744,7 @@
         </place>
         <place name="Lowne 1" x="-2.8189864484374993" y="-16.56721281888167" z="-43.3742745984091">
             <vendor name="Sarich Port" distance="1972.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="OUTFIT"/>
@@ -7808,7 +7808,7 @@
         </place>
         <place name="Lumbla" x="44.62567346636206" y="-3.3965947037359" z="-88.83295172454382">
             <vendor name="Perrin Ring" distance="1157.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -7928,7 +7928,7 @@
         </place>
         <place name="Manamaya" x="-29.40413074211392" y="1.979318582380074" z="-61.27615092091219">
             <vendor name="Cameron Survey" distance="28.8">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="OUTFIT"/>
@@ -8018,7 +8018,7 @@
                 <offer type="BUY" item="i35" price="7552.0" count="448"/>
             </vendor>
             <vendor name="Shuttleworth Terminal" distance="40.8">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MEDIUM_LANDPAD"/>
@@ -8109,7 +8109,7 @@
         </place>
         <place name="Marduk" x="-20.82123177151516" y="-12.746704983510426" z="-43.87861841469203">
             <vendor name="Port Sippar" distance="546.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -8152,7 +8152,7 @@
                 <offer type="BUY" item="i1" price="106.0" count="0"/>
             </vendor>
             <vendor name="Amar Station" distance="785.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -8201,7 +8201,7 @@
         </place>
         <place name="Meri" x="-10.84623098049633" y="-25.33324549531244" z="-44.28428004121088">
             <vendor name="Tyurin Port" distance="268615.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MEDIUM_LANDPAD"/>
@@ -8283,7 +8283,7 @@
         </place>
         <place name="Ndozins" x="-14.30518781335195" y="-10.740774792702723" z="-60.55794946214519">
             <vendor name="Coney Arena" distance="7537.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="MUNITION"/>
@@ -8354,27 +8354,27 @@
         </place>
         <place name="Nihursaga" x="24.04744137038506" y="9.327112509072322" z="-62.875171059658896">
             <vendor name="Hardwick Hub" distance="232326.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="Psi Tauri" x="-19.613955045952025" y="-25.354455414981203" z="-84.15133307362339">
             <vendor name="Wohler Orbital" distance="260.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Blackwell Station" distance="457.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Vela Gateway" distance="844.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Knight Terminal" distance="1168.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="Ross 592" x="-20.475437454933854" y="-11.596985524829506" z="-68.7440323793453"></place>
         <place name="Ross 878" x="17.514975876656536" y="19.561443850398064" z="-57.37756996013559">
             <vendor name="Jakes Enterprice" distance="303.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -8506,13 +8506,13 @@
                 <offer type="BUY" item="i35" price="6375.0" count="0"/>
             </vendor>
             <vendor name="Wells Ring" distance="116993.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="Sol" x="0.0" y="0.0" z="0.0"></place>
         <place name="Sui Xing" x="-16.330472124172957" y="-12.648681305108767" z="-69.58904110160802">
             <vendor name="Morgan Terminal" distance="1602.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="MUNITION"/>
@@ -8610,7 +8610,7 @@
                 <offer type="BUY" item="i35" price="7332.0" count="368"/>
             </vendor>
             <vendor name="Oswald Platform" distance="2779.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -8701,7 +8701,7 @@
         <place name="Susanoo" x="12.1875" y="-1.65625" z="-62.78125"></place>
         <place name="Tamalhikas" x="43.18322183307828" y="-12.14074857380183" z="-77.44715344142605">
             <vendor name="Budarin Terminal" distance="472.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -8798,7 +8798,7 @@
                 <offer type="BUY" item="i35" price="7068.0" count="-1"/>
             </vendor>
             <vendor name="Horowitz Gateway" distance="658.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -8906,7 +8906,7 @@
         <place name="Toog" x="21.1875" y="3.6875" z="-50.5"></place>
         <place name="Tote" x="-21.054825014107337" y="-15.819412386554177" z="-91.74498915672302">
             <vendor name="Whitelaw Enterprise" distance="1137.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -9071,7 +9071,7 @@
         </place>
         <place name="Uchaluroja" x="-10.10447702192323" y="0.2840682439455122" z="-56.86858930330345">
             <vendor name="Rozhdestvensky Station" distance="1831.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -9168,30 +9168,30 @@
                 <offer type="BUY" item="i35" price="7499.0" count="-1"/>
             </vendor>
             <vendor name="Crown Market" distance="22447.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Harrison Orbital" distance="22610.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Zudov Dock" distance="22782.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Runco Ring" distance="22822.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Willis Dock" distance="22861.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Marshall Hub" distance="22935.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Hoften Enterprise" distance="24269.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="V491 Persei" x="-21.89994698519513" y="-11.29822095426789" z="-61.787785550677654">
             <vendor name="Rand City" distance="60.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -9310,7 +9310,7 @@
         </place>
         <place name="Wolf 1278" x="-11.311923124321765" y="-17.72063105354391" z="-43.32491461727841">
             <vendor name="Maller Hub" distance="1065.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -9398,7 +9398,7 @@
                 <offer type="BUY" item="i35" price="7569.0" count="776"/>
             </vendor>
             <vendor name="Scott Settlement" distance="3017.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -9486,7 +9486,7 @@
         </place>
         <place name="Wolf 1301" x="-15.404445265630784" y="-34.7439694392051" z="-79.39193947540844">
             <vendor name="Saunders's Dive" distance="415.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="BLACK_MARKET"/>
                     <service type="REPAIR"/>
@@ -9591,15 +9591,15 @@
                 <offer type="BUY" item="i35" price="6975.0" count="0"/>
             </vendor>
             <vendor name="Denton Installation" distance="848.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
             <vendor name="Menezes Installation" distance="1469.0">
-                <services></services>
+                <services><service type="REFUEL"/></services>
             </vendor>
         </place>
         <place name="Wolf 1323" x="-22.133987464349048" y="-17.597265765380143" z="-38.360987657597434">
             <vendor name="Denis Filippov" distance="345.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -9685,7 +9685,7 @@
                 <offer type="BUY" item="i35" price="7551.0" count="481"/>
             </vendor>
             <vendor name="Rattus High" distance="442.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -9777,7 +9777,7 @@
         <place name="YIN Sector EQ-Y B2" x="37.745753330636944" y="-3.8300935922052304" z="-68.47150420853723"></place>
         <place name="Yggdrajang" x="28.3125" y="0.84375" z="-67.875">
             <vendor name="Schade Platform" distance="12301.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -9871,7 +9871,7 @@
                 <offer type="BUY" item="i35" price="6692.0" count="148"/>
             </vendor>
             <vendor name="Selberg's Inheritance" distance="13326.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="REPAIR"/>
                     <service type="OUTFIT"/>
                 </services>
@@ -9879,7 +9879,7 @@
         </place>
         <place name="Zandu" x="37.2308330945998" y="6.69687441240967" z="-72.16363865118183">
             <vendor name="Vaucanson Hub" distance="284.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="REPAIR"/>
                     <service type="MUNITION"/>
@@ -10027,7 +10027,7 @@
                 <offer type="BUY" item="i35" price="6062.0" count="0"/>
             </vendor>
             <vendor name="Frimout Horizons" distance="417.0">
-                <services>
+                <services><service type="REFUEL"/>
                     <service type="MARKET"/>
                     <service type="MEDIUM_LANDPAD"/>
                 </services>

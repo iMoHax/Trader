@@ -56,7 +56,7 @@ public interface Place extends Connectable<Place> {
 
     @Override
     default boolean canRefill() {
-        return !isEmpty();
+        return !isEmpty() && get().stream().filter(v -> v.has(SERVICE_TYPE.REFUEL)).findAny().isPresent();
     }
 
     @Override

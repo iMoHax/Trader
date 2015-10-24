@@ -89,6 +89,7 @@ public class LoadTest extends Assert {
         vendor1.setGovernment(GOVERNMENT.ANARCHY);
         vendor1.add(SERVICE_TYPE.MARKET);
         vendor1.add(SERVICE_TYPE.OUTFIT);
+        vendor1.add(SERVICE_TYPE.REFUEL);
         Offer offer1 = vendor1.addOffer(OFFER_TYPE.SELL, item1, 10,43);
         Offer offer2 = vendor1.addOffer(OFFER_TYPE.BUY, item1, 12,1);
         Offer offer3 = vendor1.addOffer(OFFER_TYPE.SELL, item2, 1012,1000);
@@ -99,6 +100,7 @@ public class LoadTest extends Assert {
         vendor2.setGovernment(GOVERNMENT.NONE);
         vendor3.setDistance(200000.4);
         vendor3.add(SERVICE_TYPE.OUTFIT);
+        vendor3.add(SERVICE_TYPE.REFUEL);
 
         LOG.info("save market");
         File xml = new File("save_load_test.xml");
@@ -175,6 +177,7 @@ public class LoadTest extends Assert {
                         assertFalse(vendor.has(SERVICE_TYPE.MUNITION));
                         assertTrue(vendor.has(SERVICE_TYPE.OUTFIT));
                         assertFalse(vendor.has(SERVICE_TYPE.SHIPYARD));
+                        assertTrue(vendor.has(SERVICE_TYPE.REFUEL));
                     }
                     if (vendor2.getName().equals(vendor.getName())) {
                         LOG.info("check vendor 2");
@@ -187,6 +190,7 @@ public class LoadTest extends Assert {
                         assertFalse(vendor.has(SERVICE_TYPE.MUNITION));
                         assertFalse(vendor.has(SERVICE_TYPE.OUTFIT));
                         assertFalse(vendor.has(SERVICE_TYPE.SHIPYARD));
+                        assertFalse(vendor.has(SERVICE_TYPE.REFUEL));
                     }
                 }
                 assertEquals(2, j);
@@ -209,6 +213,7 @@ public class LoadTest extends Assert {
                         assertFalse(vendor.has(SERVICE_TYPE.MUNITION));
                         assertTrue(vendor.has(SERVICE_TYPE.OUTFIT));
                         assertFalse(vendor.has(SERVICE_TYPE.SHIPYARD));
+                        assertTrue(vendor.has(SERVICE_TYPE.REFUEL));
                     }
                 }
                 assertEquals(1, j);

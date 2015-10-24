@@ -1,18 +1,7 @@
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.control.Label?>
-<?import ru.trader.view.support.NumberField?>
-
-
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.layout.TilePane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import org.controlsfx.glyphfont.Glyph?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
+<?import ru.trader.view.support.NumberField?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.trader.controllers.FilterController"
               styleClass="dialog" vgap="4" hgap="8">
         <columnConstraints>
@@ -27,9 +16,10 @@
         <Label text="%filter.distance" GridPane.rowIndex="3" />
         <NumberField fx:id="distance" GridPane.columnIndex="1" GridPane.rowIndex="3" />
         <Label text="%filter.services" GridPane.rowIndex="4" />
-        <TilePane hgap="5" vgap="5" tileAlignment="BASELINE_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="4" >
+        <TilePane hgap="5" vgap="5" tileAlignment="BASELINE_LEFT" prefColumns="2" GridPane.columnIndex="1" GridPane.rowIndex="4" >
             <CheckBox fx:id="cbMarket" text="%services.MARKET"/>
             <CheckBox fx:id="cbBlackMarket" text="%services.BLACK_MARKET"/>
+            <CheckBox fx:id="cbRefuel" text="%services.REFUEL"/>
             <CheckBox fx:id="cbRepair" text="%services.REPAIR"/>
             <CheckBox fx:id="cbMunition" text="%services.MUNITION"/>
             <CheckBox fx:id="cbOutfit" text="%services.OUTFIT"/>

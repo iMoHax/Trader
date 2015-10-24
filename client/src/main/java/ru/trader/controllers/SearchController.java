@@ -43,6 +43,8 @@ public class SearchController {
     @FXML
     private CheckBox cbBlackMarket;
     @FXML
+    private CheckBox cbRefuel;
+    @FXML
     private CheckBox cbRepair;
     @FXML
     private CheckBox cbMunition;
@@ -115,6 +117,7 @@ public class SearchController {
         filter.setDistance(distance.getValue().doubleValue());
         if (cbMarket.isSelected()) filter.add(SERVICE_TYPE.MARKET); else filter.remove(SERVICE_TYPE.MARKET);
         if (cbBlackMarket.isSelected()) filter.add(SERVICE_TYPE.BLACK_MARKET); else filter.remove(SERVICE_TYPE.BLACK_MARKET);
+        if (cbRefuel.isSelected()) filter.add(SERVICE_TYPE.REFUEL); else filter.remove(SERVICE_TYPE.REFUEL);
         if (cbMunition.isSelected()) filter.add(SERVICE_TYPE.MUNITION); else filter.remove(SERVICE_TYPE.MUNITION);
         if (cbRepair.isSelected()) filter.add(SERVICE_TYPE.REPAIR); else filter.remove(SERVICE_TYPE.REPAIR);
         if (cbOutfit.isSelected()) filter.add(SERVICE_TYPE.OUTFIT); else filter.remove(SERVICE_TYPE.OUTFIT);

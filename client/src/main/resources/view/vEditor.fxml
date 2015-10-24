@@ -29,16 +29,23 @@
         </VBox>
         <VBox HBox.hgrow="ALWAYS" alignment="CENTER">
             <Label text="%vEditor.text.services"/>
-            <TilePane hgap="5" vgap="5" maxWidth="350" tileAlignment="BASELINE_LEFT">
-                <CheckBox fx:id="cbMarket" text="%services.MARKET"/>
-                <CheckBox fx:id="cbBlackMarket" text="%services.BLACK_MARKET"/>
-                <CheckBox fx:id="cbRepair" text="%services.REPAIR"/>
-                <CheckBox fx:id="cbMunition" text="%services.MUNITION"/>
-                <CheckBox fx:id="cbOutfit" text="%services.OUTFIT"/>
-                <CheckBox fx:id="cbShipyard" text="%services.SHIPYARD"/>
-                <CheckBox fx:id="cbMediumLandpad" text="%services.MEDIUM_LANDPAD"/>
-                <CheckBox fx:id="cbLargeLandpad" text="%services.LARGE_LANDPAD"/>
-            </TilePane>
+            <HBox spacing="5" maxWidth="400">
+                <VBox spacing="5">
+                    <CheckBox fx:id="cbMarket" text="%services.MARKET"/>
+                    <CheckBox fx:id="cbBlackMarket" text="%services.BLACK_MARKET"/>
+                    <CheckBox fx:id="cbRefuel" text="%services.REFUEL"/>
+                </VBox>
+                <VBox spacing="5">
+                    <CheckBox fx:id="cbRepair" text="%services.REPAIR"/>
+                    <CheckBox fx:id="cbMunition" text="%services.MUNITION"/>
+                    <CheckBox fx:id="cbOutfit" text="%services.OUTFIT"/>
+                </VBox>
+                <VBox spacing="5">
+                    <CheckBox fx:id="cbShipyard" text="%services.SHIPYARD"/>
+                    <CheckBox fx:id="cbMediumLandpad" text="%services.MEDIUM_LANDPAD"/>
+                    <CheckBox fx:id="cbLargeLandpad" text="%services.LARGE_LANDPAD"/>
+                </VBox>
+            </HBox>
         </VBox>
     </HBox>
     <VBox GridPane.rowIndex="3" alignment="CENTER" spacing="10">

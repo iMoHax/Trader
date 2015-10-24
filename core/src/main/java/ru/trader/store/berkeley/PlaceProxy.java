@@ -1,9 +1,6 @@
 package ru.trader.store.berkeley;
 
-import ru.trader.core.AbstractPlace;
-import ru.trader.core.FACTION;
-import ru.trader.core.GOVERNMENT;
-import ru.trader.core.Vendor;
+import ru.trader.core.*;
 import ru.trader.store.berkeley.entities.BDBPlace;
 import ru.trader.store.berkeley.entities.BDBVendor;
 
@@ -145,6 +142,11 @@ public class PlaceProxy extends AbstractPlace {
             return vendors.isEmpty();
         }
         return !store.getVendorAccessor().contains(place.getId());
+    }
+
+    @Override
+    public boolean canRefill() {
+        return store.getVendorAccessor().contains(place.getId(), v -> v.has(SERVICE_TYPE.REFUEL));
     }
 
     @Override

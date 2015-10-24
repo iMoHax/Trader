@@ -403,6 +403,7 @@ public class MarketTest  extends Assert {
         vendor1.setDistance(10);
         vendor1.add(SERVICE_TYPE.MARKET);
         vendor1.add(SERVICE_TYPE.OUTFIT);
+        vendor1.add(SERVICE_TYPE.REFUEL);
         Offer offer1 = vendor1.addOffer(OFFER_TYPE.SELL, item1, 10,43);
         Offer offer2 = vendor1.addOffer(OFFER_TYPE.BUY, item1, 12,1);
         Offer offer3 = vendor1.addOffer(OFFER_TYPE.SELL, item2, 1012,1000);
@@ -412,6 +413,7 @@ public class MarketTest  extends Assert {
         vendor2.setDistance(100.4);
         vendor3.setDistance(200000.4);
         vendor3.add(SERVICE_TYPE.OUTFIT);
+        vendor3.add(SERVICE_TYPE.REFUEL);
 
         LOG.info("add market");
         market.add(world);
@@ -473,6 +475,7 @@ public class MarketTest  extends Assert {
                         assertFalse(vendor.has(SERVICE_TYPE.MUNITION));
                         assertTrue(vendor.has(SERVICE_TYPE.OUTFIT));
                         assertFalse(vendor.has(SERVICE_TYPE.SHIPYARD));
+                        assertTrue(vendor.has(SERVICE_TYPE.REFUEL));
                     }
                     if (vendor2.getName().equals(vendor.getName())) {
                         LOG.info("check vendor 2");
@@ -485,6 +488,7 @@ public class MarketTest  extends Assert {
                         assertFalse(vendor.has(SERVICE_TYPE.MUNITION));
                         assertFalse(vendor.has(SERVICE_TYPE.OUTFIT));
                         assertFalse(vendor.has(SERVICE_TYPE.SHIPYARD));
+                        assertFalse(vendor.has(SERVICE_TYPE.REFUEL));
                     }
                 }
                 assertEquals(2, j);
@@ -507,6 +511,7 @@ public class MarketTest  extends Assert {
                         assertFalse(vendor.has(SERVICE_TYPE.MUNITION));
                         assertTrue(vendor.has(SERVICE_TYPE.OUTFIT));
                         assertFalse(vendor.has(SERVICE_TYPE.SHIPYARD));
+                        assertTrue(vendor.has(SERVICE_TYPE.REFUEL));
                     }
                 }
                 assertEquals(1, j);

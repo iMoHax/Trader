@@ -39,6 +39,7 @@ public class MarketAnalyzerTest extends Assert {
             place.add(new SimpleVendor());
         }
         Vendor vendor = place.get().iterator().next();
+        vendor.add(SERVICE_TYPE.REFUEL);
         vendor.add(offer);
     }
 

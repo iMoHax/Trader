@@ -18,6 +18,7 @@ import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
 import ru.trader.view.support.cells.CustomListCell;
+
 import java.util.Optional;
 
 public class FilterController {
@@ -39,6 +40,8 @@ public class FilterController {
     private CheckBox cbMarket;
     @FXML
     private CheckBox cbBlackMarket;
+    @FXML
+    private CheckBox cbRefuel;
     @FXML
     private CheckBox cbRepair;
     @FXML
@@ -109,6 +112,7 @@ public class FilterController {
         distance.setValue(filter.getDistance());
         cbMarket.setSelected(filter.has(SERVICE_TYPE.MARKET));
         cbBlackMarket.setSelected(filter.has(SERVICE_TYPE.BLACK_MARKET));
+        cbRefuel.setSelected(filter.has(SERVICE_TYPE.REFUEL));
         cbMunition.setSelected(filter.has(SERVICE_TYPE.MUNITION));
         cbRepair.setSelected(filter.has(SERVICE_TYPE.REPAIR));
         cbOutfit.setSelected(filter.has(SERVICE_TYPE.OUTFIT));
@@ -134,6 +138,7 @@ public class FilterController {
         filter.setDistance(distance.getValue().doubleValue());
         if (cbMarket.isSelected()) filter.add(SERVICE_TYPE.MARKET); else filter.remove(SERVICE_TYPE.MARKET);
         if (cbBlackMarket.isSelected()) filter.add(SERVICE_TYPE.BLACK_MARKET); else filter.remove(SERVICE_TYPE.BLACK_MARKET);
+        if (cbRefuel.isSelected()) filter.add(SERVICE_TYPE.REFUEL); else filter.remove(SERVICE_TYPE.REFUEL);
         if (cbMunition.isSelected()) filter.add(SERVICE_TYPE.MUNITION); else filter.remove(SERVICE_TYPE.MUNITION);
         if (cbRepair.isSelected()) filter.add(SERVICE_TYPE.REPAIR); else filter.remove(SERVICE_TYPE.REPAIR);
         if (cbOutfit.isSelected()) filter.add(SERVICE_TYPE.OUTFIT); else filter.remove(SERVICE_TYPE.OUTFIT);

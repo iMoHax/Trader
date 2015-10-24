@@ -1,10 +1,13 @@
 package ru.trader.store.berkeley.dao;
 
-import com.sleepycat.persist.*;
+import com.sleepycat.persist.EntityStore;
+import com.sleepycat.persist.PrimaryIndex;
+import com.sleepycat.persist.SecondaryIndex;
 import ru.trader.store.berkeley.entities.BDBVendor;
 
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class VendorDA<T> {
     private final PrimaryIndex<Long, BDBVendor> indexById;
@@ -40,6 +43,10 @@ public class VendorDA<T> {
 
     public boolean contains(long placeId){
         return indexByPlaceId.contains(placeId);
+    }
+
+    public boolean contains(long placeId, Predicate<BDBVendor> filter) {
+        return !DAUtils.getAll(indexByPlaceId, placeId, v -> v, filter).isEmpty();
     }
 
     public long count(long placeId){

@@ -2,7 +2,6 @@ package ru.trader.controllers;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -50,6 +49,8 @@ public class OffersController {
     private CheckBox cbMarket;
     @FXML
     private CheckBox cbBlackMarket;
+    @FXML
+    private CheckBox cbRefuel;
     @FXML
     private CheckBox cbRepair;
     @FXML
@@ -159,6 +160,7 @@ public class OffersController {
             distance.setText(String.valueOf(station.getDistance()));
             cbMarket.setSelected(station.hasService(SERVICE_TYPE.MARKET));
             cbBlackMarket.setSelected(station.hasService(SERVICE_TYPE.BLACK_MARKET));
+            cbRefuel.setSelected(station.hasService(SERVICE_TYPE.REFUEL));
             cbMunition.setSelected(station.hasService(SERVICE_TYPE.MUNITION));
             cbRepair.setSelected(station.hasService(SERVICE_TYPE.REPAIR));
             cbOutfit.setSelected(station.hasService(SERVICE_TYPE.OUTFIT));

@@ -174,7 +174,7 @@
         <place name="26 Draconis" x="-39.0" y="-0.65625" z="24.90625"/>
         <place name="Acihaut" x="-18.5" y="-4.0" z="25.28125">
         <vendor name="Station of Acihaut">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i105" price="1.0" count="1000"/>
             <offer type="SELL" item="i39" price="1130.0" count="1000"/>
             <offer type="SELL" item="i68" price="18.0" count="1000"/>
@@ -251,7 +251,7 @@
         </place>
         <place name="Aganippe" x="-11.5625" y="11.625" z="43.8125">
         <vendor name="Station of Aganippe">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i105" price="1.0" count="1000"/>
             <offer type="SELL" item="i15" price="356.0" count="1000"/>
             <offer type="SELL" item="i12" price="15.0" count="1000"/>
@@ -287,7 +287,7 @@
         </place>
         <place name="Asellus Primus" x="-23.9375" y="-1.34375" z="40.875">
         <vendor name="Station of Asellus Primus">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i105" price="9100.0" count="1000"/>
             <offer type="SELL" item="i95" price="99900.0" count="1000"/>
             <offer type="SELL" item="i63" price="1581.0" count="1000"/>
@@ -371,7 +371,7 @@
         </place>
         <place name="Aulin" x="-19.6875" y="4.75" z="32.6875">
         <vendor name="Station of Aulin">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i114" price="2067895.0" count="1000"/>
             <offer type="SELL" item="i107" price="210400.0" count="1000"/>
             <offer type="SELL" item="i78" price="1.0" count="1000"/>
@@ -464,7 +464,7 @@
         </place>
         <place name="Aulis" x="-16.46875" y="-11.4375" z="44.1875">
         <vendor name="Station of Aulis">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i15" price="355.0" count="1000"/>
             <offer type="SELL" item="i20" price="1026.0" count="1000"/>
             <offer type="SELL" item="i12" price="15.0" count="1000"/>
@@ -503,7 +503,7 @@
         </place>
         <place name="BD+47 2112" x="-14.78125" y="-0.40625" z="33.46875">
         <vendor name="Station of BD+47 2112">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i108" price="1.0" count="1000"/>
             <offer type="SELL" item="i105" price="1.0" count="1000"/>
             <offer type="SELL" item="i36" price="519.0" count="1000"/>
@@ -549,7 +549,7 @@
         <place name="BD+55 1519" x="-16.9375" y="-16.59375" z="44.71875"></place>
         <place name="Bolg" x="-7.90625" y="2.125" z="34.71875">
         <vendor name="Station of Bolg">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i105" price="1.0" count="1000"/>
             <offer type="SELL" item="i79" price="1.0" count="1000"/>
             <offer type="SELL" item="i114" price="1.0" count="1000"/>
@@ -623,7 +623,7 @@
         </place>
         <place name="CM Draco" x="-35.6875" y="2.15625" z="30.9375">
         <vendor name="Station of CM Draco">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i36" price="447.0" count="1000"/>
             <offer type="SELL" item="i1" price="82.0" count="1000"/>
             <offer type="SELL" item="i68" price="16.0" count="1000"/>
@@ -673,7 +673,7 @@
         </place>
         <place name="Chi Herculis" x="-30.75" y="12.78125" z="39.71875">
         <vendor name="Station of Chi Herculis">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i15" price="391.0" count="1000"/>
             <offer type="SELL" item="i12" price="17.0" count="1000"/>
             <offer type="SELL" item="i18" price="67.0" count="1000"/>
@@ -706,7 +706,7 @@
         <place name="DP Draconis" x="-17.5" y="-11.375" z="25.96875"/>
         <place name="Dahan" x="-19.75" y="-3.1875" z="41.78125">
         <vendor name="Station of Dahan">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i108" price="1.0" count="1000"/>
             <offer type="SELL" item="i105" price="1.0" count="1000"/>
             <offer type="SELL" item="i36" price="535.0" count="1000"/>
@@ -769,7 +769,7 @@
         </place>
         <place name="Eranin" x="-22.84375" y="-1.1875" z="36.53125">
         <vendor name="Station of Eranin">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i66" price="255.0" count="1000"/>
             <offer type="SELL" item="i65" price="58.0" count="1000"/>
             <offer type="SELL" item="i20" price="1252.0" count="1000"/>
@@ -812,7 +812,7 @@
         </place>
         <place name="G 239-25" x="-22.6875" y="-6.6875" z="25.8125">
         <vendor name="Station of G 239-25">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i108" price="1.0" count="1000"/>
             <offer type="SELL" item="i105" price="1.0" count="1000"/>
             <offer type="SELL" item="i1" price="81.0" count="1000"/>
@@ -856,7 +856,7 @@
         <place name="Hermitage" x="-28.75" y="10.4375" z="25.0"/>
         <place name="Ithaca" x="-8.09375" y="-9.28125" z="44.9375">
         <vendor name="Station of Ithaca">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i36" price="412.0" count="1000"/>
             <offer type="SELL" item="i90" price="1.0" count="1000"/>
             <offer type="SELL" item="i68" price="18.0" count="1000"/>
@@ -909,7 +909,7 @@
         </place>
         <place name="Keries" x="-18.90625" y="12.59375" z="27.21875">
         <vendor name="Station of Keries">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i1" price="82.0" count="1000"/>
             <offer type="SELL" item="i50" price="1695.0" count="1000"/>
             <offer type="SELL" item="i68" price="16.0" count="1000"/>
@@ -954,7 +954,7 @@
         <place name="LFT 1361" x="-38.78125" y="-0.5" z="24.71875"/>
         <place name="LFT 880" x="-22.8125" y="-18.34375" z="31.40625">
         <vendor name="Station of LFT 880">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i105" price="1.0" count="1000"/>
             <offer type="SELL" item="i107" price="1.0" count="1000"/>
             <offer type="SELL" item="i68" price="18.0" count="1000"/>
@@ -1013,7 +1013,7 @@
         </place>
         <place name="LFT 992" x="-7.5625" y="0.6875" z="42.59375">
         <vendor name="Station of LFT 992">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i1" price="82.0" count="1000"/>
             <offer type="SELL" item="i50" price="1383.0" count="1000"/>
             <offer type="SELL" item="i68" price="18.0" count="1000"/>
@@ -1053,7 +1053,7 @@
         </place>
         <place name="LHS 2819" x="-30.5" y="-13.4375" z="38.5625">
         <vendor name="Station of LHS 2819">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i1" price="48.0" count="1000"/>
             <offer type="SELL" item="i50" price="1383.0" count="1000"/>
             <offer type="SELL" item="i68" price="18.0" count="1000"/>
@@ -1091,7 +1091,7 @@
         </place>
         <place name="LHS 2884" x="-22.0" y="1.78125" z="48.40625">
         <vendor name="Station of LHS 2884">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i36" price="535.0" count="1000"/>
             <offer type="SELL" item="i1" price="48.0" count="1000"/>
             <offer type="SELL" item="i68" price="18.0" count="1000"/>
@@ -1137,7 +1137,7 @@
         </place>
         <place name="LHS 2887" x="-7.34375" y="5.71875" z="26.78125">
         <vendor name="Station of LHS 2887">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i42" price="821.0" count="1000"/>
             <offer type="SELL" item="i39" price="1375.0" count="1000"/>
             <offer type="SELL" item="i1" price="81.0" count="1000"/>
@@ -1196,7 +1196,7 @@
         </place>
         <place name="LHS 3006" x="-21.96875" y="-1.71875" z="29.09375">
         <vendor name="Station of LHS 3006">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i1" price="81.0" count="1000"/>
             <offer type="SELL" item="i50" price="1557.0" count="1000"/>
             <offer type="SELL" item="i68" price="18.0" count="1000"/>
@@ -1236,7 +1236,7 @@
         </place>
         <place name="LHS 3262" x="-24.125" y="4.90625" z="18.84375">
         <vendor name="Station of LHS 3262">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i105" price="1.0" count="1000"/>
             <offer type="SELL" item="i95" price="1.0" count="1000"/>
             <offer type="SELL" item="i63" price="1283.0" count="1000"/>
@@ -1315,7 +1315,7 @@
         </place>
         <place name="LHS 417" x="-18.3125" y="4.90625" z="18.1875">
         <vendor name="Station of LHS 417">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i36" price="543.0" count="1000"/>
             <offer type="SELL" item="i1" price="81.0" count="1000"/>
             <offer type="SELL" item="i68" price="18.0" count="1000"/>
@@ -1360,7 +1360,7 @@
         </place>
         <place name="LHS 5287" x="-36.40625" y="-0.78125" z="48.1875">
         <vendor name="Station of LHS 5287">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i1" price="48.0" count="1000"/>
             <offer type="SELL" item="i50" price="1379.0" count="1000"/>
             <offer type="SELL" item="i68" price="11.0" count="1000"/>
@@ -1398,7 +1398,7 @@
         <place name="LP 275-68" x="-23.34375" y="15.1875" z="25.0625"/>
         <place name="LP 64-194" x="-21.65625" y="-16.21875" z="32.21875">
         <vendor name="Station of LP 64-194">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i1" price="67.0" count="1000"/>
             <offer type="SELL" item="i68" price="18.0" count="1000"/>
             <offer type="SELL" item="i116" price="1.0" count="1000"/>
@@ -1441,7 +1441,7 @@
         </place>
         <place name="LP 98-132" x="-26.78125" y="-4.59375" z="37.03125">
         <vendor name="Station of LP 98-132">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i105" price="9100.0" count="1000"/>
             <offer type="SELL" item="i90" price="1.0" count="1000"/>
             <offer type="SELL" item="i68" price="18.0" count="1000"/>
@@ -1494,7 +1494,7 @@
         <place name="Lalande 29917" x="-26.53125" y="-4.5625" z="22.15625"/>
         <place name="Magec" x="-32.875" y="15.5" z="36.15625">
         <vendor name="Station of Magec">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i66" price="255.0" count="1000"/>
             <offer type="SELL" item="i65" price="53.0" count="1000"/>
             <offer type="SELL" item="i20" price="1249.0" count="1000"/>
@@ -1534,7 +1534,7 @@
         <place name="Meliae" x="-17.3125" y="-1.6875" z="49.53125"/>
         <place name="Morgor" x="-15.25" y="-2.25" z="39.53125">
         <vendor name="Station of Morgor">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i105" price="9100.0" count="1000"/>
             <offer type="SELL" item="i1" price="81.0" count="1000"/>
             <offer type="SELL" item="i90" price="5800.0" count="1000"/>
@@ -1576,7 +1576,7 @@
         </place>
         <place name="Nang Ta-khian" x="-18.21875" y="-6.34375" z="26.5625">
         <vendor name="Station of Nang Ta-khian">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i108" price="11600.0" count="1000"/>
             <offer type="SELL" item="i105" price="9100.0" count="1000"/>
             <offer type="SELL" item="i71" price="4066.0" count="1000"/>
@@ -1647,7 +1647,7 @@
         </place>
         <place name="Naraka" x="-34.09375" y="-5.53125" z="26.21875">
         <vendor name="Station of Naraka">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i105" price="1.0" count="1000"/>
             <offer type="SELL" item="i65" price="48.0" count="1000"/>
             <offer type="SELL" item="i13" price="922.0" count="1000"/>
@@ -1683,7 +1683,7 @@
         </place>
         <place name="Opala" x="-25.5" y="9.28125" z="35.25">
         <vendor name="Station of Opala">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i15" price="478.0" count="1000"/>
             <offer type="SELL" item="i12" price="16.0" count="1000"/>
             <offer type="SELL" item="i18" price="84.0" count="1000"/>
@@ -1715,7 +1715,7 @@
         </place>
         <place name="Ovid" x="-28.0625" y="14.8125" z="35.15625">
         <vendor name="Station of Ovid">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i91" price="1.0" count="1000"/>
             <offer type="SELL" item="i27" price="4008.0" count="1000"/>
             <offer type="SELL" item="i68" price="18.0" count="1000"/>
@@ -1788,7 +1788,7 @@
         </place>
         <place name="Pi-fang" x="-34.65625" y="-4.59375" z="22.84375">
         <vendor name="Station of Pi-fang">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i108" price="1.0" count="1000"/>
             <offer type="SELL" item="i90" price="1.0" count="1000"/>
             <offer type="SELL" item="i76" price="1.0" count="1000"/>
@@ -1840,7 +1840,7 @@
         </place>
         <place name="Rakapila" x="-14.90625" y="9.125" z="33.625">
         <vendor name="Station of Rakapila">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i4" price="129.0" count="1000"/>
             <offer type="SELL" item="i69" price="24.0" count="1000"/>
             <offer type="SELL" item="i68" price="18.0" count="1000"/>
@@ -1887,7 +1887,7 @@
         </place>
         <place name="Ross 1015" x="-6.09375" y="3.03125" z="29.46875">
         <vendor name="Station of Ross 1015">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i1" price="75.0" count="1000"/>
             <offer type="SELL" item="i50" price="1383.0" count="1000"/>
             <offer type="SELL" item="i68" price="18.0" count="1000"/>
@@ -1922,7 +1922,7 @@
         </place>
         <place name="Ross 1051" x="-37.21875" y="-5.0625" z="44.5">
         <vendor name="Station of Ross 1051">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i108" price="1.0" count="1000"/>
             <offer type="SELL" item="i105" price="9100.0" count="1000"/>
             <offer type="SELL" item="i91" price="92000.0" count="1000"/>
@@ -1988,7 +1988,7 @@
         </place>
         <place name="Ross 1057" x="-32.3125" y="-12.4375" z="26.1875">
         <vendor name="Station of Ross 1057">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i66" price="256.0" count="1000"/>
             <offer type="SELL" item="i12" price="25.0" count="1000"/>
             <offer type="SELL" item="i18" price="84.0" count="1000"/>
@@ -2022,7 +2022,7 @@
         <place name="Styx" x="-24.3125" y="6.03125" z="37.75"/>
         <place name="Surya" x="-38.46875" y="5.40625" z="39.25">
         <vendor name="Station of Surya">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i105" price="9100.0" count="1000"/>
             <offer type="SELL" item="i107" price="210400.0" count="1000"/>
             <offer type="SELL" item="i68" price="18.0" count="1000"/>
@@ -2079,7 +2079,7 @@
         </place>
         <place name="Tilian" x="-21.53125" y="10.125" z="22.3125">
         <vendor name="Station of Tilian">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i105" price="9100.0" count="1000"/>
             <offer type="SELL" item="i30" price="129.0" count="1000"/>
             <offer type="SELL" item="i114" price="2067835.0" count="1000"/>
@@ -2155,7 +2155,7 @@
         <place name="Wise 1647+5632" x="-21.59375" y="1.75" z="17.71875"/>
         <place name="Wyrd" x="-11.625" y="-3.9375" z="31.53125">
         <vendor name="Station of Wyrd">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i97" price="1.0" count="1000"/>
             <offer type="SELL" item="i108" price="1.0" count="1000"/>
             <offer type="SELL" item="i105" price="1.0" count="1000"/>
@@ -2212,7 +2212,7 @@
         </place>
         <place name="h Draconis" x="-39.84375" y="-3.90625" z="29.5625">
         <vendor name="Station of h Draconis">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i114" price="1.0" count="1000"/>
             <offer type="SELL" item="i78" price="1.0" count="1000"/>
             <offer type="SELL" item="i68" price="18.0" count="1000"/>
@@ -2282,7 +2282,7 @@
         </place>
         <place name="i Bootis" x="-22.375" y="4.0" z="34.84375">
         <vendor name="Station of i Bootis">
-            <services><service type="MARKET"/></services>
+            <services><service type="REFUEL"/><service type="MARKET"/></services>
             <offer type="SELL" item="i105" price="1.0" count="1000"/>
             <offer type="SELL" item="i97" price="1.0" count="1000"/>
             <offer type="SELL" item="i79" price="1.0" count="1000"/>

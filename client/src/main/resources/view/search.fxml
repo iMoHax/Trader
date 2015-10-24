@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
-
-<?import javafx.scene.control.cell.PropertyValueFactory?>
-
-<?import ru.trader.view.support.NumberField?>
 <?import ru.trader.view.support.cells.DistanceCell?>
+<?import ru.trader.view.support.NumberField?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="ru.trader.controllers.SearchController">
 
@@ -35,9 +33,10 @@
             <Label text="%search.text.distance" GridPane.rowIndex="3" />
             <NumberField fx:id="distance" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label text="%filter.services" GridPane.rowIndex="4" />
-            <TilePane hgap="5" vgap="5" tileAlignment="BASELINE_LEFT" GridPane.columnSpan="2" GridPane.rowIndex="5" >
+            <TilePane hgap="5" vgap="5" tileAlignment="BASELINE_LEFT" prefColumns="2" GridPane.columnSpan="2" GridPane.rowIndex="5" >
                 <CheckBox fx:id="cbMarket" text="%services.MARKET"/>
                 <CheckBox fx:id="cbBlackMarket" text="%services.BLACK_MARKET"/>
+                <CheckBox fx:id="cbRefuel" text="%services.REFUEL"/>
                 <CheckBox fx:id="cbRepair" text="%services.REPAIR"/>
                 <CheckBox fx:id="cbMunition" text="%services.MUNITION"/>
                 <CheckBox fx:id="cbOutfit" text="%services.OUTFIT"/>

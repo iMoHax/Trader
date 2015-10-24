@@ -36,16 +36,17 @@
             </HBox>
             <HBox spacing="4">
             <Label text="%offers.text.services"/>
-            <HBox spacing="15">
+            <TilePane hgap="5" vgap="5" prefColumns="5" tileAlignment="BASELINE_LEFT">
                 <CheckBox fx:id="cbMarket" text="%services.MARKET"/>
                 <CheckBox fx:id="cbBlackMarket" text="%services.BLACK_MARKET"/>
+                <CheckBox fx:id="cbRefuel" text="%services.REFUEL"/>
                 <CheckBox fx:id="cbRepair" text="%services.REPAIR"/>
                 <CheckBox fx:id="cbMunition" text="%services.MUNITION"/>
                 <CheckBox fx:id="cbOutfit" text="%services.OUTFIT"/>
                 <CheckBox fx:id="cbShipyard" text="%services.SHIPYARD"/>
                 <CheckBox fx:id="cbMediumLandpad" text="%services.MEDIUM_LANDPAD"/>
                 <CheckBox fx:id="cbLargeLandpad" text="%services.LARGE_LANDPAD"/>
-            </HBox>
+            </TilePane>
         </HBox>
         </VBox>
 

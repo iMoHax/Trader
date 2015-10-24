@@ -75,7 +75,7 @@ public interface Vendor extends Connectable<Vendor> {
     }
 
     default boolean canRefill(){
-        return getPlace().canRefill();
+        return has(SERVICE_TYPE.REFUEL);
     }
 
     default void clear(){

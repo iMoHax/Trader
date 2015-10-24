@@ -50,6 +50,8 @@ public class StationEditorController {
     @FXML
     private CheckBox cbMarket;
     @FXML
+    private CheckBox cbRefuel;
+    @FXML
     private CheckBox cbBlackMarket;
     @FXML
     private CheckBox cbRepair;
@@ -101,6 +103,7 @@ public class StationEditorController {
         distance.numberProperty().bindBidirectional(updater.distanceProperty());
         cbMarket.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.MARKET));
         cbBlackMarket.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.BLACK_MARKET));
+        cbRefuel.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.REFUEL));
         cbMunition.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.MUNITION));
         cbRepair.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.REPAIR));
         cbOutfit.selectedProperty().bindBidirectional(updater.serviceProperty(SERVICE_TYPE.OUTFIT));
