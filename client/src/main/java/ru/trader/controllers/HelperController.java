@@ -229,12 +229,13 @@ public class HelperController {
         boolean isEnd = route.isEnd();
         RouteEntryModel entry = this.entry;
         if (profile.isDocked() && MainController.getProfile().getStation().equals(entry.getStation())) {
-            route.complete();
             if (!isEnd)
                 profile.setDocked(false);
             else {
                 if (!route.isLoop()) {
                     profile.clearRoute();
+                } else {
+                    route.complete();
                 }
             }
         } else {
@@ -243,26 +244,6 @@ public class HelperController {
                 profile.setStation(entry.getStation());
                 profile.setDocked(true);
             }
-        }
-    }
-
-    @FXML
-    private void next(){
-        int index = route.getCurrentEntry();
-        if (index < route.getJumps() - 1){
-            route.setCurrentEntry(index + 1);
-        } else {
-            if (route.isLoop()){
-                route.setCurrentEntry(0);
-            }
-        }
-    }
-
-    @FXML
-    private void previous(){
-        int index = route.getCurrentEntry();
-        if (index > 0){
-            route.setCurrentEntry(index - 1);
         }
     }
 

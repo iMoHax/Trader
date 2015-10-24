@@ -257,6 +257,7 @@ public class RouteModel {
 
     public void updateCurrentEntry(SystemModel system, StationModel station, boolean undock) {
         if (undock){
+            complete();
             int index = getCurrentEntry();
             RouteEntryModel entry = entries.get(index);
             if (index < entries.size()-1 && system.equals(entry.getStation().getSystem()) && entry.getStation().equals(station)){
@@ -300,7 +301,7 @@ public class RouteModel {
         int index = getCurrentEntry();
         RouteEntryModel entry = entries.get(index);
         Collection<OrderModel> orders = entry.orders();
-        for (int i = index+1; i < entries.size(); i++) {
+        for (int i = index; i < entries.size(); i++) {
             RouteEntryModel e = entries.get(i);
             for (MissionModel mission : e.missions()) {
                 mission.complete(orders);
@@ -314,24 +315,29 @@ public class RouteModel {
                 }
             }
         }
-        Collection<MissionModel> missions = new ArrayList<>(entry.missions());
+        if (index == entries.size()-1){
+            removeCompletedMissions();
+            if (isLoop()) setCurrentEntry(0);
+        }
+    }
+
+    private void removeCompletedMissions(){
         boolean needRefresh = false;
-        for (MissionModel mission : missions) {
-            mission.complete(orders);
-            if (mission.isCompleted()){
-                Collection<RouteReserve> reserves = mission.getReserves();
-                if (reserves != null) {
-                    needRefresh = true;
-                    _route.unreserve(reserves);
+        for (RouteEntryModel entry : entries) {
+            Collection<MissionModel> missions = new ArrayList<>(entry.missions());
+            for (MissionModel mission : missions) {
+                if (mission.isCompleted()) {
+                    Collection<RouteReserve> reserves = mission.getReserves();
+                    if (reserves != null) {
+                        needRefresh = true;
+                        _route.unreserve(reserves);
+                    }
+                    entry.remove(mission);
                 }
-                entry.remove(mission);
             }
         }
         if (needRefresh){
             refresh();
-        }
-        if (index == entries.size()-1){
-            if (isLoop()) setCurrentEntry(0);
         }
     }
 
