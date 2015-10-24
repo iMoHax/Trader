@@ -45,4 +45,13 @@ public class ViewUtils {
     public static String timeToString(long time){
         return String.format("%d:%02d:%02d", time/3600, (time%3600)/60, (time%60));
     }
+
+    public static String distanceToString(double distance){
+        if (distance < 0.01) return String.format("%.0f Ls", distance / 0.00000003169);
+        return String.format("%.2f LY", distance);
+    }
+
+    public static String stationDistanceToString(double distance){
+        return String.format("%.2f Ls", distance);
+    }
 }

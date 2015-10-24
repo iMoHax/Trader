@@ -6,17 +6,21 @@
 <?import org.controlsfx.glyphfont.Glyph?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.HelperController"
-      spacing="4" minWidth="200" fx:id="helper">
+      spacing="4" minWidth="220" maxWidth="220" fx:id="helper">
     <HBox>
-        <VBox>
+        <VBox HBox.hgrow="ALWAYS">
             <HBox>
                 <Button onAction="#copy" minWidth="30">
                     <graphic><Glyph text="FontAwesome|COPY" /></graphic>
                 </Button>
-                <Label fx:id="system" text="Breksta" prefWidth="130" maxWidth="130" styleClass="text-big" />
-                <Label fx:id="time" text="0:44:15" styleClass="text-small"/>
+                <Label fx:id="system" text="Breksta" styleClass="text-big" />
             </HBox>
             <Label fx:id="station" text="Pieres Market" styleClass="text-medium" />
+        </VBox>
+        <VBox minWidth="60" alignment="TOP_RIGHT">
+            <Label fx:id="time" text="00:44:15" styleClass="text-small"/>
+            <Label fx:id="distance" text="10 LY" styleClass="text-small"/>
+            <Label fx:id="stationDistance" text="123456 ls" styleClass="text-small"/>
         </VBox>
     </HBox>
     <HBox fx:id="refuelGroup"><Label text="Заправить:" /><Label fx:id="refuel" /></HBox>

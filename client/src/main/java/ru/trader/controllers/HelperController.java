@@ -45,6 +45,10 @@ public class HelperController {
     @FXML
     private Label time;
     @FXML
+    private Label distance;
+    @FXML
+    private Label stationDistance;
+    @FXML
     private Label refuel;
     @FXML
     private ListView<OrderModel> buyOrders;
@@ -197,9 +201,18 @@ public class HelperController {
             station.setText(entry.getStation().getName());
             system.setText(entry.getStation().getSystem().getName());
             if (index > 0){
-                time.setText(ViewUtils.timeToString(route.get(index-1).getTime()));
+                RouteEntryModel prev = route.get(index - 1);
+                time.setText(ViewUtils.timeToString(prev.getTime()));
+                distance.setText(ViewUtils.distanceToString(prev.getStation().getSystem().getDistance(entry.getStation().getSystem())));
+                if (entry.isTransit()) {
+                    stationDistance.setText("");
+                } else {
+                    stationDistance.setText(ViewUtils.stationDistanceToString(entry.getStation().getDistance()));
+                }
             } else {
-                time.setText(ViewUtils.timeToString(0));
+                time.setText("");
+                distance.setText("");
+                stationDistance.setText("");
             }
             refuel.setText(String.valueOf(entry.getRefill()));
             buyOrders.setItems(entry.orders());
@@ -213,6 +226,8 @@ public class HelperController {
             station.setText("");
             system.setText("No route");
             time.setText("");
+            distance.setText("");
+            stationDistance.setText("");
             refuel.setText("");
             buyOrders.setItems(FXCollections.emptyObservableList());
             sellOrders.setItems(FXCollections.emptyObservableList());
@@ -253,7 +268,7 @@ public class HelperController {
     }
 
     private void bindKeys(){
-        KeyBinding.bind(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_MASK), k -> ViewUtils.doFX(this::complete));
+        KeyBinding.bind(KeyStroke.getKeyStroke(KeyEvent.VK_END, 0), k -> ViewUtils.doFX(this::complete));
     }
 
     private final ChangeListener<? super Number> currentEntryListener = (ov, o, n) -> ViewUtils.doFX(() -> setRouteEntry(n.intValue()));

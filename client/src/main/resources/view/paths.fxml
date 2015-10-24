@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <?import javafx.scene.control.cell.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-
-
-<?import ru.trader.view.support.cells.DoubleCell?>
-
-<?import ru.trader.view.support.cells.OfferCellValueImpl?>
-<?import ru.trader.view.support.cells.OfferTableCell?>
-<?import ru.trader.view.support.cells.PathRouteCell?>
+<?import javafx.scene.layout.HBox?>
 <?import ru.trader.view.support.cells.DistanceCell?>
+<?import ru.trader.view.support.cells.DoubleCell?>
+<?import ru.trader.view.support.cells.PathRouteCell?>
+<?import ru.trader.view.support.cells.TimeCell?>
 <HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.PathsController" styleClass="dialog"
       prefWidth="1050">
@@ -35,7 +32,11 @@
             <TableColumn minWidth="70.0" text="%market.order.profit">
                 <cellValueFactory><PropertyValueFactory property="profit"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="profitByTime" minWidth="70.0" text="%market.offer.avg" sortType="DESCENDING">
+            <TableColumn minWidth="70.0" text="%market.route.time" sortType="DESCENDING">
+                <cellFactory><TimeCell /></cellFactory>
+                <cellValueFactory><PropertyValueFactory property="time"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="profitByTime" minWidth="70.0" text="%market.route.profitByTime" sortType="DESCENDING">
                 <cellFactory><DoubleCell format="\%.0f"/></cellFactory>
                 <cellValueFactory><PropertyValueFactory property="profitByTime"/></cellValueFactory>
             </TableColumn>

@@ -72,7 +72,7 @@ public class RouteModel {
     }
 
     public int getJumps() {
-        return entries.size();
+        return entries.size()-1;
     }
 
     public int getRefuels() {

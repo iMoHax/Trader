@@ -10,7 +10,6 @@ import ru.trader.analysis.Route;
 import ru.trader.analysis.RouteEntry;
 import ru.trader.core.Vendor;
 import ru.trader.model.RouteModel;
-import ru.trader.view.support.cells.DistanceCell;
 
 public class RouteNode {
     private final static String CSS_PATH = "path";
@@ -39,7 +38,7 @@ public class RouteNode {
                 VBox.setVgrow(track, Priority.ALWAYS);
                 track.getStyleClass().add(CSS_TRACK);
 
-                Text t = new Text(DistanceCell.distanceToString(entry.getVendor().getDistance(prev)));
+                Text t = new Text(ViewUtils.distanceToString(entry.getVendor().getDistance(prev)));
                 t.getStyleClass().add(CSS_TRACK_TEXT);
                 track.getChildren().addAll(t, Glyph.create("FontAwesome|LONG_ARROW_RIGHT"));
 
