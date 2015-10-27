@@ -30,7 +30,7 @@ public class OffersHandler implements ParseHandler {
     }
 
     private String getStationId(Vendor vendor){
-        return vendor.getPlace().getName()+"/"+vendor.getName();
+        return vendor.getPlace().getName().toLowerCase()+"/"+vendor.getName().toLowerCase();
     }
 
     @Override
@@ -113,7 +113,7 @@ public class OffersHandler implements ParseHandler {
 
         name = sb.toString();
         LOG.trace("system: {}, station: {}", system, name);
-        String id = system + "/" +name;
+        String id = system.toLowerCase() + "/" +name.toLowerCase();
         station = stations.get(id);
         if (station == null){
             LOG.warn("Station {} not found", id);
