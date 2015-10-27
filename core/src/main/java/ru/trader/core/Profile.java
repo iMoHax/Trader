@@ -27,7 +27,7 @@ public class Profile {
     public Profile(Ship ship) {
         this.ship = ship;
         refill = true;
-        jumps = 6;
+        jumps = 4;
         lands = 4;
         routesCount = 30;
         distanceTime = 0.3;
@@ -195,7 +195,7 @@ public class Profile {
             profile.setStation(null);
         }
         profile.setDocked(Boolean.valueOf(values.getProperty("profile.docked","false")));
-        profile.setJumps(Integer.valueOf(values.getProperty("profile.jumps", "6")));
+        profile.setJumps(Integer.valueOf(values.getProperty("profile.jumps", "4")));
         profile.setLands(Integer.valueOf(values.getProperty("profile.lands", "4")));
         profile.setPathPriority(PATH_PRIORITY.valueOf(values.getProperty("profile.search.priority", "FAST")));
         profile.setRoutesCount(Integer.valueOf(values.getProperty("profile.search.routes", "100")));
