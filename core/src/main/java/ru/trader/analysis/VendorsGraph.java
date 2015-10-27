@@ -313,7 +313,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         public Path<Vendor> getPath(double fuel){
             Path<Vendor> res = null;
             for (Path<Vendor> p : paths) {
-                if ((fuel >= p.getMinFuel() || getSource().getEntry().canRefill()) && fuel <= p.getMaxFuel()) {
+                if (((fuel - p.getMinFuel() > 0.05) || getSource().getEntry().canRefill()) && fuel <= p.getMaxFuel()) {
                     if (getProfile().getPathPriority().equals(Profile.PATH_PRIORITY.FAST)) {
                         if (res == null || (p.getSize() < res.getSize() || p.getSize() == res.getSize() && p.getFuelCost() < res.getFuelCost()) && p.getRefillCount(fuel) <= res.getRefillCount(fuel)) {
                             res = p;
