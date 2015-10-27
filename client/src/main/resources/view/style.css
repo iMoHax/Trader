@@ -143,7 +143,7 @@ HBox.fields-group hbox-margin{
 }
 
 #helper.root {
-    -fx-base: #232323;
+    -fx-base: black;
     -fx-background: -fx-base;
     -fx-control-inner-background: -fx-base;
     -fx-control-inner-background-alt: -fx-base;
