@@ -264,4 +264,8 @@ public class Screeners {
         filterController.init();
         EMDNUpdater.setMarket(MainController.getMarket());
     }
+
+    public static void showTrackTab(){
+        mainController.showTrack();
+    }
 }

@@ -4,10 +4,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
-<?import org.controlsfx.control.SegmentedButton?>
 <?import ru.trader.view.support.cells.*?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="ru.trader.controllers.OffersController">
+          fx:controller="ru.trader.controllers.OffersController"
+        prefHeight="500">
 
     <fx:define><Insets fx:id="stationsMargin" left="5" right="5" /></fx:define>
     <fx:define><Insets fx:id="stationsPadding" left="12" right="10" /></fx:define>
@@ -17,14 +17,15 @@
         <ColumnConstraints fillWidth="true"/>
     </columnConstraints>
 
-    <TitledPane GridPane.rowSpan="3" text="%market.systems" minWidth="270" prefHeight="590" collapsible="false">
-        <TextField fx:id="systemText" />
-    </TitledPane>
-
-    <TitledPane GridPane.columnIndex="1" text="%market.stations" maxHeight="60" collapsible="false">
-        <SegmentedButton fx:id="stationsBar" />
-    </TitledPane>
-    <TitledPane GridPane.rowIndex="1" GridPane.columnIndex="1" text="" maxHeight="60" collapsible="false">
+    <VBox GridPane.rowSpan="2" GridPane.vgrow="ALWAYS" minWidth="270">
+        <TitledPane text="%market.system.name"  collapsible="false">
+            <TextField fx:id="systemText" />
+        </TitledPane>
+        <TitledPane VBox.vgrow="ALWAYS" text="%market.stations" collapsible="false">
+            <ListView fx:id="stationsList"/>
+        </TitledPane>
+    </VBox>
+    <TitledPane fx:id="stationPane" GridPane.columnIndex="1" maxHeight="60" collapsible="false">
         <VBox>
             <HBox spacing="4">
                 <Label text="%offers.text.distance"/>
@@ -51,7 +52,7 @@
         </VBox>
 
     </TitledPane>
-    <Accordion GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+    <Accordion GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
         <panes>
             <TitledPane fx:id="paneSells" animated="false" text="%offers.pane.sell">
               <TableView fx:id="tblSell" editable="true">

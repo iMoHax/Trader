@@ -11,19 +11,23 @@
     <Label text="Имя:" />
     <TextField fx:id="name" />
     <StackPane>
-        <HBox fx:id="profileInfo">
+        <HBox fx:id="profileInfo" spacing="4">
             <Label text="Баланс:" />
             <NumberField fx:id="balance" />
             <Label text="Система:" />
             <TextField fx:id="systemText" />
-            <Button fx:id="btnAddSystem"/>
+            <Button fx:id="btnAddSystem" minWidth="30">
+                <graphic><Glyph text="FontAwesome|EDIT"/></graphic>
+            </Button>
             <Label text="Станция:" />
             <ComboBox fx:id="station" />
-            <Button fx:id="btnAddStation"/>
+            <Button fx:id="btnAddStation" minWidth="30">
+                <graphic><Glyph text="FontAwesome|EDIT"/></graphic>
+            </Button>
             <Label text="В доке:" />
             <CheckBox fx:id="docked" />
         </HBox>
-        <HBox fx:id="shipInfo">
+        <HBox fx:id="shipInfo" spacing="4">
             <Label text="Трюм:" />
             <NumberField fx:id="cargo" maxWidth="60"/>
             <Label text="Топливный бак:" />

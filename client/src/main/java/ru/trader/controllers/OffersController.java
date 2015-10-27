@@ -3,10 +3,8 @@ package ru.trader.controllers;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
-import org.controlsfx.control.SegmentedButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.SERVICE_TYPE;
@@ -29,12 +27,10 @@ public class OffersController {
     private StationModel station;
 
     @FXML
-    private Insets stationsMargin;
-    @FXML
     private TextField systemText;
     private AutoCompletion<SystemModel> system;
     @FXML
-    private SegmentedButton stationsBar;
+    private ListView<StationModel> stationsList;
     @FXML
     private TableView<OfferModel> tblSell;
     @FXML
@@ -63,11 +59,11 @@ public class OffersController {
     private CheckBox cbMediumLandpad;
     @FXML
     private CheckBox cbLargeLandpad;
+    @FXML
+    private TitledPane stationPane;
 
     private final List<OfferModel> sells = FXCollections.observableArrayList();
     private final List<OfferModel> buys = FXCollections.observableArrayList();
-
-    private final static ToggleGroup stationsGrp = new ToggleGroup();
 
     // инициализируем форму данными
     @FXML
@@ -77,14 +73,13 @@ public class OffersController {
             LOG.info("Change system to {}", newValue);
             fillDetails(newValue);
         });
-        stationsGrp.selectedToggleProperty().addListener((v, o, n) -> {
-            if (n != null){
-                fillTables((StationModel) n.getUserData());
+        stationsList.getSelectionModel().selectedItemProperty().addListener((v, o, n) -> {
+            if (n != null) {
+                fillTables(n);
             } else {
                 fillTables(ModelFabric.NONE_STATION);
             }
         });
-        stationsBar.setToggleGroup(stationsGrp);
 
         tblSell.getSelectionModel().selectedItemProperty().addListener((v, o, n) -> {
             if (n != null) Screeners.changeItemDesc(n.getItem());
@@ -122,20 +117,13 @@ public class OffersController {
 
     private void fillDetails(SystemModel system){
         if (ModelFabric.isFake(system)) return;
-        stationsBar.getButtons().clear();
         List<StationModel> stations = system.getStations();
-        stations.forEach(s -> stationsBar.getButtons().add(buildStationNode(s)));
+        stationsList.setItems(FXCollections.observableList(stations));
         if (!stations.isEmpty()){
-            stationsBar.getButtons().get(0).setSelected(true);
+            stationsList.getSelectionModel().selectFirst();
         } else {
             fillTables(ModelFabric.NONE_STATION);
         }
-    }
-
-    private ToggleButton buildStationNode(StationModel station){
-        ToggleButton stationBtn = new ToggleButton(station.getName());
-        stationBtn.setUserData(station);
-        return stationBtn;
     }
 
     private void fillTables(StationModel station){
@@ -143,6 +131,7 @@ public class OffersController {
         this.station = station;
         sells.clear();
         buys.clear();
+        stationPane.setText(station.getName());
         distance.setText("");
         government.setText("");
         faction.setText("");
@@ -253,7 +242,9 @@ public class OffersController {
         @Override
         public void add(StationModel station) {
             ViewUtils.doFX(() -> {
-                stationsBar.getButtons().add(buildStationNode(station));
+                if (station.getSystem().equals(system.getValue())) {
+                    stationsList.getItems().add(station);
+                }
                 refresh();
                 sort();
             });
@@ -269,8 +260,9 @@ public class OffersController {
         @Override
         public void remove(StationModel station) {
             ViewUtils.doFX(() -> {
-                stationsBar.getToggleGroup().getSelectedToggle().setSelected(false);
-                stationsBar.getButtons().removeIf(b -> b.getUserData().equals(station));
+                if (station.getSystem().equals(system.getValue())) {
+                    stationsList.getItems().remove(station);
+                }
                 refresh();
                 sort();
             });

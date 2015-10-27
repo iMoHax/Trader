@@ -1,71 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-
-<?import org.controlsfx.glyphfont.Glyph?>
-<?import ru.trader.view.support.NumberField?>
 <?import ru.trader.view.support.cells.ItemListCell?>
 <?import ru.trader.view.support.ItemStringConverter?>
+<?import ru.trader.view.support.NumberField?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="ru.trader.controllers.MissionsController"
           hgap="10" vgap="5">
 
     <columnConstraints>
-        <ColumnConstraints minWidth="180" />
-        <ColumnConstraints minWidth="180" />
-        <ColumnConstraints minWidth="180" />
+        <ColumnConstraints minWidth="100" maxWidth="100"/>
+        <ColumnConstraints minWidth="140" maxWidth="140"/>
     </columnConstraints>
 
-    <Label text="Курьерские"/>
-    <HBox GridPane.rowIndex="1">
-        <Label text="Доставить на:"/>
-        <TextField fx:id="receiverText" prefWidth="160"/>
+    <HBox spacing="4" GridPane.columnSpan="2" alignment="CENTER">
+        <ToggleButton fx:id="courierBtn"><graphic>
+            <ImageView fitWidth="30" preserveRatio="true" pickOnBounds="true" smooth="true">
+                <image><Image url="@/images/courier_mission.jpg" /></image>
+            </ImageView></graphic>
+        </ToggleButton>
+        <ToggleButton fx:id="deliveryBtn"><graphic>
+            <ImageView fitWidth="30" preserveRatio="true" pickOnBounds="true" smooth="true">
+                <image><Image url="@/images/transport_mission.jpg" /></image>
+            </ImageView></graphic>
+        </ToggleButton>
+        <ToggleButton fx:id="supplyBtn"><graphic>
+            <ImageView fitWidth="30" preserveRatio="true" pickOnBounds="true" smooth="true">
+                <image><Image url="@/images/delivering_mission.jpg" /></image>
+            </ImageView></graphic>
+        </ToggleButton>
     </HBox>
-    <HBox GridPane.rowIndex="3">
-        <Label text="Прибыль:"/>
-        <NumberField fx:id="courierProfit" value="0" />
-    </HBox>
-    <Button fx:id="addCourierBtn" prefWidth="30" onAction="#addCourier" GridPane.rowIndex="4">
-        <graphic><Glyph text="FontAwesome|PLUS"/></graphic>
-    </Button>
 
-    <Label text="Доставка" GridPane.columnIndex="1"/>
-    <HBox GridPane.rowIndex="1" GridPane.columnIndex="1">
-        <Label text="Доставить на:"/>
-        <TextField fx:id="buyerText" prefWidth="160"/>
-    </HBox>
-    <HBox GridPane.rowIndex="2" GridPane.columnIndex="1">
-        <Label text="Кол-во:"/>
-        <NumberField fx:id="deliveryCount" value="0"/>
-    </HBox>
-    <HBox GridPane.rowIndex="3" GridPane.columnIndex="1">
-        <Label text="Прибыль:"/>
-        <NumberField fx:id="deliveryProfit" value="0"/>
-    </HBox>
-    <Button fx:id="addDeliveryBtn" prefWidth="30" onAction="#addDelivery" GridPane.rowIndex="4" GridPane.columnIndex="1">
-        <graphic><Glyph text="FontAwesome|PLUS"/></graphic>
-    </Button>
-
-    <Label text="Поставка" GridPane.columnIndex="2"/>
-    <HBox GridPane.rowIndex="1" GridPane.columnIndex="2">
-        <Label text="Товар:"/>
-        <ComboBox fx:id="item" prefWidth="160">
-            <cellFactory><ItemListCell /></cellFactory>
-            <converter><ItemStringConverter /></converter>
-        </ComboBox>
-    </HBox>
-    <HBox GridPane.rowIndex="2" GridPane.columnIndex="2">
-        <Label text="Кол-во:"/>
-        <NumberField fx:id="supplyCount" value="0"/>
-    </HBox>
-    <HBox GridPane.rowIndex="3" GridPane.columnIndex="2">
-        <Label text="Прибыль:"/>
-        <NumberField fx:id="supplyProfit" value="0"/>
-    </HBox>
-    <Button fx:id="addSupplyBtn" prefWidth="30" onAction="#addSupply" GridPane.rowIndex="4" GridPane.columnIndex="2">
-        <graphic><Glyph text="FontAwesome|PLUS"/></graphic>
-    </Button>
-
+    <Label GridPane.rowIndex="1" text="%missions.label.starport"/>
+    <TextField fx:id="starportText" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    <Label GridPane.rowIndex="2" text="%missions.label.cargo"/>
+    <ComboBox fx:id="cargo" GridPane.rowIndex="2" GridPane.columnIndex="1">
+        <cellFactory><ItemListCell /></cellFactory>
+        <converter><ItemStringConverter /></converter>
+    </ComboBox>
+    <Label GridPane.rowIndex="3" text="%missions.label.quantity"/>
+    <NumberField fx:id="quantity" GridPane.rowIndex="3" GridPane.columnIndex="1" value="0"/>
+    <Label GridPane.rowIndex="4" text="%missions.label.reward"/>
+    <NumberField fx:id="reward" GridPane.rowIndex="4" GridPane.columnIndex="1" value="0" />
 </GridPane>

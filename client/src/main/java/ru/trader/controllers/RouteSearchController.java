@@ -67,15 +67,15 @@ public class RouteSearchController {
             fromStation.setItems(n.getStationNamesList());
             fromStation.getSelectionModel().selectFirst();
         });
-        fromStation.valueProperty().addListener((ov, o , n) -> {
+        fromStation.valueProperty().addListener((ov, o, n) -> {
             SystemModel system = fromSystem.getValue();
-            if (system == null || n == null){
+            if (system == null || n == null) {
                 missionsController.setStation(ModelFabric.NONE_STATION);
             } else {
                 missionsController.setStation(system.get(n));
             }
         });
-        toSystem.valueProperty().addListener((ov, o , n) -> {
+        toSystem.valueProperty().addListener((ov, o, n) -> {
             toStation.setItems(n.getStationNamesList());
             toStation.getSelectionModel().selectFirst();
         });
@@ -105,20 +105,44 @@ public class RouteSearchController {
         missionsList.getItems().forEach(m -> m.toSpecification(specificator));
         market.getRoutes(f, fS, t, tS, profile.getBalance(), specificator, routes -> {
             Optional<RouteModel> path = Screeners.showRouters(routes);
-            if (path.isPresent()){
+            if (path.isPresent()) {
                 RouteModel route = path.get();
                 route.addAll(0, missionsList.getItems());
                 profile.setRoute(route);
+                Screeners.showTrackTab();
             }
         });
+    }
+
+    @FXML
+    private void searchTop(){
+        market.getTopRoutes(profile.getBalance(), routes -> {
+            Optional<RouteModel> path = Screeners.showRouters(routes);
+            if (path.isPresent()) {
+                RouteModel route = path.get();
+                profile.setRoute(route);
+                Screeners.showTrackTab();
+            }
+        });
+    }
+
+
+    @FXML
+    private void addMission(){
+        missionsController.add();
     }
 
     @FXML
     private void removeMission(){
         int index = missionsList.getSelectionModel().getSelectedIndex();
         if (index >= 0){
-            missionsList.getItems().remove(index);
+            missionsController.remove(index);
         }
+    }
+
+    @FXML
+    private void clearMissions(){
+        missionsController.clear();
 
     }
 }

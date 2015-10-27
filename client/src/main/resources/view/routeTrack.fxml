@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<?import ru.trader.view.support.cells.OfferListCell?>
-<?import javafx.geometry.Insets?>
-<?import ru.trader.view.support.NumberField?>
 <?import org.controlsfx.glyphfont.Glyph?>
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.RouteTrackController"
       spacing="4" >
-    <HBox fx:id="track" minHeight="100"/>
+    <VBox>
     <ToggleButton minWidth="30" onAction="#toggleEdit">
         <graphic><Glyph text="FontAwesome|EDIT"/></graphic>
     </ToggleButton>
@@ -19,8 +16,12 @@
             <fx:include fx:id="missions" source="missions.fxml"/>
             <HBox>
                 <ListView fx:id="addMissionsList" maxHeight="150"/>
-                <Button prefWidth="30" onAction="#removeMission"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
-                <Button prefWidth="80" text="Добавить" onAction="#addMissions" />
+                <VBox spacing="4" alignment="TOP_RIGHT">
+                    <Button prefWidth="30" onAction="#addMission"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
+                    <Button prefWidth="30" onAction="#removeMission"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
+                    <Button prefWidth="30" onAction="#clearMissions"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
+                </VBox>
+                <Button prefWidth="80" text="Добавить" onAction="#addMissionsToTrack" />
             </HBox>
         </VBox>
         <VBox fx:id="infoGroup">
@@ -44,4 +45,7 @@
             </VBox>
         </VBox>
     </StackPane>
-</VBox>
+    </VBox>
+    <VBox fx:id="track" minWidth="200"/>
+
+</HBox>

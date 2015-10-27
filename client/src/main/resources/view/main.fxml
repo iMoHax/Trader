@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ru.trader.controllers.MainController"
             fx:id="mainPane"
@@ -48,7 +48,7 @@
        </VBox>
    </top>
    <center>
-       <TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+       <TabPane fx:id="tabs" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
            <Tab text="%market.items">
                <fx:include fx:id="items" source="items.fxml"/>
            </Tab>
@@ -56,15 +56,12 @@
                <fx:include fx:id="offers" source="offers.fxml"/>
            </Tab>
            <Tab text="%main.tab.routes">
-               <fx:include fx:id="router" source="router.fxml"/>
+               <fx:include source="routeSearch.fxml"/>
            </Tab>
            <Tab text="%main.tab.search">
                <fx:include source="search.fxml"/>
            </Tab>
-           <Tab text="Маршрут">
-               <fx:include source="routeSearch.fxml"/>
-           </Tab>
-           <Tab text="Миссии">
+           <Tab fx:id="track" text="Текущий маршрут">
                <fx:include source="routeTrack.fxml"/>
            </Tab>
        </TabPane>

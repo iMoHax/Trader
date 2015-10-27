@@ -7,12 +7,12 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import org.controlsfx.glyphfont.Glyph;
 import ru.trader.model.RouteEntryModel;
 import ru.trader.model.RouteModel;
 import ru.trader.model.StationModel;
-import ru.trader.view.support.cells.DistanceCell;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class Track {
     private final static String CSS_STATION_TEXT = "route-station-text";
 
     private final RouteModel route;
-    private final HBox node = new HBox();
+    private final VBox node = new VBox();
     private final IntegerProperty active;
     private final List<Node> entryNodes;
 
@@ -44,7 +44,7 @@ public class Track {
     private void build(){
         StationModel prev = null;
         for (RouteEntryModel entry : route.getEntries()) {
-            if (prev != null){
+/*            if (prev != null){
                 VBox track = new VBox();
                 VBox.setVgrow(track, Priority.ALWAYS);
                 track.getStyleClass().add(CSS_TRACK);
@@ -54,9 +54,11 @@ public class Track {
                 track.getChildren().addAll(t, Glyph.create("FontAwesome|LONG_ARROW_RIGHT"));
 
                 node.getChildren().addAll(track);
-            }
+            }*/
             HBox entryNode = new HBox();
-            HBox stationNode = new HBox();
+            Circle circle = new Circle(5);
+            entryNode.getChildren().add(circle);
+            VBox stationNode = new VBox();
             VBox icons = new VBox();
             VBox.setVgrow(icons, Priority.ALWAYS);
 

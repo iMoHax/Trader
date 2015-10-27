@@ -82,7 +82,7 @@ public class Main extends Application {
 
     private static void loadMainScene() throws IOException {
         primaryStage.setTitle(Localization.getString("main.title"));
-        primaryStage.setMinHeight(590);
+        primaryStage.setMinHeight(500);
         primaryStage.setScene(new Scene(Screeners.newScreeners(Main.class.getResource("/view/main.fxml"), getUrl("style.css").toExternalForm())));
         primaryStage.setOnCloseRequest((we) -> {
             try {

@@ -16,7 +16,7 @@
         <ColumnConstraints fillWidth="true"/>
     </columnConstraints>
 
-    <TitledPane text="%market.systems" prefHeight="590" collapsible="false">
+    <TitledPane text="%market.systems" prefHeight="500" collapsible="false">
         <GridPane vgap="4">
             <columnConstraints>
                 <ColumnConstraints minWidth="100"/>

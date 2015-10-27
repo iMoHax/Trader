@@ -2,35 +2,43 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<?import ru.trader.view.support.cells.OfferListCell?>
-<?import javafx.geometry.Insets?>
-<?import ru.trader.view.support.NumberField?>
-<?import org.controlsfx.glyphfont.Glyph?>
+<?import org.controlsfx.glyphfont.*?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="ru.trader.controllers.RouteSearchController"
-      spacing="4" >
-    <HBox>
-        <HBox>
-            <Label text="От:" />
-            <TextField fx:id="fromSystemText" />
-            <ComboBox fx:id="fromStation" />
-            <Button onAction="#currentAsFrom"/>
+      fx:controller="ru.trader.controllers.RouteSearchController">
+    <TitledPane text="%router.pane.route" minHeight="80" collapsible="false">
+        <VBox spacing="4">
+            <HBox spacing="10" alignment="CENTER">
+                <HBox spacing="2" alignment="BASELINE_LEFT">
+                    <Label text="%router.pane.route.from" />
+                    <TextField fx:id="fromSystemText" />
+                    <ComboBox fx:id="fromStation" minWidth="140"/>
+                    <Button minWidth="30" onAction="#currentAsFrom"><graphic><Glyph text="FontAwesome|MAP_MARKER"/></graphic></Button>
+                </HBox>
+                <HBox spacing="2" alignment="BASELINE_LEFT">
+                    <Label text="%router.pane.route.to" />
+                    <TextField fx:id="toSystemText" />
+                    <ComboBox fx:id="toStation" minWidth="140"/>
+                    <Button minWidth="30" onAction="#loop"><graphic><Glyph text="FontAwesome|RETWEET"/></graphic></Button>
+                </HBox>
+                <CheckBox fx:id="cbFast" text="%router.pane.route.fast"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER">
+                <Button prefWidth="80" text="%router.button.search" onAction="#search" />
+                <Button prefWidth="80" text="%router.button.top" onAction="#searchTop" />
+            </HBox>
+        </VBox>
+    </TitledPane>
+    <TitledPane text="%router.pane.missions" collapsible="false">
+        <HBox spacing="10">
+            <fx:include fx:id="missions" source="missions.fxml"/>
+            <HBox spacing="4" maxHeight="200">
+                <VBox spacing="4" alignment="TOP_RIGHT">
+                    <Button prefWidth="30" onAction="#addMission"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
+                    <Button prefWidth="30" onAction="#removeMission"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
+                    <Button prefWidth="30" onAction="#clearMissions"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
+                </VBox>
+                <ListView fx:id="missionsList" />
+            </HBox>
         </HBox>
-        <HBox>
-            <Label text="До:" />
-            <TextField fx:id="toSystemText" />
-            <ComboBox fx:id="toStation" />
-            <Button onAction="#loop"/>
-        </HBox>
-        <CheckBox fx:id="cbFast" text="Быстрый"/>
-        <Button prefWidth="80" text="Найти" onAction="#search" />
-    </HBox>
-    <VBox>
-        <fx:include fx:id="missions" source="missions.fxml"/>
-        <HBox>
-            <ListView fx:id="missionsList" />
-            <Button prefWidth="30" onAction="#removeMission"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
-        </HBox>
-    </VBox>
+    </TitledPane>
 </VBox>

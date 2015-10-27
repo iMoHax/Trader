@@ -135,3 +135,51 @@ HBox.fields-group hbox-margin{
 #items HBox.reset Glyph:hover {
     -fx-opacity: 1;
 }
+
+#helper {
+    -fx-border-style: solid;
+    -fx-border-color: #b83500;
+    -fx-opacity: 0.85;
+}
+
+#helper.root {
+    -fx-base: #232323;
+    -fx-background: -fx-base;
+    -fx-control-inner-background: -fx-base;
+    -fx-control-inner-background-alt: -fx-base;
+
+    -fx-light-text-color: orangered;
+    -fx-mid-text-color: derive(-fx-light-text-color, -50%);
+    -fx-dark-text-color: derive(-fx-light-text-color, -90%);
+
+    -fx-accent: #c93700;
+
+    -fx-default-button: #861818;
+
+    -fx-focus-color: #bb6b00;
+    -fx-faint-focus-color: #bb6b0022;
+}
+
+.text-small, .text-medium, .text-big {
+    -fx-font-weight: bold;
+}
+
+.text-big {
+    -fx-font-size: 19;
+}
+
+.text-medium {
+    -fx-font-size: 14;
+}
+
+.text-small {
+    -fx-font-size: 12;
+}
+
+.service-ok {
+    -fx-text-fill: green;
+}
+
+.service-warning {
+    -fx-text-fill: red;
+}

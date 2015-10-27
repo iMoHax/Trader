@@ -34,6 +34,7 @@ public class LoginController {
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
         Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
         loginButton.setDisable(true);
+        email.setText(Main.SETTINGS.edce().getEmail());
         email.textProperty().addListener((observable, oldValue, newValue) -> {
             loginButton.setDisable(newValue.trim().isEmpty());
             Main.SETTINGS.edce().setEmail(newValue);
@@ -54,7 +55,7 @@ public class LoginController {
         if (dialog == null){
             createDialog(parent, content);
         }
-        Platform.runLater(email::requestFocus);
+        Platform.runLater(password::requestFocus);
         Optional<Pair<String, String>> result = dialog.showAndWait();
         clear();
         return result;

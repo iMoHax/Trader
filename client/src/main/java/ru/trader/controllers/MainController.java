@@ -3,9 +3,7 @@ package ru.trader.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Menu;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import org.controlsfx.control.action.Action;
@@ -51,6 +49,10 @@ public class MainController {
     private ItemsController itemsController;
     @FXML
     private RouterController routerController;
+    @FXML
+    private TabPane tabs;
+    @FXML
+    private Tab track;
 
     @FXML
     private void initialize() {
@@ -75,7 +77,7 @@ public class MainController {
                 }
             } catch (IOException e) {
                 LOG.error("Error on change locale to {}", n.getUserData());
-                LOG.error("",e);
+                LOG.error("", e);
             }
         });
     }
@@ -317,5 +319,9 @@ public class MainController {
         world = new MarketModel(World.getMarket());
         market = world;
         Screeners.reinitAll();
+    }
+
+    public void showTrack(){
+        tabs.getSelectionModel().select(track);
     }
 }
