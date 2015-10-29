@@ -56,6 +56,8 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        //Workaround for fix bug with ComboBox in Win10
+        System.setProperty("glass.accessible.force", "false");
         PropertyConfigurator.configure("log4j.properties");
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             System.err.print("Exception in thread \"" + t.getName() + "\" ");
