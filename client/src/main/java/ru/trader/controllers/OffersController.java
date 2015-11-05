@@ -189,12 +189,18 @@ public class OffersController {
 
     @FXML
     private void addStation() {
-        Screeners.showAddStation(getSystem());
+        SystemModel s = getSystem();
+        if (!ModelFabric.isFake(s)){
+            Screeners.showAddStation(s);
+        }
     }
 
     @FXML
     private void editStation() {
-        Screeners.showEditStation(getStation());
+        StationModel s = getStation();
+        if (!ModelFabric.isFake(s)){
+            Screeners.showEditStation(s);
+        }
     }
 
 

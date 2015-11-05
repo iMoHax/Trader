@@ -22,7 +22,16 @@
             <TextField fx:id="systemText" />
         </TitledPane>
         <TitledPane VBox.vgrow="ALWAYS" text="%market.stations" collapsible="false">
-            <ListView fx:id="stationsList"/>
+            <ListView fx:id="stationsList">
+                <contextMenu>
+                    <ContextMenu>
+                        <items>
+                            <MenuItem text="%main.menu.edit.addStation" onAction="#addStation" />
+                            <MenuItem text="%main.menu.edit.editStation" onAction="#editStation" />
+                        </items>
+                    </ContextMenu>
+                </contextMenu>
+            </ListView>
         </TitledPane>
     </VBox>
     <TitledPane fx:id="stationPane" GridPane.columnIndex="1" maxHeight="60" collapsible="false">
