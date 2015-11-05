@@ -12,6 +12,7 @@ import ru.trader.Main;
 import ru.trader.ServicesManager;
 import ru.trader.core.Engine;
 import ru.trader.model.*;
+import ru.trader.model.support.ChangeMarketListener;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.ViewUtils;
 import ru.trader.view.support.autocomplete.AutoCompletion;
@@ -121,6 +122,7 @@ public class ProfileController {
 
     void init(){
         MarketModel world = MainController.getWorld();
+        world.getNotificator().add(marketChangeListener);
         SystemsProvider provider = world.getSystemsProvider();
         if (system == null){
             system = new AutoCompletion<>(systemText, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
@@ -226,6 +228,27 @@ public class ProfileController {
     private final ChangeListener<Number> tankListener = (ov, o, n) -> consumeChanges(() -> tank.setValue(n));
     private final ChangeListener<Number> cargoListener = (ov, o, n) -> consumeChanges(() -> cargo.setValue(n));
     private final ChangeListener<Engine> engineListener = (ov, o, n) -> consumeChanges(() -> engine.setValue(n));
+
+    private final ChangeMarketListener marketChangeListener = new ChangeMarketListener() {
+
+        @Override
+        public void add(StationModel station) {
+            ViewUtils.doFX(() -> {
+                if (station.getSystem().equals(system.getValue())) {
+                    ProfileController.this.station.getItems().add(station.getName());
+                }
+            });
+        }
+
+        @Override
+        public void remove(StationModel station) {
+            ViewUtils.doFX(() -> {
+                if (station.getSystem().equals(system.getValue())) {
+                    ProfileController.this.station.getItems().remove(station.getName());
+                }
+            });
+        }
+    };
 
     private class EngineStringConverter extends StringConverter<Engine> {
         @Override
