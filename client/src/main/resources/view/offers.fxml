@@ -28,6 +28,7 @@
                         <items>
                             <MenuItem text="%main.menu.edit.addStation" onAction="#addStation" />
                             <MenuItem text="%main.menu.edit.editStation" onAction="#editStation" />
+                            <MenuItem text="%main.menu.edit.removeStation" onAction="#removeStation" />
                         </items>
                     </ContextMenu>
                 </contextMenu>

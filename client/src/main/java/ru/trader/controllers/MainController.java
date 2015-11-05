@@ -222,14 +222,14 @@ public class MainController {
 
     public void editSystem(ActionEvent actionEvent){
         SystemModel system = offersController.getSystem();
-        if (system != null) {
+        if (!ModelFabric.isFake(system)) {
             Screeners.showSystemsEditor(system);
         }
     }
 
     public void removeSystem(ActionEvent actionEvent){
         SystemModel system = offersController.getSystem();
-        if (system != null) {
+        if (!ModelFabric.isFake(system)) {
             Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), system.getName()));
             if (res == Dialog.ACTION_YES) {
                 market.remove(system);
@@ -238,22 +238,22 @@ public class MainController {
     }
 
     public void addStation(ActionEvent actionEvent) {
-        SystemModel system = offersController.getSystem();
-        if (system != null){
+        SystemModel system = profile.getSystem();
+        if (!ModelFabric.isFake(system)) {
             Screeners.showAddStation(offersController.getSystem());
         }
     }
 
     public void editStation(ActionEvent actionEvent) {
         StationModel station = profile.getStation();
-        if (station != null) {
+        if (!ModelFabric.isFake(station)) {
             Screeners.showEditStation(station);
         }
     }
 
     public void removeStation(ActionEvent actionEvent){
-        StationModel station = offersController.getStation();
-        if (station != null) {
+        StationModel station = profile.getStation();
+        if (!ModelFabric.isFake(station)) {
             Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), station.getName()));
             if (res == Dialog.ACTION_YES) {
                 station.getSystem().remove(station);

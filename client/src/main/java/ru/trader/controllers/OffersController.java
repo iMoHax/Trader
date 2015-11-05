@@ -5,6 +5,8 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
+import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.SERVICE_TYPE;
@@ -13,6 +15,7 @@ import ru.trader.model.support.BindingsHelper;
 import ru.trader.model.support.ChangeMarketListener;
 import ru.trader.view.support.FactionStringConverter;
 import ru.trader.view.support.GovernmentStringConverter;
+import ru.trader.view.support.Localization;
 import ru.trader.view.support.ViewUtils;
 import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
@@ -204,6 +207,16 @@ public class OffersController {
         }
     }
 
+    @FXML
+    private void removeStation() {
+        StationModel s = getStation();
+        if (!ModelFabric.isFake(s)){
+            Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), s.getName()));
+            if (res == org.controlsfx.dialog.Dialog.ACTION_YES) {
+                s.getSystem().remove(s);
+            }
+        }
+    }
 
     private void addOffer(OfferModel offer){
         switch (offer.getType()){
