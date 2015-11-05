@@ -34,11 +34,11 @@ public class LoginController {
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
         Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
         loginButton.setDisable(true);
-        email.setText(Main.SETTINGS.edce().getEmail());
         email.textProperty().addListener((observable, oldValue, newValue) -> {
             loginButton.setDisable(newValue.trim().isEmpty());
             Main.SETTINGS.edce().setEmail(newValue);
         });
+        email.setText(Main.SETTINGS.edce().getEmail());
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
                 return new Pair<>(email.getText(), password.getText());
