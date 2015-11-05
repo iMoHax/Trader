@@ -137,6 +137,7 @@ public class OffersController {
         faction.setText("");
         cbMarket.setSelected(false);
         cbBlackMarket.setSelected(false);
+        cbRefuel.setSelected(false);
         cbMunition.setSelected(false);
         cbRepair.setSelected(false);
         cbOutfit.setSelected(false);
