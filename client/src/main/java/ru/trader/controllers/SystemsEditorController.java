@@ -85,6 +85,12 @@ public class SystemsEditorController {
         clnS4.setCellFactory(TextFieldCell.forTableColumn(new DoubleStringConverter()));
         clnS5.setCellFactory(TextFieldCell.forTableColumn(new DoubleStringConverter()));
         clnS6.setCellFactory(TextFieldCell.forTableColumn(new DoubleStringConverter()));
+        clnName.setOnEditCommit(e -> copySys1());
+        clnS1.setOnEditCommit(e -> copySys2());
+        clnS2.setOnEditCommit(e -> copySys3());
+        clnS3.setOnEditCommit(e -> copySys4());
+        clnS4.setOnEditCommit(e -> copySys5());
+        clnS5.setOnEditCommit(e -> copySys6());
         tblSystems.setItems(FXCollections.observableArrayList());
         tblSystems.getSelectionModel().setCellSelectionEnabled(true);
         tblSystems.setSortPolicy(t -> true);
@@ -174,6 +180,7 @@ public class SystemsEditorController {
             SystemModel s = profile.getPrevSystem();
             if (!ModelFabric.isFake(s)){
                 searchLandMark(s, profile.getEmptyMaxShipJumpRange()*1.5);
+                copySys1();
             }
         }
         for (int i = 0; i < 10; i++) {
