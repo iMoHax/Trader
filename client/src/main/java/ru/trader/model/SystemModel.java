@@ -37,6 +37,10 @@ public class SystemModel {
         return system;
     }
 
+    MarketModel getMarket(){
+        return market;
+    }
+
     public String getName() {return name != null ? name.get() : system.getName();}
 
     public void setName(String value) {

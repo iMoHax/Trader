@@ -6,13 +6,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.view.support.Track;
 import ru.trader.view.support.ViewUtils;
+import ru.trader.view.support.autocomplete.AutoCompletion;
+import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
+import ru.trader.view.support.autocomplete.SystemsProvider;
 import ru.trader.view.support.cells.OrderListCell;
 
 import java.util.stream.Collectors;
@@ -47,6 +52,11 @@ public class RouteTrackController {
     private MissionsController missionsController;
     @FXML
     private Pane track;
+    @FXML
+    private TextField newEntrySystemText;
+    private AutoCompletion<SystemModel> newEntrySystem;
+    @FXML
+    private ComboBox<String> newEntryStation;
 
     private RouteModel route;
     private Track trackNode;
@@ -58,12 +68,25 @@ public class RouteTrackController {
         sellOrders.setCellFactory(new OrderListCell(true));
         editGroup.setVisible(false);
         init();
+        newEntrySystem.valueProperty().addListener((ov, o , n) -> {
+            newEntryStation.setItems(n.getStationNamesList());
+            newEntryStation.getSelectionModel().selectFirst();
+        });
     }
 
     void init(){
         ProfileModel profile = MainController.getProfile();
         profile.routeProperty().addListener(routeListener);
         setRoute(profile.getRoute());
+        MarketModel market = MainController.getMarket();
+        SystemsProvider provider = market.getSystemsProvider();
+        if (newEntrySystem == null){
+            newEntrySystem = new AutoCompletion<>(newEntrySystemText, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
+        } else {
+            newEntrySystem.setSuggestions(provider.getPossibleSuggestions());
+            newEntrySystem.setConverter(provider.getConverter());
+        }
+        newEntryStation.setValue(ModelFabric.NONE_STATION.getName());
     }
 
     void unbind(){
@@ -171,6 +194,39 @@ public class RouteTrackController {
     private void clearMissions(){
         missionsController.clear();
 
+    }
+
+    @FXML
+    private void addEntry(){
+        SystemModel toSystem = newEntrySystem.getValue();
+        StationModel toStation = toSystem != null ? toSystem.get(newEntryStation.getValue()) : ModelFabric.NONE_STATION;
+        if (!ModelFabric.isFake(toSystem)){
+            if (route != null){
+                if (!ModelFabric.isFake(toStation)){
+                    setRoute(route.add(toStation));
+                } else {
+                    setRoute(route.add(toSystem));
+                }
+            } else {
+                RouteModel r;
+                if (!ModelFabric.isFake(toStation)){
+                    r = RouteModel.asRoute(toStation);
+                } else {
+                    r = RouteModel.asRoute(toSystem);
+                }
+                setRoute(r);
+            }
+        }
+    }
+
+    @FXML
+    private void setActive(){
+        MainController.getProfile().setRoute(route);
+    }
+
+    @FXML
+    private void clear(){
+        setRoute(null);
     }
 
     private final ChangeListener<? super Number> currentEntryListener = (ov, o, n) -> ViewUtils.doFX(() -> setIndex(n.intValue()));

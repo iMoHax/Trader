@@ -7,6 +7,7 @@ import ru.trader.core.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ public class RouteSearcher {
 
     public List<Edge<Place>> getPath(Place from, Place to, Collection<Place> places){
         List<List<Edge<Place>>> res = search(from, to, places, 1, null);
-        return res.isEmpty() ? null : res.get(0);
+        return res.isEmpty() ? Collections.emptyList() : res.get(0);
     }
 
     public List<List<Edge<Place>>> getPaths(Place from, Collection<Place> places){
@@ -43,6 +44,7 @@ public class RouteSearcher {
 
     private List<List<Edge<Place>>> search(Place source, Place target, Collection<Place> places, int count, RouteSpecification<Place> specification){
         Profile profile = scorer.getProfile();
+        //TODO: fast search if source equals target
         LOG.trace("Start search path from {} to {} ", source, target);
         ConnectibleGraph<Place> graph = new ConnectibleGraph<>(profile, callback);
         LOG.trace("Build connectible graph");

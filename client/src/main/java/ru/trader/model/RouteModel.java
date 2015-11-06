@@ -129,6 +129,20 @@ public class RouteModel {
         return getCopy();
     }
 
+    public RouteModel add(SystemModel system){
+        RouteEntryModel last = entries.get(entries.size()-1);
+        StationModel fromStation = last.getStation();
+        RouteModel path = market.getPath(fromStation.getSystem(), fromStation, system, ModelFabric.NONE_STATION);
+        return add(path);
+    }
+
+    public RouteModel add(StationModel station){
+        RouteEntryModel last = entries.get(entries.size()-1);
+        StationModel fromStation = last.getStation();
+        RouteModel path = market.getPath(fromStation.getSystem(), fromStation, station.getSystem(), station);
+        return add(path);
+    }
+
     public RouteModel add(RouteModel route){
         _route.join(route.getRoute());
         return getCopy();
@@ -352,4 +366,15 @@ public class RouteModel {
         }
         fillSellOrders();
     }
+
+    public static RouteModel asRoute(SystemModel system){
+        Route route = new Route(new RouteEntry(system.getSystem().asTransit(),0,0,0));
+        return new RouteModel(route, system.getMarket());
+    }
+
+    public static RouteModel asRoute(StationModel station){
+        Route route = new Route(new RouteEntry(station.getStation(),0,0,0));
+        return new RouteModel(route, station.getMarket());
+    }
+
 }

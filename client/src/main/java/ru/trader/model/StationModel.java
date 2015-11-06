@@ -35,6 +35,10 @@ public class StationModel {
         return station;
     }
 
+    MarketModel getMarket(){
+        return market;
+    }
+
     public String getName() {return station.getName();}
 
     public void setName(String value) {
