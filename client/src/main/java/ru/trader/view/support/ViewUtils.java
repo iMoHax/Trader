@@ -4,6 +4,9 @@ import com.sun.javafx.scene.control.skin.TableViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 
@@ -32,6 +35,18 @@ public class ViewUtils {
             }
         }
         editNext(tableView);
+    }
+
+    public static <T extends Event> EventHandler<T> joinHandlers(EventHandler<T> first, EventHandler<T> second){
+        return (e -> {
+            first.handle(e);
+            second.handle(e);
+        });
+    }
+
+    public static  <S,T> void addOnEditCommit(TableColumn<S, T> column, EventHandler<TableColumn.CellEditEvent<S, T>> eventHandler){
+        final EventHandler<TableColumn.CellEditEvent<S, T>> oldHandler = column.getOnEditCommit();
+        column.setOnEditCommit(joinHandlers(oldHandler, eventHandler));
     }
 
     public static void doFX(Runnable runnable){
