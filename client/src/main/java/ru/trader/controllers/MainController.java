@@ -221,14 +221,14 @@ public class MainController {
     }
 
     public void editSystem(ActionEvent actionEvent){
-        SystemModel system = offersController.getSystem();
+        SystemModel system = profile.getSystem();
         if (!ModelFabric.isFake(system)) {
             Screeners.showSystemsEditor(system);
         }
     }
 
     public void removeSystem(ActionEvent actionEvent){
-        SystemModel system = offersController.getSystem();
+        SystemModel system = profile.getSystem();
         if (!ModelFabric.isFake(system)) {
             Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), system.getName()));
             if (res == Dialog.ACTION_YES) {
@@ -240,7 +240,7 @@ public class MainController {
     public void addStation(ActionEvent actionEvent) {
         SystemModel system = profile.getSystem();
         if (!ModelFabric.isFake(system)) {
-            Screeners.showAddStation(offersController.getSystem());
+            Screeners.showAddStation(profile.getSystem());
         }
     }
 
