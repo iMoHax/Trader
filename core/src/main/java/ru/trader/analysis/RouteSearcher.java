@@ -221,21 +221,20 @@ public class RouteSearcher {
             ConnectibleEdge<Place> edge = (ConnectibleEdge<Place>) edges.get(i);
             Vendor vendor = i == 0 ? from : edge.getSource().getEntry().asTransit();
             RouteEntry entry = new RouteEntry(vendor, edge.getRefill(), edge.getFuelCost(), 0);
+            if (i == 0) entry.setLand(!(vendor instanceof TransitVendor));
             if (prev != null){
                 prev.setTime(scorer.getTime(entry, prev));
                 prev.setFullTime(prev.getTime());
             }
             entries.add(entry);
+            prev = entry;
             if (i == edges.size()-1){
                 entry = new RouteEntry(to, 0, 0, 0);
-                entry.setLand(true);
-                if (prev != null){
-                    prev.setTime(scorer.getTime(entry, prev));
-                    prev.setFullTime(prev.getTime());
-                }
+                entry.setLand(!(to instanceof TransitVendor));
+                prev.setTime(scorer.getTime(entry, prev));
+                prev.setFullTime(prev.getTime());
                 entries.add(entry);
             }
-            prev = entry;
         }
         Route route = new Route(entries);
         route.setBalance(scorer.getProfile().getBalance());
