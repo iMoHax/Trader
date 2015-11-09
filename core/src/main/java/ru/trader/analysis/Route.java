@@ -174,6 +174,7 @@ public class Route implements Comparable<Route> {
 
     public void join(Route route){
         LOG.trace("Join route {}", route);
+        if (route.isEmpty()) return;
         RouteEntry end = entries.get(entries.size()-1);
         if (route.entries.get(0).is(end.getVendor())){
             entries.remove(entries.size()-1);
