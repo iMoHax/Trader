@@ -122,7 +122,7 @@ public class Crawler<T> {
                 if (maxDeep < 0) maxDeep = 0;
                 found = bfs(start(s), maxDeep, count);
             } else {
-                found = dfs(start(s), t.get().getLevel() + 1, count);
+                found = dfs(start(s), t.get().getLevel() + 1);
             }
         }
         callback.endSearch();
@@ -170,6 +170,15 @@ public class Crawler<T> {
 
     protected CostTraversalEntry travers(CostTraversalEntry entry, Edge<T> edge){
         return new CostTraversalEntry(entry, edge);
+    }
+
+    private int dfs(CostTraversalEntry entry, int deep){
+        int found = 0;
+        while (deep > graph.getMinLevel() && found == 0){
+            LOG.debug("Search on deep {}", deep);
+            found = dfs(entry, deep--, 1);
+        }
+        return found;
     }
 
     private int dfs(CostTraversalEntry entry, int deep, int count) {
