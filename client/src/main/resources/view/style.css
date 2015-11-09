@@ -61,49 +61,35 @@ HBox.fields-group hbox-margin{
     -fx-fill-height: true;
 }
 
-.route-system, .path-system {
+.route-marker {
     -fx-alignment: center-left;
+}
+
+.route-system {
+    -fx-alignment: top-left;
     -fx-text-alignment: left;
 }
 
-.route-text, .path-text {
-    -fx-alignment: center;
+.route-system-text {
+    -fx-font-size: 17;
 }
 
-.route-system-text, .path-system-text {
+.route-station-text {
+    -fx-font-size: 14;
 }
 
-.route-station-text, .path-station-text {
-    -fx-font-size: 8pt;
+.route-icons {
+    -fx-alignment: top-right;
 }
 
-.route-icons, .path-icons {
-    -fx-alignment: center;
-}
-
-.route-track, .path-track {
-    -fx-padding: 0 8;
-    -fx-alignment: center;
-}
-
-.route-track .glyph-font, .path-track .glyph-font {
-    -fx-font-family: FontAwesome;
-    -fx-font-size: 16pt;
-}
-
-
-.route-track-text, .path-track-text {
-    -fx-font-size: 7pt;
+.route-info {
+    -fx-alignment: top-right;
+    -fx-font-size: 12;
 }
 
 .route-active {
     -fx-border-style: solid;
     -fx-background-color: lightskyblue;
-}
-
-.path-pane {
-    -fx-padding: 10;
-    -fx-alignment: center-left;
 }
 
 /* EditOfferCell */

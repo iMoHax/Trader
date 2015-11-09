@@ -19,12 +19,11 @@ import java.util.List;
 
 public class Track {
     private final static String CSS_ROUTE = "route";
-    private final static String CSS_ICONS = "route-icons";
-    private final static String CSS_TRACK = "route-track";
-    private final static String CSS_TRACK_TEXT = "route-track-text";
+    private final static String CSS_ROUTE_MARKER = "route-marker";
     private final static String CSS_SYSTEM = "route-system";
+    private final static String CSS_ICONS = "route-icons";
+    private final static String CSS_INFO = "route-info";
     private final static String CSS_ACTIVE_SYSTEM = "route-active";
-    private final static String CSS_TEXT = "route-text";
     private final static String CSS_SYSTEM_TEXT = "route-system-text";
     private final static String CSS_STATION_TEXT = "route-station-text";
 
@@ -42,7 +41,7 @@ public class Track {
     }
 
     private void build(){
-        StationModel prev = null;
+        RouteEntryModel prev = null;
         for (RouteEntryModel entry : route.getEntries()) {
 /*            if (prev != null){
                 VBox track = new VBox();
@@ -57,26 +56,13 @@ public class Track {
             }*/
             HBox entryNode = new HBox();
             Circle circle = new Circle(5);
+            circle.getStyleClass().add(CSS_ROUTE_MARKER);
             entryNode.getChildren().add(circle);
-            VBox stationNode = new VBox();
-            VBox icons = new VBox();
-            VBox.setVgrow(icons, Priority.ALWAYS);
-
-            stationNode.getStyleClass().add(CSS_SYSTEM);
-            icons.getStyleClass().add(CSS_ICONS);
-
-            stationNode.getChildren().add(buildText(entry.getStation(), entry.isTransit()));
-
-            if (entry.isBuy()){
-                icons.getChildren().add(Glyph.create("FontAwesome|UPLOAD"));
-            }
-            if (entry.getRefill() > 0){
-                icons.getChildren().add(Glyph.create("FontAwesome|REFRESH"));
-            }
-            if (entry.isSell()){
-                icons.getChildren().add(Glyph.create("FontAwesome|DOWNLOAD"));
-            }
-            entryNode.getChildren().addAll(stationNode, icons);
+            VBox stationNode = buildStationNode(entry);
+            HBox.setHgrow(stationNode, Priority.ALWAYS);
+            VBox icons = buildIconsNode(entry);
+            VBox info = buildInfoNode(prev, entry);
+            entryNode.getChildren().addAll(stationNode, icons, info);
             node.getChildren().addAll(entryNode);
             final int curIndex = entryNodes.size();
             entryNode.setOnMouseClicked(e -> {
@@ -85,28 +71,55 @@ public class Track {
                 }
             });
             entryNodes.add(entryNode);
-            prev = entry.getStation();
+            prev = entry;
         }
     }
 
-    private VBox buildText(StationModel station, boolean transit){
-        Text systemText = new Text(station.getSystem().getName());
+    private VBox buildStationNode(RouteEntryModel entry){
+        VBox node = new VBox();
+        node.getStyleClass().add(CSS_SYSTEM);
+        VBox.setVgrow(node, Priority.ALWAYS);
+        Text systemText = new Text(entry.getStation().getSystem().getName());
         systemText.getStyleClass().add(CSS_SYSTEM_TEXT);
-
-        VBox text = new VBox(2);
-        VBox.setVgrow(text, Priority.ALWAYS);
-        text.getStyleClass().add(CSS_TEXT);
-        text.getChildren().addAll(systemText);
-
-        if (!transit) {
-            Text stationText = new Text(station.getName());
+        node.getChildren().addAll(systemText);
+        if (!entry.isTransit()) {
+            Text stationText = new Text(entry.getStation().getName());
             stationText.getStyleClass().add(CSS_STATION_TEXT);
-            Text distanceText = new Text(String.format("%.0f Ls", station.getDistance()));
-            distanceText.getStyleClass().add(CSS_STATION_TEXT);
-            text.getChildren().addAll(stationText, distanceText);
+            node.getChildren().addAll(stationText);
         }
+        return node;
+    }
 
-        return text;
+    private VBox buildIconsNode(RouteEntryModel entry){
+        VBox icons = new VBox();
+        icons.getStyleClass().add(CSS_ICONS);
+        VBox.setVgrow(icons, Priority.ALWAYS);
+        if (entry.isBuy()){
+            icons.getChildren().add(Glyph.create("FontAwesome|UPLOAD"));
+        }
+        if (entry.getRefill() > 0){
+            icons.getChildren().add(Glyph.create("FontAwesome|REFRESH"));
+        }
+        if (entry.isSell()){
+            icons.getChildren().add(Glyph.create("FontAwesome|DOWNLOAD"));
+        }
+        return icons;
+    }
+
+    private VBox buildInfoNode(RouteEntryModel prevEntry, RouteEntryModel entry){
+        VBox node = new VBox();
+        node.getStyleClass().add(CSS_INFO);
+        VBox.setVgrow(node, Priority.ALWAYS);
+        Text timeText = new Text(ViewUtils.timeToString(entry.getTime()));
+        Text distanceText = new Text(prevEntry != null ? ViewUtils.distanceToString(prevEntry.getStation().getSystem().getDistance(entry.getStation().getSystem())): "");
+        Text stationDistanceText = new Text(entry.getStation().getSystem().getName());
+        if (entry.isTransit()) {
+            stationDistanceText.setText("");
+        } else {
+            stationDistanceText.setText(ViewUtils.stationDistanceToString(entry.getStation().getDistance()));
+        }
+        node.getChildren().addAll(timeText, distanceText, stationDistanceText);
+        return node;
     }
 
     public int getActive() {
