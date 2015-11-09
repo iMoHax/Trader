@@ -29,7 +29,19 @@ public class RouteSearcher {
         return scorer;
     }
 
+    private <T extends Connectable<T>> Edge<T> createEdge(T source, T target){
+        ConnectibleEdge<T> edge = new ConnectibleEdge<>(new Vertex<>(source, 0), new Vertex<>(target, 0));
+        Profile profile = getScorer().getProfile();
+        Ship ship = profile.getShip();
+        double fuelCost =  profile.withRefill() ? ship.getFuelCost(ship.getTank(), source.getDistance(target)) : 0;
+        edge.setFuelCost(fuelCost);
+        return edge;
+    }
+
     public List<Edge<Place>> getPath(Place from, Place to, Collection<Place> places){
+        if (from.equals(to)){
+            return Collections.singletonList(createEdge(from, to));
+        }
         List<List<Edge<Place>>> res = search(from, to, places, 1, null);
         return res.isEmpty() ? Collections.emptyList() : res.get(0);
     }
@@ -44,7 +56,6 @@ public class RouteSearcher {
 
     private List<List<Edge<Place>>> search(Place source, Place target, Collection<Place> places, int count, RouteSpecification<Place> specification){
         Profile profile = scorer.getProfile();
-        //TODO: fast search if source equals target
         LOG.trace("Start search path from {} to {} ", source, target);
         ConnectibleGraph<Place> graph = new ConnectibleGraph<>(profile, callback);
         LOG.trace("Build connectible graph");
