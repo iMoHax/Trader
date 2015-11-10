@@ -203,7 +203,7 @@ public class HelperController {
             if (index > 0){
                 RouteEntryModel prev = route.get(index - 1);
                 time.setText(ViewUtils.timeToString(prev.getTime()));
-                distance.setText(ViewUtils.distanceToString(prev.getStation().getSystem().getDistance(entry.getStation().getSystem())));
+                distance.setText(ViewUtils.distanceToString(entry.getDistance()));
                 if (entry.isTransit()) {
                     stationDistance.setText("");
                 } else {

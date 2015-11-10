@@ -12,13 +12,13 @@ import javafx.scene.text.Text;
 import org.controlsfx.glyphfont.Glyph;
 import ru.trader.model.RouteEntryModel;
 import ru.trader.model.RouteModel;
-import ru.trader.model.StationModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Track {
     private final static String CSS_ROUTE = "route";
+    private final static String CSS_ROUTE_ENTRY = "route-entry";
     private final static String CSS_ROUTE_MARKER = "route-marker";
     private final static String CSS_SYSTEM = "route-system";
     private final static String CSS_ICONS = "route-icons";
@@ -41,37 +41,26 @@ public class Track {
     }
 
     private void build(){
-        RouteEntryModel prev = null;
         for (RouteEntryModel entry : route.getEntries()) {
-/*            if (prev != null){
-                VBox track = new VBox();
-                VBox.setVgrow(track, Priority.ALWAYS);
-                track.getStyleClass().add(CSS_TRACK);
-
-                Text t = new Text(DistanceCell.distanceToString(entry.getStation().getDistance(prev)));
-                t.getStyleClass().add(CSS_TRACK_TEXT);
-                track.getChildren().addAll(t, Glyph.create("FontAwesome|LONG_ARROW_RIGHT"));
-
-                node.getChildren().addAll(track);
-            }*/
             HBox entryNode = new HBox();
-            Circle circle = new Circle(5);
-            circle.getStyleClass().add(CSS_ROUTE_MARKER);
-            entryNode.getChildren().add(circle);
+            entryNode.getStyleClass().add(CSS_ROUTE_ENTRY);
+            VBox marker = new VBox();
+            marker.getStyleClass().add(CSS_ROUTE_MARKER);
+            marker.getChildren().add(new Circle(5));
+            entryNode.getChildren().add(marker);
             VBox stationNode = buildStationNode(entry);
             HBox.setHgrow(stationNode, Priority.ALWAYS);
             VBox icons = buildIconsNode(entry);
-            VBox info = buildInfoNode(prev, entry);
+            VBox info = buildInfoNode(entry);
             entryNode.getChildren().addAll(stationNode, icons, info);
             node.getChildren().addAll(entryNode);
             final int curIndex = entryNodes.size();
             entryNode.setOnMouseClicked(e -> {
-                if (e.getButton() == MouseButton.PRIMARY){
+                if (e.getButton() == MouseButton.PRIMARY) {
                     setActive(curIndex);
                 }
             });
             entryNodes.add(entryNode);
-            prev = entry;
         }
     }
 
@@ -106,12 +95,12 @@ public class Track {
         return icons;
     }
 
-    private VBox buildInfoNode(RouteEntryModel prevEntry, RouteEntryModel entry){
+    private VBox buildInfoNode(RouteEntryModel entry){
         VBox node = new VBox();
         node.getStyleClass().add(CSS_INFO);
         VBox.setVgrow(node, Priority.ALWAYS);
-        Text timeText = new Text(ViewUtils.timeToString(entry.getTime()));
-        Text distanceText = new Text(prevEntry != null ? ViewUtils.distanceToString(prevEntry.getStation().getSystem().getDistance(entry.getStation().getSystem())): "");
+        Text timeText = new Text(ViewUtils.timeToString(entry.getFullTime()));
+        Text distanceText = new Text(ViewUtils.distanceToString(entry.getDistance()));
         Text stationDistanceText = new Text(entry.getStation().getSystem().getName());
         if (entry.isTransit()) {
             stationDistanceText.setText("");

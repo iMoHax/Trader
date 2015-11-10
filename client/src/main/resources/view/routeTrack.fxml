@@ -46,17 +46,19 @@
         </VBox>
     </StackPane>
     </VBox>
-    <VBox>
-        <VBox fx:id="track" minWidth="200"/>
+    <ScrollPane minWidth="220" fitToHeight="true">
         <VBox>
-            <HBox><TextField fx:id="newEntrySystemText"/></HBox>
-            <HBox><ComboBox fx:id="newEntryStation"/></HBox>
-            <HBox>
-                <Button onAction="#addEntry"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
-                <Button onAction="#setActive"><graphic><Glyph text="FontAwesome|MAP_MARKER"/></graphic></Button>
-                <Button onAction="#clear"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
-            </HBox>
+            <AnchorPane fx:id="track"/>
+            <VBox>
+                <HBox><TextField fx:id="newEntrySystemText"/></HBox>
+                <HBox><ComboBox fx:id="newEntryStation"/></HBox>
+                <HBox>
+                    <Button onAction="#addEntry"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
+                    <Button onAction="#setActive"><graphic><Glyph text="FontAwesome|MAP_MARKER"/></graphic></Button>
+                    <Button onAction="#clear"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
+                </HBox>
+            </VBox>
         </VBox>
-    </VBox>
+    </ScrollPane>
 
 </HBox>

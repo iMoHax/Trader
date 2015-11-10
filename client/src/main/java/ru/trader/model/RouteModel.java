@@ -25,11 +25,23 @@ public class RouteModel {
         this._route = route;
         entries = _route.getEntries().stream().map(e -> new RouteEntryModel(e, market)).collect(Collectors.toList());
         profit = new SimpleDoubleProperty();
-        profit.bind(BindingsHelper.group(Double::sum, RouteEntryModel::profitProperty, entries));
         profitByTime = new SimpleDoubleProperty();
-        profitByTime.bind(profit.divide(_route.getTime()));
-        fillSellOrders();
         currentEntry = new SimpleIntegerProperty(0);
+        fill();
+    }
+
+    private void fill(){
+        profit.bind(BindingsHelper.group(Double::sum, RouteEntryModel::profitProperty, entries));
+        profitByTime.bind(profit.divide(_route.getTime()));
+        long time = 0;
+        for (int i = 0; i < entries.size()-1; i++) {
+            RouteEntryModel entry = entries.get(i);
+            RouteEntryModel entry2 = entries.get(i+1);
+            time += entry.getTime();
+            entry2.setDistance(entry.getStation().getDistance(entry2.getStation()));
+            entry2.setFullTime(time);
+        }
+        fillSellOrders();
     }
 
     private void fillSellOrders(){
@@ -368,12 +380,12 @@ public class RouteModel {
     }
 
     public static RouteModel asRoute(SystemModel system){
-        Route route = new Route(new RouteEntry(system.getSystem().asTransit(),0,0,0));
+        Route route = Route.singletone(system.getSystem().asTransit());
         return new RouteModel(route, system.getMarket());
     }
 
     public static RouteModel asRoute(StationModel station){
-        Route route = new Route(new RouteEntry(station.getStation(),0,0,0));
+        Route route = Route.singletone(station.getStation());
         return new RouteModel(route, station.getMarket());
     }
 

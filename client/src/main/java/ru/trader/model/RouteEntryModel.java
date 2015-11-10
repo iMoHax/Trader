@@ -1,8 +1,6 @@
 package ru.trader.model;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -17,6 +15,8 @@ public class RouteEntryModel {
     private final StationModel station;
     private final RouteEntry entry;
     private final DoubleProperty profit;
+    private final LongProperty fullTime;
+    private final DoubleProperty distance;
     private final ObservableList<OrderModel> orders;
     private final ObservableList<OrderModel> sellOrders;
     private final ObservableList<MissionModel> missions;
@@ -30,6 +30,8 @@ public class RouteEntryModel {
         missions = FXCollections.observableArrayList();
         profit = new SimpleDoubleProperty();
         profit.bind(BindingsHelper.group(Double::sum, OrderModel::profitProperty, orders));
+        fullTime = new SimpleLongProperty();
+        distance = new SimpleDoubleProperty();
     }
 
     void addSellOrder(OrderModel order){
@@ -68,8 +70,28 @@ public class RouteEntryModel {
         return entry.getTime();
     }
 
-    public long getFullTime(){
-        return entry.getFullTime();
+    public long getFullTime() {
+        return fullTime.get();
+    }
+
+    public ReadOnlyLongProperty fullTimeProperty() {
+        return fullTime;
+    }
+
+    void setFullTime(long fullTime) {
+        this.fullTime.set(fullTime);
+    }
+
+    public double getDistance() {
+        return distance.get();
+    }
+
+    public ReadOnlyDoubleProperty distanceProperty() {
+        return distance;
+    }
+
+    void setDistance(double distance) {
+        this.distance.set(distance);
     }
 
     public double getRefill(){

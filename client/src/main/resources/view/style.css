@@ -53,16 +53,72 @@ HBox.fields-group hbox-margin{
     -fx-font-weight: bold;
 }
 
-
 /*   Path      */
-.route, .path {
+.path {
     -fx-alignment: center-left;
     -fx-spacing: 5px;
     -fx-fill-height: true;
 }
 
+.path-system {
+    -fx-alignment: center-left;
+    -fx-text-alignment: left;
+}
+
+.path-text {
+    -fx-alignment: center;
+}
+
+.path-system-text {
+}
+
+.path-station-text {
+    -fx-font-size: 8pt;
+}
+
+.path-icons {
+    -fx-alignment: center;
+}
+
+.path-track {
+    -fx-padding: 0 8;
+    -fx-alignment: center;
+}
+
+.path-track .glyph-font {
+    -fx-font-family: FontAwesome;
+    -fx-font-size: 16pt;
+}
+
+
+.path-track-text {
+    -fx-font-size: 7pt;
+}
+
+.path-pane {
+    -fx-padding: 10;
+    -fx-alignment: center-left;
+}
+
+/*   Route      */
+.route {
+    -fx-alignment: top-center;
+    -fx-spacing: 5px;
+    -fx-fill-height: true;
+    -fx-min-width: 200px;
+}
+
+.route-entry {
+    -fx-min-height: 50px;
+    -fx-spacing: 4px;
+    -fx-border-style: solid;
+    -fx-border-width: 0 0 2px 0;
+    -fx-fill-width: true;
+}
+
 .route-marker {
     -fx-alignment: center-left;
+    -fx-padding: 2px;
 }
 
 .route-system {
@@ -80,15 +136,17 @@ HBox.fields-group hbox-margin{
 
 .route-icons {
     -fx-alignment: top-right;
+    -fx-padding: 2px;
 }
 
 .route-info {
     -fx-alignment: top-right;
     -fx-font-size: 12;
+    -fx-min-width: 60px;
+    -fx-max-width: 60px;
 }
 
 .route-active {
-    -fx-border-style: solid;
     -fx-background-color: lightskyblue;
 }
 

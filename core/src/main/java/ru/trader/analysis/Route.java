@@ -3,6 +3,7 @@ package ru.trader.analysis;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.core.TransitVendor;
 import ru.trader.core.Vendor;
 
 import java.util.*;
@@ -285,4 +286,14 @@ public class Route implements Comparable<Route> {
             }
         };
     }
+
+    public static Route singletone(Vendor root){
+        RouteEntry entry = new RouteEntry(root, 0,0,0);
+        if (!(root instanceof TransitVendor)){
+            entry.setLand(true);
+        }
+        return new Route(entry);
+    }
+
+
 }
