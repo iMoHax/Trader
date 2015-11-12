@@ -113,7 +113,6 @@ public class SearchController {
     @FXML
     private void searchStations(){
         MarketFilter filter = new MarketFilter();
-        //TODO: set center = source
         filter.setDistance(distance.getValue().doubleValue());
         if (cbMarket.isSelected()) filter.add(SERVICE_TYPE.MARKET); else filter.remove(SERVICE_TYPE.MARKET);
         if (cbBlackMarket.isSelected()) filter.add(SERVICE_TYPE.BLACK_MARKET); else filter.remove(SERVICE_TYPE.BLACK_MARKET);
@@ -168,7 +167,8 @@ public class SearchController {
         private ResultEntry(StationModel station, OfferModel offer) {
             this.station = station;
             this.offer = offer;
-            this.distance = new SimpleDoubleProperty(source.getValue().getDistance(station.getSystem()));
+            SystemModel system = source.getValue();
+            this.distance = new SimpleDoubleProperty(ModelFabric.isFake(system)? Double.NaN : system.getDistance(station.getSystem()));
         }
 
         public SystemModel getSystem(){
