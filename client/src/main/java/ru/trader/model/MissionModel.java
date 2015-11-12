@@ -32,7 +32,7 @@ public class MissionModel {
         this.count = count;
         this.profit = profit;
         if (item != null) {
-            offer = SimpleOffer.fakeBuy(target.getStation(), item.getItem(), profit / count, count);
+            offer = SimpleOffer.fakeBuy(ModelFabric.get(target), ModelFabric.get(item), profit / count, count);
             need = count;
         } else {
             need = 0;
@@ -92,7 +92,7 @@ public class MissionModel {
             specificator.buy(offer);
         } else
         if (isCourier() || isDelivery()){
-            specificator.add(target.getStation(), true);
+            specificator.add(ModelFabric.get(target), true);
         }
     }
 
@@ -114,7 +114,7 @@ public class MissionModel {
             for (OrderModel order : orders) {
                 if (item.equals(order.getOffer().getItem()) && target.equals(order.getBuyer())){
                     for (RouteReserve reserve : reserves) {
-                        if (order.getOffer().getOffer().equals(reserve.getOrder().getSell())){
+                        if (ModelFabric.get(order.getOffer()).equals(reserve.getOrder().getSell())){
                             need -= order.getCount();
                         }
                     }

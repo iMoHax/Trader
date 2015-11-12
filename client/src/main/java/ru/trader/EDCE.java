@@ -115,7 +115,7 @@ public class EDCE {
             return false;
         }
         SystemModel sModel = world.get(system.getName());
-        boolean found = sModel != ModelFabric.NONE_SYSTEM;
+        boolean found = !ModelFabric.isFake(sModel);
         if (!found){
             LOG.warn("Not found system {}", system.getName());
             sModel = world.add(system.getName(), 0,0,0);
@@ -131,7 +131,7 @@ public class EDCE {
         }
         SystemModel sModel = profile.getSystem();
         StationModel station = sModel.get(starport.getName());
-        boolean found = station != ModelFabric.NONE_STATION;
+        boolean found = !ModelFabric.isFake(station);
         if (!found){
             LOG.info("Not found station {}, adding", starport.getName());
             updater.create(sModel);

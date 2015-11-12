@@ -94,7 +94,7 @@ public class SystemModel {
     }
 
     public double getDistance(SystemModel other){
-        return system.getDistance(other.getSystem());
+        return system.getDistance(ModelFabric.get(other));
     }
 
     public double getDistance(double x, double y, double z){

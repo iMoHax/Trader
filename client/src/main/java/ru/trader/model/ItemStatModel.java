@@ -111,7 +111,7 @@ public class ItemStatModel {
     private void refreshProp(ObjectProperty<OfferModel> prop, Offer offer){
         if (prop!=null ){
             OfferModel model = prop.getValue();
-            if (model==null || !model.getOffer().equals(offer)){
+            if (model==null || !ModelFabric.get(model).equals(offer)){
                 prop.setValue(asModel(offer));
             }
         }

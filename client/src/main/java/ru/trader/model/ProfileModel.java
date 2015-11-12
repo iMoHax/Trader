@@ -118,7 +118,7 @@ public class ProfileModel {
     }
 
     public void setSystem(SystemModel system) {
-        profile.setSystem(ModelFabric.isFake(system) ? null : system.getSystem());
+        profile.setSystem(ModelFabric.get(system));
         this.system.set(system);
     }
 
@@ -131,7 +131,7 @@ public class ProfileModel {
     }
 
     public void setStation(StationModel station) {
-        profile.setStation(ModelFabric.isFake(station) ? null : station.getStation());
+        profile.setStation(ModelFabric.get(station));
         this.station.set(station);
     }
 

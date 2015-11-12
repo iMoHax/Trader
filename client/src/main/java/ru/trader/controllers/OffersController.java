@@ -147,7 +147,7 @@ public class OffersController {
         cbShipyard.setSelected(false);
         cbMediumLandpad.setSelected(false);
         cbLargeLandpad.setSelected(false);
-        if (station != ModelFabric.NONE_STATION){
+        if (!ModelFabric.isFake(station)){
             faction.setText(FactionStringConverter.toLocalizationString(station.getFaction()));
             government.setText(GovernmentStringConverter.toLocalizationString(station.getGovernment()));
             distance.setText(String.valueOf(station.getDistance()));

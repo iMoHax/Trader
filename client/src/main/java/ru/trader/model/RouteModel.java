@@ -59,6 +59,10 @@ public class RouteModel {
         }
     }
 
+    Route getRoute() {
+        return _route;
+    }
+
     private RouteModel getCopy(){
         RouteModel res = new RouteModel(_route, market);
         res.setCurrentEntry(getCurrentEntry());
@@ -93,10 +97,6 @@ public class RouteModel {
 
     public long getTime(){
         return _route.getTime();
-    }
-
-    public Route getRoute() {
-        return _route;
     }
 
     public boolean isLoop(){
@@ -156,12 +156,12 @@ public class RouteModel {
     }
 
     public RouteModel add(RouteModel route){
-        _route.join(route.getRoute());
+        _route.join(ModelFabric.get(route));
         return getCopy();
     }
 
     public RouteModel remove(OrderModel order) {
-        _route.dropTo(order.getStation().getStation());
+        _route.dropTo(ModelFabric.get(order.getStation()));
         return getCopy();
     }
 
@@ -183,7 +183,7 @@ public class RouteModel {
             }
         } else
         if (mission.isDelivery()){
-            RouteReserve reserve = RouteFiller.getReserves(_route, offset, mission.getTarget().getStation(), mission.getCount());
+            RouteReserve reserve = RouteFiller.getReserves(_route, offset, ModelFabric.get(mission.getTarget()), mission.getCount());
             if (reserve != null) {
                 _route.reserve(reserve);
                 mission.setReserves(Collections.singleton(reserve));
@@ -194,7 +194,7 @@ public class RouteModel {
             }
         } else
         if (mission.isCourier()){
-            completeIndex = _route.find(mission.getTarget().getStation(), offset+1);
+            completeIndex = _route.find(ModelFabric.get(mission.getTarget()), offset+1);
         }
         if (completeIndex != -1){
             entries.get(completeIndex).add(mission);
@@ -215,7 +215,7 @@ public class RouteModel {
                 }
             } else
             if (mission.isDelivery()){
-                RouteReserve reserve = RouteFiller.getReserves(_route, offset, mission.getTarget().getStation(), mission.getCount());
+                RouteReserve reserve = RouteFiller.getReserves(_route, offset, ModelFabric.get(mission.getTarget()), mission.getCount());
                 if (reserve != null) {
                     _route.reserve(reserve);
                     mission.setReserves(Collections.singleton(reserve));
@@ -223,7 +223,7 @@ public class RouteModel {
                 }
             } else
             if (mission.isCourier()){
-                completeIndex = _route.find(mission.getTarget().getStation(), offset+1);
+                completeIndex = _route.find(ModelFabric.get(mission.getTarget()), offset+1);
             }
             if (completeIndex != -1){
                 if (completeIndex == 0 && _route.isLoop()) completeIndex = _route.getJumps()-1;
@@ -240,7 +240,7 @@ public class RouteModel {
         entries.subList(startIndex, entries.size()).stream()
                 .filter(e -> !e.isTransit())
                 .map(RouteEntryModel::getStation)
-                .filter(station -> station != ModelFabric.NONE_STATION)
+                .filter(station -> !ModelFabric.isFake(station))
                 .forEach(res::add);
         return res;
     }
@@ -380,12 +380,12 @@ public class RouteModel {
     }
 
     public static RouteModel asRoute(SystemModel system){
-        Route route = Route.singletone(system.getSystem().asTransit());
+        Route route = Route.singletone(ModelFabric.get(system).asTransit());
         return new RouteModel(route, system.getMarket());
     }
 
     public static RouteModel asRoute(StationModel station){
-        Route route = Route.singletone(station.getStation());
+        Route route = Route.singletone(ModelFabric.get(station));
         return new RouteModel(route, station.getMarket());
     }
 

@@ -45,11 +45,11 @@ public class OrderModel {
 
     public OrderModel(OfferModel offer, double balance, long limit) {
         this(offer);
-        this.max.setValue(Order.getMaxCount(offer.getOffer(), balance, limit));
+        this.max.setValue(Order.getMaxCount(ModelFabric.get(offer), balance, limit));
     }
 
     Order getOrder(){
-        return new Order(getOffer().getOffer(), getBuyOffer().getOffer(), getCount());
+        return new Order(ModelFabric.get(getOffer()), ModelFabric.get(getBuyOffer()), getCount());
     }
 
     public OfferModel getOffer() {
@@ -127,7 +127,7 @@ public class OrderModel {
     }
 
     public ObservableValue<Number> getProfit(OfferModel buyer) {
-        return Bindings.createDoubleBinding(() -> offer.getPrice() * Order.getMaxCount(offer.getOffer(), buyer.getOffer(), max.get()),
+        return Bindings.createDoubleBinding(() -> offer.getPrice() * Order.getMaxCount(ModelFabric.get(offer), ModelFabric.get(buyer), max.get()),
                 buyer.priceProperty(), offer.priceProperty(), max, buyer.countProperty());
     }
 

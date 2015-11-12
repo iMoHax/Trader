@@ -32,7 +32,7 @@ public class MainController {
     private final static Logger LOG = LoggerFactory.getLogger(MainController.class);
 
     private static MarketModel world = new MarketModel(World.getMarket());
-    private static ProfileModel profile = new ProfileModel(Main.SETTINGS.getProfile(), world);
+    private static ProfileModel profile = world.getModeler().get(Main.SETTINGS.getProfile());
     private static MarketModel market = world;
 
     @FXML

@@ -133,7 +133,7 @@ public class FilterController {
     private void save() {
         SystemModel s = center.getValue();
         LOG.trace("Old filter", filter);
-        filter.setCenter(ModelFabric.isFake(s) ? null : market.getModeler().get(s));
+        filter.setCenter(ModelFabric.isFake(s) ? null : ModelFabric.get(s));
         filter.setRadius(radius.getValue().doubleValue());
         filter.setDistance(distance.getValue().doubleValue());
         if (cbMarket.isSelected()) filter.add(SERVICE_TYPE.MARKET); else filter.remove(SERVICE_TYPE.MARKET);
@@ -146,7 +146,7 @@ public class FilterController {
         if (cbMediumLandpad.isSelected()) filter.add(SERVICE_TYPE.MEDIUM_LANDPAD); else filter.remove(SERVICE_TYPE.MEDIUM_LANDPAD);
         if (cbLargeLandpad.isSelected()) filter.add(SERVICE_TYPE.LARGE_LANDPAD); else filter.remove(SERVICE_TYPE.LARGE_LANDPAD);
         filter.clearExcludes();
-        excludes.getItems().forEach(st -> filter.addExclude(market.getModeler().get(st)));
+        excludes.getItems().forEach(st -> filter.addExclude(ModelFabric.get(st)));
         LOG.trace("New filter", filter);
     }
 

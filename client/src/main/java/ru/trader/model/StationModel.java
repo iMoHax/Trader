@@ -112,7 +112,7 @@ public class StationModel {
     }
 
     public OfferModel add(OFFER_TYPE type, ItemModel item, double price, long count){
-        OfferModel offer = asModel(station.addOffer(type, item.getItem(), price, count), item);
+        OfferModel offer = asModel(station.addOffer(type, ModelFabric.get(item), price, count), item);
         LOG.info("Add offer {} to station {}", offer, station);
         offer.refresh();
         market.getNotificator().sendAdd(offer);
@@ -121,17 +121,17 @@ public class StationModel {
 
     public void remove(OfferModel offer) {
         LOG.info("Remove offer {} from station {}", offer, station);
-        station.remove(offer.getOffer());
+        station.remove(ModelFabric.get(offer));
         offer.refresh();
         market.getNotificator().sendRemove(offer);
     }
 
     public boolean hasSell(ItemModel item) {
-        return station.hasSell(item.getItem());
+        return station.hasSell(ModelFabric.get(item));
     }
 
     public boolean hasBuy(ItemModel item) {
-        return station.hasBuy(item.getItem());
+        return station.hasBuy(ModelFabric.get(item));
     }
 
     public double getDistance(StationModel other){

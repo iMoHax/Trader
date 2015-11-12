@@ -30,8 +30,16 @@ public class ModelFabric {
         return new OrderModel(get(order.getSell()), get(order.getBuy()), order.getCount());
     }
 
+    public static Order get(OrderModel order){
+        return order.getOrder();
+    }
+
     public RouteModel get(Route route) {
         return new RouteModel(route, market);
+    }
+
+    public static Route get(RouteModel route){
+        return route.getRoute();
     }
 
     public SystemModel get(Place system){
@@ -48,7 +56,8 @@ public class ModelFabric {
         return res;
     }
 
-    public Place get(SystemModel model){
+    public static Place get(SystemModel model){
+        if (isFake(model)) return null;
         return model.getSystem();
     }
 
@@ -66,13 +75,18 @@ public class ModelFabric {
         return res;
     }
 
-    public Vendor get(StationModel model){
+    public static Vendor get(StationModel model){
+        if (isFake(model)) return null;
         return model.getStation();
     }
 
     public GroupModel get(Group group){
         if (group == null) return null;
         return new GroupModel(group);
+    }
+
+    public static Group get(GroupModel group){
+        return group.getGroup();
     }
 
     public ItemModel get(Item item){
@@ -89,6 +103,11 @@ public class ModelFabric {
         return res;
     }
 
+    public static Item get(ItemModel item){
+        if (isFake(item)) return null;
+        return item.getItem();
+    }
+
     public OfferModel get(Offer offer){
         if (offer == null) return null;
         OfferModel res = null;
@@ -103,12 +122,24 @@ public class ModelFabric {
         return res;
     }
 
+    public static Offer get(OfferModel offer){
+        return offer.getOffer();
+    }
+
     public OfferModel get(Offer offer, ItemModel item){
         if (offer == null) return null;
         //always create new offer model
         OfferModel res = new OfferModel(offer, item, market);
         offers.put(offer, new WeakReference<>(res));
         return res;
+    }
+
+    public ProfileModel get(Profile profile){
+        return new ProfileModel(profile, market);
+    }
+
+    public static Profile get(ProfileModel profile){
+        return profile.getProfile();
     }
 
     public void clear(){
@@ -128,6 +159,10 @@ public class ModelFabric {
 
     public static boolean isFake(SystemModel system) {
         return system == null || system instanceof FAKE_SYSTEM_MODEL;
+    }
+
+    public static boolean isFake(ItemModel item) {
+        return item == null || item instanceof FAKE_ITEM_MODEL;
     }
 
     private static class FAKE_SYSTEM_MODEL extends SystemModel {

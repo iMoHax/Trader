@@ -124,7 +124,7 @@ public class SearchController {
         if (cbMediumLandpad.isSelected()) filter.add(SERVICE_TYPE.MEDIUM_LANDPAD); else filter.remove(SERVICE_TYPE.MEDIUM_LANDPAD);
         if (cbLargeLandpad.isSelected()) filter.add(SERVICE_TYPE.LARGE_LANDPAD); else filter.remove(SERVICE_TYPE.LARGE_LANDPAD);
         ItemModel item = items.getValue();
-        if (item == null || item == ModelFabric.NONE_ITEM){
+        if (ModelFabric.isFake(item)){
             Collection<StationModel> stations = market.getStations(filter);
             fill(stations);
         } else {

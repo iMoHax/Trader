@@ -9,6 +9,7 @@ import org.controlsfx.glyphfont.Glyph;
 import ru.trader.analysis.Route;
 import ru.trader.analysis.RouteEntry;
 import ru.trader.core.Vendor;
+import ru.trader.model.ModelFabric;
 import ru.trader.model.RouteModel;
 
 public class RouteNode {
@@ -25,7 +26,7 @@ public class RouteNode {
     private final HBox node = new HBox();
 
     public RouteNode(RouteModel route) {
-        this.route = route.getRoute();
+        this.route = ModelFabric.get(route);
         node.getStyleClass().add(CSS_PATH);
         build();
     }

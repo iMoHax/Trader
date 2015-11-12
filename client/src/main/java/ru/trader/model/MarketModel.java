@@ -113,12 +113,12 @@ public class MarketModel {
         LOG.info("Remove system {} from market {}", system, this);
         notificator.sendRemove(system);
         stationNames.removeAll(system.getStationFullNames());
-        market.remove(system.getSystem());
+        market.remove(ModelFabric.get(system));
         systemNames.remove(system.getName());
     }
 
     StationModel addStation(SystemModel system, String name) {
-        StationModel station = modeler.get(system.getSystem().addVendor(name));
+        StationModel station = modeler.get(ModelFabric.get(system).addVendor(name));
         LOG.info("Add station {} to system {}", station, system);
         stationNames.add(station.getFullName());
         notificator.sendAdd(station);
@@ -129,7 +129,7 @@ public class MarketModel {
         LOG.info("Remove station {} from system {}", station, station.getSystem());
         notificator.sendRemove(station);
         stationNames.remove(station.getFullName());
-        station.getSystem().getSystem().remove(station.getStation());
+        ModelFabric.get(station.getSystem()).remove(ModelFabric.get(station));
     }
 
     public ReadOnlyListProperty<GroupModel> getGroups(){
@@ -152,7 +152,7 @@ public class MarketModel {
     }
 
     public ItemModel add(String name, GroupModel group) {
-        ItemModel item = modeler.get(market.addItem(name, group.getGroup()));
+        ItemModel item = modeler.get(market.addItem(name, ModelFabric.get(group)));
         LOG.info("Add item {} to market {}", item, this);
         notificator.sendAdd(item);
         items.add(item);
@@ -164,7 +164,7 @@ public class MarketModel {
     }
 
     public ObservableList<OfferModel> getOffers(OFFER_TYPE offerType, ItemModel item, MarketFilter filter){
-        return BindingsHelper.observableList(analyzer.getOffers(offerType, item.getItem(), filter), modeler::get);
+        return BindingsHelper.observableList(analyzer.getOffers(offerType, ModelFabric.get(item), filter), modeler::get);
     }
 
     public ObservableList<StationModel> getStations(MarketFilter filter){
@@ -185,13 +185,10 @@ public class MarketModel {
 
     public void getOrders(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo, double balance, Consumer<ObservableList<OrderModel>> result) {
         ProgressController progress = new ProgressController(Screeners.getMainScreen(), Localization.getString("analyzer.orders.title"));
-        Profile profile = MainController.getProfile().getProfile().copy();
+        Profile profile = ModelFabric.get(MainController.getProfile()).copy();
         profile.setBalance(balance);
         OrdersSearchTask task = new OrdersSearchTask(this,
-                from == null || from == ModelFabric.NONE_SYSTEM ? null : from.getSystem(),
-                stationFrom == null || stationFrom == ModelFabric.NONE_STATION ? null : stationFrom.getStation(),
-                to == null || to == ModelFabric.NONE_SYSTEM ? null : to.getSystem(),
-                stationTo == null || stationTo == ModelFabric.NONE_STATION ? null : stationTo.getStation(),
+                ModelFabric.get(from), ModelFabric.get(stationFrom), ModelFabric.get(to), ModelFabric.get(stationTo),
                 profile
         );
 
@@ -211,15 +208,11 @@ public class MarketModel {
 
     public void getRoutes(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo, double balance, CrawlerSpecificator specificator, Consumer<ObservableList<RouteModel>> result) {
         ProgressController progress = new ProgressController(Screeners.getMainScreen(), Localization.getString("analyzer.routes.title"));
-        Profile profile = MainController.getProfile().getProfile().copy();
+        Profile profile = ModelFabric.get(MainController.getProfile()).copy();
         profile.setBalance(balance);
         RoutesSearchTask task = new RoutesSearchTask(this,
-                from == null || from == ModelFabric.NONE_SYSTEM ? null : from.getSystem(),
-                stationFrom == null || stationFrom == ModelFabric.NONE_STATION ? null : stationFrom.getStation(),
-                to == null || to == ModelFabric.NONE_SYSTEM ? null : to.getSystem(),
-                stationTo == null || stationTo == ModelFabric.NONE_STATION ? null : stationTo.getStation(),
-                profile,
-                specificator
+                ModelFabric.get(from), ModelFabric.get(stationFrom), ModelFabric.get(to), ModelFabric.get(stationTo),
+                profile, specificator
         );
 
         progress.run(task, route -> {
@@ -237,13 +230,13 @@ public class MarketModel {
     }
 
     public RouteModel getRoute(RouteModel path) {
-        Route r = analyzer.getRoute(path.getRoute().getVendors());
+        Route r = analyzer.getRoute(ModelFabric.get(path).getVendors());
         if (r == null) return null;
         return modeler.get(r);
     }
 
     Route _getPath(OrderModel order) {
-        return analyzer.getPath(order.getOrder());
+        return analyzer.getPath(ModelFabric.get(order));
     }
 
     private RouteModel getPath(Vendor from, Vendor to) {
@@ -252,19 +245,19 @@ public class MarketModel {
     }
 
     public RouteModel getPath(StationModel from, StationModel to) {
-        return getPath(from.getStation(), to.getStation());
+        return getPath(ModelFabric.get(from), ModelFabric.get(to));
     }
 
     public RouteModel getPath(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo){
         if (ModelFabric.isFake(stationFrom)){
-            return getPath(from.getSystem().asTransit(), ModelFabric.isFake(stationTo) ? to.getSystem().asTransit() : stationTo.getStation());
+            return getPath(ModelFabric.get(from).asTransit(), ModelFabric.isFake(stationTo) ? ModelFabric.get(to).asTransit() : ModelFabric.get(stationTo));
         } else {
-            return getPath(stationFrom.getStation(), ModelFabric.isFake(stationTo) ? to.getSystem().asTransit() : stationTo.getStation());
+            return getPath(ModelFabric.get(stationFrom), ModelFabric.isFake(stationTo) ? ModelFabric.get(to).asTransit() : ModelFabric.get(stationTo));
         }
     }
 
     public RouteModel getPath(OrderModel order) {
-        Route p = analyzer.getPath(order.getOrder());
+        Route p = analyzer.getPath(ModelFabric.get(order));
         return modeler.get(p);
     }
 
