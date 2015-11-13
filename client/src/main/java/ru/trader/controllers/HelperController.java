@@ -25,7 +25,6 @@ import ru.trader.view.support.cells.OrderListCell;
 import ru.trader.view.support.cells.StationListCell;
 
 import javax.swing.*;
-import java.awt.event.KeyEvent;
 
 
 public class HelperController {
@@ -167,17 +166,20 @@ public class HelperController {
         ProfileModel profile = MainController.getProfile();
         profile.routeProperty().addListener(routeListener);
         profile.dockedProperty().addListener(dockedListener);
+        Main.SETTINGS.helper().completeKeyProperty().addListener(completeKeyListener);
         Main.SETTINGS.helper().xProperty().bind(stage.xProperty());
         Main.SETTINGS.helper().yProperty().bind(stage.yProperty());
-        bindKeys();
+        bindKeys(Main.SETTINGS.helper().getCompleteKey());
     }
 
     private void unbind(){
         ProfileModel profile = MainController.getProfile();
         profile.routeProperty().removeListener(routeListener);
         profile.dockedProperty().removeListener(dockedListener);
+        Main.SETTINGS.helper().completeKeyProperty().removeListener(completeKeyListener);
         Main.SETTINGS.helper().xProperty().unbind();
         Main.SETTINGS.helper().yProperty().unbind();
+        KeyBinding.unbind(Main.SETTINGS.helper().getCompleteKey());
     }
 
     private void setRoute(RouteModel route){
@@ -267,13 +269,21 @@ public class HelperController {
         Main.copyToClipboard(system.getText());
     }
 
-    private void bindKeys(){
-        KeyBinding.bind(KeyStroke.getKeyStroke(KeyEvent.VK_END, 0), k -> ViewUtils.doFX(this::complete));
+    private void bindKeys(KeyStroke completeKey){
+        KeyBinding.bind(completeKey, k -> ViewUtils.doFX(this::complete));
     }
 
     private final ChangeListener<? super Number> currentEntryListener = (ov, o, n) -> ViewUtils.doFX(() -> setRouteEntry(n.intValue()));
     private final ChangeListener<Boolean> dockedListener = (ov, o, n) -> ViewUtils.doFX(() -> setDocked(n));
     private final ChangeListener<RouteModel> routeListener = (ov, o, n) -> ViewUtils.doFX(() -> setRoute(n));
+    private final ChangeListener<KeyStroke> completeKeyListener = (ov, o, n) -> {
+        if (o != null){
+            KeyBinding.unbind(o);
+        }
+        if (n != null){
+            bindKeys(n);
+        }
+    };
 
     private void addDragListeners(final Node node){
         new DragListener(node);

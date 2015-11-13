@@ -8,6 +8,7 @@ import ru.trader.core.MarketFilter;
 import ru.trader.core.Profile;
 import ru.trader.core.Ship;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.Locale;
 import java.util.Properties;
@@ -227,11 +228,13 @@ public class Settings {
         private final IntegerProperty x;
         private final IntegerProperty y;
         private final BooleanProperty visible;
+        private final ObjectProperty<KeyStroke> completeKey;
 
         public HelperSettings() {
             x = new SimpleIntegerProperty();
             y = new SimpleIntegerProperty();
             visible = new SimpleBooleanProperty();
+            completeKey = new SimpleObjectProperty<>();
         }
 
         public int getX() {
@@ -270,16 +273,30 @@ public class Settings {
             this.visible.set(visible);
         }
 
+        public KeyStroke getCompleteKey() {
+            return completeKey.get();
+        }
+
+        public ObjectProperty<KeyStroke> completeKeyProperty() {
+            return completeKey;
+        }
+
+        public void setCompleteKey(KeyStroke completeKey) {
+            this.completeKey.set(completeKey);
+        }
+
         public void readFrom(Properties values){
             setVisible(!"0".equals(values.getProperty("helper.visible", "0")));
             setX(Integer.valueOf(values.getProperty("helper.x", "100")));
             setY(Integer.valueOf(values.getProperty("helper.y", "100")));
+            setCompleteKey(KeyStroke.getKeyStroke(values.getProperty("helper.keys.complete", "pressed END")));
         }
 
         public void writeTo(Properties values){
             values.setProperty("helper.visible", isVisible() ? "1":"0");
             values.setProperty("helper.x", String.valueOf(getX()));
             values.setProperty("helper.y", String.valueOf(getY()));
+            values.setProperty("helper.keys.complete", String.valueOf(getCompleteKey()));
         }
     }
 

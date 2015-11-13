@@ -4,13 +4,18 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.Main;
 import ru.trader.core.Profile;
 import ru.trader.view.support.Localization;
 import ru.trader.view.support.NumberField;
+import ru.trader.view.support.ViewUtils;
 
+import javax.swing.*;
+import java.awt.event.InputEvent;
 
 public class SettingsController {
     private final static Logger LOG = LoggerFactory.getLogger(SettingsController.class);
@@ -48,11 +53,31 @@ public class SettingsController {
     @FXML
     private NumberField edceInterval;
 
+    @FXML
+    private TextField completeKeyText;
+    private KeyStroke completeKey;
+
     private Dialog<ButtonType> dlg;
 
     @FXML
     private void initialize(){
         pathPriority.setItems(FXCollections.observableArrayList(Profile.PATH_PRIORITY.values()));
+        completeKeyText.setOnKeyReleased(KeyEvent::consume);
+        completeKeyText.setOnKeyTyped(KeyEvent::consume);
+        completeKeyText.setOnKeyPressed(e -> {
+            if (e.getCode().equals(KeyCode.ESCAPE)) {
+                completeKey = null;
+                completeKeyText.setText("");
+            } else {
+                int modifiers = 0;
+                if (e.isAltDown()) modifiers |= InputEvent.ALT_DOWN_MASK;
+                if (e.isShiftDown()) modifiers |= InputEvent.SHIFT_DOWN_MASK;
+                if (e.isControlDown()) modifiers |= InputEvent.CTRL_DOWN_MASK;
+                completeKey = KeyStroke.getKeyStroke(e.getCode().impl_getCode(), modifiers);
+                completeKeyText.setText(ViewUtils.keyToString(completeKey));
+            }
+            e.consume();
+        });
         init();
     }
 
@@ -77,6 +102,8 @@ public class SettingsController {
 
         edceActive.setSelected(Main.SETTINGS.edce().isActive());
         edceInterval.setValue(Main.SETTINGS.edce().getInterval());
+
+        completeKeyText.setText(ViewUtils.keyToString(Main.SETTINGS.helper().getCompleteKey()));
     }
 
     private void createDialog(Parent owner, Parent content){
@@ -120,6 +147,8 @@ public class SettingsController {
 
         Main.SETTINGS.edce().setActive(edceActive.isSelected());
         Main.SETTINGS.edce().setInterval(edceInterval.getValue().intValue());
+
+        Main.SETTINGS.helper().setCompleteKey(completeKey);
     }
 
     public void showDialog(Parent parent, Parent content){

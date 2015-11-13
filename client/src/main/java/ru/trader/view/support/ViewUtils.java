@@ -10,6 +10,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 
+import javax.swing.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+
 public class ViewUtils {
 
     //Scroll to row if invisible
@@ -69,4 +73,28 @@ public class ViewUtils {
     public static String stationDistanceToString(double distance){
         return String.format("%.2f Ls", distance);
     }
+
+    public static String keyToString(KeyStroke key){
+        if (key == null) return "";
+        if (key.getKeyCode() == KeyEvent.VK_SHIFT
+                || key.getKeyCode() == KeyEvent.VK_CONTROL
+                || key.getKeyCode() == KeyEvent.VK_ALT
+                || key.getKeyCode() == KeyEvent.VK_ALT_GRAPH){
+            return KeyEvent.getKeyText(key.getKeyCode());
+        }
+        StringBuilder buf = new StringBuilder();
+        int modifiers = key.getModifiers();
+        if ((modifiers & InputEvent.SHIFT_DOWN_MASK) != 0 ) {
+            buf.append("SHIFT+");
+        }
+        if ((modifiers & InputEvent.CTRL_DOWN_MASK) != 0 ) {
+            buf.append("CTRL+");
+        }
+        if ((modifiers & InputEvent.ALT_DOWN_MASK) != 0 ) {
+            buf.append("ALT+");
+        }
+        buf.append(KeyEvent.getKeyText(key.getKeyCode()));
+        return buf.toString();
+    }
+
 }
