@@ -40,6 +40,16 @@ public class MissionModel {
         }
     }
 
+    protected MissionModel(MissionModel mission, boolean includeReserves){
+        this.target = mission.target;
+        this.item = mission.item;
+        this.count = mission.count;
+        this.profit = mission.profit;
+        this.offer = mission.offer;
+        this.need = mission.need;
+        this.reserves = includeReserves ? mission.reserves : null;
+    }
+
     public StationModel getTarget() {
         return target;
     }
@@ -89,7 +99,11 @@ public class MissionModel {
 
     public void toSpecification(CrawlerSpecificator specificator){
         if (isSupply()){
-            specificator.buy(offer);
+            if (isCompleted()){
+                specificator.add(ModelFabric.get(target), true);
+            } else {
+                specificator.buy(offer);
+            }
         } else
         if (isCourier() || isDelivery()){
             specificator.add(ModelFabric.get(target), true);
@@ -143,9 +157,11 @@ public class MissionModel {
         return Objects.hash(target, item, count);
     }
 
+    public static MissionModel copy(MissionModel mission){
+        return new MissionModel(mission, false);
+    }
 
-
-    public MissionModel getCopy(){
-        return new MissionModel(target, item, count, profit);
+    public static MissionModel clone(MissionModel mission){
+        return mission != null ? new MissionModel(mission, true) : null;
     }
 }

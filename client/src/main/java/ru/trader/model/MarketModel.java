@@ -185,7 +185,7 @@ public class MarketModel {
 
     public void getOrders(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo, double balance, Consumer<ObservableList<OrderModel>> result) {
         ProgressController progress = new ProgressController(Screeners.getMainScreen(), Localization.getString("analyzer.orders.title"));
-        Profile profile = ModelFabric.get(MainController.getProfile()).copy();
+        Profile profile = Profile.clone(ModelFabric.get(MainController.getProfile()));
         profile.setBalance(balance);
         OrdersSearchTask task = new OrdersSearchTask(this,
                 ModelFabric.get(from), ModelFabric.get(stationFrom), ModelFabric.get(to), ModelFabric.get(stationTo),
@@ -206,9 +206,13 @@ public class MarketModel {
         getOrders(ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, balance, result);
     }
 
+    public void getRoutes(StationModel stationFrom, StationModel stationTo, double balance, CrawlerSpecificator specificator, Consumer<ObservableList<RouteModel>> result) {
+        getRoutes(stationFrom.getSystem(), stationFrom, stationTo.getSystem(), stationTo, balance, specificator, result);
+    }
+
     public void getRoutes(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo, double balance, CrawlerSpecificator specificator, Consumer<ObservableList<RouteModel>> result) {
         ProgressController progress = new ProgressController(Screeners.getMainScreen(), Localization.getString("analyzer.routes.title"));
-        Profile profile = ModelFabric.get(MainController.getProfile()).copy();
+        Profile profile = Profile.clone(ModelFabric.get(MainController.getProfile()));
         profile.setBalance(balance);
         RoutesSearchTask task = new RoutesSearchTask(this,
                 ModelFabric.get(from), ModelFabric.get(stationFrom), ModelFabric.get(to), ModelFabric.get(stationTo),

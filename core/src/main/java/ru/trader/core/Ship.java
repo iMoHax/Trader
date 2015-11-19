@@ -20,13 +20,16 @@ public class Ship {
         this.engine = new Engine(2, 'E');
     }
 
-    public static Ship copyOf(Ship other){
-        Ship copy = new Ship();
-        copy.mass = other.mass;
-        copy.cargo = other.cargo;
-        copy.tank = other.tank;
-        copy.engine = other.getEngine();
-        return copy;
+    protected Ship(Ship ship){
+        this.mass = ship.mass;
+        this.cargo = ship.cargo;
+        this.tank = ship.tank;
+        this.engine = ship.getEngine();
+
+    }
+
+    public static Ship clone(Ship ship){
+        return ship != null ? new Ship(ship) : ship;
     }
 
     public int getCargo() {

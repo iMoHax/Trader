@@ -39,6 +39,26 @@ public class Profile {
         pathPriority = PATH_PRIORITY.FAST;
     }
 
+    protected Profile(Profile profile){
+        this.name = profile.name;
+        this.balance = profile.balance;
+        this.docked = profile.docked;
+        this.jumps = profile.jumps;
+        this.lands = profile.lands;
+        this.refill = profile.refill;
+        this.routesCount = profile.routesCount;
+        this.distanceTime = profile.distanceTime;
+        this.jumpTime = profile.jumpTime;
+        this.landingTime = profile.landingTime;
+        this.takeoffTime = profile.takeoffTime;
+        this.rechargeTime = profile.rechargeTime;
+        this.fuelPrice = profile.fuelPrice;
+        this.pathPriority = profile.pathPriority;
+        this.system = profile.system;
+        this.station = profile.station;
+        this.ship = Ship.clone(profile.ship);
+    }
+
     public String getName() {
         return name;
     }
@@ -226,25 +246,8 @@ public class Profile {
         values.setProperty("profile.search.times.recharge", String.valueOf(rechargeTime));
         ship.writeTo(values);
     }
-    
-    public Profile copy(){
-        Profile res = new Profile(ship);
-        res.name = this.name;
-        res.balance = this.balance;
-        res.system = this.system;
-        res.station = this.station;
-        res.docked = this.docked;
-        res.jumps = this.jumps;
-        res.lands = this.lands;
-        res.refill = this.refill;
-        res.routesCount = this.routesCount;
-        res.distanceTime = this.distanceTime;
-        res.jumpTime = this.jumpTime;
-        res.landingTime = this.landingTime;
-        res.takeoffTime = this.takeoffTime;
-        res.rechargeTime = this.rechargeTime;
-        res.fuelPrice = this.fuelPrice;
-        res.pathPriority = this.pathPriority;
-        return res;
-    } 
+
+    public static Profile clone(Profile profile){
+        return profile != null ? new Profile(profile) : null;
+    }
 }

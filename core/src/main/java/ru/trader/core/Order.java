@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 public class Order implements Comparable<Order> {
-    private Offer sell;
-    private Offer buy;
+    private final Offer sell;
+    private final Offer buy;
     private double profit;
     private long count;
 
@@ -25,6 +25,12 @@ public class Order implements Comparable<Order> {
         this(sell, buy);
         this.count = getMaxCount(sell, buy, count);
         this.profit = (buy.getPrice() - sell.getPrice()) * count;
+    }
+
+    protected Order(Order order){
+        this(order.sell, order.buy);
+        this.profit = order.profit;
+        this.count = order.count;
     }
 
     public Offer getSell() {
@@ -142,5 +148,9 @@ public class Order implements Comparable<Order> {
         if (demand <= 0) demand = Long.MAX_VALUE;
         if (Double.isInfinite(balance)) return Math.min(limit, Math.min(supply, demand));
         return (long) Math.min(limit, Math.min(Math.min(supply, demand), Math.floor(balance/sell.getPrice())));
+    }
+
+    public static Order clone(Order order){
+        return order != null ? new Order(order) : null;
     }
 }

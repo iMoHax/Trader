@@ -134,4 +134,17 @@ public class RouteEntryModel {
         orders.clear();
         orders.addAll(BindingsHelper.observableList(entry.getOrders(), market.getModeler()::get));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RouteEntryModel)) return false;
+        RouteEntryModel that = (RouteEntryModel) o;
+        return entry.equals(that.entry);
+    }
+
+    @Override
+    public int hashCode() {
+        return entry.hashCode();
+    }
 }

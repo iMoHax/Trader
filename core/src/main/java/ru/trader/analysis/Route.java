@@ -31,6 +31,20 @@ public class Route implements Comparable<Route> {
         updateStats();
     }
 
+    protected Route(Route route) {
+        this.profit = route.profit;
+        this.balance = route.balance;
+        this.distance = route.distance;
+        this.fuel = route.fuel;
+        this.time = route.time;
+        this.lands = route.lands;
+        this.refills = route.refills;
+        this.cargo = route.cargo;
+        this.entries = new ArrayList<>(route.entries.size());
+        route.entries.forEach(e -> this.entries.add(RouteEntry.clone(e)));
+    }
+
+
     public List<RouteEntry> getEntries() {
         return entries;
     }
@@ -195,6 +209,18 @@ public class Route implements Comparable<Route> {
             }
             iterator.remove();
         }
+        updateStats();
+    }
+
+    public void dropTo(int index){
+        for (ListIterator<RouteEntry> iterator = entries.listIterator(entries.size()); iterator.hasPrevious(); ) {
+            if (iterator.previousIndex() == index){
+                break;
+            }
+            iterator.previous();
+            iterator.remove();
+        }
+        updateStats();
     }
 
     void updateStats(){
@@ -295,5 +321,8 @@ public class Route implements Comparable<Route> {
         return new Route(entry);
     }
 
+    public static Route clone(Route route){
+        return route != null ? new Route(route) : null;
+    }
 
 }

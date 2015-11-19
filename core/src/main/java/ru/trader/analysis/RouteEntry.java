@@ -29,6 +29,19 @@ public class RouteEntry {
         reserved = 0;
     }
 
+    protected RouteEntry(RouteEntry entry){
+        this.vendor = entry.vendor;
+        this.fuel = entry.fuel;
+        this.land = entry.land;
+        this.refill = entry.refill;
+        this.profit = entry.profit;
+        this.time = entry.time;
+        this.fulltime = entry.fulltime;
+        this.reserved = entry.reserved;
+        this.orders = new ArrayList<>(entry.orders.size());
+        entry.orders.forEach(o -> this.orders.add(new OrderWrapper(o)));
+    }
+
     public Vendor getVendor() {
         return vendor;
     }
@@ -224,8 +237,18 @@ public class RouteEntry {
             this.max = order.getCount();
         }
 
+        private OrderWrapper(OrderWrapper orderWrapper){
+            super(orderWrapper);
+            this.fixed = orderWrapper.fixed;
+            this.max = orderWrapper.max;
+        }
+
         public void reset(){
             setCount(max);
         }
+    }
+
+    public static RouteEntry clone(RouteEntry entry){
+        return entry != null ? new RouteEntry(entry) : null;
     }
 }
