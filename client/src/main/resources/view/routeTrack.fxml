@@ -21,7 +21,10 @@
                     <Button prefWidth="30" onAction="#removeMission"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
                     <Button prefWidth="30" onAction="#clearMissions"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
                 </VBox>
-                <Button prefWidth="80" text="Добавить" onAction="#addMissionsToTrack" />
+                <VBox>
+                    <Button prefWidth="80" text="Добавить" onAction="#addMissionsToTrack" />
+                    <Button prefWidth="80" text="Добавить все" onAction="#addAllMissionsToTrack" />
+                </VBox>
             </HBox>
         </VBox>
         <VBox fx:id="infoGroup">

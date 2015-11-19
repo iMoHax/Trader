@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import ru.trader.analysis.CrawlerSpecificator;
 import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.view.support.Track;
@@ -17,6 +18,8 @@ import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
 import ru.trader.view.support.cells.OrderListCell;
 
+import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class RouteTrackController {
@@ -129,10 +132,6 @@ public class RouteTrackController {
         if (index != -1) {
             RouteEntryModel entry = route.get(index);
             missionsController.setStation(entry.getStation());
-            ObservableList<String> stations = BindingsHelper.observableList(route.getStations(index), StationModel::getFullName);
-            missionsController.setStations(stations);
-            ObservableList<ItemModel> items = FXCollections.observableList(route.getSellOffers(index).stream().map(OfferModel::getItem).collect(Collectors.toList()));
-            missionsController.setItems(items);
 
             station.setText(entry.getStation().getName());
             system.setText(entry.getStation().getSystem().getName());
@@ -143,8 +142,6 @@ public class RouteTrackController {
             missionsList.setItems(entry.missions());
         } else {
             missionsController.setStation(ModelFabric.NONE_STATION);
-            missionsController.setStations(FXCollections.emptyObservableList());
-            missionsController.setItems(FXCollections.emptyObservableList());
 
             station.setText("");
             system.setText("");
@@ -169,8 +166,43 @@ public class RouteTrackController {
 
     @FXML
     private void addMissionsToTrack(){
-        int startIndex = trackNode.getActive();
-        route.addAll(startIndex, addMissionsList.getItems());
+        addMissionsToTrack(addMissionsList.getItems(), false);
+    }
+
+    @FXML
+    private void addAllMissionsToTrack(){
+        addMissionsToTrack(addMissionsList.getItems(), true);
+    }
+
+    private void addMissionsToTrack(Collection<MissionModel> missions, boolean all){
+        if (missions.isEmpty()) return;
+        final int startIndex = trackNode.getActive();
+        final Collection<MissionModel> notAdded = route.addAll(startIndex, missions);
+        if (all && !notAdded.isEmpty()){
+            CrawlerSpecificator specificator = new CrawlerSpecificator();
+            specificator.setFullScan(false);
+            final Collection<MissionModel> oldMissions = route.getMissions(startIndex);
+            oldMissions.forEach(m -> m.toSpecification(specificator));
+            notAdded.forEach(m -> m.toSpecification(specificator));
+            StationModel from = route.get(startIndex).getStation();
+            StationModel to = route.getLast().getStation();
+            route.getMarket().getRoutes(from, to, route.getBalance(startIndex), specificator, routes -> {
+                Optional<RouteModel> path = Screeners.showRouters(routes);
+                if (path.isPresent()) {
+                    route.removeAll(oldMissions);
+                    RouteModel newRoute = route.set(startIndex, path.get());
+                    newRoute.addAll(startIndex, notAdded);
+                    newRoute.addAll(startIndex, oldMissions);
+                    setRoute(newRoute);
+                }
+            });
+        } else {
+            if (notAdded.isEmpty()){
+                Screeners.showInfo("Результат операции", null, "Миссии добавлены");
+            } else {
+                Screeners.showInfo("Результат операции", "Миссии не добавлены", notAdded.toString());
+            }
+        }
     }
 
 

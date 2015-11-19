@@ -59,14 +59,23 @@ public class RouteModel {
         }
     }
 
+    public MarketModel getMarket(){
+        return market;
+    }
+
     Route getRoute() {
         return _route;
     }
 
-    private RouteModel getCopy(){
-        RouteModel res = new RouteModel(_route, market);
+
+    private RouteModel copyFill(Route route){
+        return copyFill(route, entries.size()-1);
+    }
+
+    private RouteModel copyFill(Route route, int index){
+        RouteModel res = new RouteModel(route, market);
         res.setCurrentEntry(getCurrentEntry());
-        int size = Math.min(entries.size(), res.entries.size());
+        int size = Math.min(index+1, res.entries.size());
         for (int i = 0; i < size; i++) {
             RouteEntryModel entry = entries.get(i);
             RouteEntryModel rEntry = res.entries.get(i);
@@ -81,6 +90,11 @@ public class RouteModel {
 
     public Collection<RouteEntryModel> getEntries(){
         return entries;
+    }
+
+    public RouteEntryModel getLast(){
+        if (entries.size() == 1) return entries.get(0);
+        return entries.get(entries.size()-1);
     }
 
     public double getDistance() {
@@ -137,8 +151,9 @@ public class RouteModel {
     public RouteModel add(OrderModel order){
         Route path = market._getPath(order);
         if (path == null) return this;
-        _route.join(path);
-        return getCopy();
+        Route route = Route.clone(_route);
+        route.join(path);
+        return copyFill(route);
     }
 
     public RouteModel add(SystemModel system){
@@ -156,17 +171,26 @@ public class RouteModel {
     }
 
     public RouteModel add(RouteModel route){
-        _route.join(ModelFabric.get(route));
-        return getCopy();
+        Route res = Route.clone(_route);
+        res.join(ModelFabric.get(route));
+        return copyFill(res);
+    }
+
+    public RouteModel set(int offset, RouteModel route){
+        Route res = Route.clone(_route);
+        res.dropTo(offset);
+        res.join(ModelFabric.get(route));
+        return copyFill(res, offset);
     }
 
     public RouteModel remove(OrderModel order) {
-        _route.dropTo(ModelFabric.get(order.getStation()));
-        return getCopy();
+        Route res = Route.clone(_route);
+        res.dropTo(ModelFabric.get(order.getStation()));
+        return copyFill(res);
     }
 
-    public void add(int offset, MissionModel mission){
-        mission = mission.getCopy();
+    public boolean add(int offset, MissionModel mission){
+        mission = MissionModel.copy(mission);
         int completeIndex = -1;
         Offer offer = mission.getOffer();
         if (offer != null){
@@ -198,16 +222,24 @@ public class RouteModel {
         }
         if (completeIndex != -1){
             entries.get(completeIndex).add(mission);
+            return true;
         }
+        return false;
     }
 
-    public void addAll(int offset, Collection<MissionModel> missions){
-        for (MissionModel mission : missions) {
-            mission = mission.getCopy();
+    public Collection<MissionModel> addAll(int offset, Collection<MissionModel> missions){
+        Collection<MissionModel> notAdded = new ArrayList<>();
+        for (MissionModel m : missions) {
+            MissionModel mission = MissionModel.copy(m);
             Offer offer = mission.getOffer();
             int completeIndex = -1;
             if (offer != null){
-                Collection<RouteReserve> reserves = RouteFiller.getReserves(_route, offset, offer);
+                Collection<RouteReserve> reserves;
+                if (m.getReserves() != null){
+                    reserves = RouteFiller.changeReserves(_route, offset, offer, m.getReserves());
+                } else {
+                    reserves = RouteFiller.getReserves(_route, offset, offer);
+                }
                 if (!reserves.isEmpty()) {
                     _route.reserve(reserves);
                     mission.setReserves(reserves);
@@ -228,6 +260,34 @@ public class RouteModel {
             if (completeIndex != -1){
                 if (completeIndex == 0 && _route.isLoop()) completeIndex = _route.getJumps()-1;
                 entries.get(completeIndex).add(mission);
+            } else {
+                notAdded.add(mission);
+            }
+        }
+        refresh();
+        return notAdded;
+    }
+
+    public void remove(MissionModel mission){
+        Collection<RouteReserve> reserves = mission.getReserves();
+        if (reserves != null) {
+            _route.unreserve(reserves);
+        }
+        for (RouteEntryModel entry : entries) {
+            entry.remove(mission);
+        }
+        refresh();
+    }
+
+
+    public void removeAll(Collection<MissionModel> missions){
+        for (MissionModel mission : missions) {
+            Collection<RouteReserve> reserves = mission.getReserves();
+            if (reserves != null) {
+                _route.unreserve(reserves);
+            }
+            for (RouteEntryModel entry : entries) {
+                entry.remove(mission);
             }
         }
         refresh();
@@ -245,6 +305,15 @@ public class RouteModel {
         return res;
     }
 
+    public Collection<MissionModel> getMissions(int offset){
+        int startIndex = offset+1;
+        if (startIndex >= entries.size()) return Collections.emptyList();
+        List<MissionModel> res = entries.subList(startIndex, entries.size()).stream()
+                .flatMap(e -> e.missions().stream())
+                .collect(Collectors.toList());
+        return res;
+    }
+
     public Collection<OfferModel> getSellOffers(int offset){
         Map<ItemModel, OfferModel> res = new HashMap<>();
         for (StationModel station : getStations(offset)) {
@@ -258,6 +327,15 @@ public class RouteModel {
             }
         }
         return res.values();
+    }
+
+    public double getBalance(int index){
+        int endIndex = index+1;
+        if (endIndex > entries.size()) endIndex = entries.size();
+        double balance = _route.getBalance();
+        balance -= entries.subList(0, endIndex).stream().flatMap(e -> e.orders().stream()).mapToDouble(OrderModel::getCredit).sum();
+        balance += entries.subList(0, endIndex).stream().flatMap(e -> e.sellOrders().stream()).mapToDouble(OrderModel::getDebet).sum();
+        return balance;
     }
 
     public int getCurrentEntry() {

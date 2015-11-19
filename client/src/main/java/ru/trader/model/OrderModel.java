@@ -122,6 +122,16 @@ public class OrderModel {
         return buyOffer != null ? buyer.get().getStation() : null;
     }
 
+    public double getCredit(){
+        return getCount() * getOffer().getPrice();
+    }
+
+    public double getDebet(){
+        OfferModel buyOffer = getBuyOffer();
+        return buyOffer != null ? getCount() * getBuyOffer().getPrice() : 0;
+    }
+
+
     public double getProfit() {
         return profitProperty().get();
     }

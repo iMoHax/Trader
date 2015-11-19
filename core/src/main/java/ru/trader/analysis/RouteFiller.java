@@ -514,4 +514,35 @@ public class RouteFiller {
         }
         return reserves;
     }
+
+    public static Collection<RouteReserve> changeReserves(final Route route, final int fromIndex, final Offer buyOffer, Collection<RouteReserve> oldReserves){
+        List<RouteReserve> reserves = new ArrayList<>();
+        int need = 0;
+        for (RouteReserve r : oldReserves) {
+            if (r.getFromIndex() > fromIndex){
+                need += r.getOrder().getCount();
+            }
+        }
+        int newEndIndex;
+        if (need > 0){
+            for (RouteReserve r : getReserves(route, fromIndex, buyOffer)) {
+                if (need <= 0) break;
+                if (r.getOrder().getCount() >= need){
+                    r.getOrder().setCount(need);
+                }
+                reserves.add(r);
+                need -= r.getOrder().getCount();
+            }
+            newEndIndex = reserves.get(0).getToIndex();
+        } else {
+            newEndIndex = route.find(buyOffer.getVendor(), fromIndex);
+        }
+        for (RouteReserve r : oldReserves) {
+            if (r.getFromIndex() <= fromIndex){
+                RouteReserve reserve = new RouteReserve(r.getOrder(), r.getFromIndex(), newEndIndex);
+                reserves.add(reserve);
+            }
+        }
+        return reserves;
+    }
 }
