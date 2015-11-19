@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -248,6 +249,15 @@ public class Screeners {
         dialog.setContentText(content);
         return dialog.showAndWait();
     }
+
+    public static void showInfo(String title, String header, String message){
+        Alert dialog = new Alert(Alert.AlertType.INFORMATION);
+        dialog.setTitle(title);
+        dialog.setHeaderText(header);
+        dialog.setContentText(message);
+        dialog.showAndWait();
+    }
+
 
     public static void showHelper(){
         helperController.show(helperScreen, false);
