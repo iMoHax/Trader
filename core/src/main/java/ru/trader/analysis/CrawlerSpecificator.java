@@ -15,6 +15,7 @@ public class CrawlerSpecificator {
     private final Collection<Offer> offers;
     private int groupCount;
     private boolean byTime;
+    private boolean fullScan;
 
     public CrawlerSpecificator() {
         any = new HashSet<>();
@@ -22,10 +23,19 @@ public class CrawlerSpecificator {
         containsAny = new HashSet<>();
         offers = new ArrayList<>();
         byTime = false;
+        fullScan = true;
     }
 
     public void setByTime(boolean byTime){
         this.byTime = byTime;
+    }
+
+    public void setFullScan(boolean fullScan) {
+        this.fullScan = fullScan;
+    }
+
+    public boolean isFullScan() {
+        return fullScan;
     }
 
     public void all(Collection<Vendor> vendors){

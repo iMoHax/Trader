@@ -86,6 +86,7 @@ public class RouteSearcher {
         VendorsCrawlerSpecification specification = specificator.build(vendors, collector::add);
         Crawler<Vendor> crawler = vGraph.crawler(specification, callback);
         int lands = Math.max(scorer.getProfile().getLands(), specification.getMinLands());
+        if (!specificator.isFullScan()) lands = specificator.getMinHop();
         crawler.setMaxSize(lands);
         crawler.findMin(target, count);
         return collector.get();
@@ -108,6 +109,7 @@ public class RouteSearcher {
         crawler.findMin(source, vendors.size());
         specification = specificator.build(vendors, collector::add, new RouteSpecificationByTarget<>(source), false);
         lands = Math.max(scorer.getProfile().getLands(), specification.getMinLands());
+        if (!specificator.isFullScan()) lands = specificator.getMinHop();
         crawler = vGraph.crawler(specification, callback);
         crawler.setMaxSize(lands);
         crawler.findMin(source, 1);
