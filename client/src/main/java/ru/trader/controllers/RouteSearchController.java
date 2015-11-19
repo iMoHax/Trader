@@ -28,6 +28,8 @@ public class RouteSearchController {
     @FXML
     private CheckBox cbFast;
     @FXML
+    private CheckBox cbFullScan;
+    @FXML
     private ListView<MissionModel> missionsList;
     @FXML
     private MissionsController missionsController;
@@ -102,6 +104,7 @@ public class RouteSearchController {
 
         CrawlerSpecificator specificator = new CrawlerSpecificator();
         specificator.setByTime(cbFast.isSelected());
+        specificator.setFullScan(cbFullScan.isSelected());
         missionsList.getItems().forEach(m -> m.toSpecification(specificator));
         market.getRoutes(f, fS, t, tS, profile.getBalance(), specificator, routes -> {
             Optional<RouteModel> path = Screeners.showRouters(routes);

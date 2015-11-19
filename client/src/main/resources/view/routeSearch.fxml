@@ -21,6 +21,7 @@
                     <Button minWidth="30" onAction="#loop"><graphic><Glyph text="FontAwesome|RETWEET"/></graphic></Button>
                 </HBox>
                 <CheckBox fx:id="cbFast" text="%router.pane.route.fast"/>
+                <CheckBox fx:id="cbFullScan" selected="true" text="Глубокий поиск"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER">
                 <Button prefWidth="80" text="%router.button.search" onAction="#search" />
