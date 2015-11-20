@@ -32,6 +32,15 @@ public interface Traversal<T> {
         return s;
     }
 
+    default long getTime(){
+        Edge<T> edge = this.getEdge();
+        long t = edge != null ? edge.getTime() : 0;
+        if (this.getHead().isPresent()){
+            t += getHead().get().getTime();
+        }
+        return t;
+    }
+
     @SuppressWarnings("unchecked")
     default List<Edge<T>> toEdges(){
         int s = size();
@@ -46,6 +55,22 @@ public interface Traversal<T> {
             i--;
         }
         return Arrays.asList(res);
+    }
+
+    @SuppressWarnings("unchecked")
+    default List<Traversal<T>> toList(){
+        int s = size();
+        Traversal<T>[] res = new Traversal[s];
+        int i = s - 1;
+        Traversal<T> entry = this;
+        while (i >= 0){
+            res[i]=entry;
+            if (i > 0)
+                entry = entry.getHead().get();
+            i--;
+        }
+        return Arrays.asList(res);
+
     }
 
     default Iterator<Edge<T>> routeIterator(){

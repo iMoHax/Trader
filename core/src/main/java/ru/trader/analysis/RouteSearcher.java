@@ -85,8 +85,10 @@ public class RouteSearcher {
         RouteCollector collector = new RouteCollector();
         VendorsCrawlerSpecification specification = specificator.build(vendors, collector::add);
         Crawler<Vendor> crawler = vGraph.crawler(specification, callback);
-        int lands = Math.max(scorer.getProfile().getLands(), specification.getMinLands());
-        if (!specificator.isFullScan()) lands = specificator.getMinHop();
+        int lands = specification.getMinLands();
+        if (specificator.isFullScan()){
+            lands = Math.max(scorer.getProfile().getLands(), lands);
+        }
         crawler.setMaxSize(lands);
         crawler.findMin(target, count);
         return collector.get();
@@ -103,13 +105,18 @@ public class RouteSearcher {
         specificator.setGroupCount(vendors.size());
 
         VendorsCrawlerSpecification specification = specificator.build(vendors, collector::add, new LoopRouteSpecification<>(true), true);
-        int lands = Math.max(scorer.getProfile().getLands(), specification.getMinLands());
+        int lands = specification.getMinLands();
+        if (specificator.isFullScan()){
+            lands = Math.max(scorer.getProfile().getLands(), lands);
+        }
         Crawler<Vendor> crawler = vGraph.crawler(specification, callback);
         crawler.setMaxSize(lands);
         crawler.findMin(source, vendors.size());
         specification = specificator.build(vendors, collector::add, new RouteSpecificationByTarget<>(source), false);
-        lands = Math.max(scorer.getProfile().getLands(), specification.getMinLands());
-        if (!specificator.isFullScan()) lands = specificator.getMinHop();
+        lands = specification.getMinLands();
+        if (specificator.isFullScan()){
+            lands = Math.max(scorer.getProfile().getLands(), lands);
+        }
         crawler = vGraph.crawler(specification, callback);
         crawler.setMaxSize(lands);
         crawler.findMin(source, 1);

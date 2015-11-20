@@ -6,23 +6,43 @@ import ru.trader.analysis.graph.Traversal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 public class RouteSpecificationByPair<T> implements RouteSpecification<T> {
     protected final Collection<T> first;
     protected final T second;
+    protected final long time;
     private boolean checkSecond;
 
     public RouteSpecificationByPair(T first, T second) {
+        this(first, second, Long.MAX_VALUE);
+    }
+
+    public RouteSpecificationByPair(T first, T second, long time) {
         this.first = new ArrayList<>();
         this.first.add(first);
         this.second = second;
+        this.time = time;
         checkSecond = true;
     }
 
     public RouteSpecificationByPair(Collection<T> first, T second) {
+        this(first, second, Long.MAX_VALUE);
+    }
+
+    public RouteSpecificationByPair(Collection<T> first, T second, long time) {
         this.first = new ArrayList<>(first);
         this.second = second;
+        this.time = time;
         checkSecond = true;
+    }
+
+    private boolean checkTime(){
+        return time < Long.MAX_VALUE;
+    }
+
+    protected void remove(){
+        checkSecond = false;
     }
 
     @Override
@@ -32,6 +52,7 @@ public class RouteSpecificationByPair<T> implements RouteSpecification<T> {
 
     @Override
     public boolean content(Edge<T> edge, Traversal<T> entry) {
+        if (checkTime() && edge.getTime() + entry.getTime() > time) return false;
         T obj = edge.getTarget().getEntry();
         return second.equals(obj) || first.contains(obj);
     }
@@ -47,51 +68,35 @@ public class RouteSpecificationByPair<T> implements RouteSpecification<T> {
     }
 
     private int searchPair(Edge<T> edge, Traversal<T> entry){
-        T obj = edge.getTarget().getEntry();
         int fIndex = -1;
         int sIndex = -1;
-        if (first.contains(obj)){
-            fIndex = 0;
-        }
-        if (second.equals(obj)){
-            sIndex = 0;
-        }
-        if (sIndex != -1 && fIndex >= sIndex) return 0;
-
-        Iterator<Edge<T>> iterator = entry.routeIterator();
-        int i = 1;
-        while (iterator.hasNext()){
-            obj = iterator.next().getTarget().getEntry();
-            if (sIndex == -1 && second.equals(obj)){
+        List<Traversal<T>> entries = entry.toList();
+        int max = entries.size();
+        for (int i = 0; i < max; i++) {
+            Traversal<T> e = entries.get(i);
+            T target = e.getTarget().getEntry();
+            if (second.equals(target)){
+                if (checkTime() && e.getTime() > time) return checkSecond ? 2 : 1;
                 sIndex = i;
             }
-            if (sIndex != -1 && fIndex >= sIndex){
+            if (sIndex != -1 && fIndex != -1 && fIndex <= sIndex){
                 return 0;
             }
-            if (first.contains(obj)){
+            if (fIndex == -1 && first.contains(target)){
                 fIndex = i;
             }
-            i++;
+        }
+        T obj = edge.getTarget().getEntry();
+        if (fIndex == -1 && first.contains(obj)){
+            fIndex = max;
+        }
+        if (second.equals(obj)){
+            if (checkTime() && edge.getTime() + entry.getTime() > time) return checkSecond ? 2 : 1;
+            sIndex = max;
         }
         if (fIndex == -1) return checkSecond ? 2 : 1;
-        if (sIndex == -1) return 1;
-        return fIndex >= sIndex ? 0 : 1;
+        if (sIndex == -1) return checkSecond ? 1 : 0;
+        return fIndex <= sIndex ? 0 : 1;
     }
 
-
-    @Override
-    public void onAnd(RouteSpecification<T> other) {
-        if (other instanceof RouteSpecificationByTarget){
-            if (checkSecond){
-                T otherTarget = ((RouteSpecificationByTarget<T>)other).target;
-                checkSecond = !second.equals(otherTarget);
-            }
-        } else
-        if (other instanceof RouteSpecificationByPair){
-            RouteSpecificationByPair<T> os = (RouteSpecificationByPair<T>)other;
-            if (checkSecond && os.checkSecond){
-                checkSecond = !second.equals(os.second);
-            }
-        }
-    }
 }

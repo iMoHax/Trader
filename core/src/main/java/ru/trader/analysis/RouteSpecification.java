@@ -14,7 +14,7 @@ public interface RouteSpecification<T> {
     public default boolean updateMutated(){return false;}
     public default boolean mutable(){return false;}
     public default void update(Traversal<T> entry){}
-    public default void onAnd(RouteSpecification<T> other){}
+    public default void onAnd(RouteSpecification<T> other){RouteSpecificationMixer.andMix(this, other);}
     public default void onOr(RouteSpecification<T> other){}
 
     default RouteSpecification<T> and(final RouteSpecification<T> other){

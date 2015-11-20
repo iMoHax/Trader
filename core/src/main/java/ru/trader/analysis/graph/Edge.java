@@ -33,6 +33,10 @@ public abstract class Edge<T> implements Comparable<Edge>{
         return target.getEntry().equals(other);
     }
 
+    public long getTime(){
+        return 1;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -199,7 +199,7 @@ public class CrawlerSpecificatorTest extends Assert{
         VendorsCrawlerSpecification spec = specificator.build(vendors, edges -> {paths.add(RouteSearcher.toRoute(edges, vGraph.getScorer()));});
 
         Crawler<Vendor> crawler = vGraph.crawler(spec, new AnalysisCallBack());
-        crawler.setMaxSize(7);
+        crawler.setMaxSize(spec.getMinLands());
         crawler.findMin(ithaca_st, 10);
         assertEquals(10, paths.size());
         for (Route path : paths) {

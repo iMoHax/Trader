@@ -51,6 +51,7 @@ public class VendorsCrawler extends Crawler<Vendor> {
     protected class VendorsTraversalEntry extends CostTraversalEntry {
         private final double fuel;
         private final double balance;
+        private Long time;
 
         protected VendorsTraversalEntry(CostTraversalEntry entry, double fuel, double balance) {
             super(entry.getTarget());
@@ -101,6 +102,13 @@ public class VendorsCrawler extends Crawler<Vendor> {
             return weight;
         }
 
+        @Override
+        public long getTime() {
+            if (time == null){
+                time = super.getTime();
+            }
+            return time;
+        }
 
         private Vendor findMarket(){
             Optional<Traversal<Vendor>> head = getHead();
@@ -171,6 +179,7 @@ public class VendorsCrawler extends Crawler<Vendor> {
             return profitByTonne;
         }
 
+        @Override
         public long getTime() {
             if (time == null){
                 time = computeTime();
