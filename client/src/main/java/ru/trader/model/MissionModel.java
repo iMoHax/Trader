@@ -14,22 +14,24 @@ public class MissionModel {
     private final long count;
     private final double profit;
     private final Offer offer;
+    private final Long time;
     private long need;
     private Collection<RouteReserve> reserves;
 
-    public MissionModel(StationModel target, double profit) {
-        this(target, null, 0, profit);
+    public MissionModel(StationModel target, long time, double profit) {
+        this(target, null, 0, time, profit);
     }
 
-    public MissionModel(StationModel target, long count, double profit) {
-        this(target, null, count, profit);
+    public MissionModel(StationModel target, long count, long time, double profit) {
+        this(target, null, count, time, profit);
     }
 
 
-    public MissionModel(StationModel target, ItemModel item, long count, double profit) {
+    public MissionModel(StationModel target, ItemModel item, long count, long time, double profit) {
         this.target = target;
         this.item = item;
         this.count = count;
+        this.time = time;
         this.profit = profit;
         if (item != null) {
             offer = SimpleOffer.fakeBuy(ModelFabric.get(target), ModelFabric.get(item), profit / count, count);
@@ -44,6 +46,7 @@ public class MissionModel {
         this.target = mission.target;
         this.item = mission.item;
         this.count = mission.count;
+        this.time = mission.time;
         this.profit = mission.profit;
         this.offer = mission.offer;
         this.need = mission.need;
@@ -93,6 +96,7 @@ public class MissionModel {
                 "target=" + target +
                 ", item=" + item +
                 ", count=" + count +
+                ", time=" + time +
                 ", profit=" + profit +
                 "} ";
     }
@@ -100,13 +104,16 @@ public class MissionModel {
     public void toSpecification(CrawlerSpecificator specificator){
         if (isSupply()){
             if (isCompleted()){
-                specificator.add(ModelFabric.get(target), true);
+                if (time == 0) specificator.add(ModelFabric.get(target), true);
+                 else specificator.add(ModelFabric.get(target), time, true);
             } else {
-                specificator.buy(offer);
+                if (time == 0) specificator.buy(offer);
+                 else specificator.buy(offer, time);
             }
         } else
         if (isCourier() || isDelivery()){
-            specificator.add(ModelFabric.get(target), true);
+            if (time == 0) specificator.add(ModelFabric.get(target), true);
+             else specificator.add(ModelFabric.get(target), time, true);
         }
     }
 
@@ -148,6 +155,7 @@ public class MissionModel {
         MissionModel that = (MissionModel) o;
         return Objects.equals(count, that.count) &&
                 Objects.equals(profit, that.profit) &&
+                Objects.equals(time, that.time) &&
                 Objects.equals(target, that.target) &&
                 Objects.equals(item, that.item);
     }

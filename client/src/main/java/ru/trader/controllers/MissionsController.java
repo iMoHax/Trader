@@ -24,6 +24,8 @@ public class MissionsController {
     @FXML
     private NumberField quantity;
     @FXML
+    private NumberField leftTime;
+    @FXML
     private NumberField reward;
     @FXML
     private ToggleButton courierBtn;
@@ -52,6 +54,7 @@ public class MissionsController {
                 starportText.setDisable(false);
                 cargo.setDisable(true);
                 quantity.setDisable(true);
+                leftTime.setDisable(false);
                 reward.setDisable(false);
             } else
             if (deliveryBtn.equals(n)){
@@ -59,6 +62,7 @@ public class MissionsController {
                 starportText.setDisable(false);
                 cargo.setDisable(true);
                 quantity.setDisable(false);
+                leftTime.setDisable(false);
                 reward.setDisable(false);
             } else
             if (supplyBtn.equals(n)){
@@ -69,12 +73,14 @@ public class MissionsController {
                 starportText.setDisable(false);
                 cargo.setDisable(false);
                 quantity.setDisable(false);
+                leftTime.setDisable(false);
                 reward.setDisable(false);
             } else {
                 missionType = null;
                 starportText.setDisable(true);
                 cargo.setDisable(true);
                 quantity.setDisable(true);
+                leftTime.setDisable(true);
                 reward.setDisable(true);
             }
         });
@@ -108,14 +114,15 @@ public class MissionsController {
         StationModel station = starport.getValue();
         ItemModel item = cargo.getValue();
         long count = quantity.getValue().longValue();
+        long time = leftTime.getValue().longValue();
         double profit = reward.getValue().doubleValue();
         if (station != null && profit > 0){
             switch (missionType){
-                case COURIER: missions.add(new MissionModel(station, profit));
+                case COURIER: missions.add(new MissionModel(station, time, profit));
                     break;
-                case DELIVERY: if (count > 0) missions.add(new MissionModel(station, count, profit));
+                case DELIVERY: if (count > 0) missions.add(new MissionModel(station, count, time, profit));
                     break;
-                case SUPPLY: if (item != null && count > 0) missions.add(new MissionModel(station, item, count, profit));
+                case SUPPLY: if (item != null && count > 0) missions.add(new MissionModel(station, item, count, time,profit));
                     break;
             }
         }
