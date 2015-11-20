@@ -56,6 +56,10 @@ public class FilteredMarket {
         return vendor instanceof TransitVendor;
     }
 
+    public Stream<Vendor> getMarkets(){
+        return getMarkets(false);
+    }
+
     public Stream<Vendor> getMarkets(boolean withTransit){
         Predicate<Vendor> transitOrMarket = v -> withTransit && isTransit(v) || isMarket(v);
         if (disableFilter){
