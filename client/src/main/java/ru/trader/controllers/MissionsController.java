@@ -13,6 +13,8 @@ import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.StationsProvider;
 
+import java.time.Duration;
+
 
 public class MissionsController {
 
@@ -114,7 +116,7 @@ public class MissionsController {
         StationModel station = starport.getValue();
         ItemModel item = cargo.getValue();
         long count = quantity.getValue().longValue();
-        long time = leftTime.getValue().longValue();
+        Duration time = Duration.ofSeconds(leftTime.getValue().longValue());
         double profit = reward.getValue().doubleValue();
         if (station != null && profit > 0){
             switch (missionType){

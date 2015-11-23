@@ -5,6 +5,10 @@ import ru.trader.analysis.RouteReserve;
 import ru.trader.core.Offer;
 import ru.trader.store.simple.SimpleOffer;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -14,24 +18,24 @@ public class MissionModel {
     private final long count;
     private final double profit;
     private final Offer offer;
-    private final Long time;
+    private final LocalDateTime time;
     private long need;
     private Collection<RouteReserve> reserves;
 
-    public MissionModel(StationModel target, long time, double profit) {
-        this(target, null, 0, time, profit);
+    public MissionModel(StationModel target, Duration duration, double profit) {
+        this(target, null, 0, duration, profit);
     }
 
-    public MissionModel(StationModel target, long count, long time, double profit) {
-        this(target, null, count, time, profit);
+    public MissionModel(StationModel target, long count, Duration duration, double profit) {
+        this(target, null, count, duration, profit);
     }
 
 
-    public MissionModel(StationModel target, ItemModel item, long count, long time, double profit) {
+    public MissionModel(StationModel target, ItemModel item, long count, Duration duration, double profit) {
         this.target = target;
         this.item = item;
         this.count = count;
-        this.time = time;
+        this.time = LocalDateTime.now().plus(duration);
         this.profit = profit;
         if (item != null) {
             offer = SimpleOffer.fakeBuy(ModelFabric.get(target), ModelFabric.get(item), profit / count, count);
@@ -83,14 +87,15 @@ public class MissionModel {
 
     @Override
     public String toString() {
+        String t = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).format(time);
         if (isDelivery()){
-            return String.format("Deliver %d items to %s", count, target.getName());
+            return String.format("Deliver %d items to %s at %s", count, target.getName(), t);
         }
         if (isCourier()){
-            return String.format("Deliver message to %s", target.getName());
+            return String.format("Deliver message to %s at %s", target.getName(), t);
         }
         if (isSupply()){
-            return String.format("Supply %d %s to %s", count, item.getName(), target.getName());
+            return String.format("Supply %d %s to %s at %s", count, item.getName(), target.getName(), t);
         }
         return "MissionModel{" +
                 "target=" + target +
@@ -102,18 +107,19 @@ public class MissionModel {
     }
 
     public void toSpecification(CrawlerSpecificator specificator){
+        long interval = Duration.between(LocalDateTime.now(), time).getSeconds();
         if (isSupply()){
             if (isCompleted()){
-                if (time == 0) specificator.add(ModelFabric.get(target), true);
-                 else specificator.add(ModelFabric.get(target), time, true);
+                if (interval <= 0) specificator.add(ModelFabric.get(target), true);
+                 else specificator.add(ModelFabric.get(target), interval, true);
             } else {
-                if (time == 0) specificator.buy(offer);
-                 else specificator.buy(offer, time);
+                if (interval <= 0) specificator.buy(offer);
+                 else specificator.buy(offer, interval);
             }
         } else
         if (isCourier() || isDelivery()){
-            if (time == 0) specificator.add(ModelFabric.get(target), true);
-             else specificator.add(ModelFabric.get(target), time, true);
+            if (interval <= 0) specificator.add(ModelFabric.get(target), true);
+             else specificator.add(ModelFabric.get(target), interval, true);
         }
     }
 
