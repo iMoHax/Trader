@@ -6,6 +6,7 @@
 <?import ru.trader.view.support.cells.ItemListCell?>
 <?import ru.trader.view.support.ItemStringConverter?>
 <?import ru.trader.view.support.NumberField?>
+<?import ru.trader.view.support.DurationField?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="ru.trader.controllers.MissionsController"
           hgap="10" vgap="5">
@@ -43,7 +44,7 @@
     <Label GridPane.rowIndex="3" text="%missions.label.quantity"/>
     <NumberField fx:id="quantity" GridPane.rowIndex="3" GridPane.columnIndex="1" value="0"/>
     <Label GridPane.rowIndex="4" text="%missions.label.leftTime"/>
-    <NumberField fx:id="leftTime" GridPane.rowIndex="4" GridPane.columnIndex="1" value="0" />
+    <DurationField fx:id="leftTime" GridPane.rowIndex="4" GridPane.columnIndex="1" />
     <Label GridPane.rowIndex="5" text="%missions.label.reward"/>
     <NumberField fx:id="reward" GridPane.rowIndex="5" GridPane.columnIndex="1" value="0" />
 </GridPane>

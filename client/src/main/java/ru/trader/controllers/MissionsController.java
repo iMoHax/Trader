@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import ru.trader.model.*;
+import ru.trader.view.support.DurationField;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
@@ -26,7 +27,7 @@ public class MissionsController {
     @FXML
     private NumberField quantity;
     @FXML
-    private NumberField leftTime;
+    private DurationField leftTime;
     @FXML
     private NumberField reward;
     @FXML
@@ -116,7 +117,7 @@ public class MissionsController {
         StationModel station = starport.getValue();
         ItemModel item = cargo.getValue();
         long count = quantity.getValue().longValue();
-        Duration time = Duration.ofSeconds(leftTime.getValue().longValue());
+        Duration time = leftTime.getValue();
         double profit = reward.getValue().doubleValue();
         if (station != null && profit > 0){
             switch (missionType){
@@ -124,7 +125,7 @@ public class MissionsController {
                     break;
                 case DELIVERY: if (count > 0) missions.add(new MissionModel(station, count, time, profit));
                     break;
-                case SUPPLY: if (item != null && count > 0) missions.add(new MissionModel(station, item, count, time,profit));
+                case SUPPLY: if (item != null && count > 0) missions.add(new MissionModel(station, item, count, time, profit));
                     break;
             }
         }
