@@ -516,6 +516,14 @@ public class Crawler<T> {
             return true;
         }
 
+        private boolean checkLimit(CostTraversalEntry entry, double nextLimit){
+            return !Double.isNaN(limit) && nextLimit >= limit && (entry.size() >= SPLIT_SIZE || nextLimit - limit > 1);
+        }
+
+        private double computeLimit(CostTraversalEntry entry){
+            return entry.getWeight();
+        }
+
         private void search(){
             curr = root;
             LOG.trace("Start {}", root);
@@ -537,14 +545,18 @@ public class Crawler<T> {
                         nextEntry.sort();
                     }
                     curr = new CTEntrySupport(curr, nextEntry);
+                    double nextLimit = computeLimit(nextEntry);
+                    boolean stop = checkLimit(nextEntry, nextLimit);
                     if (isTarget){
                         LOG.trace("Found, add entry {} to queue", nextEntry);
                         targets.add(curr);
-                        limit = Double.isNaN(limit) ? nextEntry.getWeight() : Math.min(limit, nextEntry.getWeight());
+                        if (Double.isNaN(limit) || nextLimit < limit){
+                            limit = nextLimit;
+                        }
                         levelUp();
                     } else {
                         if (skip()) continue;
-                        if (!Double.isNaN(limit) && nextEntry.getWeight() >= limit){
+                        if (stop){
                             LOG.trace("Not found, limit {}, add entry {} to queue", limit, nextEntry);
                             queue.add(curr);
                             levelUp();
