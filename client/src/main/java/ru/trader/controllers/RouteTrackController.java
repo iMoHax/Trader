@@ -194,7 +194,11 @@ public class RouteTrackController {
                     RouteModel newRoute = route.set(startIndex, path.get());
                     newRoute.addAll(startIndex, notAdded);
                     newRoute.addAll(startIndex, oldMissions);
-                    setRoute(newRoute);
+                    if (MainController.getProfile().getRoute() == route){
+                        MainController.getProfile().setRoute(newRoute);
+                    } else {
+                        setRoute(newRoute);
+                    }
                 }
             });
         } else {
