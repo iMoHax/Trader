@@ -103,7 +103,8 @@ public class SettingsController {
         edceActive.setSelected(Main.SETTINGS.edce().isActive());
         edceInterval.setValue(Main.SETTINGS.edce().getInterval());
 
-        completeKeyText.setText(ViewUtils.keyToString(Main.SETTINGS.helper().getCompleteKey()));
+        completeKey = Main.SETTINGS.helper().getCompleteKey();
+        completeKeyText.setText(ViewUtils.keyToString(completeKey));
     }
 
     private void createDialog(Parent owner, Parent content){
