@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TableView;
+import ru.trader.Main;
 import ru.trader.model.RouteModel;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.view.support.Localization;
@@ -79,5 +80,14 @@ public class PathsController {
     public RouteModel getPath(){
         return tblPaths.getSelectionModel().getSelectedItem();
     }
+
+    @FXML
+    private void copyToClipboard(){
+        RouteModel route = getPath();
+        if (route != null){
+            Main.copyToClipboard(route.asString());
+        }
+    }
+
 
 }

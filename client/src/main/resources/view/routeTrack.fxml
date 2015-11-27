@@ -59,6 +59,7 @@
                     <Button onAction="#addEntry"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
                     <Button onAction="#setActive"><graphic><Glyph text="FontAwesome|MAP_MARKER"/></graphic></Button>
                     <Button onAction="#clear"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
+                    <Button onAction="#copyToClipboard"><graphic><Glyph text="FontAwesome|COPY"/></graphic></Button>
                 </HBox>
             </VBox>
         </VBox>

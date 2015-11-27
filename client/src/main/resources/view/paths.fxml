@@ -47,5 +47,12 @@
         <sortOrder>
             <fx:reference source="profitByTime"/>
         </sortOrder>
+        <contextMenu>
+            <ContextMenu>
+                <items>
+                    <MenuItem text="%dialog.button.copy" onAction="#copyToClipboard" />
+                </items>
+            </ContextMenu>
+        </contextMenu>
     </TableView>
 </HBox>

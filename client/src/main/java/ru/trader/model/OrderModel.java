@@ -6,6 +6,7 @@ import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import ru.trader.core.Order;
 import ru.trader.model.support.ModelBindings;
+import ru.trader.view.support.Localization;
 
 import java.util.List;
 
@@ -163,6 +164,10 @@ public class OrderModel {
             distance = new SimpleDoubleProperty(buyer!=null ? getStation().getDistance(buyer) : Double.NaN);
         }
         return distance;
+    }
+
+    public String asString(){
+        return String.format(Localization.getString("market.order.text.format"), getOffer().getItem().getName(), getStation().getFullName(), getBuyer().getFullName());
     }
 
     public StringBinding asString(final boolean buy){

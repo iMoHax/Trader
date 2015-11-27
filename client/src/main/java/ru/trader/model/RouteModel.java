@@ -8,6 +8,8 @@ import ru.trader.analysis.RouteReserve;
 import ru.trader.core.Offer;
 import ru.trader.core.Order;
 import ru.trader.model.support.BindingsHelper;
+import ru.trader.view.support.Localization;
+import ru.trader.view.support.ViewUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -119,6 +121,10 @@ public class RouteModel {
 
     public int getLands() {
         return _route.getLands();
+    }
+
+    public double getProfitByTonne(){
+        return _route.getProfit()/_route.getCargo();
     }
 
     public double getProfit() {
@@ -465,6 +471,19 @@ public class RouteModel {
     public static RouteModel asRoute(StationModel station){
         Route route = Route.singletone(ModelFabric.get(station));
         return new RouteModel(route, station.getMarket());
+    }
+
+    public String asString(){
+        StringBuilder builder = new StringBuilder();
+        for (RouteEntryModel entry : entries) {
+            for (OrderModel order : entry.orders()) {
+                if (builder.length()>0) builder.append("\n");
+                builder.append(order.asString());
+            }
+        }
+        builder.append("\n");
+        builder.append(String.format(Localization.getString("routes.text.format"), getProfitByTonne(), ViewUtils.timeToString(getTime())));
+        return builder.toString();
     }
 
 }

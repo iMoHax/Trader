@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import ru.trader.Main;
 import ru.trader.analysis.CrawlerSpecificator;
 import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
@@ -256,6 +257,13 @@ public class RouteTrackController {
     @FXML
     private void clear(){
         setRoute(null);
+    }
+
+    @FXML
+    private void copyToClipboard(){
+        if (route != null){
+            Main.copyToClipboard(route.asString());
+        }
     }
 
     private final ChangeListener<? super Number> currentEntryListener = (ov, o, n) -> ViewUtils.doFX(() -> setIndex(n.intValue()));
