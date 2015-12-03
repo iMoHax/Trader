@@ -23,8 +23,11 @@ import ru.trader.view.support.Localization;
 import ru.trader.view.support.autocomplete.StationsProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 
 public class MarketModel {
@@ -171,16 +174,8 @@ public class MarketModel {
         return BindingsHelper.observableList(analyzer.getVendors(filter), modeler::get);
     }
 
-    public void getOrders(SystemModel from, double balance, Consumer<ObservableList<OrderModel>> result) {
-        getOrders(from, ModelFabric.NONE_STATION, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, balance, result);
-    }
-
-    public void getOrders(SystemModel from, SystemModel to, double balance, Consumer<ObservableList<OrderModel>> result) {
-        getOrders(from, ModelFabric.NONE_STATION, to, ModelFabric.NONE_STATION, balance, result);
-    }
-
-    public void getOrders(StationModel from, StationModel to, double balance, Consumer<ObservableList<OrderModel>> result) {
-        getOrders(from.getSystem(), from, to.getSystem(), to, balance, result);
+    public void getOrders(StationModel from, double balance, Consumer<ObservableList<OrderModel>> result) {
+        getOrders(ModelFabric.NONE_SYSTEM, from, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, balance, result);
     }
 
     public void getOrders(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo, double balance, Consumer<ObservableList<OrderModel>> result) {
@@ -192,6 +187,22 @@ public class MarketModel {
                 profile
         );
 
+        progress.run(task, order -> {
+            ObservableList<OrderModel> res = BindingsHelper.observableList(order, modeler::get);
+            if (Platform.isFxApplicationThread()) {
+                result.accept(res);
+            } else {
+                Platform.runLater(() -> result.accept(res));
+            }
+        });
+    }
+
+    public void getOrders(StationModel seller, Collection<StationModel> buyers, double balance, Consumer<ObservableList<OrderModel>> result) {
+        ProgressController progress = new ProgressController(Screeners.getMainScreen(), Localization.getString("analyzer.orders.title"));
+        Profile profile = Profile.clone(ModelFabric.get(MainController.getProfile()));
+        profile.setBalance(balance);
+        List<Vendor> vendors = buyers.stream().map(ModelFabric::get).collect(Collectors.toList());
+        OrdersSearchTask task = new OrdersSearchTask(this, ModelFabric.get(seller), vendors, profile);
         progress.run(task, order -> {
             ObservableList<OrderModel> res = BindingsHelper.observableList(order, modeler::get);
             if (Platform.isFxApplicationThread()) {

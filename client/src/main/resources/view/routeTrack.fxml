@@ -39,7 +39,14 @@
                 </VBox>
                 <VBox>
                     <Label text="Купить:" />
-                    <ListView fx:id="buyOrders"/>
+                    <HBox spacing="4">
+                        <ListView fx:id="buyOrders"/>
+                        <VBox spacing="4" alignment="TOP_RIGHT">
+                            <Button prefWidth="30" onAction="#addOrder"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
+                            <Button prefWidth="30" onAction="#removeOrder"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
+                            <Button prefWidth="30" onAction="#clearOrders"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
+                        </VBox>
+                    </HBox>
                 </VBox>
             </HBox>
             <VBox fx:id="missionsGroup" maxHeight="120">

@@ -162,6 +162,21 @@ public class RouteModel {
         return copyFill(route);
     }
 
+    public void add(int offset, OrderModel order){
+        _route.add(offset, ModelFabric.get(order));
+        refresh(offset);
+    }
+
+    public void remove(int offset, OrderModel order){
+        _route.remove(offset, ModelFabric.get(order));
+        refresh(offset);
+    }
+
+    public void clearOrders(int offset){
+        _route.removeAllOrders(offset);
+        refresh(offset);
+    }
+
     public RouteModel add(SystemModel system){
         RouteEntryModel last = entries.get(entries.size()-1);
         StationModel fromStation = last.getStation();
@@ -205,11 +220,7 @@ public class RouteModel {
                 _route.reserve(reserves);
                 mission.setReserves(reserves);
                 completeIndex = RouteReserve.getCompleteIndex(reserves, offset);
-                for (RouteEntryModel entry : entries) {
-                    entry.sellOrders().clear();
-                    entry.refresh(market);
-                }
-                fillSellOrders();
+                refresh();
             }
         } else
         if (mission.isDelivery()){
@@ -455,6 +466,15 @@ public class RouteModel {
         return getCurrentEntry() == entries.size()-1;
     }
 
+    private void refresh(int index){
+        RouteEntryModel entry = get(index);
+        entry.refresh(market);
+        for (RouteEntryModel e : entries) {
+            e.sellOrders().clear();
+        }
+        fillSellOrders();
+    }
+
     private void refresh(){
         for (RouteEntryModel entry : entries) {
             entry.sellOrders().clear();
@@ -463,13 +483,13 @@ public class RouteModel {
         fillSellOrders();
     }
 
-    public static RouteModel asRoute(SystemModel system){
-        Route route = Route.singletone(ModelFabric.get(system).asTransit());
+    public static RouteModel asRoute(SystemModel system, ProfileModel profile){
+        Route route = Route.singletone(ModelFabric.get(system).asTransit(), profile.getBalance(), profile.getShipCargo());
         return new RouteModel(route, system.getMarket());
     }
 
-    public static RouteModel asRoute(StationModel station){
-        Route route = Route.singletone(ModelFabric.get(station));
+    public static RouteModel asRoute(StationModel station, ProfileModel profile){
+        Route route = Route.singletone(ModelFabric.get(station), profile.getBalance(), profile.getShipCargo());
         return new RouteModel(route, station.getMarket());
     }
 

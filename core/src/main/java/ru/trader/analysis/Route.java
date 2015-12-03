@@ -3,6 +3,7 @@ package ru.trader.analysis;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.core.Order;
 import ru.trader.core.TransitVendor;
 import ru.trader.core.Vendor;
 
@@ -112,6 +113,27 @@ public class Route implements Comparable<Route> {
     public void add(RouteEntry entry){
         LOG.trace("Add entry {} to route {}", entry, this);
         entries.add(entry);
+        updateStats();
+    }
+
+    public void add(int index, Order order){
+        LOG.trace("Add order {} to route {}, index = {}", order, this, index);
+        RouteEntry entry = entries.get(index);
+        entry.add(order);
+        updateStats();
+    }
+
+    public void remove(int index, Order order){
+        LOG.trace("Remove order {} from route {}, index = {}", order, this, index);
+        RouteEntry entry = entries.get(index);
+        entry.remove(order);
+        updateStats();
+    }
+
+    public void removeAllOrders(int index){
+        LOG.trace("Remove all orders from route {}, index = {}", this, index);
+        RouteEntry entry = entries.get(index);
+        entry.clear();
         updateStats();
     }
 
@@ -313,12 +335,15 @@ public class Route implements Comparable<Route> {
         };
     }
 
-    public static Route singletone(Vendor root){
+    public static Route singletone(Vendor root, double balance, long cargo){
         RouteEntry entry = new RouteEntry(root, 0,0,0);
         if (!(root instanceof TransitVendor)){
             entry.setLand(true);
         }
-        return new Route(entry);
+        Route route = new Route(entry);
+        route.setBalance(balance);
+        route.setCargo(cargo);
+        return route;
     }
 
     public static Route clone(Route route){

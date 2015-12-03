@@ -94,6 +94,14 @@ public class RouteTrackController {
         MainController.getProfile().routeProperty().removeListener(routeListener);
     }
 
+    private void updateRoute(RouteModel newRoute){
+        if (MainController.getProfile().getRoute() == route){
+            MainController.getProfile().setRoute(newRoute);
+        } else {
+            setRoute(newRoute);
+        }
+    }
+
     public void setRoute(RouteModel route){
         if (this.route != null){
             this.route.currentEntryProperty().removeListener(currentEntryListener);
@@ -194,11 +202,7 @@ public class RouteTrackController {
                     RouteModel newRoute = route.set(startIndex, path.get());
                     newRoute.addAll(startIndex, notAdded);
                     newRoute.addAll(startIndex, oldMissions);
-                    if (MainController.getProfile().getRoute() == route){
-                        MainController.getProfile().setRoute(newRoute);
-                    } else {
-                        setRoute(newRoute);
-                    }
+                    updateRoute(newRoute);
                 }
             });
         } else {
@@ -237,19 +241,66 @@ public class RouteTrackController {
         if (!ModelFabric.isFake(toSystem)){
             if (route != null){
                 if (!ModelFabric.isFake(toStation)){
-                    setRoute(route.add(toStation));
+                    updateRoute(route.add(toStation));
                 } else {
-                    setRoute(route.add(toSystem));
+                    updateRoute(route.add(toSystem));
                 }
             } else {
                 RouteModel r;
+                ProfileModel profile = MainController.getProfile();
                 if (!ModelFabric.isFake(toStation)){
-                    r = RouteModel.asRoute(toStation);
+                    r = RouteModel.asRoute(toStation, profile);
                 } else {
-                    r = RouteModel.asRoute(toSystem);
+                    r = RouteModel.asRoute(toSystem, profile);
                 }
-                setRoute(r);
+                updateRoute(r);
             }
+        }
+    }
+
+    @FXML
+    private void addOrder(){
+        if (route != null){
+            final int startIndex = trackNode.getActive();
+            RouteEntryModel entry = route.get(startIndex);
+            if (entry.isTransit()) return;
+            StationModel seller = entry.getStation();
+            if (ModelFabric.isFake(seller)) return;
+            if (startIndex != route.getJumps()){
+                Collection<StationModel> buyers = route.getStations(startIndex);
+                route.getMarket().getOrders(seller, buyers, route.getBalance(startIndex), orders -> {
+                    Optional<OrderModel> order = Screeners.showOrders(orders);
+                    if (order.isPresent()){
+                        route.add(startIndex, order.get());
+                    }
+                });
+            } else {
+                route.getMarket().getOrders(seller, route.getBalance(startIndex), orders -> {
+                    Optional<OrderModel> order = Screeners.showOrders(orders);
+                    if (order.isPresent()){
+                        updateRoute(route.add(order.get()));
+                    }
+                });
+            }
+        }
+    }
+
+    @FXML
+    private void removeOrder(){
+        if (route != null){
+            final int index = trackNode.getActive();
+            OrderModel order = buyOrders.getSelectionModel().getSelectedItem();
+            if (order != null){
+                route.remove(index, order);
+            }
+        }
+    }
+
+    @FXML
+    private void clearOrders(){
+        if (route != null){
+            final int index = trackNode.getActive();
+            route.clearOrders(index);
         }
     }
 
@@ -260,7 +311,7 @@ public class RouteTrackController {
 
     @FXML
     private void clear(){
-        setRoute(null);
+        updateRoute(null);
     }
 
     @FXML

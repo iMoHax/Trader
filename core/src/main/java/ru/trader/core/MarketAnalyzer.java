@@ -139,7 +139,7 @@ public class MarketAnalyzer {
         return res;
     }
 
-    private Collection<Order> getOrders(Collection<Vendor> sellers, Collection<Vendor> buyers, double lowProfit) {
+    public Collection<Order> getOrders(Collection<Vendor> sellers, Collection<Vendor> buyers, double lowProfit) {
         List<Order> res = new ArrayList<>();
         callback.start(sellers.size());
         for (Vendor seller : sellers) {

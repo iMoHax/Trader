@@ -94,6 +94,14 @@ public class RouteEntry {
         orders.add(fixedWrap(order));
     }
 
+    void remove(Order order){
+        orders.removeIf(o -> o.fixed && o.equals(order));
+    }
+
+    void clear(){
+        orders.removeIf(o -> o.fixed);
+    }
+
     void addAll(Collection<Order> orders){
         orders.forEach(this::add);
     }
