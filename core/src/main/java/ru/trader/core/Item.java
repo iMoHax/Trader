@@ -8,6 +8,11 @@ public interface Item extends Comparable<Item> {
     String getName();
     void setName(String name);
 
+    boolean isIllegal(FACTION faction);
+    void setIllegal(FACTION faction, boolean illegal);
+    boolean isIllegal(GOVERNMENT government);
+    void setIllegal(GOVERNMENT government, boolean illegal);
+
     Group getGroup();
 
     @Override
