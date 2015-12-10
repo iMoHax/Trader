@@ -189,7 +189,7 @@ public class RouteSearcher {
                         buyer = orders.get(0).getBuyer();
                         sellerEntry.addAll(orders);
                     } else {
-                        if (!(vendor instanceof TransitVendor)){
+                        if (!vendor.isTransit()){
                             entry.setLand(true);
                         }
                     }
@@ -203,7 +203,7 @@ public class RouteSearcher {
         }
         if (vEdge != null) {
             RouteEntry entry = new RouteEntry(vEdge.getTarget().getEntry(), 0, 0, 0);
-            if (!(entry.getVendor() instanceof TransitVendor)) entry.setLand(true);
+            if (!entry.getVendor().isTransit()) entry.setLand(true);
             if (prev != null){
                 prev.setTime(scorer.getTime(entry, prev));
             }
@@ -230,7 +230,7 @@ public class RouteSearcher {
             ConnectibleEdge<Place> edge = (ConnectibleEdge<Place>) edges.get(i);
             Vendor vendor = i == 0 ? from : edge.getSource().getEntry().asTransit();
             RouteEntry entry = new RouteEntry(vendor, edge.getRefill(), edge.getFuelCost(), 0);
-            if (i == 0) entry.setLand(!(vendor instanceof TransitVendor));
+            if (i == 0) entry.setLand(!vendor.isTransit());
             if (prev != null){
                 prev.setTime(scorer.getTime(entry, prev));
                 prev.setFullTime(prev.getTime());
@@ -239,7 +239,7 @@ public class RouteSearcher {
             prev = entry;
             if (i == edges.size()-1){
                 entry = new RouteEntry(to, 0, 0, 0);
-                entry.setLand(!(to instanceof TransitVendor));
+                entry.setLand(!to.isTransit());
                 prev.setTime(scorer.getTime(entry, prev));
                 prev.setFullTime(prev.getTime());
                 entries.add(entry);

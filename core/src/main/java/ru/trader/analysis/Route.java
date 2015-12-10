@@ -337,7 +337,7 @@ public class Route implements Comparable<Route> {
 
     public static Route singletone(Vendor root, double balance, long cargo){
         RouteEntry entry = new RouteEntry(root, 0,0,0);
-        if (!(root instanceof TransitVendor)){
+        if (!root.isTransit()){
             entry.setLand(true);
         }
         Route route = new Route(entry);
