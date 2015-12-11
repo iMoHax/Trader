@@ -5,6 +5,7 @@ import ru.trader.core.FACTION;
 import ru.trader.core.GOVERNMENT;
 import ru.trader.core.Group;
 
+import java.util.Collection;
 import java.util.EnumSet;
 
 public class SimpleItem extends AbstractItem {
@@ -39,8 +40,8 @@ public class SimpleItem extends AbstractItem {
     }
 
     @Override
-    public boolean isIllegal(FACTION faction) {
-        return fIllegals.contains(faction);
+    public Collection<FACTION> getIllegalFactions() {
+        return fIllegals;
     }
 
     @Override
@@ -50,8 +51,8 @@ public class SimpleItem extends AbstractItem {
     }
 
     @Override
-    public boolean isIllegal(GOVERNMENT government) {
-        return gIllegals.contains(government);
+    public Collection<GOVERNMENT> getIllegalGovernments() {
+        return gIllegals;
     }
 
     @Override

@@ -49,8 +49,8 @@ public class BDBItem {
         else fIllegals.remove(faction);
     }
 
-    public boolean isIllegal(FACTION faction) {
-        return fIllegals.contains(faction);
+    public Collection<FACTION> getIllegalFactions() {
+        return fIllegals;
     }
 
     public void setIllegal(GOVERNMENT government, boolean illegal) {
@@ -58,8 +58,8 @@ public class BDBItem {
         else gIllegals.remove(government);
     }
 
-    public boolean isIllegal(GOVERNMENT government) {
-        return gIllegals.contains(government);
+    public Collection<GOVERNMENT> getIllegalGovernments() {
+        return gIllegals;
     }
 
     public String getGroupId() {

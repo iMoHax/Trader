@@ -46,6 +46,7 @@ public class MarketUtils {
     public static List<Order> getOrders(Vendor seller, Vendor buyer){
         LOG.trace("Get orders from {}, to {}", seller, buyer);
         List<Order> orders = new ArrayList<>();
+        if (seller.isTransit() || buyer.isTransit()) return orders;
         for (Offer sell : seller.getAllSellOffers()) {
             Offer buy = buyer.getBuy(sell.getItem());
             if (buy != null) {

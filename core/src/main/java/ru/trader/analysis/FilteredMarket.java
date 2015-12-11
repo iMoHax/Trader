@@ -3,6 +3,7 @@ package ru.trader.analysis;
 import ru.trader.core.*;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.NavigableSet;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -52,16 +53,12 @@ public class FilteredMarket {
         return vendor.has(SERVICE_TYPE.MARKET) || vendor.has(SERVICE_TYPE.BLACK_MARKET);
     }
 
-    private boolean isTransit(Vendor vendor){
-        return vendor instanceof TransitVendor;
-    }
-
     public Stream<Vendor> getMarkets(){
         return getMarkets(false);
     }
 
     public Stream<Vendor> getMarkets(boolean withTransit){
-        Predicate<Vendor> transitOrMarket = v -> withTransit && isTransit(v) || isMarket(v);
+        Predicate<Vendor> transitOrMarket = v -> withTransit && v.isTransit() || isMarket(v);
         if (disableFilter){
             return market.getVendors().stream().filter(transitOrMarket);
         }
@@ -91,8 +88,11 @@ public class FilteredMarket {
         if (disableFilter){
             return res;
         }
-        return res.filter(o -> !filter.isFiltered(o.getVendor(), true));
+        return res.filter(o -> !filter.isFiltered(o));
     }
 
+    public FilteredVendor getFiltered(Vendor vendor){
+        return new FilteredVendor(vendor, filter.getFilter(vendor));
+    }
 
 }

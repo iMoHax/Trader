@@ -6,6 +6,8 @@ import ru.trader.core.GOVERNMENT;
 import ru.trader.core.Group;
 import ru.trader.store.berkeley.entities.BDBItem;
 
+import java.util.Collection;
+
 public class ItemProxy extends AbstractItem {
     private final BDBItem item;
     private final BDBStore store;
@@ -42,8 +44,8 @@ public class ItemProxy extends AbstractItem {
     }
 
     @Override
-    public boolean isIllegal(FACTION faction) {
-        return item.isIllegal(faction);
+    public Collection<FACTION> getIllegalFactions() {
+        return item.getIllegalFactions();
     }
 
     @Override
@@ -53,8 +55,8 @@ public class ItemProxy extends AbstractItem {
     }
 
     @Override
-    public boolean isIllegal(GOVERNMENT government) {
-        return item.isIllegal(government);
+    public Collection<GOVERNMENT> getIllegalGovernments() {
+        return item.getIllegalGovernments();
     }
 
     @Override

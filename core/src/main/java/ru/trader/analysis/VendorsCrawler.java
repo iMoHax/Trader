@@ -87,7 +87,7 @@ public class VendorsCrawler extends Crawler<Vendor> {
             } else {
                 Vendor seller = findMarket();
                 if (seller != null) {
-                    orders = MarketUtils.getOrders(seller, edge.getTarget().getEntry());
+                    orders = getScorer().getOrders(seller, edge.getTarget().getEntry());
                 }
             }
             res.setOrders(MarketUtils.getStack(orders, balance, getScorer().getProfile().getShip().getCargo()));
@@ -146,7 +146,7 @@ public class VendorsCrawler extends Crawler<Vendor> {
             if (orders == null){
                 Vendor seller = source.getEntry();
                 Vendor buyer = target.getEntry();
-                orders = MarketUtils.getOrders(seller, buyer);
+                orders = getScorer().getOrders(seller, buyer);
             }
             return orders;
         }

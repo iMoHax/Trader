@@ -2,11 +2,9 @@ package ru.trader.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.analysis.FilteredVendor;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.Properties;
+import java.util.*;
 
 public class MarketFilter {
     private final static Logger LOG = LoggerFactory.getLogger(MarketFilter.class);
@@ -16,10 +14,18 @@ public class MarketFilter {
     private double distance;
     private final EnumSet<SERVICE_TYPE> services;
     private final Collection<Vendor> excludes;
+    private final VendorFilter defaultVendorFilter;
+    private final HashMap<String, VendorFilter> customFilteredVendors;
 
     public MarketFilter() {
-        services = EnumSet.noneOf(SERVICE_TYPE.class);
-        excludes = new ArrayList<>();
+        this(new VendorFilter());
+    }
+
+    public MarketFilter(VendorFilter defaultVendorFilter) {
+        this.services = EnumSet.noneOf(SERVICE_TYPE.class);
+        this.excludes = new ArrayList<>();
+        this.customFilteredVendors = new HashMap<>();
+        this.defaultVendorFilter = defaultVendorFilter;
     }
 
     public Place getCenter() {
@@ -78,6 +84,23 @@ public class MarketFilter {
         return excludes;
     }
 
+    private String getVendorKey(Vendor vendor){
+        return vendor == null ? null : vendor.getFullName();
+    }
+
+    public void addFilter(Vendor vendor, VendorFilter vendorFilter){
+        customFilteredVendors.put(getVendorKey(vendor), vendorFilter);
+    }
+
+    public void removeFilter(Vendor vendor){
+        customFilteredVendors.remove(getVendorKey(vendor));
+    }
+
+    public VendorFilter getFilter(Vendor vendor){
+        VendorFilter filter = customFilteredVendors.get(getVendorKey(vendor));
+        return filter != null ? filter : defaultVendorFilter;
+    }
+
     public boolean isFiltered(Place place){
         return center != null && center.getDistance(place) > radius;
     }
@@ -94,6 +117,12 @@ public class MarketFilter {
             if (!vendor.has(service)) return true;
         }
         return false;
+    }
+
+    public boolean isFiltered(Offer offer){
+        if (isFiltered(offer.getVendor(), true)) return true;
+        VendorFilter filter = getFilter(offer.getVendor());
+        return filter.isFiltered(offer);
     }
 
     public static MarketFilter buildFilter(Properties values, Market market){

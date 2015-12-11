@@ -297,7 +297,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             if (orders == null){
                 Vendor seller = source.getEntry();
                 Vendor buyer = target.getEntry();
-                orders = MarketUtils.getOrders(seller, buyer);
+                orders = getScorer().getOrders(seller, buyer);
             }
             return orders;
         }
