@@ -421,11 +421,14 @@ public class RouteFiller {
         return res;
     }
 
-    private static int getLastIndex(final int fromIndex, final Offer buyOffer, final Order[] sells){
+    private static int getLastIndex(final int fromIndex, final Offer buyOffer, final Order[] sells, boolean isLoop){
         long need = buyOffer.getCount();
         for (int i = 0; i < sells.length; i++) {
             int index = i + fromIndex;
-            if (index >= sells.length) index -= sells.length;
+            if (index >= sells.length){
+                if (isLoop) index -= sells.length;
+                    else break;
+            }
             Order sell = sells[index];
             if (sell == null) continue;
             if (sell.getCount() >= need) {
@@ -465,7 +468,7 @@ public class RouteFiller {
                 this.entry = entry;
                 this.index = index;
                 this.sell = orders[index];
-                int lastIndex = getLastIndex(index, buyOffer, orders);
+                int lastIndex = getLastIndex(index, buyOffer, orders, route.isLoop());
                 if (lastIndex != -1) {
                     endIndex = route.find(buyOffer.getVendor(), lastIndex+1);
                     if (endIndex != -1) {
@@ -481,7 +484,7 @@ public class RouteFiller {
             }
 
             private boolean isSeller(){
-                return sell != null && endIndex != -1;
+                return sell != null && endIndex != -1 && (endIndex >= index || route.isLoop());
             }
 
             private double getProfit(){

@@ -308,6 +308,7 @@ public class Route implements Comparable<Route> {
     public LoopIterator loopIterator(int from){
         return new LoopIterator() {
             private final int size = entries.size() - (isLoop() ? 1 : 0);
+            private final int maxIndex = isLoop() ? size - 1 : size - from;
             private int i = -1;
 
             @Override
@@ -324,7 +325,7 @@ public class Route implements Comparable<Route> {
 
             @Override
             public boolean hasNext() {
-                return i < size-1;
+                return i < maxIndex;
             }
 
             @Override
