@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Fuel {
     private double capacity;
-    private double lvl;
+    private double level;
 
     public double getCapacity() {
         return capacity;
@@ -14,12 +14,12 @@ public class Fuel {
         this.capacity = capacity;
     }
 
-    public double getLvl() {
-        return lvl;
+    public double getLevel() {
+        return level;
     }
 
-    public void setLvl(double lvl) {
-        this.lvl = lvl;
+    public void setLevel(double level) {
+        this.level = level;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class Fuel {
         if (o == null || getClass() != o.getClass()) return false;
         Fuel fuel = (Fuel) o;
         return Objects.equals(capacity, fuel.capacity) &&
-                Objects.equals(lvl, fuel.lvl);
+                Objects.equals(level, fuel.level);
     }
 
     @Override

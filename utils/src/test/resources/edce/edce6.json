@@ -2448,11 +2448,14 @@
     "cockpitBreached": false,
     "oxygenRemaining": 450000,
     "fuel": {
-      "capacity": 16,
-      "lvl": 12.47372
-    },
-    "reserve": {
-      "lvl": 0.587228
+      "main": {
+        "level": 12.47372,
+        "capacity": 16
+      },
+      "reserve": {
+        "level": 0.587228,
+        "capacity": 1
+      }
     },
     "cargo": {
       "capacity": 0,

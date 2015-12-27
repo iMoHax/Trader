@@ -2,11 +2,14 @@ package ru.trader.edce.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class Ship {
     private String name;
-    private Fuel fuel;
+    private FuelTanks fuel;
     private Cargo cargo;
     private Map<String, List<Slot>> modules = new LinkedHashMap<>();
 
@@ -18,11 +21,11 @@ public class Ship {
         this.name = name;
     }
 
-    public Fuel getFuel() {
+    public FuelTanks getFuel() {
         return fuel;
     }
 
-    public void setFuel(Fuel fuel) {
+    public void setFuel(FuelTanks fuel) {
         this.fuel = fuel;
     }
 
@@ -43,13 +46,13 @@ public class Ship {
     }
 
     @JsonIgnore
-    public double getFuelLvl(){
-        return fuel != null ? fuel.getLvl() : 0;
+    public double getFuelLevel(){
+        return fuel != null ? fuel.getMain().getLevel() : 0;
     }
 
     @JsonIgnore
     public double getFuelCapacity(){
-        return fuel != null ? fuel.getCapacity() : 0;
+        return fuel != null ? fuel.getMain().getCapacity() : 0;
     }
 
     @JsonIgnore

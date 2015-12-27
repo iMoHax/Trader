@@ -7,7 +7,10 @@ import org.slf4j.LoggerFactory;
 import ru.trader.edce.entities.*;
 import ru.trader.edce.entities.System;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 public class ParseTest extends Assert {
@@ -68,7 +71,7 @@ public class ParseTest extends Assert {
         assertNotNull(ship);
         assertEquals("CobraMkIII", ship.getName());
         assertEquals(16, ship.getFuelCapacity(), 0.0001);
-        assertEquals(16, ship.getFuelLvl(), 0.0001);
+        assertEquals(16, ship.getFuelLevel(), 0.0001);
         assertEquals(12, ship.getCargoCapacity());
         assertEquals(8, ship.getCargoLimit());
         Module fsd = ship.getFSD();
@@ -159,7 +162,7 @@ public class ParseTest extends Assert {
         assertNotNull(ship);
         assertEquals("CobraMkIII", ship.getName());
         assertEquals(16, ship.getFuelCapacity(), 0.0001);
-        assertEquals(12.47372, ship.getFuelLvl(), 0.0001);
+        assertEquals(12.47372, ship.getFuelLevel(), 0.0001);
         assertEquals(0, ship.getCargoCapacity());
         assertEquals(0, ship.getCargoLimit());
         Module fsd = ship.getFSD();
