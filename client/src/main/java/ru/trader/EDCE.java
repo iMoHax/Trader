@@ -168,7 +168,7 @@ public class EDCE {
         if (shipyard != null){
             for (ShipyardItem ship : shipyard.getShips()) {
                 String id = Converter.getShipId(ship);
-                if (id.isEmpty()){
+                if (id == null || id.isEmpty()){
                     LOG.debug("{} is ignored, skip", ship.getName());
                     continue;
                 }
