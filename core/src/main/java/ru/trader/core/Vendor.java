@@ -85,4 +85,8 @@ public interface Vendor extends Connectable<Vendor> {
             remove(offer);
         }
     }
+
+    default boolean isTransit(){
+        return this instanceof TransitVendor;
+    }
 }

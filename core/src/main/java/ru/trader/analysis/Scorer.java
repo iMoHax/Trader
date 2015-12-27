@@ -165,4 +165,10 @@ public class Scorer {
         if (order.getProfit() <= 0) return Stream.empty();
         return Stream.of(order);
     }
+
+    public List<Order> getOrders(Vendor seller, Vendor buyer){
+        FilteredVendor fSeller = market.getFiltered(seller);
+        FilteredVendor fBuyer = market.getFiltered(buyer);
+        return MarketUtils.getOrders(fSeller, fBuyer);
+    }
 }

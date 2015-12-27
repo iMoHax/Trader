@@ -24,6 +24,12 @@ public interface Offer extends Comparable<Offer> {
         return getItem().equals(item);
     }
 
+    default boolean isIllegal(){
+        Vendor vendor = getVendor();
+        Item item = getItem();
+        return item.isIllegal(vendor);
+    }
+
     @Override
     default int compareTo(@NotNull Offer other) {
         Objects.requireNonNull(other, "Not compare with null");

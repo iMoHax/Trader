@@ -48,8 +48,6 @@ public class MainController {
     @FXML
     private ItemsController itemsController;
     @FXML
-    private RouterController routerController;
-    @FXML
     private TabPane tabs;
     @FXML
     private Tab track;
@@ -111,7 +109,6 @@ public class MainController {
     void init(){
         itemsController.init();
         offersController.init();
-        routerController.init();
         //TODO: add init all controllers
     }
 

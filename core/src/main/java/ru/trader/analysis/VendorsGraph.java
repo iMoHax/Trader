@@ -75,7 +75,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
     }
 
     private void updateVertexes(){
-        vertexes.removeIf(v -> v.getEntry() instanceof TransitVendor);
+        vertexes.removeIf(v -> v.getEntry().isTransit());
         updateLevels(root);
     }
 
@@ -124,11 +124,11 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             BuildHelper<Vendor> helper = super.createHelper(buyer);
             if (helper.isConnected()){
                 Vendor seller = vertex.getEntry();
-                if (buyer instanceof TransitVendor && (deep == 0 || seller.getPlace().equals(buyer.getPlace()))){
+                if (buyer.isTransit() && (deep == 0 || seller.getPlace().equals(buyer.getPlace()))){
                     LOG.trace("Buyer is transit of seller or is end, skipping");
                     return new BuildHelper<>(buyer, -1);
                 }
-                if (seller instanceof TransitVendor && seller.getPlace().equals(buyer.getPlace())){
+                if (seller.isTransit() && seller.getPlace().equals(buyer.getPlace())){
                     LOG.trace("Seller is transit of buyer, skipping");
                     return new BuildHelper<>(buyer, -1);
                 }
@@ -147,10 +147,10 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         @Override
         protected BuildEdge createEdge(BuildHelper<Vendor> helper, Vertex<Vendor> next) {
             BuildEdge cEdge = super.createEdge(helper, next);
-            if (next.getEntry() instanceof TransitVendor){
+            if (next.getEntry().isTransit()){
                 return cEdge;
             }
-            if (vertex.getEntry() instanceof TransitVendor){
+            if (vertex.getEntry().isTransit()){
                 addEdgesToHead(cEdge);
             }
             return new VendorsBuildEdge(cEdge);
@@ -158,7 +158,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
 
         private void addEdgesToHead(BuildEdge lastEdge){
             Vertex<Vendor> target = lastEdge.getTarget();
-            assert vertex.getEntry() instanceof TransitVendor && !(target.getEntry() instanceof TransitVendor);
+            assert vertex.getEntry().isTransit() && !target.getEntry().isTransit();
             VendorsGraphBuilder h = this;
             Path<Vendor> path = new Path<>(Collections.singleton(lastEdge));
             while (h != null && h.edge != null){
@@ -177,7 +177,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
                 if (!source.equals(target)){
                     addEdge(source, target, path);
                 }
-                if (!(source.getEntry() instanceof TransitVendor)){
+                if (!source.getEntry().isTransit()){
                     break;
                 }
                 h = h.head;
@@ -199,7 +199,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
                 LOG.trace("Check {}", entry);
                 if (limit >= e.getMinFuel() && limit <= e.getMaxFuel()) {
                     LOG.trace("Connect {} to {}", entry, vertex);
-                    if (vertex.getEntry() instanceof TransitVendor && !(entry instanceof TransitVendor)) {
+                    if (vertex.getEntry().isTransit() && !entry.isTransit()) {
                         addCheckedEdgesToHead(e);
                     }
                 }
@@ -208,7 +208,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
 
         private void addCheckedEdgesToHead(VendorsBuildEdge lastEdge){
             Vertex<Vendor> target = lastEdge.getTarget();
-            assert vertex.getEntry() instanceof TransitVendor && !(target.getEntry() instanceof TransitVendor);
+            assert vertex.getEntry().isTransit() && !target.getEntry().isTransit();
             List<Path<Vendor>> paths = lastEdge.paths;
             int i = 1;
             Path<Vendor> path = paths != null ? paths.get(0) : new Path<>(Collections.singleton((BuildEdge)lastEdge));
@@ -232,7 +232,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
                         if (!source.equals(target)){
                             addEdge(source, target, path);
                         }
-                        if (!(source.getEntry() instanceof TransitVendor)){
+                        if (!source.getEntry().isTransit()){
                             break;
                         }
                         h = h.head;
@@ -256,7 +256,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         @Override
         protected void addSubTask(Edge<Vendor> edge, double nextLimit) {
             Vertex<Vendor> next = edge.getTarget();
-            if (next.getLevel() >= deep && next.getEntry() instanceof TransitVendor) {
+            if (next.getLevel() >= deep && next.getEntry().isTransit()) {
                 if (deep > 0){
                     VendorsGraphBuilder task = new VendorsGraphBuilder(this, (BuildEdge) edge, set, deep - 1, nextLimit);
                     task.isAdding = true;
@@ -297,7 +297,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             if (orders == null){
                 Vendor seller = source.getEntry();
                 Vendor buyer = target.getEntry();
-                orders = MarketUtils.getOrders(seller, buyer);
+                orders = getScorer().getOrders(seller, buyer);
             }
             return orders;
         }
