@@ -205,7 +205,7 @@ public class ParseTest extends Assert {
         assertNotNull(starport);
         Shipyard shipyard = starport.getShips();
         assertNotNull(shipyard);
-        assertEquals(23, shipyard.getShips().size());
+        assertEquals(29, shipyard.getShips().size());
     }
 
 }
