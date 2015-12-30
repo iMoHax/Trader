@@ -215,18 +215,18 @@ public class MarketAnalyzer {
     }
 
     public Collection<Route> getRoutes(Place from, Place to, CrawlerSpecificator specificator){
-        specificator.any(getVendors(to));
+        specificator.targetAny(getVendors(to));
         return getRoutes(from, specificator);
     }
 
     public Collection<Route> getRoutes(Vendor from, CrawlerSpecificator specificator){
         Collection<Vendor> vendors = getVendors(specificator, false);
-        specificator.any(vendors);
+        specificator.targetAny(vendors);
         return searcher.search(from, from, getVendors(specificator, true), profile.getRoutesCount(), specificator);
     }
 
     public Collection<Route> getRoutes(Vendor from, Place to, CrawlerSpecificator specificator){
-        specificator.any(getVendors(to));
+        specificator.targetAny(getVendors(to));
         return searcher.search(from, from, getVendors(specificator, true), profile.getRoutesCount(), specificator);
     }
 
