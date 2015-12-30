@@ -6,39 +6,76 @@ import ru.trader.analysis.graph.Traversal;
 import java.util.*;
 
 public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
-    protected final Collection<T> targets;
-    protected final boolean all;
-    protected final boolean targetOnly;
-    protected final long time;
+    private final Collection<T> targets;
+    private final boolean all;
+    private final boolean targetOnly;
+    private final long start;
+    private final long end;
 
-    protected RouteSpecificationByTargets(Collection<T> targets, long time, boolean all, boolean targetOnly) {
+    private RouteSpecificationByTargets(Collection<T> targets, long startTime, long endTime, boolean all, boolean targetOnly) {
         this.all = all;
         this.targetOnly = targetOnly;
         this.targets = new HashSet<>(targets);
-        this.time = time;
+        this.start = startTime;
+        this.end = endTime;
     }
 
     private boolean checkTime(){
-        return time < Long.MAX_VALUE;
+        return end < Long.MAX_VALUE;
+    }
+
+    public Collection<T> getTargets(){
+        return targets;
+    }
+
+    @Override
+    public long getStart() {
+        return start;
+    }
+
+    @Override
+    public long getEnd() {
+        return end;
+    }
+
+    public boolean isAny(){
+        return targetOnly;
+    }
+
+    public boolean isAll(){
+        return all;
+    }
+
+    public boolean isContainAny(){
+        return !targetOnly && !all;
     }
 
     @Override
     public boolean specified(Edge<T> edge, Traversal<T> entry) {
         if (targets.isEmpty()) return true;
-        if (checkTime() && targetOnly && edge.getTime() + entry.getTime() > time) return false;
+        if (checkTime()){
+            long time = edge.getTime();
+            if (targetOnly && (time < start || time > end)) return false;
+        }
         return all ? containsAll(edge, entry) == 0 : containsAny(edge, entry) == 0;
     }
 
     @Override
     public boolean content(Edge<T> edge, Traversal<T> entry) {
-        if (checkTime() && edge.getTime() + entry.getTime() > time) return false;
+        if (checkTime()){
+            long time = edge.getTime();
+            if (time < start || time > end) return false;
+        }
         return targets.contains(edge.getTarget().getEntry());
     }
 
     @Override
     public int lastFound(Edge<T> edge, Traversal<T> entry) {
         if (targets.isEmpty()) return 0;
-        if (checkTime() && targetOnly && edge.getTime() + entry.getTime() > time) return matchCount();
+        if (checkTime()){
+            long time = edge.getTime();
+            if (targetOnly && (time < start || time > end)) return matchCount();
+        }
         return all ? containsAll(edge, entry) : containsAny(edge, entry);
     }
 
@@ -50,51 +87,62 @@ public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
 
     private int containsAll(Edge<T> edge, Traversal<T> entry) {
         Collection<T> founds = new HashSet<>();
-        List<Traversal<T>> entries = entry.toList();
-        for (Traversal<T> e : entries) {
+
+        Optional<Traversal<T>> t = Optional.of(entry);
+        while (t.isPresent()){
+            Traversal<T> e = t.get();
+            t = e.getHead();
+            if (checkTime()){
+                long time = e.getTime();
+                if (time > end) continue;
+                if (time < start) break;
+            }
             T target = e.getTarget().getEntry();
             if (targets.contains(target)){
-                if (checkTime() && e.getTime() > time){
-                    return targets.size() - founds.size();
-                } else {
-                    founds.add(target);
-                }
+                founds.add(target);
             }
             if (targets.size() == founds.size()) return 0;
         }
+
         T target = edge.getTarget().getEntry();
+        if (checkTime()){
+            long time = edge.getTime();
+            if (time < start || time > end) return targets.size() - founds.size();
+        }
         if (targets.contains(target)){
-            if (checkTime() && edge.getTime() + entry.getTime() > time){
-                return targets.size() - founds.size();
-            } else {
-                founds.add(target);
-            }
+            founds.add(target);
         }
         return targets.size() - founds.size();
     }
 
     private int containsAny(Edge<T> edge, Traversal<T> entry) {
         T obj = edge.getTarget().getEntry();
-        if (targets.contains(obj)){
-            if (targetOnly){
-                if (checkTime() && edge.getTime() + entry.getTime() > time) return 1;
-                 else return 0;
-            } else {
-                return 0;
+        boolean check = true;
+        if (checkTime()){
+            long time = edge.getTime();
+            if (time < start || time > end){
+                if (targetOnly) return 1;
+                check = false;
             }
+        }
+        if (check && targets.contains(obj)){
+            return 0;
         }
         if (targetOnly){
             return 1;
         }
-        List<Traversal<T>> entries = entry.toList();
-        for (Traversal<T> e : entries) {
+        Optional<Traversal<T>> t = Optional.of(entry);
+        while (t.isPresent()){
+            Traversal<T> e = t.get();
+            t = e.getHead();
+            if (checkTime()){
+                long time = e.getTime();
+                if (time > end) continue;
+                if (time < start) break;
+            }
             T target = e.getTarget().getEntry();
             if (targets.contains(target)){
-                if (checkTime() && e.getTime() > time){
-                    return 1;
-                } else {
-                    return 0;
-                }
+                return 0;
             }
         }
         return 1;
@@ -105,7 +153,11 @@ public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
     }
 
     public static <T> RouteSpecificationByTargets<T> all(Collection<T> targets, long time){
-        return new RouteSpecificationByTargets<>(targets, time, true, false);
+        return new RouteSpecificationByTargets<>(targets, 0, time, true, false);
+    }
+
+    public static <T> RouteSpecificationByTargets<T> all(Collection<T> targets, long startTime, long endTime){
+        return new RouteSpecificationByTargets<>(targets, startTime, endTime, true, false);
     }
 
     public static <T> RouteSpecificationByTargets<T> any(Collection<T> targets){
@@ -113,7 +165,11 @@ public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
     }
 
     public static <T> RouteSpecificationByTargets<T> any(Collection<T> targets, long time){
-        return new RouteSpecificationByTargets<>(targets, time, false, true);
+        return new RouteSpecificationByTargets<>(targets, 0, time, false, true);
+    }
+
+    public static <T> RouteSpecificationByTargets<T> any(Collection<T> targets, long startTime, long endTime){
+        return new RouteSpecificationByTargets<>(targets, startTime, endTime, false, true);
     }
 
     public static <T> RouteSpecificationByTargets<T> containAny(Collection<T> targets){
@@ -121,6 +177,10 @@ public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
     }
 
     public static <T> RouteSpecificationByTargets<T> containAny(Collection<T> targets, long time){
-        return new RouteSpecificationByTargets<>(targets, time, false, false);
+        return new RouteSpecificationByTargets<>(targets, 0, time, false, false);
+    }
+
+    public static <T> RouteSpecificationByTargets<T> containAny(Collection<T> targets, long startTime, long endTime){
+        return new RouteSpecificationByTargets<>(targets, startTime, endTime, false, false);
     }
 }

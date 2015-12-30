@@ -213,4 +213,56 @@ public class CrawlerSpecificatorTest extends Assert{
         paths.clear();
     }
 
+    @Test
+    public void testMix() throws Exception {
+        LOG.info("Test Mix");
+
+        // target A = A
+        // contains A and B and C = [A&B&C]
+        // target A or B or C = [A|B|C]
+        // contains A or B or C = [A,B,C]
+        // pair A or B or C to D = [A,B,C - D]
+
+        //A & A -> A
+        //A & [A,B,C] -> A
+        //A & [B,C] -> A & [B,C]
+        //A & [A|B|C] -> A
+        //A & [A&B&C] -> A & [B&C]
+        //A & [A,B,C - D] -> A & [A,B,C - D]
+        //A & [B,C - A] -> A & [B,C]
+
+        //[A,B,C] & A -> A & [B,C]
+        //[A,B,C] & [B,C,D] -> [A,B,C,D]
+        //[A,B,C] & [B|C|D] -> [B|C] | ([A] & D)
+        //[A,B,C] & [B&C&D] -> [B&C&D]
+        //[A,B,C] & [B,C,D - E] -> [B,C - E] | ([A] & [D - E])
+        //[A,B,C] & [B,C,D - A] -> [B,C,D - A]
+
+        //[A|B|C] & A -> A
+        //[A|B|C] & [B,C,D] -> ([D] & A) | ([B|C])
+        //[A|B|C] & [B|C|D] -> [A|B|C|D]
+        //[A|B|C] & [B&C&D] -> (A & [B&C]) | (B & [C&D]) | (C & [B&D])
+        //[A|B|C] & [B,C,D - E] -> [A|B|C] & [B,C,D - E]
+        //[A|B|C] & [B,C,D - A] -> (A & [B,C,D]) | ([B|C] & [B,C,D - A])
+
+        //[A&B&C] & A -> A & [B&C]
+        //[A&B&C] & [B,C,D] -> [A&B&C]
+        //[A&B&C] & [B|C|D] -> ([A&C] & B) | ([A&B] & C) | ([A&B&C] & D)
+        //[A&B&C] & [B&C&D] -> [A&B&C&D]
+        //[A&B&C] & [B,C,D - E] -> ([A&C] & [B - E]) | ([A&B] & [C - E]) | ([A&B&C] & [D - E])
+        //[A&B&C] & [B,C,D,E - A] -> ([B&C] & [D,E - A]) | ([C] & [B - A])
+
+        //[A,B,C - D] & A -> [A,B,C - D] & A
+        //[A,B,C - D] & D -> [A,B,C] & D
+        //[A,B,C - D] & [B,C,D,E] -> [A,B,C - D]
+        //[A,B,C - F] & [B,C,D,E] -> ([A - F] & [D,E]) | [B,C - F]
+        //[A,B,C - D] & [B|C|D|E] -> ([A,B,C - D] & D) | ([A,B,C - D] & [B|C|E])
+        //[A,B,C - F] & [B|C|D|E] -> [A,B,C - F] & [B|C|D|E]
+        //[A,B,C - D] & [B&C&D&E] -> ([B - D] & [C&E]) | ([C - D] & [B&E]) | ([A - D] & [B&C&E])
+        //[A,B,C - F] & [B&C&D&E] -> ([B - F] & [C&D&E]) | ([C - F] & [B&D&E]) | ([A - F] & [B&C&D&E])
+        //[A,B,C - D] & [B,C,D - E] -> ([B,C - D - E]) | ([A - D] & [B,C - E])
+        //[A,B,C - F] & [B,C,D - F] -> [B,C - F] | ([A - D - F]) | ([D - A - F])
+
+    }
+
 }

@@ -14,162 +14,23 @@ public interface RouteSpecification<T> {
     public default boolean updateMutated(){return false;}
     public default boolean mutable(){return false;}
     public default void update(Traversal<T> entry){}
-    public default void onAnd(RouteSpecification<T> other){RouteSpecificationMixer.andMix(this, other);}
-    public default void onOr(RouteSpecification<T> other){}
+    public default long getStart(){return 0;}
+    public default long getEnd(){return Long.MAX_VALUE;}
 
     default RouteSpecification<T> and(final RouteSpecification<T> other){
-        this.onAnd(other);
-        other.onAnd(this);
-        return new RouteSpecification<T>() {
-            @Override
-            public boolean specified(Edge<T> edge, Traversal<T> entry) {
-                return RouteSpecification.this.specified(edge, entry) && other.specified(edge, entry);
-            }
-
-            @Override
-            public boolean content(Edge<T> edge, Traversal<T> entry) {
-                return RouteSpecification.this.content(edge, entry) || other.content(edge, entry);
-            }
-
-            @Override
-            public int lastFound(Edge<T> edge, Traversal<T> entry) {
-                return RouteSpecification.this.lastFound(edge, entry) + other.lastFound(edge, entry);
-            }
-
-            @Override
-            public int matchCount() {
-                return RouteSpecification.this.matchCount() + other.matchCount();
-            }
-
-            @Override
-            public boolean updateMutated() {
-                return RouteSpecification.this.updateMutated() || other.updateMutated();
-            }
-
-            @Override
-            public boolean mutable() {
-                return RouteSpecification.this.mutable() || other.mutable();
-            }
-
-            @Override
-            public void update(Traversal<T> entry) {
-                RouteSpecification.this.update(entry);
-                other.update(entry);
-            }
-
-            @Override
-            public void onAnd(RouteSpecification<T> specification) {
-                RouteSpecification.this.onAnd(specification);
-                other.onAnd(specification);
-            }
-
-            @Override
-            public void onOr(RouteSpecification<T> specification) {
-                RouteSpecification.this.onOr(specification);
-                other.onOr(specification);
-            }
-        };
+        if (other instanceof RouteSpecificationAndMixer){
+            ((RouteSpecificationAndMixer<T>) other).mix(this);
+            return other;
+        }
+        return RouteSpecificationAndMixer.mix(this, other);
     }
 
     default RouteSpecification<T> or(final RouteSpecification<T> other){
-        this.onOr(other);
-        return new RouteSpecification<T>() {
-            @Override
-            public boolean specified(Edge<T> edge, Traversal<T> entry) {
-                return RouteSpecification.this.specified(edge, entry) || other.specified(edge, entry);
-            }
-
-            @Override
-            public boolean content(Edge<T> edge, Traversal<T> entry) {
-                return RouteSpecification.this.content(edge, entry) || other.content(edge, entry);
-            }
-
-            @Override
-            public int lastFound(Edge<T> edge, Traversal<T> entry) {
-                return Math.min(RouteSpecification.this.lastFound(edge, entry), other.lastFound(edge, entry));
-            }
-
-            @Override
-            public int matchCount() {
-                return Math.min(RouteSpecification.this.matchCount(), other.matchCount());
-            }
-
-            @Override
-            public boolean updateMutated() {
-                return RouteSpecification.this.updateMutated() || other.updateMutated();
-            }
-            @Override
-            public boolean mutable() {
-                return RouteSpecification.this.mutable() || other.mutable();
-            }
-
-            @Override
-            public void update(Traversal<T> entry) {
-                RouteSpecification.this.update(entry);
-                other.update(entry);
-            }
-
-            @Override
-            public void onAnd(RouteSpecification<T> specification) {
-                RouteSpecification.this.onAnd(specification);
-                other.onAnd(specification);
-            }
-
-            @Override
-            public void onOr(RouteSpecification<T> specification) {
-                RouteSpecification.this.onOr(specification);
-                other.onOr(specification);
-            }
-
-        };
+        if (other instanceof RouteSpecificationOrMixer){
+            ((RouteSpecificationOrMixer<T>) other).mix(this);
+            return other;
+        }
+        return RouteSpecificationOrMixer.mix(this, other);
     }
 
-    default RouteSpecification<T> negate(){
-        return new RouteSpecification<T>() {
-            @Override
-            public boolean specified(Edge<T> edge, Traversal<T> entry) {
-                return !RouteSpecification.this.specified(edge, entry);
-            }
-
-
-            @Override
-            public boolean content(Edge<T> edge, Traversal<T> entry) {
-                return !RouteSpecification.this.content(edge, entry);
-            }
-
-            @Override
-            public int lastFound(Edge<T> edge, Traversal<T> entry) {
-                return RouteSpecification.this.lastFound(edge, entry);
-            }
-
-            @Override
-            public int matchCount() {
-                return RouteSpecification.this.matchCount();
-            }
-
-            @Override
-            public boolean updateMutated() {
-                return RouteSpecification.this.updateMutated();
-            }
-            @Override
-            public boolean mutable() {
-                return RouteSpecification.this.mutable();
-            }
-
-            @Override
-            public void update(Traversal<T> entry) {
-                RouteSpecification.this.update(entry);
-            }
-
-            @Override
-            public void onAnd(RouteSpecification<T> specification) {
-                RouteSpecification.this.onAnd(specification);
-            }
-
-            @Override
-            public void onOr(RouteSpecification<T> specification) {
-                RouteSpecification.this.onOr(specification);
-            }
-        };
-    }
 }

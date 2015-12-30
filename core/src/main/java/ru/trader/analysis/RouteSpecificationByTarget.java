@@ -4,34 +4,49 @@ import ru.trader.analysis.graph.Edge;
 import ru.trader.analysis.graph.Traversal;
 
 public class RouteSpecificationByTarget<T> implements RouteSpecification<T> {
-    private T target;
-    protected final long time;
+    private final T target;
+    private final long start;
+    private final long end;
 
     public RouteSpecificationByTarget(T target) {
-        this(target, Long.MAX_VALUE);
+        this(target, 0, Long.MAX_VALUE);
     }
 
     public RouteSpecificationByTarget(T target, long time) {
+        this(target, 0, time);
+    }
+
+    public RouteSpecificationByTarget(T target, long startTime, long endTime) {
         this.target = target;
-        this.time = time;
+        this.start = startTime;
+        this.end = endTime;
     }
 
     private boolean checkTime(){
-        return time < Long.MAX_VALUE;
+        return end < Long.MAX_VALUE;
     }
 
-    protected T getTarget(){
+    public T getTarget(){
         return target;
     }
 
-    protected void remove(){
-        target = null;
+    @Override
+    public long getStart(){
+        return start;
+    }
+
+    @Override
+    public long getEnd(){
+        return end;
     }
 
     @Override
     public boolean specified(Edge<T> edge, Traversal<T> entry) {
         if (target == null) return true;
-        if (checkTime() && edge.getTime() + entry.getTime() > time) return false;
+        if (checkTime()){
+            long time = edge.getTime();
+            if (time < start || time > end) return false;
+        }
         return edge.isConnect(target);
     }
 }
