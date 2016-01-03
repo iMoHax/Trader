@@ -17,9 +17,12 @@ public class Converter {
         ITEM_ID.put(128049202L, "hydrogenfuel");
         ITEM_ID.put(128049203L, "mineraloil");
         ITEM_ID.put(128049205L, "pesticides");
+        ITEM_ID.put(128672305L, "surface_stabilisers");
+        ITEM_ID.put(128672303L, "synthetic_reagents");
         ITEM_ID.put(128049241L, "clothing");
         ITEM_ID.put(128049240L, "consumertechnology");
         ITEM_ID.put(128049238L, "domesticappliances");
+        ITEM_ID.put(128672314L, "evacuation_shelter");
         ITEM_ID.put(128049177L, "algae");
         ITEM_ID.put(128049182L, "animalmeat");
         ITEM_ID.put(128049189L, "coffee");
@@ -29,20 +32,27 @@ public class Converter {
         ITEM_ID.put(128049180L, "grain");
         ITEM_ID.put(128049185L, "syntheticmeat");
         ITEM_ID.put(128049188L, "tea");
+        ITEM_ID.put(128672302L, "ceramic_composites");
+        ITEM_ID.put(128672701L, "meta_alloys");
         ITEM_ID.put(128049197L, "polymers");
         ITEM_ID.put(128049199L, "semiconductors");
         ITEM_ID.put(128049200L, "superconductors");
         ITEM_ID.put(128049214L, "beer");
+        ITEM_ID.put(128672306L, "bootleg_liquor");
         ITEM_ID.put(128049216L, "liquor");
         ITEM_ID.put(128049212L, "basicnarcotics");
         ITEM_ID.put(128049213L, "tobacco");
         ITEM_ID.put(128049215L, "wine");
         ITEM_ID.put(128064028L, "atmosphericprocessors");
+        ITEM_ID.put(128672309L, "building_fabricators");
         ITEM_ID.put(128049222L, "cropharvesters");
+        ITEM_ID.put(128672307L, "geological_equipment");
         ITEM_ID.put(128049223L, "marinesupplies");
         ITEM_ID.put(128049220L, "microbialfurnaces");
         ITEM_ID.put(128049221L, "mineralextractors");
         ITEM_ID.put(128049217L, "powergenerators");
+        ITEM_ID.put(128672313L, "skimer_components");
+        ITEM_ID.put(128672308L, "thermal_cooling_units");
         ITEM_ID.put(128049218L, "waterpurifiers");
         ITEM_ID.put(128049208L, "agriculturalmedicines");
         ITEM_ID.put(128049210L, "basicmedicines");
@@ -51,26 +61,33 @@ public class Converter {
         ITEM_ID.put(128049669L, "progenitorcells");
         ITEM_ID.put(128049176L, "aluminium");
         ITEM_ID.put(128049168L, "beryllium");
+        ITEM_ID.put(128672300L, "bismuth");
         ITEM_ID.put(128049162L, "cobalt");
         ITEM_ID.put(128049175L, "copper");
         ITEM_ID.put(128049170L, "gallium");
         ITEM_ID.put(128049154L, "gold");
         ITEM_ID.put(128049169L, "indium");
+        ITEM_ID.put(128672298L, "lanthanum");
         ITEM_ID.put(128049173L, "lithium");
         ITEM_ID.put(128671118L, "osmium");
         ITEM_ID.put(128049153L, "palladium");
         ITEM_ID.put(128049152L, "platinum");
         ITEM_ID.put(128049155L, "silver");
         ITEM_ID.put(128049171L, "tantalum");
+        ITEM_ID.put(128672299L, "thallium");
+        ITEM_ID.put(128672301L, "thorium");
         ITEM_ID.put(128049174L, "titanium");
         ITEM_ID.put(128049172L, "uranium");
         ITEM_ID.put(128049165L, "bauxite");
         ITEM_ID.put(128049156L, "bertrandite");
         ITEM_ID.put(128049159L, "coltan");
+        ITEM_ID.put(128672294L, "cryolite");
         ITEM_ID.put(128049158L, "gallite");
+        ITEM_ID.put(128672295L, "goslarite");
         ITEM_ID.put(128049157L, "indite");
         ITEM_ID.put(128049161L, "lepidolite");
         ITEM_ID.put(128668550L, "painite");
+        ITEM_ID.put(128672297L, "pyrophyllite");
         ITEM_ID.put(128049163L, "rutile");
         ITEM_ID.put(128049160L, "uraninite");
         ITEM_ID.put(128667728L, "imperialslaves");
@@ -85,6 +102,7 @@ public class Converter {
         ITEM_ID.put(128049226L, "hazardousenvironmentsuits");
         ITEM_ID.put(128049671L, "resonatingseparators");
         ITEM_ID.put(128049227L, "robotics");
+        ITEM_ID.put(128672311L, "structural_regulators");
         ITEM_ID.put(128049232L, "landenrichmentsystems");
         ITEM_ID.put(128049190L, "leather");
         ITEM_ID.put(128049191L, "naturalfabrics");
@@ -122,10 +140,14 @@ public class Converter {
         SHIP_ID.put(128672138L, "imperial_eagle");
         SHIP_ID.put(128049273L, "viper");
         SHIP_ID.put(128049279L, "cobraMk3");
+        SHIP_ID.put(128672255L, "viperMkIV");
+        SHIP_ID.put(128672262L, "cobraMkIV");
         SHIP_ID.put(128671217L, "diamondback_scout");
         SHIP_ID.put(128049285L, "type6");
+        SHIP_ID.put(128672269L, "keelback");
         SHIP_ID.put(128671831L, "diamondback_explorer");
         SHIP_ID.put(128049309L, "vulture");
+        SHIP_ID.put(128672276L, "asp_scout");
         SHIP_ID.put(128049303L, "asp");
         SHIP_ID.put(128049297L, "type7");
         SHIP_ID.put(128049315L, "imperial_clipper");
@@ -138,6 +160,9 @@ public class Converter {
         SHIP_ID.put(128049339L, "python");
         SHIP_ID.put(128049333L, "type9");
         SHIP_ID.put(128049363L, "anaconda");
+        SHIP_ID.put(128049369L, "federation_corvette");
+        SHIP_ID.put(128049375L, "cutter");
+
     }
 
     public static String getItemId(Commodity commodity){
@@ -153,7 +178,11 @@ public class Converter {
     }
 
     public static String getShipId(ShipyardItem ship){
-        return SHIP_ID.get(ship.getId());
+        String id = SHIP_ID.get(ship.getId());
+        if (id == null){
+            id = ship.getName().toLowerCase().replace(" ","_");
+        }
+        return id;
     }
 
 }
