@@ -1,5 +1,6 @@
 package ru.trader.controllers;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -54,7 +55,7 @@ public class ItemAddController {
         this.market = null;
         name.clear();
         group.getSelectionModel().clearSelection();
-        group.getItems().clear();
+        group.setItems(FXCollections.emptyObservableList());
     }
 
     public Optional<ItemModel> showDialog(Parent parent, Parent content, MarketModel market) {
