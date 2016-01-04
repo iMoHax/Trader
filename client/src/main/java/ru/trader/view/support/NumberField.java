@@ -109,5 +109,9 @@ public class NumberField extends TextField {
             }
     }
 
-
+    @Override
+    public void clear() {
+        number.setValue(0);
+        super.clear();
+    }
 }
