@@ -118,9 +118,7 @@ public class Crawler<T> {
         if (t.isPresent()) {
             setTarget(target);
             if (count > 1 || s.isEntry(target)) {
-                int maxDeep = maxSize - (s.isEntry(target) ? graph.getMinJumps() * 2 : graph.getMinJumps());
-                if (maxDeep < 0) maxDeep = 0;
-                found = bfs(start(s), maxDeep, count);
+                found = bfs(start(s), graph.getMinLevel(), count);
             } else {
                 found = dfs(start(s), t.get().getLevel() + 1);
             }
@@ -155,9 +153,7 @@ public class Crawler<T> {
         int found = 0;
         if (t.isPresent()) {
             setTarget(target);
-            int maxDeep = s.isEntry(target) ? maxSize - graph.getMinJumps() * 2 : graph.getMinLevel();
-            if (maxDeep < 0) maxDeep = 0;
-            found = ucs2(start(s), maxDeep, count);
+            found = ucs2(start(s), graph.getMinLevel(), count);
         }
         LOG.debug("Found {} paths", found);
         callback.endSearch();
