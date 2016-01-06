@@ -2,7 +2,6 @@ package ru.trader.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.trader.analysis.FilteredVendor;
 
 import java.util.*;
 
@@ -84,21 +83,41 @@ public class MarketFilter {
         return excludes;
     }
 
-    private String getVendorKey(Vendor vendor){
+    public static String getVendorKey(Vendor vendor){
         return vendor == null ? null : vendor.getFullName();
+    }
+
+    public VendorFilter getDefaultVendorFilter() {
+        return defaultVendorFilter;
+    }
+
+    public Map<String, VendorFilter> getVendorFilters() {
+        return customFilteredVendors;
     }
 
     public void addFilter(Vendor vendor, VendorFilter vendorFilter){
         customFilteredVendors.put(getVendorKey(vendor), vendorFilter);
     }
 
+    public void addFilter(String key, VendorFilter vendorFilter){
+        customFilteredVendors.put(key, vendorFilter);
+    }
+
     public void removeFilter(Vendor vendor){
         customFilteredVendors.remove(getVendorKey(vendor));
+    }
+
+    public void removeFilter(String key){
+        customFilteredVendors.remove(key);
     }
 
     public VendorFilter getFilter(Vendor vendor){
         VendorFilter filter = customFilteredVendors.get(getVendorKey(vendor));
         return filter != null ? filter : defaultVendorFilter;
+    }
+
+    public void clearVendorFilters(){
+        customFilteredVendors.clear();
     }
 
     public boolean isFiltered(Place place){

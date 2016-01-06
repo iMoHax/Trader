@@ -6,6 +6,8 @@ import javafx.beans.property.StringProperty;
 import ru.trader.core.Group;
 import ru.trader.view.support.Localization;
 
+import java.util.Objects;
+
 public class GroupModel implements Comparable<GroupModel> {
 
     private final Group group;
@@ -50,6 +52,19 @@ public class GroupModel implements Comparable<GroupModel> {
         int cmp = group.getType().compareTo(other.group.getType());
         if (cmp != 0) return cmp;
         return getName().compareTo(other.getName());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GroupModel that = (GroupModel) o;
+        return Objects.equals(group, that.group);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(group);
     }
 
     @Override

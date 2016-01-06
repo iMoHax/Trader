@@ -1,12 +1,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.controlsfx.glyphfont.Glyph?>
+<?import org.controlsfx.glyphfont.*?>
 <?import ru.trader.view.support.NumberField?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.trader.controllers.FilterController"
               styleClass="dialog" vgap="4" hgap="8">
         <columnConstraints>
             <ColumnConstraints minWidth="180"  maxWidth="180"/>
-            <ColumnConstraints minWidth="250"  maxWidth="250"/>
+            <ColumnConstraints minWidth="320"  maxWidth="320"/>
         </columnConstraints>
         <Label text="%filter.title" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"/>
         <Label text="%filter.center" GridPane.rowIndex="1"/>
@@ -37,7 +37,22 @@
                 <Button prefWidth="30" onAction="#clean"><graphic><Glyph text="FontAwesome|TRASH_ALT"/></graphic></Button>
             </HBox>
         </VBox>
-        <ListView fx:id="excludes" GridPane.rowIndex="6" GridPane.columnIndex="1" maxHeight="200"/>
+        <ListView fx:id="excludes" GridPane.rowIndex="6" GridPane.columnIndex="1" maxHeight="120"/>
+
+    <Label text="Фильтры на товары:" GridPane.rowIndex="7" />
+    <VBox GridPane.rowIndex="8" spacing="4">
+        <TextField fx:id="vFilterSystemText" minWidth="180"/>
+        <ComboBox fx:id="vFilterStation" minWidth="180"/>
+        <HBox spacing="2" alignment="BASELINE_RIGHT">
+            <Button prefWidth="30" onAction="#addVendorFilter"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
+            <Button prefWidth="30" onAction="#editVendorFilter"><graphic><Glyph text="FontAwesome|EDIT"/></graphic></Button>
+            <Button prefWidth="30" onAction="#removeVendorFilter"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
+            <Button prefWidth="30" onAction="#cleanVendorFilters"><graphic><Glyph text="FontAwesome|TRASH_ALT"/></graphic></Button>
+        </HBox>
+        <Button prefWidth="180" text="Глобальный фильтр" onAction="#editDefaultVendorFilter"/>
+</VBox>
+    <ListView fx:id="vFilters" GridPane.rowIndex="8" GridPane.columnIndex="1" maxHeight="120"/>
+
 
 </GridPane>
 

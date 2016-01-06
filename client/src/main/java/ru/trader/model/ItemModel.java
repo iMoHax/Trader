@@ -65,6 +65,10 @@ public class ItemModel implements Comparable<ItemModel> {
         }
     }
 
+    public GroupModel getGroup(){
+        return group;
+    }
+
     public ReadOnlyDoubleProperty avgBuyProperty() {
         return statBuy.avgProperty();
     }

@@ -1,12 +1,15 @@
 package ru.trader.controllers;
 
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.MarketFilter;
 import ru.trader.core.SERVICE_TYPE;
+import ru.trader.core.VendorFilter;
 import ru.trader.model.MarketModel;
 import ru.trader.model.ModelFabric;
 import ru.trader.model.StationModel;
@@ -19,6 +22,7 @@ import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
 import ru.trader.view.support.cells.CustomListCell;
 
+import java.util.Map;
 import java.util.Optional;
 
 public class FilterController {
@@ -56,6 +60,14 @@ public class FilterController {
     private CheckBox cbLargeLandpad;
     @FXML
     private ListView<StationModel> excludes;
+    @FXML
+    private TextField vFilterSystemText;
+    private AutoCompletion<SystemModel> vFilterSystem;
+    @FXML
+    private ComboBox<String> vFilterStation;
+    @FXML
+    private ListView<Pair<String, VendorFilter>> vFilters;
+
 
     private MarketModel market;
     private MarketFilter filter;
@@ -64,11 +76,17 @@ public class FilterController {
     @FXML
     private void initialize(){
         init();
-        excludes.setCellFactory(new CustomListCell<>(s -> String.format("%s (%s)", s.getSystem().getName(), s.getName())));
+        excludes.setCellFactory(new CustomListCell<>(StationModel::getFullName));
         system.valueProperty().addListener((ov, o, n) -> {
             station.setItems(n.getStationNamesList());
             station.getSelectionModel().selectFirst();
         });
+        vFilterSystem.valueProperty().addListener((ov, o, n) -> {
+            vFilterStation.setItems(n.getStationNamesList());
+            vFilterStation.getSelectionModel().selectFirst();
+        });
+        vFilters.setCellFactory(new CustomListCell<>(Pair::getKey));
+        vFilters.setItems(FXCollections.observableArrayList());
     }
 
     void init(){
@@ -85,6 +103,12 @@ public class FilterController {
         } else {
             center.setSuggestions(provider.getPossibleSuggestions());
             center.setConverter(provider.getConverter());
+        }
+        if (vFilterSystem == null){
+            vFilterSystem = new AutoCompletion<>(vFilterSystemText, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
+        } else {
+            vFilterSystem.setSuggestions(provider.getPossibleSuggestions());
+            vFilterSystem.setConverter(provider.getConverter());
         }
     }
 
@@ -120,6 +144,10 @@ public class FilterController {
         cbMediumLandpad.setSelected(filter.has(SERVICE_TYPE.MEDIUM_LANDPAD));
         cbLargeLandpad.setSelected(filter.has(SERVICE_TYPE.LARGE_LANDPAD));
         excludes.setItems(BindingsHelper.observableList(filter.getExcludes(), market.getModeler()::get));
+        vFilters.getItems().clear();
+        for (Map.Entry<String, VendorFilter> entry : filter.getVendorFilters().entrySet()) {
+            vFilters.getItems().add(new Pair<>(entry.getKey(), entry.getValue()));
+        }
     }
 
     private void clear(){
@@ -127,7 +155,8 @@ public class FilterController {
         center.setValue(ModelFabric.NONE_SYSTEM);
         radius.clear();
         distance.clear();
-        excludes.getItems().clear();
+        excludes.setItems(FXCollections.emptyObservableList());
+        vFilters.getItems().clear();
     }
 
     private void save() {
@@ -147,6 +176,8 @@ public class FilterController {
         if (cbLargeLandpad.isSelected()) filter.add(SERVICE_TYPE.LARGE_LANDPAD); else filter.remove(SERVICE_TYPE.LARGE_LANDPAD);
         filter.clearExcludes();
         excludes.getItems().forEach(st -> filter.addExclude(ModelFabric.get(st)));
+        filter.clearVendorFilters();
+        vFilters.getItems().forEach(f -> filter.addFilter(f.getKey(), f.getValue()));
         LOG.trace("New filter", filter);
     }
 
@@ -192,6 +223,48 @@ public class FilterController {
     @FXML
     private void clean() {
         excludes.getItems().clear();
+    }
+
+    @FXML
+    private void addVendorFilter() {
+        SystemModel s = vFilterSystem.getValue();
+        if (s != null){
+            StationModel st = s.get(vFilterStation.getValue());
+            if (!ModelFabric.isFake(st)){
+                Optional<VendorFilter> filter =  Screeners.showVendorFilter();
+                if (filter.isPresent()) {
+                    String key = MarketFilter.getVendorKey(ModelFabric.get(st));
+                    vFilters.getItems().add(new Pair<>(key, filter.get()));
+                }
+            }
+        }
+    }
+
+    @FXML
+    private void editVendorFilter() {
+        int index = vFilters.getSelectionModel().getSelectedIndex();
+        if (index >= 0){
+            VendorFilter filter = vFilters.getItems().get(index).getValue();
+            Screeners.showFilter(filter);
+        }
+    }
+
+    @FXML
+    private void removeVendorFilter() {
+        int index = vFilters.getSelectionModel().getSelectedIndex();
+        if (index >= 0){
+            vFilters.getItems().remove(index);
+        }
+    }
+
+    @FXML
+    private void cleanVendorFilters() {
+        vFilters.getItems().clear();
+    }
+
+    @FXML
+    private void editDefaultVendorFilter() {
+        Screeners.showFilter(filter.getDefaultVendorFilter());
     }
 
 }
