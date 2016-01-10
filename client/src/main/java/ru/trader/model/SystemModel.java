@@ -136,6 +136,10 @@ public class SystemModel {
         market.removeStation(station);
     }
 
+    public StationModel asTransit(){
+        return asModel(system.asTransit());
+    }
+
     public boolean isEmpty(){
         return system.isEmpty();
     }

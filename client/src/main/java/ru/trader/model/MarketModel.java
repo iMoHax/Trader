@@ -174,6 +174,10 @@ public class MarketModel {
         return BindingsHelper.observableList(analyzer.getVendors(filter), modeler::get);
     }
 
+    public ObservableList<SystemModel> getSystems(MarketFilter filter){
+        return BindingsHelper.observableList(analyzer.getSystems(filter), modeler::get);
+    }
+
     public void getOrders(StationModel from, double balance, Consumer<ObservableList<OrderModel>> result) {
         getOrders(ModelFabric.NONE_SYSTEM, from, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, balance, result);
     }

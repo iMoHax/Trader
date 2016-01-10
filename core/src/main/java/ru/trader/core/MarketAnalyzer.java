@@ -43,6 +43,10 @@ public class MarketAnalyzer {
         return market.getVendors().filter(v -> !filter.isFiltered(v)).collect(Collectors.toList());
     }
 
+    public List<Place> getSystems(MarketFilter filter){
+        return market.get().filter(p -> !filter.isFiltered(p)).collect(Collectors.toList());
+    }
+
     public Collection<Order> getTop(int limit){
         LOG.debug("Get top {}", limit);
         Collection<Place> places = getPlaces();
