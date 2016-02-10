@@ -5,6 +5,7 @@
             <item name="explosives" id="i0"/>
             <item name="hydrogenfuel" id="i1"/>
             <item name="mineraloil" id="i2"/>
+            <item name="nerve_agents" id="i278"/>
             <item name="pesticides" id="i3"/>
             <item name="surface_stabilisers" id="i4"/>
             <item name="synthetic_reagents" id="i5"/>
@@ -113,6 +114,7 @@
             <item name="computercomponents" id="i86"/>
             <item name="hazardousenvironmentsuits" id="i87"/>
             <item name="landenrichmentsystems" id="i88"/>
+            <item name="mu_tom_imager" id="i279"/>
             <item name="resonatingseparators" id="i89"/>
             <item name="robotics" id="i90"/>
             <item name="structural_regulators" id="i91"/>
@@ -129,6 +131,7 @@
         </group>
         <group name="weapons" type="MARKET">
             <item name="battleweapons" id="i98"/>
+            <item name="landmines" id="i280"/>
             <item name="nonlethalweapons" id="i99"/>
             <item name="personalweapons" id="i100"/>
             <item name="reactivearmour" id="i101"/>

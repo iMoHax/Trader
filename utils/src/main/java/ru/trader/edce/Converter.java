@@ -16,6 +16,7 @@ public class Converter {
         ITEM_ID.put(128049204L, "explosives");
         ITEM_ID.put(128049202L, "hydrogenfuel");
         ITEM_ID.put(128049203L, "mineraloil");
+        ITEM_ID.put(128672304L, "nerve_agents");
         ITEM_ID.put(128049205L, "pesticides");
         ITEM_ID.put(128672305L, "surface_stabilisers");
         ITEM_ID.put(128672303L, "synthetic_reagents");
@@ -100,10 +101,11 @@ public class Converter {
         ITEM_ID.put(128049672L, "bioreducinglichen");
         ITEM_ID.put(128049225L, "computercomponents");
         ITEM_ID.put(128049226L, "hazardousenvironmentsuits");
+        ITEM_ID.put(128049232L, "landenrichmentsystems");
+        ITEM_ID.put(128672310L, "mu_tom_imager");
         ITEM_ID.put(128049671L, "resonatingseparators");
         ITEM_ID.put(128049227L, "robotics");
         ITEM_ID.put(128672311L, "structural_regulators");
-        ITEM_ID.put(128049232L, "landenrichmentsystems");
         ITEM_ID.put(128049190L, "leather");
         ITEM_ID.put(128049191L, "naturalfabrics");
         ITEM_ID.put(128049193L, "syntheticfabrics");
@@ -111,6 +113,7 @@ public class Converter {
         ITEM_ID.put(128049246L, "chemicalwaste");
         ITEM_ID.put(128049248L, "scrap");
         ITEM_ID.put(128049234L, "battleweapons");
+        ITEM_ID.put(128672312L, "landmines");
         ITEM_ID.put(128049236L, "nonlethalweapons");
         ITEM_ID.put(128049233L, "personalweapons");
         ITEM_ID.put(128049235L, "reactivearmour");
