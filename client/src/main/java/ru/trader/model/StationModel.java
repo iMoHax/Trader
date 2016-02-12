@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,6 +52,15 @@ public class StationModel {
         return station.getFullName();
     }
 
+    public STATION_TYPE getType() {return station.getType();}
+
+    public void setType(STATION_TYPE type) {
+        STATION_TYPE oldType = getType();
+        if (oldType != null && oldType.equals(type) || type == null) return;
+        LOG.info("Change type station {} to {}", station, type);
+        station.setType(type);
+    }
+
     public FACTION getFaction() {return station.getFaction();}
 
     public void setFaction(FACTION faction) {
@@ -67,6 +77,24 @@ public class StationModel {
         if (oldGovernment != null && oldGovernment.equals(government) || government == null) return;
         LOG.info("Change government station {} to {}", station, government);
         station.setGovernment(government);
+    }
+
+    public ECONOMIC_TYPE getEconomic() {return station.getEconomic();}
+
+    public void setEconomic(ECONOMIC_TYPE economic) {
+        ECONOMIC_TYPE oldEconomic = getEconomic();
+        if (oldEconomic != null && oldEconomic.equals(economic) || economic == null) return;
+        LOG.info("Change economic of station {} to {}", station, economic);
+        station.setEconomic(economic);
+    }
+
+    public ECONOMIC_TYPE getSubEconomic() {return station.getSubEconomic();}
+
+    public void setSubEconomic(ECONOMIC_TYPE economic) {
+        ECONOMIC_TYPE oldEconomic = getSubEconomic();
+        if (oldEconomic != null && oldEconomic.equals(economic) || economic == null) return;
+        LOG.info("Change sub economic of station {} to {}", station, economic);
+        station.setSubEconomic(economic);
     }
 
     public double getDistance(){
@@ -136,6 +164,10 @@ public class StationModel {
 
     public double getDistance(StationModel other){
         return station.getDistance(other.station);
+    }
+
+    public LocalDateTime getModifiedTime(){
+        return station.getModifiedTime();
     }
 
     @Override

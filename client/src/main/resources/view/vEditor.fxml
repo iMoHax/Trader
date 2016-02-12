@@ -22,7 +22,21 @@
             <ComboBox fx:id="government" maxWidth="200" />
         </VBox>
     </HBox>
-    <HBox GridPane.rowIndex="2" GridPane.columnIndex="1" spacing="4">
+    <HBox GridPane.rowIndex="2" GridPane.columnSpan="2" spacing="10" alignment="CENTER">
+        <VBox prefWidth="180" alignment="CENTER">
+            <Label text="%market.station.type"/>
+            <ComboBox fx:id="type" maxWidth="200" />
+        </VBox>
+        <VBox prefWidth="180" alignment="CENTER">
+            <Label text="%market.economic"/>
+            <ComboBox fx:id="economic" maxWidth="200" />
+        </VBox>
+        <VBox prefWidth="180" alignment="CENTER">
+            <Label text="%market.economic"/>
+            <ComboBox fx:id="subEconomic" maxWidth="200" />
+        </VBox>
+    </HBox>
+    <HBox GridPane.rowIndex="3" GridPane.columnIndex="1" spacing="4">
         <VBox prefWidth="200" alignment="CENTER">
             <Label text="%vEditor.text.distance"/>
             <NumberField fx:id="distance" maxWidth="60" />
@@ -48,13 +62,13 @@
             </HBox>
         </VBox>
     </HBox>
-    <VBox GridPane.rowIndex="3" alignment="CENTER" spacing="10">
+    <VBox GridPane.rowIndex="4" alignment="CENTER" spacing="10">
         <Button prefWidth="30" onAction="#up"><graphic><Glyph text="FontAwesome|ARROW_UP"/></graphic></Button>
         <Button prefWidth="30" onAction="#down"><graphic><Glyph text="FontAwesome|ARROW_DOWN"/></graphic></Button>
         <Button prefWidth="30" onAction="#add"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
         <Button prefWidth="30" onAction="#updateFromEMDN"><graphic><Glyph text="FontAwesome|REFRESH"/></graphic></Button>
     </VBox>
-    <TableView fx:id="items" prefWidth="575" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
+    <TableView fx:id="items" GridPane.rowIndex="4" prefWidth="575" maxHeight="560" editable="true" GridPane.columnIndex="1">
         <columns>
             <TableColumn minWidth="200.0" text="%market.item.name" editable="false">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>

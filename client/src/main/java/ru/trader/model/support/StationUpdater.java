@@ -5,10 +5,7 @@ import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.controllers.MainController;
-import ru.trader.core.FACTION;
-import ru.trader.core.GOVERNMENT;
-import ru.trader.core.OFFER_TYPE;
-import ru.trader.core.SERVICE_TYPE;
+import ru.trader.core.*;
 import ru.trader.model.*;
 
 import java.util.Optional;
@@ -19,8 +16,11 @@ public class StationUpdater {
     private final static SERVICE_TYPE[] SERVICE_TYPES = SERVICE_TYPE.values();
     private final ObservableList<FakeOffer> offers;
     private final StringProperty name;
+    private final ObjectProperty<STATION_TYPE> type;
     private final ObjectProperty<FACTION> faction;
     private final ObjectProperty<GOVERNMENT> government;
+    private final ObjectProperty<ECONOMIC_TYPE> economic;
+    private final ObjectProperty<ECONOMIC_TYPE> subEconomic;
     private final DoubleProperty distance;
     private final BooleanProperty[] services;
     private final MarketModel market;
@@ -33,9 +33,12 @@ public class StationUpdater {
         this.market = market;
         this.offers = BindingsHelper.observableList(MainController.getMarket().itemsProperty(), FakeOffer::new);
         this.name = new SimpleStringProperty();
+        this.type = new SimpleObjectProperty<>();
         this.distance = new SimpleDoubleProperty(0);
         this.faction = new SimpleObjectProperty<>(FACTION.NONE);
         this.government = new SimpleObjectProperty<>(GOVERNMENT.NONE);
+        this.economic = new SimpleObjectProperty<>(ECONOMIC_TYPE.NONE);
+        this.subEconomic = new SimpleObjectProperty<>(ECONOMIC_TYPE.NONE);
         this.services = new BooleanProperty[SERVICE_TYPES.length];
         for (int i = 0; i < services.length; i++) {
             services[i] = new SimpleBooleanProperty();
@@ -60,9 +63,12 @@ public class StationUpdater {
         }
         if (station != null){
             name.setValue(station.getName());
+            type.setValue(station.getType());
             faction.setValue(station.getFaction());
             government.setValue(station.getGovernment());
             distance.setValue(station.getDistance());
+            economic.setValue(station.getEconomic());
+            subEconomic.setValue(station.getSubEconomic());
             for (SERVICE_TYPE service : station.getServices()) {
                 serviceProperty(service).set(true);
             }
@@ -70,9 +76,12 @@ public class StationUpdater {
             station.getBuys().forEach(this::fillOffer);
         } else {
             name.setValue("");
+            type.setValue(null);
             faction.setValue(FACTION.NONE);
             government.setValue(GOVERNMENT.NONE);
             distance.setValue(0);
+            economic.setValue(ECONOMIC_TYPE.NONE);
+            subEconomic.setValue(ECONOMIC_TYPE.NONE);
         }
     }
 
@@ -116,6 +125,18 @@ public class StationUpdater {
         this.name.set(name);
     }
 
+    public STATION_TYPE getType() {
+        return type.get();
+    }
+
+    public ObjectProperty<STATION_TYPE> typeProperty() {
+        return type;
+    }
+
+    public void setType(STATION_TYPE type) {
+        this.type.set(type);
+    }
+
     public FACTION getFaction() {
         return faction.get();
     }
@@ -152,6 +173,30 @@ public class StationUpdater {
         this.distance.set(distance);
     }
 
+    public ECONOMIC_TYPE getEconomic() {
+        return economic.get();
+    }
+
+    public ObjectProperty<ECONOMIC_TYPE> economicProperty() {
+        return economic;
+    }
+
+    public void setEconomic(ECONOMIC_TYPE economic) {
+        this.economic.set(economic);
+    }
+
+    public ECONOMIC_TYPE getSubEconomic() {
+        return subEconomic.get();
+    }
+
+    public ObjectProperty<ECONOMIC_TYPE> subEconomicProperty() {
+        return subEconomic;
+    }
+
+    public void setSubEconomic(ECONOMIC_TYPE subEconomic) {
+        this.subEconomic.set(subEconomic);
+    }
+
     public BooleanProperty serviceProperty(SERVICE_TYPE service){
         return services[service.ordinal()];
     }
@@ -166,32 +211,29 @@ public class StationUpdater {
             Notificator notificator = market.getNotificator();
             notificator.setAlert(false);
             station = system.add(name.get());
-            station.setFaction(faction.get());
-            station.setGovernment(government.get());
-            station.setDistance(distance.get());
-            for (int i = 0; i < services.length; i++) {
-                if (services[i].get()){
-                    station.addService(SERVICE_TYPES[i]);
-                }
-            }
-            offers.forEach(FakeOffer::commit);
+            updateStation();
             notificator.setAlert(true);
             notificator.sendAdd(station);
         } else {
             station.setName(name.get());
-            station.setFaction(faction.get());
-            station.setGovernment(government.get());
-            station.setDistance(distance.get());
-            for (int i = 0; i < services.length; i++) {
-                if (services[i].get()){
-                    station.addService(SERVICE_TYPES[i]);
-                } else {
-                    station.removeService(SERVICE_TYPES[i]);
-                }
-            }
-            offers.forEach(FakeOffer::commit);
+            updateStation();
         }
         return station;
+    }
+
+    private void updateStation(){
+        station.setType(type.get());
+        station.setFaction(faction.get());
+        station.setGovernment(government.get());
+        station.setDistance(distance.get());
+        station.setEconomic(economic.get());
+        station.setSubEconomic(subEconomic.get());
+        for (int i = 0; i < services.length; i++) {
+            if (services[i].get()){
+                station.addService(SERVICE_TYPES[i]);
+            }
+        }
+        offers.forEach(FakeOffer::commit);
     }
 
     public void reset(){
