@@ -6,8 +6,12 @@ import com.sleepycat.persist.model.Relationship;
 import com.sleepycat.persist.model.SecondaryKey;
 import ru.trader.core.FACTION;
 import ru.trader.core.GOVERNMENT;
+import ru.trader.core.POWER;
+import ru.trader.core.POWER_STATE;
 
-@Entity(version = 3)
+import java.util.Objects;
+
+@Entity(version = 4)
 public class BDBPlace {
 
     @PrimaryKey(sequence = "P_ID")
@@ -24,6 +28,8 @@ public class BDBPlace {
 
     private FACTION faction;
     private GOVERNMENT government;
+    private POWER power;
+    private POWER_STATE powerState;
 
     private BDBPlace() {
     }
@@ -61,6 +67,19 @@ public class BDBPlace {
         this.government = government;
     }
 
+    public POWER getPower() {
+        return power;
+    }
+
+    public POWER_STATE getPowerState() {
+        return powerState;
+    }
+
+    public void setPower(POWER power, POWER_STATE state) {
+        this.power = power;
+        this.powerState = state;
+    }
+
     public double getX() {
         return x;
     }
@@ -93,8 +112,10 @@ public class BDBPlace {
         if (Double.compare(bdbPlace.y, y) != 0) return false;
         if (Double.compare(bdbPlace.z, z) != 0) return false;
         if (!name.equals(bdbPlace.name)) return false;
-
-        return true;
+        return  Objects.equals(faction, bdbPlace.faction)
+                && Objects.equals(government, bdbPlace.government)
+                && Objects.equals(power, bdbPlace.power)
+                && Objects.equals(powerState, bdbPlace.powerState);
     }
 
     @Override

@@ -4,6 +4,8 @@ import ru.trader.core.*;
 import ru.trader.store.berkeley.entities.BDBOffer;
 import ru.trader.store.berkeley.entities.BDBVendor;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -99,6 +101,30 @@ public class VendorProxy extends AbstractVendor {
     }
 
     @Override
+    protected void updateType(STATION_TYPE type) {
+        vendor.setType(type);
+        store.getVendorAccessor().update(vendor);
+    }
+
+    @Override
+    protected void updateEconomic(ECONOMIC_TYPE economic) {
+        vendor.setEconomic(economic);
+        store.getVendorAccessor().update(vendor);
+    }
+
+    @Override
+    protected void updateSubEconomic(ECONOMIC_TYPE economic) {
+        vendor.setSubEconomic(economic);
+        store.getVendorAccessor().update(vendor);
+    }
+
+    @Override
+    protected void updateModifiedTime(LocalDateTime time) {
+        vendor.setModified(time.toEpochSecond(ZoneOffset.UTC));
+        store.getVendorAccessor().update(vendor);
+    }
+
+    @Override
     protected void updateDistance(double distance) {
         vendor.setDistance(distance);
         store.getVendorAccessor().update(vendor);
@@ -150,6 +176,26 @@ public class VendorProxy extends AbstractVendor {
     @Override
     public GOVERNMENT getGovernment() {
         return vendor.getGovernment();
+    }
+
+    @Override
+    public STATION_TYPE getType() {
+        return vendor.getType();
+    }
+
+    @Override
+    public ECONOMIC_TYPE getEconomic() {
+        return vendor.getEconomic();
+    }
+
+    @Override
+    public ECONOMIC_TYPE getSubEconomic() {
+        return vendor.getSubEconomic();
+    }
+
+    @Override
+    public LocalDateTime getModifiedTime() {
+        return LocalDateTime.ofEpochSecond(vendor.getModified(), 0, ZoneOffset.UTC);
     }
 
     @Override

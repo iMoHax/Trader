@@ -48,6 +48,8 @@
     <xs:complexType name="itemType">
         <xs:attribute name="id" type="xs:ID" use="required"/>
         <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="illegalf" type="xs:string" use="optional"/>
+        <xs:attribute name="illegalg" type="xs:string" use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="placeType" mixed="true">
@@ -57,6 +59,8 @@
         <xs:attribute name="name" type="xs:string" use="required"/>
         <xs:attribute name="faction" type="FACTION" use="optional"/>
         <xs:attribute name="government" type="GOVERNMENT" use="optional"/>
+        <xs:attribute name="control" type="POWER_STATE" use="optional"/>
+        <xs:attribute name="power" type="POWER" use="optional"/>
         <xs:attribute name="x" type="xs:double" use="optional"/>
         <xs:attribute name="y" type="xs:double" use="optional"/>
         <xs:attribute name="z" type="xs:double" use="optional"/>
@@ -70,7 +74,11 @@
         <xs:attribute name="name" type="xs:string" use="required"/>
         <xs:attribute name="faction" type="FACTION" use="optional"/>
         <xs:attribute name="government" type="GOVERNMENT" use="optional"/>
+        <xs:attribute name="type" type="STATION_TYPE" use="optional"/>
+        <xs:attribute name="economic1" type="ECONOMIC_TYPE" use="optional"/>
+        <xs:attribute name="economic2" type="ECONOMIC_TYPE" use="optional"/>
         <xs:attribute name="distance" type="xs:double"/>
+        <xs:attribute name="modified" type="xs:dateTime" use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="serviceType">
@@ -130,6 +138,66 @@
             <xs:enumeration value="PATRONAGE"/>
             <xs:enumeration value="PRISON_COLONY"/>
             <xs:enumeration value="THEOCRACY"/>
+            <xs:enumeration value="NONE"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="POWER_STATE">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="CONTROL"/>
+            <xs:enumeration value="EXPLOITED"/>
+            <xs:enumeration value="EXPANSION"/>
+            <xs:enumeration value="NONE"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="POWER">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="DUVAL"/>
+            <xs:enumeration value="DELAINE"/>
+            <xs:enumeration value="LAVIGNY_DUVAL"/>
+            <xs:enumeration value="PATREUS"/>
+            <xs:enumeration value="MAHON"/>
+            <xs:enumeration value="WINTERS"/>
+            <xs:enumeration value="YONG_RUI"/>
+            <xs:enumeration value="ANTAL"/>
+            <xs:enumeration value="HUDSON"/>
+            <xs:enumeration value="TORVAL"/>
+            <xs:enumeration value="NONE"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="STATION_TYPE">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="STARPORT"/>
+            <xs:enumeration value="CORIOLIS_STARPORT"/>
+            <xs:enumeration value="OCELLUS_STARPORT"/>
+            <xs:enumeration value="ORBIS_STARPORT"/>
+            <xs:enumeration value="OUTPOST"/>
+            <xs:enumeration value="CIVILIAN_OUTPOST"/>
+            <xs:enumeration value="COMMERCIAL_OUTPOST"/>
+            <xs:enumeration value="INDUSTRIAL_OUTPOST"/>
+            <xs:enumeration value="MILITARY_OUTPOST"/>
+            <xs:enumeration value="MINING_OUTPOST"/>
+            <xs:enumeration value="SCIENTIFIC_OUTPOST"/>
+            <xs:enumeration value="UNSANCTIONED_OUTPOST"/>
+            <xs:enumeration value="PLANETARY_PORT"/>
+            <xs:enumeration value="PLANETARY_OUTPOST"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ECONOMIC_TYPE">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="AGRICULTURE"/>
+            <xs:enumeration value="EXTRACTION"/>
+            <xs:enumeration value="HIGH_TECH"/>
+            <xs:enumeration value="INDUSTRIAL"/>
+            <xs:enumeration value="MILITARY"/>
+            <xs:enumeration value="REFINERY"/>
+            <xs:enumeration value="SERVICE"/>
+            <xs:enumeration value="TERRAFORMING"/>
+            <xs:enumeration value="TOURISM"/>
+            <xs:enumeration value="COLONY"/>
             <xs:enumeration value="NONE"/>
         </xs:restriction>
     </xs:simpleType>

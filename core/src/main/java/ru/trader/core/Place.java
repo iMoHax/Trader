@@ -23,6 +23,10 @@ public interface Place extends Connectable<Place> {
     GOVERNMENT getGovernment();
     void setGovernment(GOVERNMENT government);
 
+    POWER getPower();
+    POWER_STATE getPowerState();
+    void setPower(POWER power, POWER_STATE state);
+
     Collection<Vendor> get();
     default Collection<Vendor> get(boolean withTransit){
         if (withTransit){

@@ -1,9 +1,6 @@
 package ru.trader.store.simple;
 
-import ru.trader.core.AbstractPlace;
-import ru.trader.core.FACTION;
-import ru.trader.core.GOVERNMENT;
-import ru.trader.core.Vendor;
+import ru.trader.core.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,6 +16,9 @@ public class SimplePlace extends AbstractPlace {
 
     private FACTION faction;
     private GOVERNMENT government;
+    private POWER power;
+    private POWER_STATE powerState;
+
 
     public SimplePlace(String name) {
         this.name = name;
@@ -56,6 +56,16 @@ public class SimplePlace extends AbstractPlace {
     }
 
     @Override
+    public POWER getPower() {
+        return power;
+    }
+
+    @Override
+    public POWER_STATE getPowerState() {
+        return powerState;
+    }
+
+    @Override
     public double getX() {
         return x;
     }
@@ -88,6 +98,12 @@ public class SimplePlace extends AbstractPlace {
     @Override
     protected void updateGovernment(GOVERNMENT government) {
         this.government = government;
+    }
+
+    @Override
+    protected void updatePower(POWER power, POWER_STATE state) {
+        this.power = power;
+        this.powerState = state;
     }
 
     @Override

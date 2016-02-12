@@ -2,6 +2,7 @@ package ru.trader.core;
 
 import ru.trader.analysis.graph.Connectable;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -29,6 +30,18 @@ public interface Vendor extends Connectable<Vendor> {
     void remove(SERVICE_TYPE service);
     boolean has(SERVICE_TYPE service);
     Collection<SERVICE_TYPE> getServices();
+
+    STATION_TYPE getType();
+    void setType(STATION_TYPE type);
+
+    ECONOMIC_TYPE getEconomic();
+    void setEconomic(ECONOMIC_TYPE economic);
+
+    ECONOMIC_TYPE getSubEconomic();
+    void setSubEconomic(ECONOMIC_TYPE economic);
+
+    LocalDateTime getModifiedTime();
+    void setModifiedTime(LocalDateTime time);
 
     void add(Offer offer);
     Offer addOffer(OFFER_TYPE type, Item item, double price, long count);

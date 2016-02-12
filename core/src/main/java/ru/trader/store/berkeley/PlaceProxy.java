@@ -57,6 +57,12 @@ public class PlaceProxy extends AbstractPlace {
     }
 
     @Override
+    protected void updatePower(POWER power, POWER_STATE state) {
+        place.setPower(power, state);
+        store.getPlaceAccessor().update(place);
+    }
+
+    @Override
     protected void updatePosition(double x, double y, double z) {
         place.setPosition(x, y, z);
         store.getPlaceAccessor().update(place);
@@ -99,6 +105,16 @@ public class PlaceProxy extends AbstractPlace {
     @Override
     public GOVERNMENT getGovernment() {
         return place.getGovernment();
+    }
+
+    @Override
+    public POWER getPower() {
+        return place.getPower();
+    }
+
+    @Override
+    public POWER_STATE getPowerState() {
+        return place.getPowerState();
     }
 
     @Override

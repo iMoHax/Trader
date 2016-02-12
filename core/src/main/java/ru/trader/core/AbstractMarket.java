@@ -122,18 +122,6 @@ public abstract class AbstractMarket implements Market {
         place.updatePosition(x, y, z);
     }
 
-    protected void updateName(AbstractVendor vendor, String name){
-        vendor.updateName(name);
-    }
-
-    protected void updateFaction(AbstractVendor vendor, FACTION faction){
-        vendor.updateFaction(faction);
-    }
-
-    protected void updateGovernment(AbstractVendor vendor, GOVERNMENT government){
-        vendor.updateGovernment(government);
-    }
-
     protected void updatePrice(AbstractOffer offer, double price){
         ItemStat itemStat = getStat(offer);
         if (itemStat instanceof AbstractItemStat){

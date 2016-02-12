@@ -2,6 +2,7 @@ package ru.trader.core;
 
 import ru.trader.analysis.graph.Connectable;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -96,6 +97,21 @@ public abstract class AbstractItemStat implements ItemStat {
         }
 
         @Override
+        public POWER getPower() {
+            return POWER.NONE;
+        }
+
+        @Override
+        public POWER_STATE getPowerState() {
+            return POWER_STATE.NONE;
+        }
+
+        @Override
+        public void setPower(POWER power, POWER_STATE state) {
+            throw new UnsupportedOperationException("Is fake place, change unsupported");
+        }
+
+        @Override
         public double getX() {
             return 0;
         }
@@ -169,6 +185,46 @@ public abstract class AbstractItemStat implements ItemStat {
 
         @Override
         public void setGovernment(GOVERNMENT government) {
+            throw new UnsupportedOperationException("Is fake vendor, change unsupported");
+        }
+
+        @Override
+        public STATION_TYPE getType() {
+            return STATION_TYPE.STARPORT;
+        }
+
+        @Override
+        public void setType(STATION_TYPE type) {
+            throw new UnsupportedOperationException("Is fake vendor, change unsupported");
+        }
+
+        @Override
+        public ECONOMIC_TYPE getEconomic() {
+            return ECONOMIC_TYPE.NONE;
+        }
+
+        @Override
+        public void setEconomic(ECONOMIC_TYPE economic) {
+            throw new UnsupportedOperationException("Is fake vendor, change unsupported");
+        }
+
+        @Override
+        public ECONOMIC_TYPE getSubEconomic() {
+            return ECONOMIC_TYPE.NONE;
+        }
+
+        @Override
+        public void setSubEconomic(ECONOMIC_TYPE economic) {
+            throw new UnsupportedOperationException("Is fake vendor, change unsupported");
+        }
+
+        @Override
+        public LocalDateTime getModifiedTime() {
+            return LocalDateTime.now();
+        }
+
+        @Override
+        public void setModifiedTime(LocalDateTime time) {
             throw new UnsupportedOperationException("Is fake vendor, change unsupported");
         }
 

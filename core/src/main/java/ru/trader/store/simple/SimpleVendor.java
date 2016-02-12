@@ -2,6 +2,7 @@ package ru.trader.store.simple;
 
 import ru.trader.core.*;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Map;
@@ -14,6 +15,10 @@ public class SimpleVendor extends AbstractVendor {
     private EnumSet<SERVICE_TYPE> services = EnumSet.noneOf(SERVICE_TYPE.class);
     private FACTION faction;
     private GOVERNMENT government;
+    private STATION_TYPE type;
+    private ECONOMIC_TYPE economic;
+    private ECONOMIC_TYPE subEconomic;
+    private LocalDateTime modified;
 
     protected Map<Item, Offer> sell;
     protected Map<Item, Offer> buy;
@@ -71,6 +76,36 @@ public class SimpleVendor extends AbstractVendor {
     @Override
     protected void updateGovernment(GOVERNMENT government) {
         this.government = government;
+    }
+
+    @Override
+    public STATION_TYPE getType() {
+        return type;
+    }
+
+    @Override
+    protected void updateType(STATION_TYPE type) {
+        this.type = type;
+    }
+
+    @Override
+    public ECONOMIC_TYPE getEconomic() {
+        return economic;
+    }
+
+    @Override
+    protected void updateEconomic(ECONOMIC_TYPE economic) {
+        this.economic = economic;
+    }
+
+    @Override
+    public ECONOMIC_TYPE getSubEconomic() {
+        return subEconomic;
+    }
+
+    @Override
+    protected void updateSubEconomic(ECONOMIC_TYPE economic) {
+        this.subEconomic = economic;
     }
 
     @Override
@@ -163,4 +198,13 @@ public class SimpleVendor extends AbstractVendor {
         }
     }
 
+    @Override
+    public LocalDateTime getModifiedTime() {
+        return modified;
+    }
+
+    @Override
+    protected void updateModifiedTime(LocalDateTime time) {
+        this.modified = time;
+    }
 }

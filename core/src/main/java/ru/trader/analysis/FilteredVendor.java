@@ -3,6 +3,7 @@ package ru.trader.analysis;
 import ru.trader.analysis.graph.Connectable;
 import ru.trader.core.*;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -63,6 +64,46 @@ public class FilteredVendor implements Vendor {
     @Override
     public void setGovernment(GOVERNMENT government) {
         vendor.setGovernment(government);
+    }
+
+    @Override
+    public STATION_TYPE getType() {
+        return vendor.getType();
+    }
+
+    @Override
+    public void setType(STATION_TYPE type) {
+        vendor.setType(type);
+    }
+
+    @Override
+    public ECONOMIC_TYPE getEconomic() {
+        return vendor.getEconomic();
+    }
+
+    @Override
+    public void setEconomic(ECONOMIC_TYPE economic) {
+        vendor.setEconomic(economic);
+    }
+
+    @Override
+    public ECONOMIC_TYPE getSubEconomic() {
+        return vendor.getSubEconomic();
+    }
+
+    @Override
+    public void setSubEconomic(ECONOMIC_TYPE economic) {
+        vendor.setSubEconomic(economic);
+    }
+
+    @Override
+    public LocalDateTime getModifiedTime() {
+        return vendor.getModifiedTime();
+    }
+
+    @Override
+    public void setModifiedTime(LocalDateTime time) {
+        vendor.setModifiedTime(time);
     }
 
     @Override

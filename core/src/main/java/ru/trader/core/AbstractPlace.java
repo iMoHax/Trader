@@ -15,6 +15,7 @@ public abstract class AbstractPlace implements Place {
     protected abstract void updateName(String name);
     protected abstract void updateFaction(FACTION faction);
     protected abstract void updateGovernment(GOVERNMENT government);
+    protected abstract void updatePower(POWER power, POWER_STATE state);
     protected abstract void updatePosition(double x, double y, double z);
     protected abstract void addVendor(Vendor vendor);
     protected abstract void removeVendor(Vendor vendor);
@@ -72,6 +73,16 @@ public abstract class AbstractPlace implements Place {
         }
     }
 
+    @Override
+    public final void setPower(POWER power, POWER_STATE state){
+        if (market != null){
+            LOG.debug("Change power of place {} to {} of {}", this, state, power);
+            updatePower(power, state);
+            market.setChange(true);
+        } else {
+            updatePower(power, state);
+        }
+    }
 
     @Override
     public final void add(Vendor vendor) {

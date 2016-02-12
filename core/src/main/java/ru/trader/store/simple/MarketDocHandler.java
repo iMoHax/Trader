@@ -8,6 +8,9 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 import ru.trader.core.*;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 
 public class MarketDocHandler extends DefaultHandler {
@@ -30,17 +33,25 @@ public class MarketDocHandler extends DefaultHandler {
     protected final static String PRICE_ATTR = "price";
     protected final static String COUNT_ATTR = "count";
     protected final static String ITEM_ATTR = "item";
+    protected final static String ILLEGAL_FACTION_ATTR = "illegalf";
+    protected final static String ILLEGAL_GOVERNMENT__ATTR = "illegalg";
     protected final static String DISTANCE_ATTR = "distance";
     protected final static String X_ATTR = "x";
     protected final static String Y_ATTR = "y";
     protected final static String Z_ATTR = "z";
     protected final static String FACTION_ATTR = "faction";
     protected final static String GOVERNMENT_ATTR = "government";
+    protected final static String POWER_ATTR = "power";
+    protected final static String POWER_STATE_ATTR = "control";
+    protected final static String ECONOMIC_ATTR = "economic1";
+    protected final static String SUB_ECONOMIC_ATTR = "economic2";
+    protected final static String MODIFIED_ATTR = "modified";
 
     protected SimpleMarket world;
     protected Vendor curVendor;
     protected Place curPlace;
     protected Group curGroup;
+    protected LocalDateTime modified;
     protected final HashMap<String,Item> items = new HashMap<>();
 
     @Override
@@ -71,7 +82,9 @@ public class MarketDocHandler extends DefaultHandler {
         switch (qName){
             case PLACE: curPlace = null;
                 break;
-            case VENDOR: curVendor = null;
+            case VENDOR:
+                curVendor.setModifiedTime(modified);
+                curVendor = null;
                 break;
             case GROUP: curGroup = null;
                 break;
@@ -94,16 +107,27 @@ public class MarketDocHandler extends DefaultHandler {
         onPlace(name, x != null ? Double.valueOf(x) : 0, y != null ? Double.valueOf(y) : 0, z != null ? Double.valueOf(z) : 0,
                 faction != null ? FACTION.valueOf(faction) : null, government != null ? GOVERNMENT.valueOf(government) : null
                 );
+        String power = attributes.getValue(POWER_ATTR);
+        String powerState = attributes.getValue(POWER_STATE_ATTR);
+        if (powerState != null && power != null){
+            updatePlace(POWER.valueOf(power), POWER_STATE.valueOf(powerState));
+        }
     }
 
     protected void parseVendor(Attributes attributes) throws SAXException {
         String name = attributes.getValue(NAME_ATTR);
+        String type = attributes.getValue(TYPE_ATTR);
         String distance = attributes.getValue(DISTANCE_ATTR);
         String faction = attributes.getValue(FACTION_ATTR);
         String government = attributes.getValue(GOVERNMENT_ATTR);
-        LOG.debug("parse vendor {}, distance {}, faction {}, government {}", name, distance, faction, government);
-        onVendor(name, distance != null ? Double.valueOf(distance) : 0,
-                 faction != null ? FACTION.valueOf(faction) : null, government != null ? GOVERNMENT.valueOf(government) : null);
+        String economic = attributes.getValue(ECONOMIC_ATTR);
+        String subEconomic = attributes.getValue(SUB_ECONOMIC_ATTR);
+        String modifiedTime = attributes.getValue(MODIFIED_ATTR);
+        modified = modifiedTime != null ? LocalDateTime.parse(modifiedTime) : null;
+        LOG.debug("parse vendor {}, type {}, distance {}, faction {}, government {}", name, type, distance, faction, government);
+        onVendor(name, type != null ? STATION_TYPE.valueOf(type) : null, distance != null ? Double.valueOf(distance) : 0,
+                faction != null ? FACTION.valueOf(faction) : null, government != null ? GOVERNMENT.valueOf(government) : null);
+        updateVendor(economic != null ? ECONOMIC_TYPE.valueOf(economic) : null, subEconomic != null ? ECONOMIC_TYPE.valueOf(subEconomic) : null);
     }
 
     protected void parseService(Attributes attributes) throws SAXException {
@@ -116,8 +140,23 @@ public class MarketDocHandler extends DefaultHandler {
     protected void parseItem(Attributes attributes) throws SAXException {
         String name = attributes.getValue(NAME_ATTR);
         String id = attributes.getValue(ID_ATTR);
-        LOG.debug("parse item {} ({})", name, id);
-        onItem(name, id);
+        String illegalFactions = attributes.getValue(ILLEGAL_FACTION_ATTR);
+        String illegalGovernments = attributes.getValue(ILLEGAL_GOVERNMENT__ATTR);
+        EnumSet<FACTION> factions = EnumSet.noneOf(FACTION.class);
+        if (illegalFactions != null){
+            for (String f : illegalFactions.split(",")) {
+                factions.add(FACTION.valueOf(f));
+            }
+        }
+        EnumSet<GOVERNMENT> governments = EnumSet.noneOf(GOVERNMENT.class);
+        if (illegalGovernments != null){
+            for (String f : illegalGovernments.split(",")) {
+                governments.add(GOVERNMENT.valueOf(f));
+            }
+        }
+
+        LOG.debug("parse item {} ({}), illegal - {}, {}", name, id, factions, governments);
+        onItem(name, id, factions, governments);
     }
 
     protected void parseOffer(Attributes attributes) throws SAXException {
@@ -148,19 +187,36 @@ public class MarketDocHandler extends DefaultHandler {
         curPlace.setGovernment(government);
     }
 
-    protected void onVendor(String name, double distance, FACTION faction, GOVERNMENT government){
+    protected void updatePlace(POWER power, POWER_STATE powerState){
+        curPlace.setPower(power, powerState);
+    }
+
+    protected void onVendor(String name, STATION_TYPE type, double distance, FACTION faction, GOVERNMENT government){
         curVendor = curPlace.addVendor(name);
+        curVendor.setType(type);
         curVendor.setDistance(distance);
         curVendor.setFaction(faction);
         curVendor.setGovernment(government);
+    }
+
+    protected void updateVendor(ECONOMIC_TYPE economic, ECONOMIC_TYPE subEconomic){
+        curVendor.setEconomic(economic);
+        curVendor.setSubEconomic(subEconomic);
+        curVendor.setModifiedTime(modified);
     }
 
     protected void onService(SERVICE_TYPE type){
         curVendor.add(type);
     }
 
-    protected void onItem(String name, String id) {
+    protected void onItem(String name, String id, Collection<FACTION> illegalFactions, Collection<GOVERNMENT> illegalGovernment) {
         Item item = world.addItem(name, curGroup);
+        for (FACTION faction : illegalFactions) {
+            item.setIllegal(faction, true);
+        }
+        for (GOVERNMENT government : illegalGovernment) {
+            item.setIllegal(government, true);
+        }
         items.put(id, item);
     }
 

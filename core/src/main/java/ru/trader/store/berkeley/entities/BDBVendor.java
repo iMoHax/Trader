@@ -1,14 +1,13 @@
 package ru.trader.store.berkeley.entities;
 
 import com.sleepycat.persist.model.*;
-import ru.trader.core.FACTION;
-import ru.trader.core.GOVERNMENT;
-import ru.trader.core.SERVICE_TYPE;
+import ru.trader.core.*;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 
-@Entity(version = 2)
+@Entity(version = 3)
 public class BDBVendor {
 
     @PrimaryKey(sequence = "V_ID")
@@ -20,6 +19,10 @@ public class BDBVendor {
     private String name;
     private FACTION faction;
     private GOVERNMENT government;
+    private STATION_TYPE type;
+    private ECONOMIC_TYPE economic;
+    private ECONOMIC_TYPE subEconomic;
+    private long modified;
     private double distance;
 
     @SecondaryKey(relate=Relationship.MANY_TO_MANY)
@@ -61,6 +64,30 @@ public class BDBVendor {
         this.government = government;
     }
 
+    public STATION_TYPE getType() {
+        return type;
+    }
+
+    public void setType(STATION_TYPE type) {
+        this.type = type;
+    }
+
+    public ECONOMIC_TYPE getEconomic() {
+        return economic;
+    }
+
+    public void setEconomic(ECONOMIC_TYPE economic) {
+        this.economic = economic;
+    }
+
+    public ECONOMIC_TYPE getSubEconomic() {
+        return subEconomic;
+    }
+
+    public void setSubEconomic(ECONOMIC_TYPE subEconomic) {
+        this.subEconomic = subEconomic;
+    }
+
     public long getPlaceId() {
         return placeId;
     }
@@ -93,6 +120,14 @@ public class BDBVendor {
         return services;
     }
 
+    public long getModified() {
+        return modified;
+    }
+
+    public void setModified(long modified) {
+        this.modified = modified;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -106,7 +141,12 @@ public class BDBVendor {
         if (!name.equals(bdbVendor.name)) return false;
         if (!services.equals(bdbVendor.services)) return false;
 
-        return true;
+        return Objects.equals(faction, bdbVendor.faction)
+               && Objects.equals(government, bdbVendor.government)
+               && Objects.equals(type, bdbVendor.type)
+               && Objects.equals(economic, bdbVendor.economic)
+               && Objects.equals(subEconomic, bdbVendor.subEconomic)
+               && Objects.equals(modified, bdbVendor.modified);
     }
 
     @Override

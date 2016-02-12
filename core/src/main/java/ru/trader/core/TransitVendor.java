@@ -2,6 +2,7 @@ package ru.trader.core;
 
 import ru.trader.analysis.graph.Connectable;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -39,6 +40,46 @@ public class TransitVendor implements Vendor {
 
     @Override
     public void setGovernment(GOVERNMENT government) {
+        throw new UnsupportedOperationException("Is fake vendor, change unsupported");
+    }
+
+    @Override
+    public STATION_TYPE getType() {
+        return STATION_TYPE.STARPORT;
+    }
+
+    @Override
+    public void setType(STATION_TYPE government) {
+        throw new UnsupportedOperationException("Is fake vendor, change unsupported");
+    }
+
+    @Override
+    public ECONOMIC_TYPE getEconomic() {
+        return ECONOMIC_TYPE.NONE;
+    }
+
+    @Override
+    public void setEconomic(ECONOMIC_TYPE government) {
+        throw new UnsupportedOperationException("Is fake vendor, change unsupported");
+    }
+
+    @Override
+    public ECONOMIC_TYPE getSubEconomic() {
+        return ECONOMIC_TYPE.NONE;
+    }
+
+    @Override
+    public void setSubEconomic(ECONOMIC_TYPE government) {
+        throw new UnsupportedOperationException("Is fake vendor, change unsupported");
+    }
+
+    @Override
+    public LocalDateTime getModifiedTime() {
+        return LocalDateTime.now();
+    }
+
+    @Override
+    public void setModifiedTime(LocalDateTime time) {
         throw new UnsupportedOperationException("Is fake vendor, change unsupported");
     }
 
