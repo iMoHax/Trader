@@ -5,9 +5,14 @@
 <?import javafx.scene.layout.StackPane?>
 <?import org.controlsfx.glyphfont.Glyph?>
 <?import ru.trader.view.support.NumberField?>
+<?import javafx.geometry.Insets?>
 <HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.ProfileController"
       spacing="4" >
+    <padding>
+        <Insets left="5" right="5" top="5" bottom="5"/>
+    </padding>
+
     <Label text="Имя:" />
     <TextField fx:id="name" />
     <StackPane>
