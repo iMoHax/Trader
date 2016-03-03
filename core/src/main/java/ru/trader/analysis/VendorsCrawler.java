@@ -73,7 +73,10 @@ public class VendorsCrawler extends Crawler<Vendor> {
         protected boolean check(Edge<Vendor> e){
             VendorsGraph.VendorsBuildEdge edge = (VendorsGraph.VendorsBuildEdge) e;
             return fuel <= edge.getMaxFuel() && (fuel >= edge.getMinFuel() || edge.getSource().getEntry().canRefill())
-                   && (edge.getProfit() > 0 || VendorsCrawler.this.isContent(edge, this));
+                   && (edge.getProfit() > 0 || VendorsCrawler.this.isContent(edge, this)
+                       // adding all edges if this start entry and don't have market
+                       || (isStart() && !MarketUtils.hasMarket(vertex.getEntry()))
+                       );
         }
 
         protected VendorsEdge wrap(Edge<Vendor> e) {

@@ -701,6 +701,10 @@ public class Crawler<T> {
             return size;
         }
 
+        public boolean isStart(){
+            return head == null && edge == null;
+        }
+
         @Override
         public String toString() {
             final StringBuilder sb = new StringBuilder("{");

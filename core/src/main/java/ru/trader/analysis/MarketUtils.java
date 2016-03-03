@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.Offer;
 import ru.trader.core.Order;
+import ru.trader.core.SERVICE_TYPE;
 import ru.trader.core.Vendor;
 
 import java.util.ArrayList;
@@ -57,5 +58,9 @@ public class MarketUtils {
             }
         }
         return orders;
+    }
+
+    public static boolean hasMarket(Vendor vendor) {
+        return vendor.has(SERVICE_TYPE.MARKET) || vendor.has(SERVICE_TYPE.BLACK_MARKET);
     }
 }
