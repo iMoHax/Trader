@@ -120,7 +120,7 @@ public class RouteSpecificationByPair<T> implements RouteSpecification<T> {
             if (sIndex != -1 && fIndex != -1 && fIndex >= sIndex){
                 return 0;
             }
-            if ((full || sIndex != -1) && fIndex == -1 && first.contains(target)){
+            if ((full || sIndex != -1) && (fIndex == -1 || fIndex < sIndex && sIndex != -1)  && first.contains(target)){
                 fIndex = i;
             }
         }
