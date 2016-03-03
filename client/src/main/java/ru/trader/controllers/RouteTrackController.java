@@ -19,6 +19,7 @@ import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
 import ru.trader.view.support.cells.OrderListCell;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,7 +29,7 @@ public class RouteTrackController {
     @FXML
     private Node editGroup;
     @FXML
-    private Node infoGroup;
+    private Node missionsGroup;
     @FXML
     private Node refuelGroup;
     @FXML
@@ -58,6 +59,9 @@ public class RouteTrackController {
     private AutoCompletion<SystemModel> newEntrySystem;
     @FXML
     private ComboBox<String> newEntryStation;
+    @FXML
+    private ToggleButton tbMissionsEdit;
+
 
     private RouteModel route;
     private Track trackNode;
@@ -163,13 +167,13 @@ public class RouteTrackController {
     }
 
     @FXML
-    private void toggleEdit(){
+    private void toggleMissionsEdit(){
         if (editGroup.isVisible()){
             editGroup.setVisible(false);
-            infoGroup.setVisible(true);
+            missionsGroup.setVisible(true);
         } else {
             editGroup.setVisible(true);
-            infoGroup.setVisible(false);
+            missionsGroup.setVisible(false);
         }
     }
 
@@ -203,6 +207,8 @@ public class RouteTrackController {
                     newRoute.addAll(startIndex, notAdded);
                     newRoute.addAll(startIndex, oldMissions);
                     updateRoute(newRoute);
+                    clearMissions();
+                    tbMissionsEdit.fire();
                 }
             });
         } else {
@@ -231,7 +237,26 @@ public class RouteTrackController {
     @FXML
     private void clearMissions(){
         missionsController.clear();
+    }
 
+    @FXML
+    private void removeMissionFromTrack(){
+        if (route != null){
+            MissionModel mission = missionsList.getSelectionModel().getSelectedItem();
+            if (mission != null){
+                route.remove(mission);
+            }
+        }
+    }
+
+    @FXML
+    private void removeAllMissionsFromTrack(){
+        if (route != null){
+            Collection<MissionModel> missions = new ArrayList<>(missionsList.getItems());
+            if (!missions.isEmpty()){
+                route.removeAll(missions);
+            }
+        }
     }
 
     @FXML

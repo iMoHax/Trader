@@ -4,59 +4,65 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.glyphfont.Glyph?>
-<HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="ru.trader.controllers.RouteTrackController"
-      spacing="4" >
-    <VBox>
-    <ToggleButton minWidth="30" onAction="#toggleEdit">
-        <graphic><Glyph text="FontAwesome|EDIT"/></graphic>
-    </ToggleButton>
-    <StackPane>
-        <VBox fx:id="editGroup">
-            <fx:include fx:id="missions" source="missions.fxml"/>
-            <HBox>
-                <ListView fx:id="addMissionsList" maxHeight="150"/>
-                <VBox spacing="4" alignment="TOP_RIGHT">
-                    <Button prefWidth="30" onAction="#addMission"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
-                    <Button prefWidth="30" onAction="#removeMission"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
-                    <Button prefWidth="30" onAction="#clearMissions"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
-                </VBox>
-                <VBox>
-                    <Button prefWidth="80" text="Добавить" onAction="#addMissionsToTrack" />
-                    <Button prefWidth="80" text="Добавить все" onAction="#addAllMissionsToTrack" />
-                </VBox>
-            </HBox>
-        </VBox>
-        <VBox fx:id="infoGroup">
-            <HBox><Label text="Система:" /><Label fx:id="system" /></HBox>
-            <HBox><Label text="Станция:" /><Label fx:id="station" /></HBox>
-            <HBox><Label text="Время:" /><Label fx:id="time" /></HBox>
-            <HBox fx:id="refuelGroup"><Label text="Заправить:" /><Label fx:id="refuel" /></HBox>
-            <HBox fx:id="ordersGroup" maxHeight="120">
-                <VBox>
-                    <Label text="Продать:" />
-                    <ListView fx:id="sellOrders"/>
-                </VBox>
-                <VBox>
-                    <Label text="Купить:" />
-                    <HBox spacing="4">
-                        <ListView fx:id="buyOrders"/>
-                        <VBox spacing="4" alignment="TOP_RIGHT">
-                            <Button prefWidth="30" onAction="#addOrder"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
-                            <Button prefWidth="30" onAction="#removeOrder"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
-                            <Button prefWidth="30" onAction="#clearOrders"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
-                        </VBox>
-                    </HBox>
-                </VBox>
-            </HBox>
-            <VBox fx:id="missionsGroup" maxHeight="120">
-                <Label text="Сдать миссии:" />
-                <ListView fx:id="missionsList" maxHeight="150"/>
-            </VBox>
-        </VBox>
-    </StackPane>
+<?import javafx.geometry.Insets?>
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="ru.trader.controllers.RouteTrackController"
+    vgap="4" hgap="4">
+    <padding>
+        <Insets left="5" right="5" top="5" bottom="5"/>
+    </padding>
+
+    <columnConstraints>
+        <ColumnConstraints minWidth="300" maxWidth="300"/>
+        <ColumnConstraints minWidth="300" maxWidth="300"/>
+        <ColumnConstraints minWidth="30"  maxWidth="40"/>
+        <ColumnConstraints minWidth="220" />
+    </columnConstraints>
+
+    <VBox GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="3">
+        <HBox><Label text="Система:" /><Label fx:id="system" /></HBox>
+        <HBox><Label text="Станция:" /><Label fx:id="station" /></HBox>
+        <HBox><Label text="Время:" /><Label fx:id="time" /></HBox>
+        <HBox fx:id="refuelGroup"><Label text="Заправить:" /><Label fx:id="refuel" /></HBox>
     </VBox>
-    <ScrollPane minWidth="220" fitToHeight="true">
+
+    <Label GridPane.rowIndex="1" GridPane.columnIndex="0" text="Продать:" />
+    <ListView GridPane.rowIndex="2" GridPane.columnIndex="0" fx:id="sellOrders" maxHeight="150"/>
+
+    <Label GridPane.rowIndex="1" GridPane.columnIndex="1" text="Купить:" />
+    <ListView GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="buyOrders" maxHeight="150"/>
+
+    <VBox GridPane.rowIndex="2" GridPane.columnIndex="2" spacing="4" alignment="TOP_RIGHT">
+        <Button prefWidth="30" onAction="#addOrder"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
+        <Button prefWidth="30" onAction="#removeOrder"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
+        <Button prefWidth="30" onAction="#clearOrders"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
+    </VBox>
+
+    <Label GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2" text="Миссии:" />
+    <StackPane GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="2" maxHeight="150">
+        <HBox fx:id="missionsGroup">
+            <ListView fx:id="missionsList" HBox.hgrow="ALWAYS"/>
+        </HBox>
+        <HBox fx:id="editGroup" spacing="4">
+            <fx:include fx:id="missions" source="missions.fxml"/>
+            <ListView fx:id="addMissionsList"/>
+            <VBox spacing="4">
+                <Button prefWidth="30" onAction="#addMission"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
+                <Button prefWidth="30" onAction="#removeMission"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
+                <Button prefWidth="30" onAction="#clearMissions"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
+                <VBox VBox.vgrow="ALWAYS" alignment="BOTTOM_LEFT">
+                    <Button prefWidth="30" onAction="#addAllMissionsToTrack"><graphic><Glyph text="FontAwesome|CHECK"/><Glyph text="FontAwesome|CHECK"/></graphic></Button>
+                </VBox>
+            </VBox>
+        </HBox>
+    </StackPane>
+
+    <VBox GridPane.rowIndex="4" GridPane.columnIndex="2" alignment="TOP_RIGHT" spacing="4">
+        <ToggleButton fx:id="tbMissionsEdit" prefWidth="30" onAction="#toggleMissionsEdit"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></ToggleButton>
+        <Button prefWidth="30" onAction="#removeMissionFromTrack"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
+        <Button prefWidth="30" onAction="#removeAllMissionsFromTrack"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
+    </VBox>
+    <ScrollPane GridPane.rowIndex="0" GridPane.columnIndex="3" GridPane.rowSpan="5" GridPane.fillHeight="true">
         <VBox>
             <AnchorPane fx:id="track"/>
             <VBox>
@@ -71,5 +77,4 @@
             </VBox>
         </VBox>
     </ScrollPane>
-
-</HBox>
+</GridPane>
