@@ -321,4 +321,8 @@ public class MainController {
     public void showTrack(){
         tabs.getSelectionModel().select(track);
     }
+
+    public void showDBEditor(){
+        Screeners.showDBEditor();
+    }
 }

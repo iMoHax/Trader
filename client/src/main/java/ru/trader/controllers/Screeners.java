@@ -14,6 +14,7 @@ import org.controlsfx.dialog.Dialogs;
 import ru.trader.EMDNUpdater;
 import ru.trader.core.MarketFilter;
 import ru.trader.core.VendorFilter;
+import ru.trader.db.controllers.DBEditorController;
 import ru.trader.model.*;
 import ru.trader.view.support.CustomBuilderFactory;
 import ru.trader.view.support.Localization;
@@ -37,6 +38,7 @@ public class Screeners {
     private static Parent loginScreen;
     private static Parent helperScreen;
     private static Parent vFilterScreen;
+    private static Parent dbEditorScreen;
 
     private static MainController mainController;
     private static ItemDescController itemDescController;
@@ -51,6 +53,7 @@ public class Screeners {
     private static LoginController loginController;
     private static HelperController helperController;
     private static VendorFilterController vFilterController;
+    private static DBEditorController dbEditorController;
 
     private static FXMLLoader initLoader(URL url){
         FXMLLoader loader = new FXMLLoader(url, Localization.getResources());
@@ -161,6 +164,13 @@ public class Screeners {
         vFilterController = loader.getController();
     }
 
+    public static void loadDBEditorStage(URL fxml) throws IOException {
+        FXMLLoader loader =  initLoader(fxml);
+        dbEditorScreen = loader.load();
+        addStylesheet(dbEditorScreen);
+        dbEditorController = loader.getController();
+    }
+
     public static void show(Node node){
         mainController.getMainPane().setCenter(node);
     }
@@ -219,6 +229,7 @@ public class Screeners {
     public static void closeAll() {
         itemDescController.close();
         helperController.close();
+        dbEditorController.close();
     }
 
     public static Optional<OrderModel> showOrders(ObservableList<OrderModel> orders) {
@@ -277,13 +288,8 @@ public class Screeners {
         helperController.show(helperScreen, true);
     }
 
-    public static void reinitAll() {
-        mainController.init();
-        systemsEditorController.init();
-        vEditorController.init();
-        filterController.init();
-        vFilterController.init();
-        EMDNUpdater.setMarket(MainController.getMarket());
+    public static void showDBEditor(){
+        dbEditorController.show(dbEditorScreen, false);
     }
 
     public static void showTrackTab(){
@@ -296,6 +302,16 @@ public class Screeners {
 
     public static boolean showFilter(VendorFilter filter) {
         return vFilterController.showEditDialog(mainScreen, vFilterScreen, filter);
+    }
+
+    public static void reinitAll() {
+        mainController.init();
+        systemsEditorController.init();
+        vEditorController.init();
+        filterController.init();
+        vFilterController.init();
+        dbEditorController.init();
+        EMDNUpdater.setMarket(MainController.getMarket());
     }
 
 }

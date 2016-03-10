@@ -23,6 +23,7 @@
                <MenuItem text="%main.menu.file.export" onAction="#exportWorld"/>
            </Menu>
            <Menu text="%main.menu.edit">
+               <MenuItem text="%main.menu.edit.dbEditor" onAction="#showDBEditor"/>
                <MenuItem text="%main.menu.edit.addSystem" onAction="#addSystem"/>
                <MenuItem text="%main.menu.edit.editSystem" onAction="#editSystem"/>
                <MenuItem text="%main.menu.edit.removeSystem" onAction="#removeSystem"/>
