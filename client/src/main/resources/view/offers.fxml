@@ -5,6 +5,7 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 <?import ru.trader.view.support.cells.*?>
+<?import org.controlsfx.glyphfont.Glyph?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="ru.trader.controllers.OffersController"
         prefHeight="500">
@@ -19,7 +20,7 @@
 
     <VBox GridPane.rowSpan="2" GridPane.vgrow="ALWAYS" minWidth="270">
         <TitledPane text="%market.system.name"  collapsible="false">
-            <TextField fx:id="systemText" />
+            <HBox><TextField fx:id="systemText" HBox.hgrow="ALWAYS" /><Button minWidth="30" onAction="#currentSystem"><graphic><Glyph text="FontAwesome|MAP_MARKER"/></graphic></Button></HBox>
         </TitledPane>
         <TitledPane VBox.vgrow="ALWAYS" text="%market.stations" collapsible="false">
             <ListView fx:id="stationsList">

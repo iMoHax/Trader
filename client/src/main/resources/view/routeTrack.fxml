@@ -51,7 +51,7 @@
                 <Button prefWidth="30" onAction="#removeMission"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
                 <Button prefWidth="30" onAction="#clearMissions"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
                 <VBox VBox.vgrow="ALWAYS" alignment="BOTTOM_LEFT">
-                    <Button prefWidth="30" onAction="#addAllMissionsToTrack"><graphic><Glyph text="FontAwesome|CHECK"/><Glyph text="FontAwesome|CHECK"/></graphic></Button>
+                    <Button prefWidth="30" onAction="#addAllMissionsToTrack"><graphic><Glyph text="FontAwesome|CHECK"/></graphic></Button>
                 </VBox>
             </VBox>
         </HBox>
@@ -66,11 +66,11 @@
         <VBox>
             <AnchorPane fx:id="track"/>
             <VBox>
-                <HBox><TextField fx:id="newEntrySystemText"/></HBox>
+                <HBox><TextField fx:id="newEntrySystemText"/><Button minWidth="30" onAction="#newEntryAsCurrent"><graphic><Glyph text="FontAwesome|MAP_MARKER"/></graphic></Button></HBox>
                 <HBox><ComboBox fx:id="newEntryStation"/></HBox>
                 <HBox>
                     <Button onAction="#addEntry"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
-                    <Button onAction="#setActive"><graphic><Glyph text="FontAwesome|MAP_MARKER"/></graphic></Button>
+                    <Button onAction="#setActive"><graphic><Glyph text="FontAwesome|CHECK"/></graphic></Button>
                     <Button onAction="#clear"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
                     <Button onAction="#copyToClipboard"><graphic><Glyph text="FontAwesome|COPY"/></graphic></Button>
                 </HBox>

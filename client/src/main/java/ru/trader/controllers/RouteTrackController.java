@@ -260,6 +260,13 @@ public class RouteTrackController {
     }
 
     @FXML
+    private void newEntryAsCurrent(){
+        ProfileModel profile = MainController.getProfile();
+        newEntrySystem.setValue(profile.getSystem());
+        newEntryStation.setValue(profile.getStation().getName());
+    }
+
+    @FXML
     private void addEntry(){
         SystemModel toSystem = newEntrySystem.getValue();
         StationModel toStation = toSystem != null ? toSystem.get(newEntryStation.getValue()) : ModelFabric.NONE_STATION;

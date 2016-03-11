@@ -191,6 +191,12 @@ public class OffersController {
     }
 
     @FXML
+    private void currentSystem(){
+        ProfileModel profile = MainController.getProfile();
+        system.setValue(profile.getSystem());
+    }
+
+    @FXML
     private void addStation() {
         SystemModel s = getSystem();
         if (!ModelFabric.isFake(s)){
