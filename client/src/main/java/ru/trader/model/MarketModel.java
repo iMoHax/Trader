@@ -177,8 +177,16 @@ public class MarketModel {
         return BindingsHelper.observableList(analyzer.getOffers(offerType, ModelFabric.get(item), filter), modeler::get);
     }
 
+    public ObservableList<StationModel> getStations(){
+        return BindingsHelper.observableList(market.getVendors(), modeler::get);
+    }
+
     public ObservableList<StationModel> getStations(MarketFilter filter){
         return BindingsHelper.observableList(analyzer.getVendors(filter), modeler::get);
+    }
+
+    public ObservableList<SystemModel> getSystems(){
+        return BindingsHelper.observableList(market.get(), modeler::get);
     }
 
     public ObservableList<SystemModel> getSystems(MarketFilter filter){

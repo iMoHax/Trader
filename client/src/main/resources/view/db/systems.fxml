@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+
+<?import ru.trader.view.support.cells.OfferCellValueImpl?>
+<?import ru.trader.view.support.cells.DoubleCell?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ru.trader.db.controllers.SystemsController">
+    <TableView fx:id="tblSystems" editable="true" VBox.vgrow="ALWAYS" prefWidth="800">
+        <columns>
+            <TableColumn minWidth="200" text="Название">
+                <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="60" text="X">
+                <cellValueFactory><PropertyValueFactory property="x"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="60" text="Y">
+                <cellValueFactory><PropertyValueFactory property="y"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="60" text="Z">
+                <cellValueFactory><PropertyValueFactory property="z"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="faction" minWidth="100" text="%market.allegiance">
+                <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="government" minWidth="100" text="%market.government">
+                <cellValueFactory><PropertyValueFactory property="government"/></cellValueFactory>
+            </TableColumn>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+        <contextMenu>
+            <ContextMenu>
+                <items>
+                    <MenuItem text="Добавить" onAction="#add" />
+                    <MenuItem text="Редактировать" onAction="#edit" />
+                    <MenuItem text="Удалить" onAction="#remove" />
+                </items>
+            </ContextMenu>
+        </contextMenu>
+    </TableView>
+</VBox>

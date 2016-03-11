@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+
+<?import ru.trader.view.support.cells.OfferCellValueImpl?>
+<?import ru.trader.view.support.cells.DoubleCell?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ru.trader.db.controllers.StationsController">
+    <TableView fx:id="tblStations" editable="true" VBox.vgrow="ALWAYS" prefWidth="800">
+        <columns>
+            <TableColumn minWidth="100" text="Система">
+                <cellValueFactory><PropertyValueFactory property="system"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="200" text="Название">
+                <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="type" minWidth="100" text="%market.station.type">
+                <cellValueFactory><PropertyValueFactory property="type"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="faction" minWidth="100" text="%market.allegiance">
+                <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="government" minWidth="100" text="%market.government">
+                <cellValueFactory><PropertyValueFactory property="government"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="economic" minWidth="100" text="%market.economic">
+                <cellValueFactory><PropertyValueFactory property="economic"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="subEconomic" minWidth="100" text="%market.economic">
+                <cellValueFactory><PropertyValueFactory property="subEconomic"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="100" text="Дистанция">
+                <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="services" minWidth="100" text="Сервисы">
+                <cellValueFactory><PropertyValueFactory property="services"/></cellValueFactory>
+            </TableColumn>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+        <contextMenu>
+            <ContextMenu>
+                <items>
+                    <MenuItem text="Добавить" onAction="#add" />
+                    <MenuItem text="Редактировать" onAction="#edit" />
+                    <MenuItem text="Удалить" onAction="#remove" />
+                </items>
+            </ContextMenu>
+        </contextMenu>
+    </TableView>
+</VBox>

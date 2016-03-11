@@ -7,7 +7,13 @@
             fx:controller="ru.trader.db.controllers.DBEditorController"
             tabClosingPolicy="UNAVAILABLE"
         >
-           <Tab text="%market.items">
-               <fx:include fx:id="items" source="items.fxml"/>
-           </Tab>
+    <Tab text="%market.items">
+        <fx:include fx:id="items" source="items.fxml"/>
+    </Tab>
+    <Tab text="Системы">
+        <fx:include fx:id="systems" source="systems.fxml"/>
+    </Tab>
+    <Tab text="Станции">
+        <fx:include fx:id="stations" source="stations.fxml"/>
+    </Tab>
 </TabPane>
