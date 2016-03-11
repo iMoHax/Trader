@@ -162,6 +162,13 @@ public class MarketModel {
         return item;
     }
 
+    public void remove(ItemModel item) {
+        LOG.info("Remove item {} from market {}", item, this);
+        market.remove(ModelFabric.get(item));
+        notificator.sendRemove(item);
+        items.remove(item);
+    }
+
     ItemStat getStat(OFFER_TYPE type, Item item){
         return market.getStat(type, item);
     }

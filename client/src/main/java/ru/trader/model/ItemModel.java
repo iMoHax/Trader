@@ -3,10 +3,13 @@ package ru.trader.model;
 import javafx.beans.property.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.core.FACTION;
+import ru.trader.core.GOVERNMENT;
 import ru.trader.core.Item;
 import ru.trader.core.OFFER_TYPE;
 import ru.trader.view.support.Localization;
 
+import java.util.Collection;
 import java.util.List;
 
 public class ItemModel implements Comparable<ItemModel> {
@@ -111,6 +114,26 @@ public class ItemModel implements Comparable<ItemModel> {
 
     public boolean isMarketItem(){
         return item.getGroup() != null && item.getGroup().isMarket();
+    }
+
+    public Collection<FACTION> getIllegalFactions(){
+        return item.getIllegalFactions();
+    }
+
+    public void setIllegalFactions(Collection<FACTION> factions){
+        LOG.debug("Set illegal factions {}", factions);
+    }
+
+    public void setIllegal(FACTION faction, boolean illegal){
+        item.setIllegal(faction, illegal);
+    }
+
+    public Collection<GOVERNMENT> getIllegalGovernments(){
+        return item.getIllegalGovernments();
+    }
+
+    public void setIllegal(GOVERNMENT government, boolean illegal){
+        item.setIllegal(government, illegal);
     }
 
     public void refresh(){

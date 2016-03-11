@@ -104,6 +104,16 @@ public class SimpleMarket extends AbstractMarket {
 
     @Override
     protected void removeItem(Item item) {
+        ItemStat stat = sellItems.get(item);
+        for (Offer offer : stat.getOffers()) {
+            SimpleVendor vendor = (SimpleVendor) offer.getVendor();
+            vendor.removeOffer(offer);
+        }
+        stat = buyItems.get(item);
+        for (Offer offer : stat.getOffers()) {
+            SimpleVendor vendor = (SimpleVendor) offer.getVendor();
+            vendor.removeOffer(offer);
+        }
         items.remove(item);
         sellItems.remove(item);
         buyItems.remove(item);

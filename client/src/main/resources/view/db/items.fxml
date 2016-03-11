@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+
+<?import ru.trader.view.support.cells.OfferCellValueImpl?>
+<?import ru.trader.view.support.cells.DoubleCell?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ru.trader.db.controllers.ItemsController">
+    <TableView fx:id="tblItems" editable="true" VBox.vgrow="ALWAYS" prefWidth="800">
+        <columns>
+            <TableColumn minWidth="120" text="ID">
+                <cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="200" text="%market.item.name">
+                <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="group" minWidth="120" text="Группа" editable="false">
+                <cellValueFactory><PropertyValueFactory property="group"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="factions" minWidth="145" text="Запрещено в">
+                <cellValueFactory><PropertyValueFactory property="illegalFactions"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="governments" minWidth="145" text="Запрещено в">
+                <cellValueFactory><PropertyValueFactory property="illegalGovernments"/></cellValueFactory>
+            </TableColumn>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+        <contextMenu>
+            <ContextMenu>
+                <items>
+                    <MenuItem text="Добавить" onAction="#add" />
+                    <MenuItem text="Удалить" onAction="#remove" />
+                </items>
+            </ContextMenu>
+        </contextMenu>
+    </TableView>
+</VBox>
