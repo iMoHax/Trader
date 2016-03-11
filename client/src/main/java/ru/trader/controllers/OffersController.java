@@ -5,8 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.SERVICE_TYPE;
@@ -22,6 +20,7 @@ import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public class OffersController {
@@ -211,8 +210,8 @@ public class OffersController {
     private void removeStation() {
         StationModel s = getStation();
         if (!ModelFabric.isFake(s)){
-            Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), s.getName()));
-            if (res == org.controlsfx.dialog.Dialog.ACTION_YES) {
+            Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), s.getName()));
+            if (res.isPresent() && res.get() == ButtonType.YES) {
                 s.getSystem().remove(s);
             }
         }

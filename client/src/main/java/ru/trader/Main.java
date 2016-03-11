@@ -2,12 +2,11 @@ package ru.trader;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
 import org.apache.log4j.PropertyConfigurator;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.controllers.MainController;
@@ -22,6 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
+import java.util.Optional;
 
 public class Main extends Application {
     private final static Logger LOG = LoggerFactory.getLogger(Main.class);
@@ -89,9 +89,9 @@ public class Main extends Application {
         primaryStage.setOnCloseRequest((we) -> {
             try {
                 if (World.getMarket().isChange()) {
-                    Action res = Screeners.showConfirm(Localization.getString("dialog.confirm.save"));
-                    if (res == Dialog.ACTION_YES) World.save();
-                    else if (res == Dialog.ACTION_CANCEL) {
+                    Optional<ButtonType> res = Screeners.showConfirm(Localization.getString("dialog.confirm.save"));
+                    if (res.isPresent() && res.get() == ButtonType.YES) World.save();
+                    else if (!res.isPresent() || res.get() == ButtonType.CANCEL) {
                         we.consume();
                         return;
                     }

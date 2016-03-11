@@ -1,13 +1,10 @@
 package ru.trader.controllers;
 
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -116,7 +113,7 @@ public class MainController {
         profController.initEDCEBtn();
     }
 
-    public void save(ActionEvent actionEvent) {
+    public void save() {
         try {
             World.save();
         } catch (FileNotFoundException | UnsupportedEncodingException | XMLStreamException e) {
@@ -124,7 +121,7 @@ public class MainController {
         }
     }
 
-    public void importWorld(ActionEvent actionEvent) {
+    public void importWorld() {
         try {
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML bd files (*.xml)", "*.xml");
@@ -140,7 +137,7 @@ public class MainController {
         }
     }
 
-    public void exportWorld(ActionEvent actionEvent) {
+    public void exportWorld() {
         try {
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML bd files (*.xml)", "*.xml");
@@ -156,49 +153,49 @@ public class MainController {
         }
     }
 
-    public void clear(ActionEvent actionEvent){
-        Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.all")));
-        if (res == Dialog.ACTION_YES) {
+    public void clear(){
+        Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.all")));
+        if (res.isPresent() && res.get() == ButtonType.OK) {
             market.clear();
             reload();
         }
     }
 
-    public void clearOffers(ActionEvent actionEvent){
-        Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.offers")));
-        if (res == Dialog.ACTION_YES) {
+    public void clearOffers(){
+        Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.offers")));
+        if (res.isPresent() && res.get() == ButtonType.YES) {
             market.clearOffers();
             reload();
         }
     }
 
-    public void clearStations(ActionEvent actionEvent){
-        Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.stations")));
-        if (res == Dialog.ACTION_YES) {
+    public void clearStations(){
+        Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.stations")));
+        if (res.isPresent() && res.get() == ButtonType.YES) {
             market.clearStations();
             reload();
         }
     }
 
-    public void clearSystems(ActionEvent actionEvent){
-        Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.systems")));
-        if (res == Dialog.ACTION_YES) {
+    public void clearSystems(){
+        Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.systems")));
+        if (res.isPresent() && res.get() == ButtonType.YES) {
             market.clearSystems();
             reload();
         }
     }
 
-    public void clearItems(ActionEvent actionEvent){
-        Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.items")));
-        if (res == Dialog.ACTION_YES) {
+    public void clearItems(){
+        Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.items")));
+        if (res.isPresent() && res.get() == ButtonType.YES) {
             market.clearItems();
             reload();
         }
     }
 
-    public void clearGroups(ActionEvent actionEvent){
-        Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.groups")));
-        if (res == Dialog.ACTION_YES) {
+    public void clearGroups(){
+        Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.groups")));
+        if (res.isPresent() && res.get() == ButtonType.YES) {
             market.clearGroups();
             reload();
         }
@@ -212,47 +209,46 @@ public class MainController {
         return Screeners.showAddItem(market);
     }
 
-
-    public void addSystem(ActionEvent actionEvent){
+    public void addSystem(){
         Screeners.showSystemsEditor(null);
     }
 
-    public void editSystem(ActionEvent actionEvent){
+    public void editSystem(){
         SystemModel system = profile.getSystem();
         if (!ModelFabric.isFake(system)) {
             Screeners.showSystemsEditor(system);
         }
     }
 
-    public void removeSystem(ActionEvent actionEvent){
+    public void removeSystem(){
         SystemModel system = profile.getSystem();
         if (!ModelFabric.isFake(system)) {
-            Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), system.getName()));
-            if (res == Dialog.ACTION_YES) {
+            Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), system.getName()));
+            if (res.isPresent() && res.get() == ButtonType.YES) {
                 market.remove(system);
             }
         }
     }
 
-    public void addStation(ActionEvent actionEvent) {
+    public void addStation() {
         SystemModel system = profile.getSystem();
         if (!ModelFabric.isFake(system)) {
             Screeners.showAddStation(profile.getSystem());
         }
     }
 
-    public void editStation(ActionEvent actionEvent) {
+    public void editStation() {
         StationModel station = profile.getStation();
         if (!ModelFabric.isFake(station)) {
             Screeners.showEditStation(station);
         }
     }
 
-    public void removeStation(ActionEvent actionEvent){
+    public void removeStation(){
         StationModel station = profile.getStation();
         if (!ModelFabric.isFake(station)) {
-            Action res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), station.getName()));
-            if (res == Dialog.ACTION_YES) {
+            Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), station.getName()));
+            if (res.isPresent() && res.get() == ButtonType.YES) {
                 station.getSystem().remove(station);
             }
         }
@@ -268,7 +264,7 @@ public class MainController {
         }
     }
 
-    public void impMadSystems(ActionEvent actionEvent) {
+    public void impMadSystems() {
         chooseFile(new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv"), file -> {
             try {
                 Parser.parseSystems(file, World.getMarket());
@@ -279,7 +275,7 @@ public class MainController {
         });
     }
 
-    public void impMadStations(ActionEvent actionEvent) {
+    public void impMadStations() {
         chooseFile(new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv"), file -> {
             try {
                 Parser.parseStations(file, World.getMarket());
@@ -290,7 +286,7 @@ public class MainController {
         });
     }
 
-    public void impMadOffers(ActionEvent actionEvent) {
+    public void impMadOffers() {
         chooseFile(new FileChooser.ExtensionFilter("Prices files (*.prices)", "*.prices"), file -> {
             try {
                 Parser.parsePrices(file, World.getMarket());

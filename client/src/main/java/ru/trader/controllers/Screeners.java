@@ -5,12 +5,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialogs;
 import ru.trader.EMDNUpdater;
 import ru.trader.core.MarketFilter;
 import ru.trader.core.VendorFilter;
@@ -20,6 +19,8 @@ import ru.trader.view.support.CustomBuilderFactory;
 import ru.trader.view.support.Localization;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.Optional;
 
@@ -175,13 +176,42 @@ public class Screeners {
         mainController.getMainPane().setCenter(node);
     }
 
-    public static void showException(Throwable e){
-        if (mainScreen!=null)
-            Dialogs.create().owner(mainScreen).showException(e);
+    public static void showException(Throwable ex){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Exception Dialog");
+        alert.setHeaderText(ex.getLocalizedMessage());
+
+        // Create expandable Exception.
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        ex.printStackTrace(pw);
+        String exceptionText = sw.toString();
+
+        Label label = new Label("The exception stacktrace was:");
+        TextArea textArea = new TextArea(exceptionText);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        GridPane.setVgrow(textArea, Priority.ALWAYS);
+        GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+        GridPane expContent = new GridPane();
+        expContent.setMaxWidth(Double.MAX_VALUE);
+        expContent.add(label, 0, 0);
+        expContent.add(textArea, 0, 1);
+
+        alert.getDialogPane().setExpandableContent(expContent);
+        alert.showAndWait();
     }
 
-    public static Action showConfirm(String text){
-        return Dialogs.create().owner(mainScreen).message(text).showConfirm();
+    public static Optional<ButtonType> showConfirm(String text){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText(text);
+        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+        return alert.showAndWait();
     }
 
     public static Optional<GroupModel> showAddGroup(MarketModel market){
