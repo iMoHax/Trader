@@ -72,8 +72,8 @@ public class StationUpdater {
             for (SERVICE_TYPE service : station.getServices()) {
                 serviceProperty(service).set(true);
             }
-            station.getSells().forEach(this::fillOffer);
-            station.getBuys().forEach(this::fillOffer);
+            station.getAllSells().forEach(this::fillOffer);
+            station.getAllBuys().forEach(this::fillOffer);
         } else {
             name.setValue("");
             type.setValue(null);

@@ -1,10 +1,12 @@
 package ru.trader.core;
 
+import ru.trader.analysis.MarketUtils;
 import ru.trader.analysis.graph.Connectable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Stream;
 
 public interface Vendor extends Connectable<Vendor> {
 
@@ -55,24 +57,34 @@ public interface Vendor extends Connectable<Vendor> {
         return get(OFFER_TYPE.SELL);
     }
 
+    default Stream<Offer> getSellOffers(){
+        return MarketUtils.getOffers(getAllSellOffers());
+    }
+
     default Collection<Offer> getAllBuyOffers(){
         return get(OFFER_TYPE.BUY);
     }
 
+    default Stream<Offer> getBuyOffers(){
+        return MarketUtils.getOffers(getAllBuyOffers());
+    }
+
     default Offer getSell(Item item){
-        return get(OFFER_TYPE.SELL, item);
+        Offer offer = get(OFFER_TYPE.SELL, item);
+        return MarketUtils.isIncorrect(offer) ? null : offer;
     }
 
     default Offer getBuy(Item item){
-        return get(OFFER_TYPE.BUY, item);
+        Offer offer = get(OFFER_TYPE.BUY, item);
+        return MarketUtils.isIncorrect(offer) ? null : offer;
     }
 
     default boolean hasSell(Item item){
-        return has(OFFER_TYPE.SELL, item);
+        return has(OFFER_TYPE.SELL, item) && !MarketUtils.isIncorrect(this, item, OFFER_TYPE.SELL);
     }
 
     default boolean hasBuy(Item item){
-        return has(OFFER_TYPE.BUY, item);
+        return has(OFFER_TYPE.BUY, item) && !MarketUtils.isIncorrect(this, item, OFFER_TYPE.BUY);
     }
 
 

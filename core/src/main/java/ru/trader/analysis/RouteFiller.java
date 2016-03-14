@@ -49,7 +49,8 @@ public class RouteFiller {
             LOG.trace("Fill orders for {}", seller);
             final int nextIndex = i+1;
             Collection<Vendor> vendors = route.getVendors(nextIndex);
-            for (Offer sell : seller.getAllSellOffers()) {
+            for (Iterator<Offer> iterator = seller.getSellOffers().iterator(); iterator.hasNext(); ) {
+                Offer sell = iterator.next();
                 for (Vendor buyer : vendors) {
                     Offer buy = buyer.getBuy(sell.getItem());
                     if (buy != null) {

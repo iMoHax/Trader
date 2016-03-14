@@ -111,7 +111,8 @@ public class MarketAnalyzer {
         callback.start(sellers.size());
         for (Vendor vendor : sellers) {
             if (callback.isCancel()) break;
-            for (Offer sell : vendor.getAllSellOffers()) {
+            for (Iterator<Offer> iterator = vendor.getSellOffers().iterator(); iterator.hasNext(); ) {
+                Offer sell = iterator.next();
                 if (callback.isCancel()) break;
                 LOG.trace("Sell offer {}", sell);
                 if (sell.getCount() == 0) continue;
@@ -148,7 +149,8 @@ public class MarketAnalyzer {
         callback.start(sellers.size());
         for (Vendor seller : sellers) {
             if (callback.isCancel()) break;
-            for (Offer sell : seller.getAllSellOffers()) {
+            for (Iterator<Offer> iterator = seller.getSellOffers().iterator(); iterator.hasNext(); ) {
+                Offer sell = iterator.next();
                 if (callback.isCancel()) break;
                 if (sell.getCount() == 0) continue;
                 long count = Order.getMaxCount(sell, profile.getBalance(), profile.getShip().getCargo());
@@ -157,7 +159,7 @@ public class MarketAnalyzer {
                 for (Vendor buyer : buyers) {
                     if (callback.isCancel()) break;
                     Offer buy = buyer.getBuy(sell.getItem());
-                    if (buy != null){
+                    if (buy != null) {
                         Order order = new Order(sell, buy, count);
                         LOG.trace("Buy offer {} profit = {}", buy, order.getProfit());
                         if (order.getProfit() < lowProfit) {

@@ -25,8 +25,10 @@ public class VendorTest extends Assert {
     public void fillVendor(){
         sellVendor = new SimpleVendor();
         sellVendor.add(SELL_OFFER);
+        sellVendor.add(SERVICE_TYPE.MARKET);
         buyVendor = new SimpleVendor();
         buyVendor.add(BUY_OFFER);
+        buyVendor.add(SERVICE_TYPE.MARKET);
     }
 
     @Test

@@ -131,12 +131,20 @@ public class StationModel {
         return market.getModeler().get(station.getPlace());
     }
 
-    public List<OfferModel> getSells() {
+    public List<OfferModel> getAllSells() {
         return station.getAllSellOffers().stream().map(this::asModel).collect(Collectors.toList());
     }
 
-    public List<OfferModel> getBuys() {
+    public List<OfferModel> getSells() {
+        return station.getSellOffers().map(this::asModel).collect(Collectors.toList());
+    }
+
+    public List<OfferModel> getAllBuys() {
         return station.getAllBuyOffers().stream().map(this::asModel).collect(Collectors.toList());
+    }
+
+    public List<OfferModel> getBuys() {
+        return station.getBuyOffers().map(this::asModel).collect(Collectors.toList());
     }
 
     public OfferModel add(OFFER_TYPE type, ItemModel item, double price, long count){

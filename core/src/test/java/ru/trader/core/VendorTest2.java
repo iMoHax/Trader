@@ -39,12 +39,14 @@ public class VendorTest2 extends Assert {
         sellVendor.add(SELL_OFFER2);
         sellVendor.add(SELL_OFFER3);
         sellVendor.add(DUBLE_SELL_OFFER1);
+        sellVendor.add(SERVICE_TYPE.MARKET);
 
         buyVendor = new SimpleVendor();
         buyVendor.add(BUY_OFFER1);
         buyVendor.add(BUY_OFFER2);
         buyVendor.add(BUY_OFFER3);
         buyVendor.add(DUBLE_BUY_OFFER1);
+        buyVendor.add(SERVICE_TYPE.MARKET);
     }
 
     @Test

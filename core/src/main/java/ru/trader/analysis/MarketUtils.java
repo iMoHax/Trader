@@ -2,14 +2,10 @@ package ru.trader.analysis;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.trader.core.Offer;
-import ru.trader.core.Order;
-import ru.trader.core.SERVICE_TYPE;
-import ru.trader.core.Vendor;
+import ru.trader.core.*;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class MarketUtils {
     private final static Logger LOG = LoggerFactory.getLogger(MarketUtils.class);
@@ -48,7 +44,8 @@ public class MarketUtils {
         LOG.trace("Get orders from {}, to {}", seller, buyer);
         List<Order> orders = new ArrayList<>();
         if (seller.isTransit() || buyer.isTransit()) return orders;
-        for (Offer sell : seller.getAllSellOffers()) {
+        for (Iterator<Offer> iterator = seller.getSellOffers().iterator(); iterator.hasNext(); ) {
+            Offer sell = iterator.next();
             Offer buy = buyer.getBuy(sell.getItem());
             if (buy != null) {
                 Order order = new Order(sell, buy, 1);
@@ -58,6 +55,26 @@ public class MarketUtils {
             }
         }
         return orders;
+    }
+
+    public static boolean isIncorrect(Offer offer){
+        return offer != null && isIncorrect(offer.getVendor(), offer.isIllegal(), offer.getType());
+    }
+
+    public static boolean isIncorrect(Vendor vendor, Item item, OFFER_TYPE type){
+        return isIncorrect(vendor, item.isIllegal(vendor), type);
+    }
+
+    public static boolean isIncorrect(Vendor vendor, boolean isIllegal, OFFER_TYPE type){
+        if (type == OFFER_TYPE.SELL){
+            return isIllegal || !vendor.has(SERVICE_TYPE.MARKET);
+        } else {
+            return isIllegal ? !vendor.has(SERVICE_TYPE.BLACK_MARKET) : !vendor.has(SERVICE_TYPE.MARKET);
+        }
+    }
+
+    public static Stream<Offer> getOffers(Collection<Offer> offers){
+        return offers.stream().filter(o -> !isIncorrect(o));
     }
 
     public static boolean hasMarket(Vendor vendor) {

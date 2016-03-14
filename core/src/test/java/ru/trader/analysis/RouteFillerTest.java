@@ -46,6 +46,8 @@ public class RouteFillerTest extends Assert {
         ITEM3 = market.addItem("ITEM3", null);
         v1 = market.addPlace("p1",0,0,0).addVendor("v1");
         v2 =  market.addPlace("p2",0,0,0).addVendor("v2");
+        v1.add(SERVICE_TYPE.MARKET);
+        v2.add(SERVICE_TYPE.MARKET);
         v1.addOffer(OFFER_TYPE.SELL, ITEM1, 100, -1);
         v1.addOffer(OFFER_TYPE.SELL, ITEM2, 200, -1);
         v1.addOffer(OFFER_TYPE.SELL, ITEM3, 300, -1);
@@ -88,6 +90,9 @@ public class RouteFillerTest extends Assert {
         v1 = market.addPlace("p1",0,0,0).addVendor("v1");
         v2 = market.addPlace("p2",0,0,0).addVendor("v2");
         v3 = market.addPlace("p3",0,0,0).addVendor("v3");
+        v1.add(SERVICE_TYPE.MARKET);
+        v2.add(SERVICE_TYPE.MARKET);
+        v3.add(SERVICE_TYPE.MARKET);
         v1.addOffer(OFFER_TYPE.SELL, ITEM1, 100, -1);
         v1.addOffer(OFFER_TYPE.SELL, ITEM3, 300, -1);
         v2.addOffer(OFFER_TYPE.SELL, ITEM2, 200, -1);
@@ -134,6 +139,10 @@ public class RouteFillerTest extends Assert {
         v2 = market.addPlace("p2",0,0,0).addVendor("v2");
         v3 = market.addPlace("p3",0,0,0).addVendor("v3");
         v4 = market.addPlace("p4",0,0,0).addVendor("v4");
+        v1.add(SERVICE_TYPE.MARKET);
+        v2.add(SERVICE_TYPE.MARKET);
+        v3.add(SERVICE_TYPE.MARKET);
+        v4.add(SERVICE_TYPE.MARKET);
         v1.addOffer(OFFER_TYPE.SELL, ITEM1, 100, -1);
         v1.addOffer(OFFER_TYPE.SELL, ITEM2, 200, -1);
         v1.addOffer(OFFER_TYPE.SELL, ITEM3, 300, -1);
@@ -216,6 +225,11 @@ public class RouteFillerTest extends Assert {
         v3 = market.addPlace("p3",0,0,0).addVendor("v3");
         v4 = market.addPlace("p4",0,0,0).addVendor("v4");
         v5 = market.addPlace("p5",0,0,0).addVendor("v5");
+        v1.add(SERVICE_TYPE.MARKET);
+        v2.add(SERVICE_TYPE.MARKET);
+        v3.add(SERVICE_TYPE.MARKET);
+        v4.add(SERVICE_TYPE.MARKET);
+        v5.add(SERVICE_TYPE.MARKET);
         v1.addOffer(OFFER_TYPE.SELL, ITEM1, 410, -1);
         v1.addOffer(OFFER_TYPE.SELL, ITEM2, 200, -1);
         v1.addOffer(OFFER_TYPE.SELL, ITEM3, 300, -1);
@@ -277,6 +291,10 @@ public class RouteFillerTest extends Assert {
         v2 = market.addPlace("p2",0,0,0).addVendor("v2");
         v3 = market.addPlace("p3",0,0,0).addVendor("v3");
         v4 = market.addPlace("p4",0,0,0).addVendor("v4");
+        v1.add(SERVICE_TYPE.MARKET);
+        v2.add(SERVICE_TYPE.MARKET);
+        v3.add(SERVICE_TYPE.MARKET);
+        v4.add(SERVICE_TYPE.MARKET);
         v1.addOffer(OFFER_TYPE.SELL, ITEM1, 100, 5);
         v1.addOffer(OFFER_TYPE.SELL, ITEM2, 200, 5);
         v1.addOffer(OFFER_TYPE.SELL, ITEM3, 300, 5);
@@ -363,6 +381,8 @@ public class RouteFillerTest extends Assert {
         ITEM4 = market.addItem("ITEM4", null);
         v1 = market.addPlace("p1",0,0,0).addVendor("v1");
         v2 = market.addPlace("p2",0,1,0).addVendor("v2");
+        v1.add(SERVICE_TYPE.MARKET);
+        v2.add(SERVICE_TYPE.MARKET);
         v1.addOffer(OFFER_TYPE.SELL, ITEM1, 100, -1);
         v1.addOffer(OFFER_TYPE.SELL, ITEM2, 200, -1);
         v1.addOffer(OFFER_TYPE.SELL, ITEM3, 300, -1);
@@ -382,6 +402,8 @@ public class RouteFillerTest extends Assert {
         LOG.info("Init test 6B");
         v3 = market.addPlace("p3",0,1,1).addVendor("v3");
         v4 = market.addPlace("p4",1,1,1).addVendor("v4");
+        v3.add(SERVICE_TYPE.MARKET);
+        v4.add(SERVICE_TYPE.MARKET);
 
         v3.addOffer(OFFER_TYPE.SELL, ITEM3, 390, -1);
 
@@ -523,6 +545,10 @@ public class RouteFillerTest extends Assert {
         v2 = market.addPlace("p2",0,0,0).addVendor("v2");
         v3 = market.addPlace("p3",0,0,0).addVendor("v3");
         v4 = market.addPlace("p4",0,0,0).addVendor("v4");
+        v1.add(SERVICE_TYPE.MARKET);
+        v2.add(SERVICE_TYPE.MARKET);
+        v3.add(SERVICE_TYPE.MARKET);
+        v4.add(SERVICE_TYPE.MARKET);
         v1.addOffer(OFFER_TYPE.SELL, ITEM1, 100, 5);
         v1.addOffer(OFFER_TYPE.SELL, ITEM2, 200, 5);
         v1.addOffer(OFFER_TYPE.SELL, ITEM3, 300, 5);
@@ -591,6 +617,10 @@ public class RouteFillerTest extends Assert {
         v2 = market.addPlace("p2",0,0,0).addVendor("v2");
         v3 = market.addPlace("p3",0,0,0).addVendor("v3");
         v4 = market.addPlace("p4",0,0,0).addVendor("v4");
+        v1.add(SERVICE_TYPE.MARKET);
+        v2.add(SERVICE_TYPE.MARKET);
+        v3.add(SERVICE_TYPE.MARKET);
+        v4.add(SERVICE_TYPE.MARKET);
         v1.addOffer(OFFER_TYPE.SELL, ITEM1, 100, 5);
         v1.addOffer(OFFER_TYPE.SELL, ITEM2, 200, 5);
         v1.addOffer(OFFER_TYPE.SELL, ITEM3, 300, 5);
