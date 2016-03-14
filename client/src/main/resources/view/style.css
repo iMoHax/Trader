@@ -1,3 +1,11 @@
+.illegal_item {
+    -fx-base: red;
+}
+
+.illegal_item .bad .diff {
+    -fx-fill: white;
+}
+
 .good .diff {
     -fx-fill: green;
     -fx-font-weight: bold;
@@ -202,6 +210,10 @@ HBox.fields-group hbox-margin{
 
     -fx-focus-color: #bb6b00;
     -fx-faint-focus-color: #bb6b0022;
+}
+
+#helper .illegal_item {
+    -fx-base: darkred;
 }
 
 .text-small, .text-medium, .text-big {

@@ -15,6 +15,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 public class ViewUtils {
+    public final static String ILLEGAL_ITEM_STYLE = "illegal_item";
 
     //Scroll to row if invisible
     public static void show(TableView tableView, int index){

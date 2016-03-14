@@ -65,6 +65,11 @@ public class OrderModel {
         this.count.set(count);
     }
 
+    public boolean isIllegal(){
+        OfferModel offer = getBuyOffer();
+        return offer != null && offer.isIllegal();
+    }
+
     public LongProperty countProperty() {
         return count;
     }

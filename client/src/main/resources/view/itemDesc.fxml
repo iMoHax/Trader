@@ -3,8 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<?import ru.trader.view.support.cells.OfferListCell?>
 <?import javafx.geometry.Insets?>
+<?import ru.trader.view.support.cells.OfferDecoratedListCell?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.ItemDescController"
       spacing="4" >
@@ -12,10 +12,10 @@
 
     <Label text="%itemDesc.sellers" VBox.margin="$vbox_margin"/>
     <ListView fx:id="seller" maxHeight="200.0">
-        <cellFactory><OfferListCell/></cellFactory>
+        <cellFactory><OfferDecoratedListCell/></cellFactory>
     </ListView>
     <Label text="%itemDesc.buyers" VBox.margin="$vbox_margin"/>
     <ListView fx:id="buyer" maxHeight="200.0">
-        <cellFactory><OfferListCell/></cellFactory>
+        <cellFactory><OfferDecoratedListCell/></cellFactory>
     </ListView>
 </VBox>

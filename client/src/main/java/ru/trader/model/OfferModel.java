@@ -51,6 +51,10 @@ public class OfferModel {
         return item;
     }
 
+    public boolean isIllegal() {
+        return offer.isIllegal();
+    }
+
     public OFFER_TYPE getType(){
         return offer.getType();
     }

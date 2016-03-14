@@ -17,6 +17,7 @@ import ru.trader.view.support.ViewUtils;
 import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
+import ru.trader.view.support.cells.OrderDecoratedListCell;
 import ru.trader.view.support.cells.OrderListCell;
 
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public class RouteTrackController {
     private void initialize(){
         addMissionsList.setItems(missionsController.getMissions());
         buyOrders.setCellFactory(new OrderListCell(false));
-        sellOrders.setCellFactory(new OrderListCell(true));
+        sellOrders.setCellFactory(new OrderDecoratedListCell(true));
         editGroup.setVisible(false);
         init();
         newEntrySystem.valueProperty().addListener((ov, o , n) -> {

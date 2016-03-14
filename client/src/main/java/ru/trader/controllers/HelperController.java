@@ -20,9 +20,7 @@ import ru.trader.KeyBinding;
 import ru.trader.Main;
 import ru.trader.model.*;
 import ru.trader.view.support.ViewUtils;
-import ru.trader.view.support.cells.OfferListCell;
-import ru.trader.view.support.cells.OrderListCell;
-import ru.trader.view.support.cells.StationListCell;
+import ru.trader.view.support.cells.*;
 
 import javax.swing.*;
 
@@ -70,8 +68,8 @@ public class HelperController {
     @FXML
     private void initialize(){
         buyOrders.setCellFactory(new OrderListCell(false));
-        sellOrders.setCellFactory(new OrderListCell(true));
-        sellOffers.setCellFactory(new OfferListCell(true));
+        sellOrders.setCellFactory(new OrderDecoratedListCell(true));
+        sellOffers.setCellFactory(new OfferDecoratedListCell(true));
         stations.setCellFactory(new StationListCell());
         infoBtn.selectedProperty().addListener((ov, o, n) -> {
             if (n) showInfo();
