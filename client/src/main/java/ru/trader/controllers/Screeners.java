@@ -179,7 +179,8 @@ public class Screeners {
     public static void showException(Throwable ex){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Exception Dialog");
-        alert.setHeaderText(ex.getLocalizedMessage());
+        String text = ex.getLocalizedMessage();
+        alert.setHeaderText(text != null ? text : ex.getMessage());
 
         // Create expandable Exception.
         StringWriter sw = new StringWriter();
