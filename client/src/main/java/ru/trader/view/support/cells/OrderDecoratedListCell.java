@@ -17,7 +17,7 @@ public class OrderDecoratedListCell extends DecoratedListCellFactory<OrderModel>
     }
 
     @Override
-    void doStyle(ListCell<OrderModel> cell, OrderModel item) {
+    protected void doStyle(ListCell<OrderModel> cell, OrderModel item) {
         ObservableList<String> styles = cell.getStyleClass();
         styles.remove(ViewUtils.ILLEGAL_ITEM_STYLE);
         if (item != null && item.isIllegal()){

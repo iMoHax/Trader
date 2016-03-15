@@ -18,7 +18,7 @@ public abstract class DecoratedCellFactory<S, T> implements Callback<TableColumn
         this.decorated = decorated;
     }
 
-    abstract void doStyle(TableCell<S, T> cell, S entry, T item);
+    protected abstract void doStyle(TableCell<S, T> cell, S entry, T item);
 
     @Override
     public final TableCell<S, T> call(TableColumn<S, T> param) {

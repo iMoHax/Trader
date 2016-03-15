@@ -9,6 +9,7 @@ import ru.trader.view.support.ViewUtils;
 
 public class OfferDecoratedRow extends DecoratedRowFactory<OfferModel> {
     public OfferDecoratedRow() {
+        super();
     }
 
     public OfferDecoratedRow(Callback<TableView<OfferModel>, TableRow<OfferModel>> decorated) {
@@ -16,7 +17,7 @@ public class OfferDecoratedRow extends DecoratedRowFactory<OfferModel> {
     }
 
     @Override
-    void doStyle(TableRow<OfferModel> row, OfferModel entry) {
+    protected void doStyle(TableRow<OfferModel> row, OfferModel entry) {
         ObservableList<String> styles = row.getStyleClass();
         styles.remove(ViewUtils.ILLEGAL_ITEM_STYLE);
         if (entry != null && entry.isIllegal()){

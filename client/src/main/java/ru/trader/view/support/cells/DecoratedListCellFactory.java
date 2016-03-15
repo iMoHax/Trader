@@ -39,7 +39,7 @@ public abstract class DecoratedListCellFactory<T> implements Callback<ListView<T
         this.decorated = decorated;
     }
 
-    abstract void doStyle(ListCell<T> cell, T item);
+    protected abstract void doStyle(ListCell<T> cell, T item);
 
     @Override
     public final ListCell<T> call(ListView<T> param) {

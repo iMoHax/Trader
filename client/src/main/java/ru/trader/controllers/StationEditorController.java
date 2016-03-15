@@ -1,9 +1,12 @@
 package ru.trader.controllers;
 
+import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.util.Callback;
 import javafx.util.converter.LongStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +17,7 @@ import ru.trader.model.StationModel;
 import ru.trader.model.SystemModel;
 import ru.trader.model.support.StationUpdater;
 import ru.trader.view.support.*;
+import ru.trader.view.support.cells.DecoratedRowFactory;
 import ru.trader.view.support.cells.EditOfferCell;
 import ru.trader.view.support.cells.TextFieldCell;
 
@@ -78,13 +82,16 @@ public class StationEditorController {
         type.setConverter(new StationTypeStringConverter());
         faction.setItems(FXCollections.observableArrayList(FACTION.values()));
         faction.setConverter(new FactionStringConverter());
+        faction.valueProperty().addListener(e -> updateItems());
         government.setItems(FXCollections.observableArrayList(GOVERNMENT.values()));
         government.setConverter(new GovernmentStringConverter());
+        government.valueProperty().addListener(e -> updateItems());
         economic.setItems(FXCollections.observableArrayList(ECONOMIC_TYPE.values()));
         economic.setConverter(new EconomicTypeStringConverter());
         subEconomic.setItems(FXCollections.observableArrayList(ECONOMIC_TYPE.values()));
         subEconomic.setConverter(new EconomicTypeStringConverter());
         items.getSelectionModel().setCellSelectionEnabled(true);
+        items.setRowFactory(new FakeOfferDecoratedRow());
         buy.setCellFactory(EditOfferCell.forTable(new PriceStringConverter(), false));
         sell.setCellFactory(EditOfferCell.forTable(new PriceStringConverter(), true));
         demand.setCellFactory(TextFieldCell.forTableColumn(new LongStringConverter()));
@@ -127,6 +134,13 @@ public class StationEditorController {
         items.setItems(updater.getOffers());
     }
 
+    private void updateItems(){
+        items.setItems(null);
+        items.layout();
+        if (updater != null){
+            items.setItems(updater.getOffers());
+        }
+    }
 
     private void createDialog(Parent owner, Parent content){
         dlg = new Dialog<>();
@@ -220,5 +234,29 @@ public class StationEditorController {
 
     public void updateFromEMDN(){
         EMDNUpdater.updateFromEMDN(updater);
+    }
+
+    private class FakeOfferDecoratedRow extends DecoratedRowFactory<StationUpdater.FakeOffer> {
+
+        public FakeOfferDecoratedRow() {
+            super();
+        }
+
+        public FakeOfferDecoratedRow(Callback<TableView<StationUpdater.FakeOffer>, TableRow<StationUpdater.FakeOffer>> decorated) {
+            super(decorated);
+        }
+
+        @Override
+        protected void doStyle(TableRow<StationUpdater.FakeOffer> row, StationUpdater.FakeOffer entry) {
+            ObservableList<String> styles = row.getStyleClass();
+            styles.remove(ViewUtils.ILLEGAL_ITEM_STYLE);
+            if (entry != null){
+                GOVERNMENT g = government.getValue();
+                FACTION f = faction.getValue();
+                if (entry.getItem().isIllegal(f, g)){
+                    styles.add(ViewUtils.ILLEGAL_ITEM_STYLE);
+                }
+            }
+        }
     }
 }

@@ -19,7 +19,7 @@ public abstract class DecoratedRowFactory<S> implements Callback<TableView<S>, T
         this.decorated = decorated;
     }
 
-    abstract void doStyle(TableRow<S> row, S entry);
+    protected abstract void doStyle(TableRow<S> row, S entry);
 
     @Override
     public final TableRow<S> call(TableView<S> param) {

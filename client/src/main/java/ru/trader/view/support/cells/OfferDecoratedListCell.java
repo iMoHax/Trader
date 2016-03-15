@@ -22,7 +22,7 @@ public class OfferDecoratedListCell extends DecoratedListCellFactory<OfferModel>
     }
 
     @Override
-    void doStyle(ListCell<OfferModel> cell, OfferModel item) {
+    protected void doStyle(ListCell<OfferModel> cell, OfferModel item) {
         ObservableList<String> styles = cell.getStyleClass();
         styles.remove(ViewUtils.ILLEGAL_ITEM_STYLE);
         if (item != null && item.isIllegal()){

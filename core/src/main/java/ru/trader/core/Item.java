@@ -12,6 +12,10 @@ public interface Item extends Comparable<Item> {
     default boolean isIllegal(Vendor vendor){
         FACTION faction = vendor.getFaction();
         GOVERNMENT government = vendor.getGovernment();
+        return isIllegal(faction, government);
+    }
+
+    default boolean isIllegal(FACTION faction, GOVERNMENT government){
         if (faction != null && getLegalFactions().contains(faction)) return false;
         if (government != null && getLegalGovernments().contains(government)) return false;
         return faction != null && getIllegalFactions().contains(faction) ||
