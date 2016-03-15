@@ -122,6 +122,18 @@ public interface Market {
         for (Item item : items) {
             Item nItem = getItem(item.getName());
             if (nItem == null) nItem = this.addItem(item.getName(), mapGroups.get(item.getGroup()));
+            for (FACTION faction : item.getIllegalFactions()) {
+                nItem.setIllegal(faction, true);
+            }
+            for (FACTION faction : item.getLegalFactions()) {
+                nItem.setLegal(faction, true);
+            }
+            for (GOVERNMENT government : item.getIllegalGovernments()) {
+                nItem.setIllegal(government, true);
+            }
+            for (GOVERNMENT government : item.getLegalGovernments()) {
+                nItem.setLegal(government, true);
+            }
             mapItems.put(item, nItem);
         }
         mapGroups.clear();

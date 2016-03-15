@@ -78,6 +78,17 @@ public class MarketStreamWriter {
             String str = governments.stream().map(GOVERNMENT::toString).collect(Collectors.joining(","));
             out.writeAttribute(MarketDocHandler.ILLEGAL_GOVERNMENT__ATTR, str);
         }
+        factions = item.getLegalFactions();
+        if (!factions.isEmpty()) {
+            String str = factions.stream().map(FACTION::toString).collect(Collectors.joining(","));
+            out.writeAttribute(MarketDocHandler.LEGAL_FACTION_ATTR, str);
+        }
+        governments = item.getLegalGovernments();
+        if (!governments.isEmpty()) {
+            String str = governments.stream().map(GOVERNMENT::toString).collect(Collectors.joining(","));
+            out.writeAttribute(MarketDocHandler.LEGAL_GOVERNMENT__ATTR, str);
+        }
+
     }
 
     protected void writePlaces() throws XMLStreamException {

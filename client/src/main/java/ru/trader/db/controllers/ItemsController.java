@@ -34,6 +34,10 @@ public class ItemsController {
     private TableColumn<ItemModel, Collection<FACTION>> factions;
     @FXML
     private TableColumn<ItemModel, Collection<GOVERNMENT>> governments;
+    @FXML
+    private TableColumn<ItemModel, Collection<FACTION>> legalFactions;
+    @FXML
+    private TableColumn<ItemModel, Collection<GOVERNMENT>> legalGovernments;
 
     private ObservableList<ItemModel> items = FXCollections.observableArrayList();
     private ObservableList<GroupModel> groups = FXCollections.observableArrayList();
@@ -48,6 +52,12 @@ public class ItemsController {
         );
         governments.setCellFactory(CheckComboBoxTableCell.forTableColumn(governments,
                 FXCollections.observableArrayList(GOVERNMENT.values()), new GovernmentStringConverter(), ItemModel::setIllegal)
+        );
+        legalFactions.setCellFactory(CheckComboBoxTableCell.forTableColumn(legalFactions,
+                FXCollections.observableArrayList(FACTION.values()), new FactionStringConverter(), ItemModel::setLegal)
+        );
+        legalGovernments.setCellFactory(CheckComboBoxTableCell.forTableColumn(legalGovernments,
+                FXCollections.observableArrayList(GOVERNMENT.values()), new GovernmentStringConverter(), ItemModel::setLegal)
         );
         init();
     }

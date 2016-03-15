@@ -7,7 +7,7 @@ import ru.trader.core.GOVERNMENT;
 import java.util.Collection;
 import java.util.HashSet;
 
-@Entity(version = 2)
+@Entity(version = 3)
 public class BDBItem {
     @PrimaryKey(sequence="I_ID")
     private long id;
@@ -19,10 +19,10 @@ public class BDBItem {
             onRelatedEntityDelete = DeleteAction.CASCADE)
     private String groupId;
 
-    @SecondaryKey(relate=Relationship.MANY_TO_MANY)
-    Collection<FACTION> fIllegals = new HashSet<>();
-    @SecondaryKey(relate=Relationship.MANY_TO_MANY)
-    Collection<GOVERNMENT> gIllegals = new HashSet<>();
+    HashSet<FACTION> fIllegals = new HashSet<>();
+    HashSet<GOVERNMENT> gIllegals = new HashSet<>();
+    HashSet<FACTION> fLegals = new HashSet<>();
+    HashSet<GOVERNMENT> gLegals = new HashSet<>();
 
     private BDBItem() {
     }
@@ -62,6 +62,25 @@ public class BDBItem {
         return gIllegals;
     }
 
+    public void setLegal(FACTION faction, boolean legal) {
+        if (legal) fLegals.add(faction);
+        else fLegals.remove(faction);
+    }
+
+    public Collection<FACTION> getLegalFactions() {
+        return fLegals;
+    }
+
+    public void setLegal(GOVERNMENT government, boolean legal) {
+        if (legal) gLegals.add(government);
+        else gLegals.remove(government);
+    }
+
+    public Collection<GOVERNMENT> getLegalGovernments() {
+        return gLegals;
+    }
+
+
     public String getGroupId() {
         return groupId;
     }
@@ -78,6 +97,8 @@ public class BDBItem {
         if (!name.equals(bdbItem.name)) return false;
         if (!fIllegals.equals(bdbItem.fIllegals)) return false;
         if (!gIllegals.equals(bdbItem.gIllegals)) return false;
+        if (!fLegals.equals(bdbItem.fLegals)) return false;
+        if (!gLegals.equals(bdbItem.gLegals)) return false;
 
         return true;
     }

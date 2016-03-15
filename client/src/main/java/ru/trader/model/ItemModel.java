@@ -120,10 +120,6 @@ public class ItemModel implements Comparable<ItemModel> {
         return item.getIllegalFactions();
     }
 
-    public void setIllegalFactions(Collection<FACTION> factions){
-        LOG.debug("Set illegal factions {}", factions);
-    }
-
     public void setIllegal(FACTION faction, boolean illegal){
         item.setIllegal(faction, illegal);
     }
@@ -134,6 +130,22 @@ public class ItemModel implements Comparable<ItemModel> {
 
     public void setIllegal(GOVERNMENT government, boolean illegal){
         item.setIllegal(government, illegal);
+    }
+
+    public Collection<FACTION> getLegalFactions(){
+        return item.getLegalFactions();
+    }
+
+    public void setLegal(FACTION faction, boolean legal){
+        item.setLegal(faction, legal);
+    }
+
+    public Collection<GOVERNMENT> getLegalGovernments(){
+        return item.getLegalGovernments();
+    }
+
+    public void setLegal(GOVERNMENT government, boolean legal){
+        item.setLegal(government, legal);
     }
 
     public void refresh(){

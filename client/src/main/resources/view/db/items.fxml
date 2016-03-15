@@ -27,6 +27,12 @@
             <TableColumn fx:id="governments" minWidth="145" text="Запрещено в">
                 <cellValueFactory><PropertyValueFactory property="illegalGovernments"/></cellValueFactory>
             </TableColumn>
+            <TableColumn fx:id="legalFactions" minWidth="145" text="Разрешено в">
+                <cellValueFactory><PropertyValueFactory property="legalFactions"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="legalGovernments" minWidth="145" text="Разрешено в">
+                <cellValueFactory><PropertyValueFactory property="legalGovernments"/></cellValueFactory>
+            </TableColumn>
         </columns>
         <columnResizePolicy>
             <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>

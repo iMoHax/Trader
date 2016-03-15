@@ -13,6 +13,8 @@ public class SimpleItem extends AbstractItem {
     private Group group;
     private final EnumSet<GOVERNMENT> gIllegals = EnumSet.noneOf(GOVERNMENT.class);
     private final EnumSet<FACTION> fIllegals = EnumSet.noneOf(FACTION.class);
+    private final EnumSet<GOVERNMENT> gLegals = EnumSet.noneOf(GOVERNMENT.class);
+    private final EnumSet<FACTION> fLegals = EnumSet.noneOf(FACTION.class);
 
     public SimpleItem(String name) {
         this.name = name;
@@ -53,6 +55,28 @@ public class SimpleItem extends AbstractItem {
     @Override
     public Collection<GOVERNMENT> getIllegalGovernments() {
         return gIllegals;
+    }
+
+    @Override
+    protected void updateLegalState(FACTION faction, boolean legal) {
+        if (legal) fLegals.add(faction);
+        else fLegals.remove(faction);
+    }
+
+    @Override
+    public Collection<FACTION> getLegalFactions() {
+        return fLegals;
+    }
+
+    @Override
+    protected void updateLegalState(GOVERNMENT government, boolean legal) {
+        if (legal) gLegals.add(government);
+        else gLegals.remove(government);
+    }
+
+    @Override
+    public Collection<GOVERNMENT> getLegalGovernments() {
+        return gLegals;
     }
 
     @Override

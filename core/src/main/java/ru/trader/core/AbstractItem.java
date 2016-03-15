@@ -13,6 +13,8 @@ public abstract class AbstractItem implements Item {
     protected abstract void updateName(String name);
     protected abstract void updateIllegalState(FACTION faction, boolean illegal);
     protected abstract void updateIllegalState(GOVERNMENT government, boolean illegal);
+    protected abstract void updateLegalState(FACTION faction, boolean legal);
+    protected abstract void updateLegalState(GOVERNMENT government, boolean legal);
 
     protected final void setMarket(AbstractMarket market){
         assert this.market == null;
@@ -49,6 +51,28 @@ public abstract class AbstractItem implements Item {
             market.setChange(true);
         } else {
             updateIllegalState(government, illegal);
+        }
+    }
+
+    @Override
+    public final void setLegal(FACTION faction, boolean legal){
+        if (market != null){
+            LOG.debug("Change legal state of item {} for faction {} to {}", this, faction, legal);
+            updateLegalState(faction, legal);
+            market.setChange(true);
+        } else {
+            updateLegalState(faction, legal);
+        }
+    }
+
+    @Override
+    public final void setLegal(GOVERNMENT government, boolean legal){
+        if (market != null){
+            LOG.debug("Change legal state of item {} for government {} to {}", this, government, legal);
+            updateLegalState(government, legal);
+            market.setChange(true);
+        } else {
+            updateLegalState(government, legal);
         }
     }
 

@@ -35,6 +35,8 @@ public class MarketDocHandler extends DefaultHandler {
     protected final static String ITEM_ATTR = "item";
     protected final static String ILLEGAL_FACTION_ATTR = "illegalf";
     protected final static String ILLEGAL_GOVERNMENT__ATTR = "illegalg";
+    protected final static String LEGAL_FACTION_ATTR = "legalf";
+    protected final static String LEGAL_GOVERNMENT__ATTR = "legalg";
     protected final static String DISTANCE_ATTR = "distance";
     protected final static String X_ATTR = "x";
     protected final static String Y_ATTR = "y";
@@ -155,8 +157,23 @@ public class MarketDocHandler extends DefaultHandler {
             }
         }
 
-        LOG.debug("parse item {} ({}), illegal - {}, {}", name, id, factions, governments);
-        onItem(name, id, factions, governments);
+        String legalFactions = attributes.getValue(LEGAL_FACTION_ATTR);
+        String legalGovernments = attributes.getValue(LEGAL_GOVERNMENT__ATTR);
+        EnumSet<FACTION> legalf = EnumSet.noneOf(FACTION.class);
+        if (legalFactions != null){
+            for (String f : legalFactions.split(",")) {
+                legalf.add(FACTION.valueOf(f));
+            }
+        }
+        EnumSet<GOVERNMENT> legalg = EnumSet.noneOf(GOVERNMENT.class);
+        if (legalGovernments != null){
+            for (String f : legalGovernments.split(",")) {
+                legalg.add(GOVERNMENT.valueOf(f));
+            }
+        }
+
+        LOG.debug("parse item {} ({}), illegal - {}, {}, legal - {}, {}", name, id, factions, governments, legalf, legalg);
+        onItem(name, id, factions, governments, legalf, legalg);
     }
 
     protected void parseOffer(Attributes attributes) throws SAXException {
@@ -209,13 +226,20 @@ public class MarketDocHandler extends DefaultHandler {
         curVendor.add(type);
     }
 
-    protected void onItem(String name, String id, Collection<FACTION> illegalFactions, Collection<GOVERNMENT> illegalGovernment) {
+    protected void onItem(String name, String id, Collection<FACTION> illegalFactions, Collection<GOVERNMENT> illegalGovernment,
+                          Collection<FACTION> legalFactions, Collection<GOVERNMENT> legalGovernment) {
         Item item = world.addItem(name, curGroup);
         for (FACTION faction : illegalFactions) {
             item.setIllegal(faction, true);
         }
         for (GOVERNMENT government : illegalGovernment) {
             item.setIllegal(government, true);
+        }
+        for (FACTION faction : legalFactions) {
+            item.setLegal(faction, true);
+        }
+        for (GOVERNMENT government : legalGovernment) {
+            item.setLegal(government, true);
         }
         items.put(id, item);
     }

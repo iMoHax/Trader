@@ -12,14 +12,21 @@ public interface Item extends Comparable<Item> {
     default boolean isIllegal(Vendor vendor){
         FACTION faction = vendor.getFaction();
         GOVERNMENT government = vendor.getGovernment();
-        return faction != null && getIllegalFactions().contains(vendor.getFaction())
-               || government != null && getIllegalGovernments().contains(government);
+        if (faction != null && getLegalFactions().contains(faction)) return false;
+        if (government != null && getLegalGovernments().contains(government)) return false;
+        return faction != null && getIllegalFactions().contains(faction) ||
+               government != null && getIllegalGovernments().contains(government);
     }
 
     Collection<FACTION> getIllegalFactions();
     void setIllegal(FACTION faction, boolean illegal);
     Collection<GOVERNMENT> getIllegalGovernments();
     void setIllegal(GOVERNMENT government, boolean illegal);
+
+    Collection<FACTION> getLegalFactions();
+    void setLegal(FACTION faction, boolean legal);
+    Collection<GOVERNMENT> getLegalGovernments();
+    void setLegal(GOVERNMENT government, boolean legal);
 
     Group getGroup();
 

@@ -60,6 +60,28 @@ public class ItemProxy extends AbstractItem {
     }
 
     @Override
+    protected void updateLegalState(FACTION faction, boolean legal) {
+        item.setLegal(faction, legal);
+        store.getItemAccessor().update(item);
+    }
+
+    @Override
+    public Collection<FACTION> getLegalFactions() {
+        return item.getLegalFactions();
+    }
+
+    @Override
+    protected void updateLegalState(GOVERNMENT government, boolean legal) {
+        item.setLegal(government, legal);
+        store.getItemAccessor().update(item);
+    }
+
+    @Override
+    public Collection<GOVERNMENT> getLegalGovernments() {
+        return item.getLegalGovernments();
+    }
+
+    @Override
     public Group getGroup() {
         if (group == null){
             group = store.getGroupAccessor().get(item.getGroupId());

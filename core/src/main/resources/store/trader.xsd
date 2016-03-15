@@ -50,6 +50,8 @@
         <xs:attribute name="name" type="xs:string" use="required"/>
         <xs:attribute name="illegalf" type="xs:string" use="optional"/>
         <xs:attribute name="illegalg" type="xs:string" use="optional"/>
+        <xs:attribute name="legalf" type="xs:string" use="optional"/>
+        <xs:attribute name="legalg" type="xs:string" use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="placeType" mixed="true">
