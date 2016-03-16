@@ -40,7 +40,9 @@ public class LoadTest extends Assert {
         assertEquals(item1.getName(), item2.getName());
         assertGroup(item1.getGroup(), item2.getGroup());
         assertEquals(item1.getIllegalFactions(), item2.getIllegalFactions());
+        assertEquals(item1.getLegalFactions(), item2.getLegalFactions());
         assertEquals(item1.getIllegalGovernments(), item2.getIllegalGovernments());
+        assertEquals(item1.getLegalGovernments(), item2.getLegalGovernments());
     }
 
     private void assertPlace(Place place1, Place place2){
@@ -86,9 +88,12 @@ public class LoadTest extends Assert {
         Item item4 = market.addItem("Item 4", group2);
         Item item5 = market.addItem("Item 5", group3);
         item1.setIllegal(FACTION.FEDERATION, true);
+        item1.setLegal(GOVERNMENT.COOPERATIVE, true);
         item2.setIllegal(FACTION.EMPIRE, true);
         item2.setIllegal(GOVERNMENT.DEMOCRACY, true);
+        item2.setLegal(FACTION.FEDERATION, true);
         item3.setIllegal(GOVERNMENT.CORPORATE, true);
+        item3.setLegal(FACTION.ALLIANCE, true);
         Place place1 = market.addPlace("Place 1", 0, 1, 3);
         place1.setFaction(FACTION.ALLIANCE);
         place1.setGovernment(GOVERNMENT.PRISON_COLONY);

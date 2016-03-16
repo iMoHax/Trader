@@ -11,6 +11,7 @@ import ru.trader.core.*;
 import ru.trader.store.simple.SimpleMarket;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 
@@ -360,6 +361,10 @@ public class MarketTest  extends Assert {
     private void assertItem(Item item1, Item item2){
         assertEquals(item1.getName(), item2.getName());
         assertGroup(item1.getGroup(), item2.getGroup());
+        assertEquals(item1.getIllegalFactions(), item2.getIllegalFactions());
+        assertEquals(item1.getLegalFactions(), item2.getLegalFactions());
+        assertEquals(item1.getIllegalGovernments(), item2.getIllegalGovernments());
+        assertEquals(item1.getLegalGovernments(), item2.getLegalGovernments());
     }
 
     private void assertPlace(Place place1, Place place2){
@@ -367,11 +372,21 @@ public class MarketTest  extends Assert {
         assertEquals(place1.getX(), place2.getX(), 0.00001);
         assertEquals(place1.getY(), place2.getY(), 0.00001);
         assertEquals(place1.getZ(), place2.getZ(), 0.00001);
+        assertEquals(place1.getFaction(), place2.getFaction());
+        assertEquals(place1.getGovernment(), place2.getGovernment());
+        assertEquals(place1.getPower(), place2.getPower());
+        assertEquals(place1.getPowerState(), place2.getPowerState());
     }
 
     private void assertVendor(Vendor vendor1, Vendor vendor2){
         assertEquals(vendor1.getName(), vendor2.getName());
+        assertEquals(vendor1.getType(), vendor2.getType());
         assertEquals(vendor1.getDistance(), vendor2.getDistance(), 0.00001);
+        assertEquals(vendor1.getFaction(), vendor2.getFaction());
+        assertEquals(vendor1.getGovernment(), vendor2.getGovernment());
+        assertEquals(vendor1.getEconomic(), vendor2.getEconomic());
+        assertEquals(vendor1.getSubEconomic(), vendor2.getSubEconomic());
+        assertEquals(vendor1.getModifiedTime(), vendor2.getModifiedTime());
     }
 
     private void assertOffer(Offer offer1, Offer offer2){
@@ -394,13 +409,29 @@ public class MarketTest  extends Assert {
         Item item3 = world.addItem("Item 3", group2);
         Item item4 = world.addItem("Item 4", group2);
         Item item5 = world.addItem("Item 5", group3);
+        item1.setIllegal(FACTION.FEDERATION, true);
+        item1.setLegal(GOVERNMENT.COOPERATIVE, true);
+        item2.setIllegal(FACTION.EMPIRE, true);
+        item2.setIllegal(GOVERNMENT.DEMOCRACY, true);
+        item2.setLegal(FACTION.FEDERATION, true);
+        item3.setIllegal(GOVERNMENT.CORPORATE, true);
+        item3.setLegal(FACTION.ALLIANCE, true);
         Place place1 = world.addPlace("Place 1", 0, 1, 3);
+        place1.setFaction(FACTION.ALLIANCE);
+        place1.setGovernment(GOVERNMENT.PRISON_COLONY);
+        place1.setPower(POWER.LAVIGNY_DUVAL, POWER_STATE.EXPLOITED);
         Place place2 = world.addPlace("Place 2",4,0,5);
+        place2.setPower(POWER.DELAINE, POWER_STATE.CONTROL);
         Place place3 = world.addPlace("Place 3",0,0,0);
         Vendor vendor1 = place1.addVendor("Vendor 1");
         Vendor vendor2 = place1.addVendor("Vendor 2");
         Vendor vendor3 = place2.addVendor("Vendor 3");
+        vendor1.setType(STATION_TYPE.CORIOLIS_STARPORT);
         vendor1.setDistance(10);
+        vendor1.setFaction(FACTION.ALLIANCE);
+        vendor1.setGovernment(GOVERNMENT.ANARCHY);
+        vendor1.setEconomic(ECONOMIC_TYPE.EXTRACTION);
+        vendor1.setSubEconomic(ECONOMIC_TYPE.REFINERY);
         vendor1.add(SERVICE_TYPE.MARKET);
         vendor1.add(SERVICE_TYPE.OUTFIT);
         vendor1.add(SERVICE_TYPE.REFUEL);
@@ -411,9 +442,13 @@ public class MarketTest  extends Assert {
         Offer offer5 = vendor1.addOffer(OFFER_TYPE.SELL, item4, 1112,12);
         Offer offer6 = vendor1.addOffer(OFFER_TYPE.BUY, item5, 11,10);
         vendor2.setDistance(100.4);
+        vendor2.setGovernment(GOVERNMENT.NONE);
+        vendor2.setEconomic(ECONOMIC_TYPE.HIGH_TECH);
+        vendor2.setType(STATION_TYPE.PLANETARY_PORT);
         vendor3.setDistance(200000.4);
         vendor3.add(SERVICE_TYPE.OUTFIT);
         vendor3.add(SERVICE_TYPE.REFUEL);
+        vendor3.setModifiedTime(LocalDateTime.of(2016, 10, 2, 10, 20, 0));
 
         LOG.info("add market");
         market.add(world);
