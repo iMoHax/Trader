@@ -2,6 +2,7 @@
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.glyphfont.*?>
 <?import ru.trader.view.support.NumberField?>
+<?import org.controlsfx.control.CheckComboBox?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.trader.controllers.FilterController"
               styleClass="dialog" vgap="4" hgap="8">
         <columnConstraints>
@@ -15,20 +16,28 @@
         <NumberField fx:id="radius" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <Label text="%filter.distance" GridPane.rowIndex="3" />
         <NumberField fx:id="distance" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-        <Label text="%filter.services" GridPane.rowIndex="4" />
-        <TilePane hgap="5" vgap="5" tileAlignment="BASELINE_LEFT" prefColumns="2" GridPane.columnIndex="1" GridPane.rowIndex="4" >
-            <CheckBox fx:id="cbMarket" text="%services.MARKET"/>
-            <CheckBox fx:id="cbBlackMarket" text="%services.BLACK_MARKET"/>
-            <CheckBox fx:id="cbRefuel" text="%services.REFUEL"/>
-            <CheckBox fx:id="cbRepair" text="%services.REPAIR"/>
-            <CheckBox fx:id="cbMunition" text="%services.MUNITION"/>
-            <CheckBox fx:id="cbOutfit" text="%services.OUTFIT"/>
-            <CheckBox fx:id="cbShipyard" text="%services.SHIPYARD"/>
-            <CheckBox fx:id="cbMediumLandpad" text="%services.MEDIUM_LANDPAD"/>
-            <CheckBox fx:id="cbLargeLandpad" text="%services.LARGE_LANDPAD"/>
-        </TilePane>
-        <Label text="%filter.excludes" GridPane.rowIndex="5" />
-        <VBox GridPane.rowIndex="6" spacing="4">
+        <HBox GridPane.rowIndex="4" GridPane.columnSpan="2" spacing="10" alignment="CENTER">
+            <VBox prefWidth="200" alignment="CENTER">
+                <Label text="%market.station.type"/>
+                <CheckComboBox fx:id="stationTypes" maxWidth="200" />
+            </VBox>
+            <VBox prefWidth="200" alignment="CENTER">
+                <Label text="%market.station.services"/>
+                <CheckComboBox fx:id="services" maxWidth="200" />
+            </VBox>
+        </HBox>
+        <HBox GridPane.rowIndex="5" GridPane.columnSpan="2" spacing="10" alignment="CENTER">
+            <VBox prefWidth="200" alignment="CENTER">
+                <Label text="%market.allegiance"/>
+                <CheckComboBox fx:id="factions" maxWidth="200" />
+            </VBox>
+            <VBox prefWidth="200" alignment="CENTER">
+                <Label text="%market.government"/>
+                <CheckComboBox fx:id="governments" maxWidth="200" />
+            </VBox>
+        </HBox>
+        <Label text="%filter.excludes" GridPane.rowIndex="6" />
+        <VBox GridPane.rowIndex="7" spacing="4">
             <TextField fx:id="systemText" minWidth="180"/>
             <ComboBox fx:id="station" minWidth="180"/>
             <HBox spacing="2" alignment="BASELINE_RIGHT">
@@ -37,10 +46,10 @@
                 <Button prefWidth="30" onAction="#clean"><graphic><Glyph text="FontAwesome|TRASH_ALT"/></graphic></Button>
             </HBox>
         </VBox>
-        <ListView fx:id="excludes" GridPane.rowIndex="6" GridPane.columnIndex="1" maxHeight="120"/>
+        <ListView fx:id="excludes" GridPane.rowIndex="7" GridPane.columnIndex="1" maxHeight="120"/>
 
-    <Label text="Фильтры на товары:" GridPane.rowIndex="7" />
-    <VBox GridPane.rowIndex="8" spacing="4">
+    <Label text="Фильтры на товары:" GridPane.rowIndex="8" />
+    <VBox GridPane.rowIndex="9" spacing="4">
         <TextField fx:id="vFilterSystemText" minWidth="180"/>
         <ComboBox fx:id="vFilterStation" minWidth="180"/>
         <HBox spacing="2" alignment="BASELINE_RIGHT">
@@ -50,8 +59,8 @@
             <Button prefWidth="30" onAction="#cleanVendorFilters"><graphic><Glyph text="FontAwesome|TRASH_ALT"/></graphic></Button>
         </HBox>
         <Button prefWidth="180" text="Глобальный фильтр" onAction="#editDefaultVendorFilter"/>
-</VBox>
-    <ListView fx:id="vFilters" GridPane.rowIndex="8" GridPane.columnIndex="1" maxHeight="120"/>
+    </VBox>
+    <ListView fx:id="vFilters" GridPane.rowIndex="9" GridPane.columnIndex="1" maxHeight="120"/>
 
 
 </GridPane>

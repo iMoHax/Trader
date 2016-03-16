@@ -11,7 +11,10 @@ public class MarketFilter {
     private Place center;
     private double radius;
     private double distance;
+    private final EnumSet<STATION_TYPE> types;
     private final EnumSet<SERVICE_TYPE> services;
+    private final EnumSet<FACTION> factions;
+    private final EnumSet<GOVERNMENT> governments;
     private final Collection<Vendor> excludes;
     private final VendorFilter defaultVendorFilter;
     private final HashMap<String, VendorFilter> customFilteredVendors;
@@ -21,7 +24,10 @@ public class MarketFilter {
     }
 
     public MarketFilter(VendorFilter defaultVendorFilter) {
+        this.types = EnumSet.noneOf(STATION_TYPE.class);
         this.services = EnumSet.noneOf(SERVICE_TYPE.class);
+        this.factions = EnumSet.noneOf(FACTION.class);
+        this.governments = EnumSet.noneOf(GOVERNMENT.class);
         this.excludes = new ArrayList<>();
         this.customFilteredVendors = new HashMap<>();
         this.defaultVendorFilter = defaultVendorFilter;
@@ -51,6 +57,22 @@ public class MarketFilter {
         this.distance = distance;
     }
 
+    public void add(STATION_TYPE type){
+        types.add(type);
+    }
+
+    public void remove(STATION_TYPE type){
+        types.remove(type);
+    }
+
+    public void clearTypes(){
+        types.clear();
+    }
+
+    public Collection<STATION_TYPE> getTypes(){
+        return types;
+    }
+
     public void add(SERVICE_TYPE service){
         services.add(service);
     }
@@ -67,6 +89,14 @@ public class MarketFilter {
         return services.contains(service);
     }
 
+    public void clearServices(){
+        services.clear();
+    }
+
+    public Collection<SERVICE_TYPE> getServices(){
+        return services;
+    }
+
     public void addExclude(Vendor vendor){
         excludes.add(vendor);
     }
@@ -81,6 +111,38 @@ public class MarketFilter {
 
     public Collection<Vendor> getExcludes(){
         return excludes;
+    }
+
+    public void add(FACTION faction){
+        factions.add(faction);
+    }
+
+    public void remove(FACTION faction){
+        factions.remove(faction);
+    }
+
+    public void clearFactions(){
+        factions.clear();
+    }
+
+    public Collection<FACTION> getFactions(){
+        return factions;
+    }
+
+    public void add(GOVERNMENT government){
+        governments.add(government);
+    }
+
+    public void remove(GOVERNMENT government){
+        governments.remove(government);
+    }
+
+    public void clearGovernments(){
+        governments.clear();
+    }
+
+    public Collection<GOVERNMENT> getGovernments(){
+        return governments;
     }
 
     public static String getVendorKey(Vendor vendor){
@@ -132,6 +194,12 @@ public class MarketFilter {
         if (checkPlace && isFiltered(vendor.getPlace())) return true;
         if (distance > 0 && vendor.getDistance() > distance) return true;
         if (excludes.contains(vendor)) return true;
+        STATION_TYPE stationType = vendor.getType();
+        if (stationType != null && !types.isEmpty() && !types.contains(stationType)) return true;
+        FACTION faction = vendor.getFaction();
+        if (faction != null && !factions.isEmpty() && !factions.contains(faction)) return true;
+        GOVERNMENT government = vendor.getGovernment();
+        if (government != null && !governments.isEmpty() && !governments.contains(vendor.getGovernment())) return true;
         for (SERVICE_TYPE service : services) {
             if (!vendor.has(service)) return true;
         }
@@ -205,7 +273,10 @@ public class MarketFilter {
                 "center=" + center +
                 ", radius=" + radius +
                 ", distance=" + distance +
+                ", types=" + types +
                 ", services=" + services +
+                ", factions=" + factions +
+                ", governments=" + governments +
                 ", excludes=" + excludes +
                 '}';
     }

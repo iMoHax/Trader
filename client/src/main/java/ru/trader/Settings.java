@@ -7,6 +7,8 @@ import ru.trader.core.Market;
 import ru.trader.core.MarketFilter;
 import ru.trader.core.Profile;
 import ru.trader.core.Ship;
+import ru.trader.store.json.FiltersStore;
+import ru.trader.store.json.JsonStore;
 
 import javax.swing.*;
 import java.io.*;
@@ -21,6 +23,8 @@ public class Settings {
     private Profile profile;
     private final EDCESettings edce;
     private final HelperSettings helper;
+    private final JsonStore jsonStore;
+    private MarketFilter filter;
 
 
     public Settings() {
@@ -28,6 +32,7 @@ public class Settings {
         profile = new Profile(new Ship());
         edce = new EDCESettings();
         helper = new HelperSettings();
+        jsonStore = new JsonStore();
     }
 
     public Settings(File file) {
@@ -35,16 +40,19 @@ public class Settings {
         profile = new Profile(new Ship());
         edce = new EDCESettings();
         helper = new HelperSettings();
+        jsonStore = new JsonStore();
     }
 
     public void load(Market market) {
         try (InputStream is = new FileInputStream(file)) {
             values.load(is);
+            filter = jsonStore.getFilter(market);
         } catch (FileNotFoundException e) {
             LOG.warn("File {} not found", file);
         } catch (IOException e) {
             LOG.error("Error on load settings", e);
         }
+        if (filter == null) filter = new MarketFilter();
         profile = Profile.readFrom(values, market);
         edce.readFrom(values);
         helper.readFrom(values);
@@ -56,8 +64,9 @@ public class Settings {
             edce.writeTo(values);
             helper.writeTo(values);
             values.store(os, "settings");
+            jsonStore.saveFilter(filter);
         } catch (IOException e) {
-            LOG.error("Error on load settings", e);
+            LOG.error("Error on save settings", e);
         }
     }
 
@@ -143,11 +152,11 @@ public class Settings {
     }
 
     public MarketFilter getFilter(Market market){
-        return MarketFilter.buildFilter(values, market);
+        return filter;
     }
 
     public void setFilter(MarketFilter filter){
-        filter.writeTo(values);
+        this.filter = filter;
     }
 
     public Profile getProfile() {

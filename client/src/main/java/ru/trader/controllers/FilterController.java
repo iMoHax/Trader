@@ -5,18 +5,16 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.util.Pair;
+import org.controlsfx.control.CheckComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.trader.core.MarketFilter;
-import ru.trader.core.SERVICE_TYPE;
-import ru.trader.core.VendorFilter;
+import ru.trader.core.*;
 import ru.trader.model.MarketModel;
 import ru.trader.model.ModelFabric;
 import ru.trader.model.StationModel;
 import ru.trader.model.SystemModel;
 import ru.trader.model.support.BindingsHelper;
-import ru.trader.view.support.Localization;
-import ru.trader.view.support.NumberField;
+import ru.trader.view.support.*;
 import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
@@ -41,23 +39,14 @@ public class FilterController {
     @FXML
     private ComboBox<String> station;
     @FXML
-    private CheckBox cbMarket;
+    private CheckComboBox<STATION_TYPE> stationTypes;
     @FXML
-    private CheckBox cbBlackMarket;
+    private CheckComboBox<SERVICE_TYPE> services;
     @FXML
-    private CheckBox cbRefuel;
+    private CheckComboBox<FACTION> factions;
     @FXML
-    private CheckBox cbRepair;
-    @FXML
-    private CheckBox cbMunition;
-    @FXML
-    private CheckBox cbOutfit;
-    @FXML
-    private CheckBox cbShipyard;
-    @FXML
-    private CheckBox cbMediumLandpad;
-    @FXML
-    private CheckBox cbLargeLandpad;
+    private CheckComboBox<GOVERNMENT> governments;
+
     @FXML
     private ListView<StationModel> excludes;
     @FXML
@@ -76,6 +65,14 @@ public class FilterController {
     @FXML
     private void initialize(){
         init();
+        stationTypes.setConverter(new StationTypeStringConverter());
+        stationTypes.getItems().setAll(STATION_TYPE.values());
+        services.setConverter(new ServiceTypeStringConverter());
+        services.getItems().setAll(SERVICE_TYPE.values());
+        factions.setConverter(new FactionStringConverter());
+        factions.getItems().setAll(FACTION.values());
+        governments.setConverter(new GovernmentStringConverter());
+        governments.getItems().setAll(GOVERNMENT.values());
         excludes.setCellFactory(new CustomListCell<>(StationModel::getFullName));
         system.valueProperty().addListener((ov, o, n) -> {
             station.setItems(n.getStationNamesList());
@@ -134,15 +131,22 @@ public class FilterController {
         center.setValue(market.getModeler().get(filter.getCenter()));
         radius.setValue(filter.getRadius());
         distance.setValue(filter.getDistance());
-        cbMarket.setSelected(filter.has(SERVICE_TYPE.MARKET));
-        cbBlackMarket.setSelected(filter.has(SERVICE_TYPE.BLACK_MARKET));
-        cbRefuel.setSelected(filter.has(SERVICE_TYPE.REFUEL));
-        cbMunition.setSelected(filter.has(SERVICE_TYPE.MUNITION));
-        cbRepair.setSelected(filter.has(SERVICE_TYPE.REPAIR));
-        cbOutfit.setSelected(filter.has(SERVICE_TYPE.OUTFIT));
-        cbShipyard.setSelected(filter.has(SERVICE_TYPE.SHIPYARD));
-        cbMediumLandpad.setSelected(filter.has(SERVICE_TYPE.MEDIUM_LANDPAD));
-        cbLargeLandpad.setSelected(filter.has(SERVICE_TYPE.LARGE_LANDPAD));
+        stationTypes.getCheckModel().clearChecks();
+        for (STATION_TYPE stationType : filter.getTypes()) {
+            stationTypes.getCheckModel().check(stationType);
+        }
+        services.getCheckModel().clearChecks();
+        for (SERVICE_TYPE service : filter.getServices()) {
+            services.getCheckModel().check(service);
+        }
+        factions.getCheckModel().clearChecks();
+        for (FACTION faction : filter.getFactions()) {
+            factions.getCheckModel().check(faction);
+        }
+        governments.getCheckModel().clearChecks();
+        for (GOVERNMENT government : filter.getGovernments()) {
+            governments.getCheckModel().check(government);
+        }
         excludes.setItems(BindingsHelper.observableList(filter.getExcludes(), market.getModeler()::get));
         vFilters.getItems().clear();
         for (Map.Entry<String, VendorFilter> entry : filter.getVendorFilters().entrySet()) {
@@ -165,15 +169,14 @@ public class FilterController {
         filter.setCenter(ModelFabric.isFake(s) ? null : ModelFabric.get(s));
         filter.setRadius(radius.getValue().doubleValue());
         filter.setDistance(distance.getValue().doubleValue());
-        if (cbMarket.isSelected()) filter.add(SERVICE_TYPE.MARKET); else filter.remove(SERVICE_TYPE.MARKET);
-        if (cbBlackMarket.isSelected()) filter.add(SERVICE_TYPE.BLACK_MARKET); else filter.remove(SERVICE_TYPE.BLACK_MARKET);
-        if (cbRefuel.isSelected()) filter.add(SERVICE_TYPE.REFUEL); else filter.remove(SERVICE_TYPE.REFUEL);
-        if (cbMunition.isSelected()) filter.add(SERVICE_TYPE.MUNITION); else filter.remove(SERVICE_TYPE.MUNITION);
-        if (cbRepair.isSelected()) filter.add(SERVICE_TYPE.REPAIR); else filter.remove(SERVICE_TYPE.REPAIR);
-        if (cbOutfit.isSelected()) filter.add(SERVICE_TYPE.OUTFIT); else filter.remove(SERVICE_TYPE.OUTFIT);
-        if (cbShipyard.isSelected()) filter.add(SERVICE_TYPE.SHIPYARD); else filter.remove(SERVICE_TYPE.SHIPYARD);
-        if (cbMediumLandpad.isSelected()) filter.add(SERVICE_TYPE.MEDIUM_LANDPAD); else filter.remove(SERVICE_TYPE.MEDIUM_LANDPAD);
-        if (cbLargeLandpad.isSelected()) filter.add(SERVICE_TYPE.LARGE_LANDPAD); else filter.remove(SERVICE_TYPE.LARGE_LANDPAD);
+        filter.clearTypes();
+        stationTypes.getCheckModel().getCheckedItems().forEach(filter::add);
+        filter.clearServices();
+        services.getCheckModel().getCheckedItems().forEach(filter::add);
+        filter.clearFactions();
+        factions.getCheckModel().getCheckedItems().forEach(filter::add);
+        filter.clearGovernments();
+        governments.getCheckModel().getCheckedItems().forEach(filter::add);
         filter.clearExcludes();
         excludes.getItems().forEach(st -> filter.addExclude(ModelFabric.get(st)));
         filter.clearVendorFilters();
