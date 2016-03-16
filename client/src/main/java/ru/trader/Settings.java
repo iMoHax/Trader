@@ -7,7 +7,6 @@ import ru.trader.core.Market;
 import ru.trader.core.MarketFilter;
 import ru.trader.core.Profile;
 import ru.trader.core.Ship;
-import ru.trader.store.json.FiltersStore;
 import ru.trader.store.json.JsonStore;
 
 import javax.swing.*;
@@ -24,7 +23,7 @@ public class Settings {
     private final EDCESettings edce;
     private final HelperSettings helper;
     private final JsonStore jsonStore;
-    private MarketFilter filter;
+    private MarketFilter filter = new MarketFilter();
 
 
     public Settings() {
@@ -52,7 +51,6 @@ public class Settings {
         } catch (IOException e) {
             LOG.error("Error on load settings", e);
         }
-        if (filter == null) filter = new MarketFilter();
         profile = Profile.readFrom(values, market);
         edce.readFrom(values);
         helper.readFrom(values);
