@@ -148,8 +148,8 @@ public class ItemModel implements Comparable<ItemModel> {
         item.setLegal(government, legal);
     }
 
-    public boolean isIllegal(FACTION faction, GOVERNMENT government){
-        return item.isIllegal(faction, government);
+    public boolean isIllegal(SystemModel system, FACTION faction, GOVERNMENT government){
+        return item.isIllegal(ModelFabric.get(system), faction, government);
     }
 
     public void refresh(){

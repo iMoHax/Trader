@@ -1,6 +1,5 @@
 package ru.trader.controllers;
 
-import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -253,7 +252,7 @@ public class StationEditorController {
             if (entry != null){
                 GOVERNMENT g = government.getValue();
                 FACTION f = faction.getValue();
-                if (entry.getItem().isIllegal(f, g)){
+                if (entry.getItem().isIllegal(updater.getSystem(), f, g)){
                     styles.add(ViewUtils.ILLEGAL_ITEM_STYLE);
                 }
             }

@@ -109,6 +109,10 @@ public class StationUpdater {
         return offers.stream().filter(o -> o.hasItem(item)).findAny();
     }
 
+    public SystemModel getSystem() {
+        return system;
+    }
+
     public StationModel getStation() {
         return station;
     }

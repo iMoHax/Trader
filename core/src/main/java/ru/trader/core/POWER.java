@@ -1,15 +1,112 @@
 package ru.trader.core;
 
 public enum POWER {
-    DUVAL,
-    DELAINE,
+    DUVAL {
+        // Exploited Systems: Imperial Slaves banned
+        // Control Systems: Imperial Slaves banned
+        @Override
+        public boolean isIllegal(FACTION faction, Item item, POWER_STATE state) {
+            if (state == POWER_STATE.CONTROL || state == POWER_STATE.EXPLOITED){
+                String itemId = item.getName();
+                return itemId != null && IMPERIAL_SLAVES.equals(itemId);
+            }
+            return super.isIllegal(faction, item, state);
+        }
+    },
+    DELAINE {
+        // Control Systems: All weapons/slaves/narcotics legalised
+        @Override
+        public boolean isLegal(FACTION faction, Item item, POWER_STATE state) {
+            if (state == POWER_STATE.CONTROL){
+                String groupId = item.getGroup() != null ? item.getGroup().getName() : null;
+                return groupId != null && (WEAPONS_GRP.equals(groupId) || SLAVES_GRP.equals(groupId) || NARCOTICS_GRP.equals(groupId));
+            }
+            return super.isLegal(faction, item, state);
+        }
+    },
     LAVIGNY_DUVAL,
-    PATREUS,
+    PATREUS {
+        // Control Systems: Imperial Slaves legalised
+        @Override
+        public boolean isLegal(FACTION faction, Item item, POWER_STATE state) {
+            if (state == POWER_STATE.CONTROL){
+                String itemId = item.getName();
+                return itemId != null && IMPERIAL_SLAVES.equals(itemId);
+            }
+            return super.isLegal(faction, item, state);
+        }
+    },
     MAHON,
-    WINTERS,
+    WINTERS {
+        // Exploited Federal systems: Imperial Slaves banned
+        // Exploited Alliance/Ind systems: Imperial Slaves banned
+        // Control Systems: Imperial Slaves banned
+        @Override
+        public boolean isIllegal(FACTION faction, Item item, POWER_STATE state) {
+            if (state == POWER_STATE.CONTROL){
+                String itemId = item.getName();
+                return itemId != null && IMPERIAL_SLAVES.equals(itemId);
+            } else
+            if (state == POWER_STATE.EXPLOITED){
+                String itemId = item.getName();
+                return itemId != null && IMPERIAL_SLAVES.equals(itemId) && (faction != null && faction != FACTION.EMPIRE);
+            }
+            return super.isIllegal(faction, item, state);
+        }
+    },
     YONG_RUI,
-    ANTAL,
-    HUDSON,
-    TORVAL,
-    NONE
+    ANTAL   {
+        // Exploited Systems: All Slaves, Narcotics and non-basic medicines banned
+        // Control Systems: All Slaves, Narcotics and non-basic medicines banned
+        @Override
+        public boolean isIllegal(FACTION faction, Item item, POWER_STATE state) {
+            if (state == POWER_STATE.CONTROL || state == POWER_STATE.EXPLOITED){
+                String groupId = item.getGroup() != null ? item.getGroup().getName() : null;
+                String itemId = item.getName();
+                return groupId != null && (SLAVES_GRP.equals(groupId) || NARCOTICS_GRP.equals(groupId)
+                        || MEDICINE_GRP.equals(groupId) && !BASIC_MEDICINES.equals(itemId)
+                );
+            }
+            return super.isIllegal(faction, item, state);
+        }
+    },
+    HUDSON {
+        // Control Systems: Imperial Slaves banned
+        @Override
+        public boolean isIllegal(FACTION faction, Item item, POWER_STATE state) {
+            if (state == POWER_STATE.CONTROL){
+                String itemId = item.getName();
+                return itemId != null && IMPERIAL_SLAVES.equals(itemId);
+            }
+            return super.isIllegal(faction, item, state);
+        }
+    },
+    TORVAL {
+        // Control Systems: Imperial Slaves legalised
+        @Override
+        public boolean isLegal(FACTION faction, Item item, POWER_STATE state) {
+            if (state == POWER_STATE.CONTROL){
+                String itemId = item.getName();
+                return itemId != null && IMPERIAL_SLAVES.equals(itemId);
+            }
+            return super.isLegal(faction, item, state);
+        }
+    },
+    NONE;
+
+    private final static String WEAPONS_GRP="weapons";
+    private final static String NARCOTICS_GRP="drugs";
+    private final static String SLAVES_GRP="slaves";
+    private final static String MEDICINE_GRP="medicines";
+    private final static String IMPERIAL_SLAVES="imperialslaves";
+    private final static String BASIC_MEDICINES="basicmedicines";
+
+    public boolean isLegal(FACTION faction, Item item, POWER_STATE state){
+        return false;
+    }
+
+    public boolean isIllegal(FACTION faction, Item item, POWER_STATE state){
+        return false;
+    }
+
 }
