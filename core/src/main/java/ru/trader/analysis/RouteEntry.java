@@ -92,14 +92,20 @@ public class RouteEntry {
 
     void add(Order order){
         orders.add(fixedWrap(order));
+        profit += order.getProfit();
     }
 
     void remove(Order order){
-        orders.removeIf(o -> o.fixed && o.equals(order));
+        if (orders.removeIf(o -> o.fixed && o.equals(order))){
+            profit -= order.getProfit();
+        }
     }
 
     void clear(){
-        orders.removeIf(o -> o.fixed);
+        double p = orders.stream().filter(o -> o.fixed).mapToDouble(Order::getProfit).sum();
+        if (orders.removeIf(o -> o.fixed)){
+            profit -= p;
+        }
     }
 
     void addAll(Collection<Order> orders){
@@ -111,7 +117,7 @@ public class RouteEntry {
     }
 
     void removeOrder(Order order){
-      if (order instanceof OrderWrapper) {
+        if (order instanceof OrderWrapper) {
             orders.remove(order);
         } else {
             orders.removeIf(order::equals);
