@@ -1,8 +1,6 @@
 package ru.trader.model;
 
-import javafx.beans.property.ReadOnlyStringProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
@@ -62,7 +60,7 @@ public class SystemModel {
     public void setFaction(FACTION faction) {
         FACTION oldFaction = getFaction();
         if (oldFaction != null && oldFaction.equals(faction) || faction == null) return;
-        LOG.info("Change faction station {} to {}", system, faction);
+        LOG.info("Change faction system {} to {}", system, faction);
         system.setFaction(faction);
     }
 
@@ -71,8 +69,26 @@ public class SystemModel {
     public void setGovernment(GOVERNMENT government) {
         GOVERNMENT oldGovernment = getGovernment();
         if (oldGovernment != null && oldGovernment.equals(government) || government == null) return;
-        LOG.info("Change government station {} to {}", system, government);
+        LOG.info("Change government system {} to {}", system, government);
         system.setGovernment(government);
+    }
+
+    public POWER getPower() {return system.getPower();}
+
+    public void setPower(POWER power) {
+        POWER oldPower = getPower();
+        if (oldPower != null && oldPower.equals(power) || power == null) return;
+        LOG.info("Change power system {} to {}", system, power);
+        system.setPower(power, system.getPowerState());
+    }
+
+    public POWER_STATE getPowerState() {return system.getPowerState();}
+
+    public void setPowerState(POWER_STATE powerState) {
+        POWER_STATE oldPowerState = getPowerState();
+        if (oldPowerState != null && oldPowerState.equals(powerState) || powerState == null) return;
+        LOG.info("Change power state system {} to {}", system, powerState);
+        system.setPower(system.getPower(), powerState);
     }
 
     public double getX(){

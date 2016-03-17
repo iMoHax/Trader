@@ -8,6 +8,7 @@
 <?import ru.trader.view.support.cells.OfferCellValueImpl?>
 <?import ru.trader.view.support.cells.DoubleCell?>
 
+<?import ru.trader.view.support.cells.WritablePropertyValueFactory?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.db.controllers.StationsController">
     <TableView fx:id="tblStations" editable="true" VBox.vgrow="ALWAYS" prefWidth="800">
@@ -19,22 +20,22 @@
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="type" minWidth="100" text="%market.station.type">
-                <cellValueFactory><PropertyValueFactory property="type"/></cellValueFactory>
+                <cellValueFactory><WritablePropertyValueFactory property="type"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="faction" minWidth="100" text="%market.allegiance">
-                <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
+                <cellValueFactory><WritablePropertyValueFactory property="faction"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="government" minWidth="100" text="%market.government">
-                <cellValueFactory><PropertyValueFactory property="government"/></cellValueFactory>
+                <cellValueFactory><WritablePropertyValueFactory property="government"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="economic" minWidth="100" text="%market.economic">
-                <cellValueFactory><PropertyValueFactory property="economic"/></cellValueFactory>
+                <cellValueFactory><WritablePropertyValueFactory property="economic"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="subEconomic" minWidth="100" text="%market.economic">
-                <cellValueFactory><PropertyValueFactory property="subEconomic"/></cellValueFactory>
+                <cellValueFactory><WritablePropertyValueFactory property="subEconomic"/></cellValueFactory>
             </TableColumn>
             <TableColumn minWidth="100" text="Дистанция">
-                <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
+                <cellValueFactory><WritablePropertyValueFactory property="distance"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="services" minWidth="100" text="Сервисы">
                 <cellValueFactory><PropertyValueFactory property="services"/></cellValueFactory>

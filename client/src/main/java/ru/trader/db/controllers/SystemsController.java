@@ -25,6 +25,10 @@ public class SystemsController {
     private TableColumn<SystemModel, FACTION> faction;
     @FXML
     private TableColumn<SystemModel, GOVERNMENT> government;
+    @FXML
+    private TableColumn<SystemModel, POWER> power;
+    @FXML
+    private TableColumn<SystemModel, POWER_STATE> powerState;
 
 
     private ObservableList<SystemModel> stations = FXCollections.observableArrayList();
@@ -35,6 +39,8 @@ public class SystemsController {
         tblSystems.setItems(stations);
         faction.setCellFactory(ComboBoxTableCell.forTableColumn(new FactionStringConverter(), FXCollections.observableArrayList(FACTION.values())));
         government.setCellFactory(ComboBoxTableCell.forTableColumn(new GovernmentStringConverter(), FXCollections.observableArrayList(GOVERNMENT.values())));
+        power.setCellFactory(ComboBoxTableCell.forTableColumn(new PowerStringConverter(), FXCollections.observableArrayList(POWER.values())));
+        powerState.setCellFactory(ComboBoxTableCell.forTableColumn(new PowerStateStringConverter(), FXCollections.observableArrayList(POWER_STATE.values())));
 
         init();
     }

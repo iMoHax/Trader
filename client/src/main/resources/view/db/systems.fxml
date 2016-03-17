@@ -8,6 +8,7 @@
 <?import ru.trader.view.support.cells.OfferCellValueImpl?>
 <?import ru.trader.view.support.cells.DoubleCell?>
 
+<?import ru.trader.view.support.cells.WritablePropertyValueFactory?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.db.controllers.SystemsController">
     <TableView fx:id="tblSystems" editable="true" VBox.vgrow="ALWAYS" prefWidth="800">
@@ -25,11 +26,18 @@
                 <cellValueFactory><PropertyValueFactory property="z"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="faction" minWidth="100" text="%market.allegiance">
-                <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
+                <cellValueFactory><WritablePropertyValueFactory property="faction"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="government" minWidth="100" text="%market.government">
-                <cellValueFactory><PropertyValueFactory property="government"/></cellValueFactory>
+                <cellValueFactory><WritablePropertyValueFactory property="government"/></cellValueFactory>
             </TableColumn>
+            <TableColumn fx:id="power" minWidth="100" text="Сила">
+                <cellValueFactory><WritablePropertyValueFactory property="power"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="powerState" minWidth="100" text="Статус">
+                <cellValueFactory><WritablePropertyValueFactory property="powerState"/></cellValueFactory>
+            </TableColumn>
+
         </columns>
         <columnResizePolicy>
             <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
