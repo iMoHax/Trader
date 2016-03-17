@@ -1,25 +1,26 @@
 package ru.trader.controllers;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.converter.DefaultStringConverter;
 import javafx.util.converter.DoubleStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.Main;
+import ru.trader.core.FACTION;
+import ru.trader.core.GOVERNMENT;
+import ru.trader.core.POWER;
+import ru.trader.core.POWER_STATE;
 import ru.trader.model.MarketModel;
 import ru.trader.model.ModelFabric;
 import ru.trader.model.ProfileModel;
 import ru.trader.model.SystemModel;
 import ru.trader.model.support.PositionComputer;
-import ru.trader.view.support.Localization;
-import ru.trader.view.support.ViewUtils;
+import ru.trader.view.support.*;
 import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
@@ -33,6 +34,14 @@ public class SystemsEditorController {
     private TableView<SystemData> tblSystems;
     @FXML
     private TableColumn<SystemData, String> clnName;
+    @FXML
+    private TableColumn<SystemData, FACTION> clnFaction;
+    @FXML
+    private TableColumn<SystemData, GOVERNMENT> clnGovernment;
+    @FXML
+    private TableColumn<SystemData, POWER> clnPower;
+    @FXML
+    private TableColumn<SystemData, POWER_STATE> clnPowerState;
     @FXML
     private TableColumn<SystemData, Double> clnX;
     @FXML
@@ -77,6 +86,10 @@ public class SystemsEditorController {
     private void initialize() {
         init();
         clnName.setCellFactory(TextFieldCell.forTableColumn(new DefaultStringConverter()));
+        clnFaction.setCellFactory(ComboBoxTableCell.forTableColumn(new FactionStringConverter(), FXCollections.observableArrayList(FACTION.values())));
+        clnGovernment.setCellFactory(ComboBoxTableCell.forTableColumn(new GovernmentStringConverter(), FXCollections.observableArrayList(GOVERNMENT.values())));
+        clnPower.setCellFactory(ComboBoxTableCell.forTableColumn(new PowerStringConverter(), FXCollections.observableArrayList(POWER.values())));
+        clnPowerState.setCellFactory(ComboBoxTableCell.forTableColumn(new PowerStateStringConverter(), FXCollections.observableArrayList(POWER_STATE.values())));
         clnX.setCellFactory(TextFieldCell.forTableColumn(new DoubleStringConverter()));
         clnY.setCellFactory(TextFieldCell.forTableColumn(new DoubleStringConverter()));
         clnZ.setCellFactory(TextFieldCell.forTableColumn(new DoubleStringConverter()));
@@ -272,6 +285,10 @@ public class SystemsEditorController {
         private final DoubleProperty x;
         private final DoubleProperty y;
         private final DoubleProperty z;
+        private final ObjectProperty<FACTION> faction;
+        private final ObjectProperty<GOVERNMENT> government;
+        private final ObjectProperty<POWER> power;
+        private final ObjectProperty<POWER_STATE> powerState;
 
         private final DoubleProperty s1 = new SimpleDoubleProperty();
         private final DoubleProperty s2 = new SimpleDoubleProperty();
@@ -287,6 +304,10 @@ public class SystemsEditorController {
             x = new SimpleDoubleProperty(Double.NaN);
             y = new SimpleDoubleProperty(Double.NaN);
             z = new SimpleDoubleProperty(Double.NaN);
+            faction = new SimpleObjectProperty<>(FACTION.NONE);
+            government = new SimpleObjectProperty<>(GOVERNMENT.NONE);
+            power = new SimpleObjectProperty<>(POWER.NONE);
+            powerState = new SimpleObjectProperty<>(POWER_STATE.NONE);
         }
 
         private SystemData(SystemModel system) {
@@ -295,6 +316,10 @@ public class SystemsEditorController {
             x = new SimpleDoubleProperty(system.getX());
             y = new SimpleDoubleProperty(system.getY());
             z = new SimpleDoubleProperty(system.getZ());
+            faction = new SimpleObjectProperty<>(system.getFaction());
+            government = new SimpleObjectProperty<>(system.getGovernment());
+            power = new SimpleObjectProperty<>(system.getPower());
+            powerState = new SimpleObjectProperty<>(system.getPowerState());
         }
 
         public StringProperty nameProperty() {
@@ -337,6 +362,22 @@ public class SystemsEditorController {
             return s6;
         }
 
+        public ObjectProperty<FACTION> factionProperty() {
+            return faction;
+        }
+
+        public ObjectProperty<GOVERNMENT> governmentProperty() {
+            return government;
+        }
+
+        public ObjectProperty<POWER> powerProperty() {
+            return power;
+        }
+
+        public ObjectProperty<POWER_STATE> powerStateProperty() {
+            return powerState;
+        }
+
         public boolean isEmpty(){
             return name.get().isEmpty() || Double.isNaN(x.get()) || Double.isNaN(y.get()) || Double.isNaN(z.get());
         }
@@ -346,8 +387,16 @@ public class SystemsEditorController {
                 if (system != null){
                     system.setName(name.get());
                     system.setPosition(x.get(), y.get(), z.get());
+                    system.setFaction(faction.get());
+                    system.setGovernment(government.get());
+                    system.setPower(power.get());
+                    system.setPowerState(powerState.get());
                 } else {
-                    market.add(name.get(), x.get(), y.get(), z.get());
+                    SystemModel system = market.add(name.get(), x.get(), y.get(), z.get());
+                    system.setFaction(faction.get());
+                    system.setGovernment(government.get());
+                    system.setPower(power.get());
+                    system.setPowerState(powerState.get());
                 }
             }
         }

@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
-
-<?import javafx.scene.control.cell.PropertyValueFactory?>
-<?import ru.trader.view.support.cells.PriceCellImpl?>
-<?import ru.trader.view.support.cells.OfferCellValueImpl?>
-
-<?import ru.trader.view.support.cells.DoubleCell?>
-<?import org.controlsfx.glyphfont.Glyph?>
-<?import org.controlsfx.control.SegmentedButton?>
+<?import org.controlsfx.glyphfont.*?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="ru.trader.controllers.SystemsEditorController"  styleClass="dialog"
           hgap="10" vgap="5" prefHeight="400">
@@ -57,10 +50,22 @@
         </Button>
     </HBox>
 
-    <TableView fx:id="tblSystems" editable="true" prefWidth="725.0" GridPane.rowIndex="3" GridPane.columnSpan="4">
+    <TableView fx:id="tblSystems" editable="true" prefWidth="800" GridPane.rowIndex="3" GridPane.columnSpan="4">
         <columns>
             <TableColumn fx:id="clnName" minWidth="180.0" text="%market.systems">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="clnFaction" minWidth="100" text="%market.allegiance">
+                <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="clnGovernment" minWidth="100" text="%market.government">
+                <cellValueFactory><PropertyValueFactory property="government"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="clnPower" minWidth="100" text="Сила">
+                <cellValueFactory><PropertyValueFactory property="power"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="clnPowerState" minWidth="100" text="Статус">
+                <cellValueFactory><PropertyValueFactory property="powerState"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="clnX" minWidth="60.0" text="x">
                 <cellValueFactory><PropertyValueFactory property="x"/></cellValueFactory>
