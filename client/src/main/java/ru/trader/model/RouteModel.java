@@ -204,6 +204,12 @@ public class RouteModel {
         return copyFill(res, offset);
     }
 
+    public RouteModel dropLast(){
+        Route res = Route.clone(_route);
+        res.dropTo(entries.size()-2);
+        return copyFill(res, entries.size()-2);
+    }
+
     public RouteModel remove(OrderModel order) {
         Route res = Route.clone(_route);
         res.dropTo(ModelFabric.get(order.getStation()));

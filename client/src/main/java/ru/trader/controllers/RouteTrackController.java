@@ -292,6 +292,13 @@ public class RouteTrackController {
     }
 
     @FXML
+    private void removeLast(){
+        if (route != null && route.getJumps() > 0){
+            updateRoute(route.dropLast());
+        }
+    }
+
+    @FXML
     private void addOrder(){
         if (route != null){
             final int startIndex = trackNode.getActive();

@@ -65,14 +65,15 @@
     <ScrollPane GridPane.rowIndex="0" GridPane.columnIndex="3" GridPane.rowSpan="5" GridPane.fillHeight="true">
         <VBox>
             <AnchorPane fx:id="track"/>
-            <VBox>
-                <HBox><TextField fx:id="newEntrySystemText"/><Button minWidth="30" onAction="#newEntryAsCurrent"><graphic><Glyph text="FontAwesome|MAP_MARKER"/></graphic></Button></HBox>
+            <VBox spacing="4">
+                <HBox spacing="2"><TextField fx:id="newEntrySystemText"/><Button minWidth="30" onAction="#newEntryAsCurrent"><graphic><Glyph text="FontAwesome|MAP_MARKER"/></graphic></Button></HBox>
                 <HBox><ComboBox fx:id="newEntryStation"/></HBox>
-                <HBox>
-                    <Button onAction="#addEntry"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
-                    <Button onAction="#setActive"><graphic><Glyph text="FontAwesome|CHECK"/></graphic></Button>
-                    <Button onAction="#clear"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
-                    <Button onAction="#copyToClipboard"><graphic><Glyph text="FontAwesome|COPY"/></graphic></Button>
+                <HBox spacing="2">
+                    <Button prefWidth="30" onAction="#addEntry"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
+                    <Button prefWidth="30" onAction="#removeLast"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
+                    <Button prefWidth="30" onAction="#clear"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
+                    <Button prefWidth="30" onAction="#copyToClipboard"><graphic><Glyph text="FontAwesome|COPY"/></graphic></Button>
+                    <Button prefWidth="30" onAction="#setActive"><graphic><Glyph text="FontAwesome|CHECK"/></graphic></Button>
                 </HBox>
             </VBox>
         </VBox>
