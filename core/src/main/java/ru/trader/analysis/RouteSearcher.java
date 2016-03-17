@@ -174,7 +174,7 @@ public class RouteSearcher {
                     buyer = null;
                 }
                 if (k == 0) {
-                    entry.setProfit(scorer.getProfit(vEdge.getProfit(), vEdge.getFuelCost()));
+                    entry.setProfit(scorer.getProfit(0, vEdge.getFuelCost()));
                     entry.setFullTime(vEdge.getTime());
                     List<Order> orders = vEdge.getOrders();
                     if (!orders.isEmpty()) {
