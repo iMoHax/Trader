@@ -44,6 +44,8 @@ public class SettingsController {
     @FXML
     private NumberField landingTime;
     @FXML
+    private NumberField orbitalTime;
+    @FXML
     private NumberField takeoffTime;
     @FXML
     private NumberField rechargeTime;
@@ -97,6 +99,7 @@ public class SettingsController {
         pathPriority.setValue(profile.getPathPriority());
         jumpTime.setValue(profile.getJumpTime());
         landingTime.setValue(profile.getLandingTime());
+        orbitalTime.setValue(profile.getOrbitalTime());
         takeoffTime.setValue(profile.getTakeoffTime());
         rechargeTime.setValue(profile.getRechargeTime());
 
@@ -142,6 +145,7 @@ public class SettingsController {
         profile.setPathPriority(pathPriority.getValue());
         profile.setJumpTime(jumpTime.getValue().intValue());
         profile.setLandingTime(landingTime.getValue().intValue());
+        profile.setOrbitalTime(orbitalTime.getValue().intValue());
         profile.setTakeoffTime(takeoffTime.getValue().intValue());
         profile.setRechargeTime(rechargeTime.getValue().intValue());
 

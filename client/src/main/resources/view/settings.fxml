@@ -39,13 +39,15 @@
     <NumberField fx:id="jumpTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="10" />
     <Label text="%settings.search.times.landing" GridPane.rowIndex="11" />
     <NumberField fx:id="landingTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-    <Label text="%settings.search.times.takeoff" GridPane.rowIndex="12" />
-    <NumberField fx:id="takeoffTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-    <Label text="%settings.search.times.recharge" GridPane.rowIndex="13" />
-    <NumberField fx:id="rechargeTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="13" />
-    <Label text="%settings.hotkeys" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"  GridPane.rowIndex="14"/>
-    <Label text="%settings.hotkeys.complete" GridPane.rowIndex="15" />
-    <TextField fx:id="completeKeyText" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="15" />
+    <Label text="%settings.search.times.orbital" GridPane.rowIndex="12" />
+    <NumberField fx:id="orbitalTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+    <Label text="%settings.search.times.takeoff" GridPane.rowIndex="13" />
+    <NumberField fx:id="takeoffTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+    <Label text="%settings.search.times.recharge" GridPane.rowIndex="14" />
+    <NumberField fx:id="rechargeTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="14" />
+    <Label text="%settings.hotkeys" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"  GridPane.rowIndex="15"/>
+    <Label text="%settings.hotkeys.complete" GridPane.rowIndex="16" />
+    <TextField fx:id="completeKeyText" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="16" />
 
 </GridPane>
 

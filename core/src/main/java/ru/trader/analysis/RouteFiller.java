@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.Offer;
 import ru.trader.core.Order;
+import ru.trader.core.STATION_TYPE;
 import ru.trader.core.Vendor;
 
 import java.util.*;

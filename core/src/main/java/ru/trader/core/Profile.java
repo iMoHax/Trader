@@ -19,6 +19,7 @@ public class Profile {
     private double distanceTime;
     private double jumpTime;
     private double landingTime;
+    private double orbitalTime;
     private double takeoffTime;
     private double rechargeTime;
     private double fuelPrice;
@@ -33,6 +34,7 @@ public class Profile {
         distanceTime = 0.3;
         fuelPrice = 100;
         landingTime = 80;
+        orbitalTime = 30;
         takeoffTime = 40;
         jumpTime = 32;
         rechargeTime = 12;
@@ -50,6 +52,7 @@ public class Profile {
         this.distanceTime = profile.distanceTime;
         this.jumpTime = profile.jumpTime;
         this.landingTime = profile.landingTime;
+        this.orbitalTime = profile.orbitalTime;
         this.takeoffTime = profile.takeoffTime;
         this.rechargeTime = profile.rechargeTime;
         this.fuelPrice = profile.fuelPrice;
@@ -163,6 +166,14 @@ public class Profile {
         this.landingTime = landingTime;
     }
 
+    public double getOrbitalTime() {
+        return orbitalTime;
+    }
+
+    public void setOrbitalTime(double orbitalTime) {
+        this.orbitalTime = orbitalTime;
+    }
+
     public double getTakeoffTime() {
         return takeoffTime;
     }
@@ -222,6 +233,7 @@ public class Profile {
         profile.setFuelPrice(Double.valueOf(values.getProperty("profile.search.fuel.price", "100")));
         profile.setDistanceTime(Double.valueOf(values.getProperty("profile.search.times.distance", "0.3")));
         profile.setLandingTime(Double.valueOf(values.getProperty("profile.search.times.landing", "80")));
+        profile.setOrbitalTime(Double.valueOf(values.getProperty("profile.search.times.orbital", "30")));
         profile.setTakeoffTime(Double.valueOf(values.getProperty("profile.search.times.takeoff", "40")));
         profile.setJumpTime(Double.valueOf(values.getProperty("profile.search.times.jump", "32")));
         profile.setRechargeTime(Double.valueOf(values.getProperty("profile.search.times.recharge", "12")));
@@ -241,6 +253,7 @@ public class Profile {
         values.setProperty("profile.search.fuel.price", String.valueOf(fuelPrice));
         values.setProperty("profile.search.times.distance", String.valueOf(distanceTime));
         values.setProperty("profile.search.times.landing", String.valueOf(landingTime));
+        values.setProperty("profile.search.times.orbital", String.valueOf(orbitalTime));
         values.setProperty("profile.search.times.takeoff", String.valueOf(takeoffTime));
         values.setProperty("profile.search.times.jump", String.valueOf(jumpTime));
         values.setProperty("profile.search.times.recharge", String.valueOf(rechargeTime));

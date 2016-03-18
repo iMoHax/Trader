@@ -50,7 +50,7 @@ public class Scorer {
         maxProfit = statProfit.getMax() / profile.getShip().getCargo();
 
         avgDistance = computeAvgDistance();
-        maxScore = getScore(1, statProfit.getMax(), 0, 1, 0);
+        maxScore = getScore(1, statProfit.getMax(), 0, 1, 0, 0);
     }
 
     public Profile getProfile() {
@@ -115,20 +115,25 @@ public class Scorer {
         if (prev == null) return 0;
         int lands = entry.isLand() ? 1 : 0;
         int jumps = prev.getVendor().getPlace().equals(entry.getVendor().getPlace()) ? 0 : 1;
-        double time = getTime(entry.getVendor().getDistance(), jumps, lands);
+        STATION_TYPE t = entry.getVendor().getType();
+        int planetLands = t != null && t.isPlanetary() ? 1 : 0;
+        double time = getTime(entry.getVendor().getDistance(), jumps, lands, planetLands);
         if (!prev.isLand()){
             time = time - profile.getTakeoffTime() + profile.getRechargeTime();
         }
         return Math.round(time);
     }
 
-    public long getTime(double distance, int jumps, int lands){
+    public long getTime(double distance, int jumps, int lands, int planetLands){
         double time = profile.getTakeoffTime();
         if (jumps > 0){
             time += profile.getJumpTime() + (jumps-1) * (profile.getRechargeTime() + profile.getJumpTime());
         }
         if (profile.getLandingTime() > 0 & lands > 0){
             time += (lands-1)*(getTime(avgDistance) + profile.getLandingTime() + profile.getTakeoffTime()) + getTime(distance) + profile.getLandingTime();
+        }
+        if (profile.getOrbitalTime() > 0 & planetLands > 0){
+            time += planetLands * profile.getOrbitalTime();
         }
         return Math.round(time);
     }
@@ -140,12 +145,14 @@ public class Scorer {
     }
 
     public double getScore(Vendor vendor, double profit, int jumps, int lands, double fuel) {
-        return getScore(vendor.getDistance(), profit, jumps, lands, fuel);
+        STATION_TYPE t = vendor.getType();
+        int planetLands = t != null && t.isPlanetary() ? 1 : 0;
+        return getScore(vendor.getDistance(), profit, jumps, lands, planetLands, fuel);
     }
 
-    public double getScore(double distance, double profit, int jumps, int lands, double fuel){
-        LOG.trace("Compute score distance={}, profit={}, jumps={}, lands={}, fuel={}", distance, profit, jumps, lands, fuel);
-        double score = getProfitByTonne(profit, fuel)/getTime(distance, jumps, lands);
+    public double getScore(double distance, double profit, int jumps, int lands, int planetLands, double fuel){
+        LOG.trace("Compute score distance={}, profit={}, jumps={}, lands={}, planetary lands = {}, fuel={}", distance, profit, jumps, lands, planetLands, fuel);
+        double score = getProfitByTonne(profit, fuel)/getTime(distance, jumps, lands, planetLands);
         LOG.trace("score={}", score);
         return score;
     }

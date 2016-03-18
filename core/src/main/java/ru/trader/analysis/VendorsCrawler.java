@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.trader.analysis.graph.*;
 import ru.trader.core.Order;
 import ru.trader.core.SERVICE_TYPE;
+import ru.trader.core.STATION_TYPE;
 import ru.trader.core.Vendor;
 
 import java.util.Collection;
@@ -206,6 +207,8 @@ public class VendorsCrawler extends Crawler<Vendor> {
         protected long computeTime(){
             int jumps = source.getEntry().getPlace().equals(target.getEntry().getPlace())? 0 : 1;
             int lands = 1;
+            STATION_TYPE t = target.getEntry().getType();
+            int planetLands = t != null && t.isPlanetary() ? 1 : 0;
             if (path != null){
                 jumps = path.size();
                 lands += path.getRefillCount();
@@ -214,7 +217,7 @@ public class VendorsCrawler extends Crawler<Vendor> {
             } else {
                 lands += isRefill() ? 1 :0;
             }
-            return getScorer().getTime(target.getEntry().getDistance(), jumps, lands);
+            return getScorer().getTime(target.getEntry().getDistance(), jumps, lands, planetLands);
         }
 
         @Override
