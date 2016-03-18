@@ -43,9 +43,9 @@ public class PathsController {
         if (owner != null) dlg.initOwner(owner.getScene().getWindow());
         dlg.setTitle(Localization.getString("paths.title"));
         dlg.getDialogPane().setContent(content);
-        dlg.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        dlg.getDialogPane().getButtonTypes().addAll(Dialogs.OK, Dialogs.CANCEL);
         dlg.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
+            if (dialogButton == Dialogs.OK) {
                 return getPath();
             }
             return null;

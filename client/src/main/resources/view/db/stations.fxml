@@ -13,10 +13,10 @@
       fx:controller="ru.trader.db.controllers.StationsController">
     <TableView fx:id="tblStations" editable="true" VBox.vgrow="ALWAYS" prefWidth="800">
         <columns>
-            <TableColumn minWidth="100" text="Система">
+            <TableColumn minWidth="100" text="%market.system">
                 <cellValueFactory><PropertyValueFactory property="system"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="200" text="Название">
+            <TableColumn minWidth="200" text="%market.station.name">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="type" minWidth="100" text="%market.station.type">
@@ -34,10 +34,10 @@
             <TableColumn fx:id="subEconomic" minWidth="100" text="%market.economic">
                 <cellValueFactory><WritablePropertyValueFactory property="subEconomic"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="100" text="Дистанция">
+            <TableColumn minWidth="100" text="%market.station.distance">
                 <cellValueFactory><WritablePropertyValueFactory property="distance"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="services" minWidth="100" text="Сервисы">
+            <TableColumn fx:id="services" minWidth="100" text="%market.station.services">
                 <cellValueFactory><PropertyValueFactory property="services"/></cellValueFactory>
             </TableColumn>
         </columns>
@@ -47,9 +47,9 @@
         <contextMenu>
             <ContextMenu>
                 <items>
-                    <MenuItem text="Добавить" onAction="#add" />
-                    <MenuItem text="Редактировать" onAction="#edit" />
-                    <MenuItem text="Удалить" onAction="#remove" />
+                    <MenuItem text="%dialog.button.add" onAction="#add" />
+                    <MenuItem text="%dialog.button.edit" onAction="#edit" />
+                    <MenuItem text="%dialog.button.remove" onAction="#remove" />
                 </items>
             </ContextMenu>
         </contextMenu>

@@ -7,6 +7,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import ru.trader.controllers.Dialogs;
 import ru.trader.controllers.MainController;
 import ru.trader.controllers.Screeners;
 import ru.trader.core.*;
@@ -76,7 +77,7 @@ public class SystemsController {
 
     private void remove(SystemModel system){
         Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), system.getName()));
-        if (res.isPresent() && res.get() == ButtonType.YES) {
+        if (res.isPresent() && res.get() == Dialogs.YES) {
             world.remove(system);
         }
     }

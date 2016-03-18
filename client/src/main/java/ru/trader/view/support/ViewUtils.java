@@ -6,16 +6,14 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 public class ViewUtils {
-    public final static String ILLEGAL_ITEM_STYLE = "illegal_item";
+    public static final String ILLEGAL_ITEM_STYLE = "illegal_item";
 
     //Scroll to row if invisible
     public static void show(TableView tableView, int index){

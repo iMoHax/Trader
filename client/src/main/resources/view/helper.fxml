@@ -23,7 +23,7 @@
             <Label fx:id="stationDistance" text="123456 ls" styleClass="text-small"/>
         </VBox>
     </HBox>
-    <HBox fx:id="refuelGroup"><Label text="Заправить:" /><Label fx:id="refuel" /></HBox>
+    <HBox fx:id="refuelGroup"><Label text="%helper.refuel" /><Label fx:id="refuel" /></HBox>
     <HBox>
         <ToggleButton fx:id="infoBtn" minWidth="30">
             <graphic><Glyph text="FontAwesome|INFO"/></graphic>
@@ -33,19 +33,19 @@
         </Button>
     </HBox>
     <VBox fx:id="ordersGroup" maxHeight="240">
-        <Label text="Продать:" />
+        <Label text="%helper.sell" />
         <ListView fx:id="sellOrders"/>
-        <Label text="Купить:" />
+        <Label text="%helper.buy" />
         <ListView fx:id="buyOrders"/>
     </VBox>
     <VBox fx:id="missionsGroup" maxHeight="120">
-        <Label text="Сдать миссии:" />
+        <Label text="%helper.missions" />
         <ListView fx:id="missions"/>
     </VBox>
     <VBox fx:id="infoGroup" maxHeight="240">
-        <Label text="Станции:" />
+        <Label text="%helper.stations" />
         <ListView fx:id="stations"/>
-        <Label text="Товары:" />
+        <Label text="%helper.items" />
         <ListView fx:id="sellOffers"/>
     </VBox>
     <padding>

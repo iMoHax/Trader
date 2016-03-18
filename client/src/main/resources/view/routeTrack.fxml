@@ -19,17 +19,17 @@
         <ColumnConstraints minWidth="220" />
     </columnConstraints>
 
-    <VBox GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="3">
-        <HBox><Label text="Система:" /><Label fx:id="system" /></HBox>
-        <HBox><Label text="Станция:" /><Label fx:id="station" /></HBox>
-        <HBox><Label text="Время:" /><Label fx:id="time" /></HBox>
-        <HBox fx:id="refuelGroup"><Label text="Заправить:" /><Label fx:id="refuel" /></HBox>
+    <VBox GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="3" spacing="4">
+        <HBox spacing="4"><Label text="%helper.system" /><Label fx:id="system" /></HBox>
+        <HBox spacing="4"><Label text="%helper.station" /><Label fx:id="station" /></HBox>
+        <HBox spacing="4"><Label text="%helper.time" /><Label fx:id="time" /></HBox>
+        <HBox fx:id="refuelGroup" spacing="4"><Label text="%helper.refuel" /><Label fx:id="refuel" /></HBox>
     </VBox>
 
-    <Label GridPane.rowIndex="1" GridPane.columnIndex="0" text="Продать:" />
+    <Label GridPane.rowIndex="1" GridPane.columnIndex="0" text="%helper.sell" />
     <ListView GridPane.rowIndex="2" GridPane.columnIndex="0" fx:id="sellOrders" maxHeight="150"/>
 
-    <Label GridPane.rowIndex="1" GridPane.columnIndex="1" text="Купить:" />
+    <Label GridPane.rowIndex="1" GridPane.columnIndex="1" text="%helper.buy" />
     <ListView GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="buyOrders" maxHeight="150"/>
 
     <VBox GridPane.rowIndex="2" GridPane.columnIndex="2" spacing="4" alignment="TOP_RIGHT">
@@ -38,7 +38,7 @@
         <Button prefWidth="30" onAction="#clearOrders"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
     </VBox>
 
-    <Label GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2" text="Миссии:" />
+    <Label GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2" text="%helper.missions" />
     <StackPane GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="2" maxHeight="150">
         <HBox fx:id="missionsGroup">
             <ListView fx:id="missionsList" HBox.hgrow="ALWAYS"/>

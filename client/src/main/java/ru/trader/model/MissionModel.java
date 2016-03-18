@@ -4,6 +4,7 @@ import ru.trader.analysis.CrawlerSpecificator;
 import ru.trader.analysis.RouteReserve;
 import ru.trader.core.Offer;
 import ru.trader.store.simple.SimpleOffer;
+import ru.trader.view.support.Localization;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -89,13 +90,13 @@ public class MissionModel {
     public String toString() {
         String t = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).format(time);
         if (isDelivery()){
-            return String.format("Deliver %d items to %s at %s", count, target.getName(), t);
+            return String.format(Localization.getString("missions.delivery.text"), count, target.getName(), t);
         }
         if (isCourier()){
-            return String.format("Deliver message to %s at %s", target.getName(), t);
+            return String.format(Localization.getString("missions.courier.text"), target.getName(), t);
         }
         if (isSupply()){
-            return String.format("Supply %d %s to %s at %s", count, item.getName(), target.getName(), t);
+            return String.format(Localization.getString("missions.supply.text"), count, item.getName(), target.getName(), t);
         }
         return "MissionModel{" +
                 "target=" + target +

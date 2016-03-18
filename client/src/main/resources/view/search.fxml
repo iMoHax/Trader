@@ -52,13 +52,13 @@
     </TitledPane>
     <TableView fx:id="tblResults" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
         <columns>
-            <TableColumn minWidth="200.0" text="%market.system.name">
+            <TableColumn minWidth="200.0" text="%market.system">
                 <cellValueFactory><PropertyValueFactory property="system"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="200.0" text="%market.station.name">
+            <TableColumn minWidth="200.0" text="%market.station">
                 <cellValueFactory><PropertyValueFactory property="station"/></cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="180.0" text="%market.item.name">
+            <TableColumn minWidth="180.0" text="%market.item">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
             <TableColumn minWidth="110.0" text="%market.offer.price">

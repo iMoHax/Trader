@@ -48,7 +48,7 @@
         </VBox>
         <ListView fx:id="excludes" GridPane.rowIndex="7" GridPane.columnIndex="1" maxHeight="120"/>
 
-    <Label text="Фильтры на товары:" GridPane.rowIndex="8" />
+    <Label text="%filter.stations" GridPane.rowIndex="8" />
     <VBox GridPane.rowIndex="9" spacing="4">
         <TextField fx:id="vFilterSystemText" minWidth="180"/>
         <ComboBox fx:id="vFilterStation" minWidth="180"/>
@@ -58,7 +58,7 @@
             <Button prefWidth="30" onAction="#removeVendorFilter"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
             <Button prefWidth="30" onAction="#cleanVendorFilters"><graphic><Glyph text="FontAwesome|TRASH_ALT"/></graphic></Button>
         </HBox>
-        <Button prefWidth="180" text="Глобальный фильтр" onAction="#editDefaultVendorFilter"/>
+        <Button prefWidth="180" text="%filter.stations.global" onAction="#editDefaultVendorFilter"/>
     </VBox>
     <ListView fx:id="vFilters" GridPane.rowIndex="9" GridPane.columnIndex="1" maxHeight="120"/>
 

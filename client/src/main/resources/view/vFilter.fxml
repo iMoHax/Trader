@@ -3,19 +3,19 @@
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.trader.controllers.VendorFilterController"
               styleClass="dialog" spacing="10">
         <HBox spacing="10">
-            <CheckBox fx:id="cbSkipIllegal" text="Только легальные"/>
-            <CheckBox fx:id="cbDontSell" text="Не покупать"/>
-            <CheckBox fx:id="cbDontBuy" text="Не продавать"/>
+            <CheckBox fx:id="cbSkipIllegal" text="%filter.stations.legalOnly"/>
+            <CheckBox fx:id="cbDontSell" text="%filter.stations.notBuy"/>
+            <CheckBox fx:id="cbDontBuy" text="%filter.stations.notSell"/>
         </HBox>
 
         <VBox spacing="4">
-            <Label text="Не покупать:"/>
+            <Label text="%filter.stations.label.notBuy"/>
             <ScrollPane maxHeight="200" maxWidth="400">
                 <GridPane fx:id="sellCbs" hgap="5" vgap="5"/>
             </ScrollPane>
         </VBox>
         <VBox spacing="4">
-            <Label text="Не продавать:"/>
+            <Label text="%filter.stations.label.notSell"/>
             <ScrollPane maxHeight="200" maxWidth="400">
                 <GridPane fx:id="buyCbs" hgap="5" vgap="5"/>
             </ScrollPane>

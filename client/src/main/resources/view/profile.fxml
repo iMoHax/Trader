@@ -13,35 +13,35 @@
         <Insets left="5" right="5" top="5" bottom="5"/>
     </padding>
 
-    <Label text="Имя:" />
+    <Label text="%profile.name" />
     <TextField fx:id="name" />
     <StackPane>
         <HBox fx:id="profileInfo" spacing="4">
-            <Label text="Баланс:" />
+            <Label text="%profile.balance" />
             <NumberField fx:id="balance" />
-            <Label text="Система:" />
-            <TextField fx:id="systemText" />
-            <Button fx:id="btnAddSystem" minWidth="30">
-                <graphic><Glyph text="FontAwesome|EDIT"/></graphic>
-            </Button>
-            <Label text="Станция:" />
-            <ComboBox fx:id="station" />
-            <Button fx:id="btnAddStation" minWidth="30">
-                <graphic><Glyph text="FontAwesome|EDIT"/></graphic>
-            </Button>
-            <Label text="В доке:" />
+            <Label text="%profile.system" />
+            <HBox>
+                <TextField fx:id="systemText" />
+                <Button fx:id="btnAddSystem" minWidth="30"><graphic><Glyph text="FontAwesome|EDIT"/></graphic></Button>
+            </HBox>
+            <Label text="%profile.station" />
+            <HBox>
+                <ComboBox fx:id="station" />
+                <Button fx:id="btnAddStation" minWidth="30"><graphic><Glyph text="FontAwesome|EDIT"/></graphic></Button>
+            </HBox>
+            <Label text="%profile.docked" />
             <CheckBox fx:id="docked" />
         </HBox>
         <HBox fx:id="shipInfo" spacing="4">
-            <Label text="Трюм:" />
+            <Label text="%profile.ship.cargo" />
             <NumberField fx:id="cargo" maxWidth="60"/>
-            <Label text="Топливный бак:" />
+            <Label text="%profile.ship.tank" />
             <NumberField fx:id="tank"  maxWidth="60"/>
-            <Label text="Масса:" />
+            <Label text="%profile.ship.mass" />
             <NumberField fx:id="mass" maxWidth="60"/>
-            <Label text="Двигатель:" />
+            <Label text="%profile.ship.engine" />
             <ComboBox fx:id="engine" maxWidth="60"/>
-            <Label text="Дальность прыжка, LY:" />
+            <Label text="%profile.ship.jump" />
             <Label fx:id="jumpRange"/>
         </HBox>
     </StackPane>

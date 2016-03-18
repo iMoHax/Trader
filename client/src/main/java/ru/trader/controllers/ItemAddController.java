@@ -36,9 +36,9 @@ public class ItemAddController {
         if (owner != null) dlg.initOwner(owner.getScene().getWindow());
         dlg.setTitle(Localization.getString("dialog.item.title"));
         dlg.getDialogPane().setContent(content);
-        dlg.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        dlg.getDialogPane().getButtonTypes().addAll(Dialogs.OK, Dialogs.CANCEL);
         dlg.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
+            if (dialogButton == Dialogs.OK) {
                 return add(market);
             }
             return null;

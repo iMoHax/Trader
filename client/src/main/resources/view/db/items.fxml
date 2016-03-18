@@ -18,19 +18,19 @@
             <TableColumn minWidth="200" text="%market.item.name">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="group" minWidth="120" text="Группа" editable="false">
+            <TableColumn fx:id="group" minWidth="120" text="%market.group" editable="false">
                 <cellValueFactory><PropertyValueFactory property="group"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="factions" minWidth="145" text="Запрещено в">
+            <TableColumn fx:id="factions" minWidth="145" text="%market.item.illegal">
                 <cellValueFactory><PropertyValueFactory property="illegalFactions"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="governments" minWidth="145" text="Запрещено в">
+            <TableColumn fx:id="governments" minWidth="145" text="%market.item.illegal">
                 <cellValueFactory><PropertyValueFactory property="illegalGovernments"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="legalFactions" minWidth="145" text="Разрешено в">
+            <TableColumn fx:id="legalFactions" minWidth="145" text="%market.item.legal">
                 <cellValueFactory><PropertyValueFactory property="legalFactions"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="legalGovernments" minWidth="145" text="Разрешено в">
+            <TableColumn fx:id="legalGovernments" minWidth="145" text="%market.item.legal">
                 <cellValueFactory><PropertyValueFactory property="legalGovernments"/></cellValueFactory>
             </TableColumn>
         </columns>
@@ -40,8 +40,8 @@
         <contextMenu>
             <ContextMenu>
                 <items>
-                    <MenuItem text="Добавить" onAction="#add" />
-                    <MenuItem text="Удалить" onAction="#remove" />
+                    <MenuItem text="%dialog.button.add" onAction="#add" />
+                    <MenuItem text="%dialog.button.remove" onAction="#remove" />
                 </items>
             </ContextMenu>
         </contextMenu>

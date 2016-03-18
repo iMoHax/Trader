@@ -30,9 +30,8 @@ public class LoginController {
         dialog.setTitle(Localization.getString("login.title"));
         dialog.setHeaderText(Localization.getString("login.header"));
         dialog.getDialogPane().setContent(content);
-        ButtonType loginButtonType = new ButtonType(Localization.getString("login.text.login"), ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
-        Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
+        dialog.getDialogPane().getButtonTypes().addAll(Dialogs.LOGIN, Dialogs.CANCEL);
+        Node loginButton = dialog.getDialogPane().lookupButton(Dialogs.LOGIN);
         loginButton.setDisable(true);
         email.textProperty().addListener((observable, oldValue, newValue) -> {
             loginButton.setDisable(newValue.trim().isEmpty());
@@ -40,7 +39,7 @@ public class LoginController {
         });
         email.setText(Main.SETTINGS.edce().getEmail());
         dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == loginButtonType) {
+            if (dialogButton == Dialogs.LOGIN) {
                 return new Pair<>(email.getText(), password.getText());
             }
             return null;

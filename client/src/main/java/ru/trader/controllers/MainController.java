@@ -155,7 +155,7 @@ public class MainController {
 
     public void clear(){
         Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.all")));
-        if (res.isPresent() && res.get() == ButtonType.OK) {
+        if (res.isPresent() && res.get() == Dialogs.OK) {
             market.clear();
             reload();
         }
@@ -163,7 +163,7 @@ public class MainController {
 
     public void clearOffers(){
         Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.offers")));
-        if (res.isPresent() && res.get() == ButtonType.YES) {
+        if (res.isPresent() && res.get() == Dialogs.YES) {
             market.clearOffers();
             reload();
         }
@@ -171,7 +171,7 @@ public class MainController {
 
     public void clearStations(){
         Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.stations")));
-        if (res.isPresent() && res.get() == ButtonType.YES) {
+        if (res.isPresent() && res.get() == Dialogs.YES) {
             market.clearStations();
             reload();
         }
@@ -179,7 +179,7 @@ public class MainController {
 
     public void clearSystems(){
         Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.systems")));
-        if (res.isPresent() && res.get() == ButtonType.YES) {
+        if (res.isPresent() && res.get() == Dialogs.YES) {
             market.clearSystems();
             reload();
         }
@@ -187,7 +187,7 @@ public class MainController {
 
     public void clearItems(){
         Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.items")));
-        if (res.isPresent() && res.get() == ButtonType.YES) {
+        if (res.isPresent() && res.get() == Dialogs.YES) {
             market.clearItems();
             reload();
         }
@@ -195,7 +195,7 @@ public class MainController {
 
     public void clearGroups(){
         Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), Localization.getString("market.groups")));
-        if (res.isPresent() && res.get() == ButtonType.YES) {
+        if (res.isPresent() && res.get() == Dialogs.YES) {
             market.clearGroups();
             reload();
         }
@@ -224,7 +224,7 @@ public class MainController {
         SystemModel system = profile.getSystem();
         if (!ModelFabric.isFake(system)) {
             Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), system.getName()));
-            if (res.isPresent() && res.get() == ButtonType.YES) {
+            if (res.isPresent() && res.get() == Dialogs.YES) {
                 market.remove(system);
             }
         }
@@ -248,7 +248,7 @@ public class MainController {
         StationModel station = profile.getStation();
         if (!ModelFabric.isFake(station)) {
             Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), station.getName()));
-            if (res.isPresent() && res.get() == ButtonType.YES) {
+            if (res.isPresent() && res.get() == Dialogs.YES) {
                 station.getSystem().remove(station);
             }
         }

@@ -145,20 +145,18 @@ public class StationEditorController {
         dlg = new Dialog<>();
         if (owner != null) dlg.initOwner(owner.getScene().getWindow());
 
-        ButtonType saveButton = new ButtonType(Localization.getString("dialog.button.save"), ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButton = new ButtonType(Localization.getString("dialog.button.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
 
         dlg.getDialogPane().setContent(content);
-        dlg.getDialogPane().getButtonTypes().addAll(saveButton, cancelButton);
+        dlg.getDialogPane().getButtonTypes().addAll(Dialogs.SAVE, Dialogs.CANCEL);
 
-        Button bSave = (Button) dlg.getDialogPane().lookupButton(saveButton);
+        Button bSave = (Button) dlg.getDialogPane().lookupButton(Dialogs.SAVE);
         bSave.disableProperty().bind(distance.wrongProperty());
 
         dlg.setResultConverter(dialogButton -> {
-            if (dialogButton == saveButton) {
+            if (dialogButton == Dialogs.SAVE) {
                 save();
             }
-            if (dialogButton == cancelButton) {
+            if (dialogButton == Dialogs.CANCEL) {
                 cancel();
             }
             return dialogButton;

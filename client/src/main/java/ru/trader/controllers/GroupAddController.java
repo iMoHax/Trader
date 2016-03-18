@@ -3,7 +3,6 @@ package ru.trader.controllers;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
@@ -34,9 +33,9 @@ public class GroupAddController {
         if (owner != null) dlg.initOwner(owner.getScene().getWindow());
         dlg.setTitle(Localization.getString("dialog.group.title"));
         dlg.getDialogPane().setContent(content);
-        dlg.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        dlg.getDialogPane().getButtonTypes().addAll(Dialogs.OK, Dialogs.CANCEL);
         dlg.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
+            if (dialogButton == Dialogs.OK) {
                 return add(market);
             }
             return null;

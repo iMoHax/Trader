@@ -19,7 +19,7 @@
     </columnConstraints>
 
     <VBox GridPane.rowSpan="2" GridPane.vgrow="ALWAYS" minWidth="270">
-        <TitledPane text="%market.system.name"  collapsible="false">
+        <TitledPane text="%market.system"  collapsible="false">
             <HBox><TextField fx:id="systemText" HBox.hgrow="ALWAYS" /><Button minWidth="30" onAction="#currentSystem"><graphic><Glyph text="FontAwesome|MAP_MARKER"/></graphic></Button></HBox>
         </TitledPane>
         <TitledPane VBox.vgrow="ALWAYS" text="%market.stations" collapsible="false">
@@ -69,7 +69,7 @@
               <TableView fx:id="tblSell" editable="true">
                   <rowFactory><OfferDecoratedRow /></rowFactory>
                   <columns>
-                      <TableColumn minWidth="230.0" text="%market.item.name">
+                      <TableColumn minWidth="230.0" text="%market.item">
                           <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
                       </TableColumn>
                       <TableColumn minWidth="110.0" text="%market.offer.price" onEditCommit="#editPrice">
@@ -118,7 +118,7 @@
               <TableView fx:id="tblBuy" editable="true">
                   <rowFactory><OfferDecoratedRow /></rowFactory>
                   <columns>
-                      <TableColumn minWidth="230.0" text="%market.item.name">
+                      <TableColumn minWidth="230.0" text="%market.item">
                           <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
                       </TableColumn>
                       <TableColumn minWidth="110.0" text="%market.offer.price" editable="true" onEditCommit="#editPrice">

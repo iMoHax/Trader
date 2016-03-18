@@ -217,7 +217,7 @@ public class OffersController {
         StationModel s = getStation();
         if (!ModelFabric.isFake(s)){
             Optional<ButtonType> res = Screeners.showConfirm(String.format(Localization.getString("dialog.confirm.remove"), s.getName()));
-            if (res.isPresent() && res.get() == ButtonType.YES) {
+            if (res.isPresent() && res.get() == Dialogs.YES) {
                 s.getSystem().remove(s);
             }
         }

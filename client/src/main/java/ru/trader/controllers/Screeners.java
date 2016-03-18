@@ -178,7 +178,7 @@ public class Screeners {
 
     public static void showException(Throwable ex){
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Exception Dialog");
+        alert.setTitle(Localization.getString("dialog.exception.title","Exception Dialog"));
         String text = ex.getLocalizedMessage();
         alert.setHeaderText(text != null ? text : ex.getMessage());
 
@@ -188,7 +188,7 @@ public class Screeners {
         ex.printStackTrace(pw);
         String exceptionText = sw.toString();
 
-        Label label = new Label("The exception stacktrace was:");
+        Label label = new Label(Localization.getString("dialog.exception.label.stacktrace","The exception stacktrace was:"));
         TextArea textArea = new TextArea(exceptionText);
         textArea.setEditable(false);
         textArea.setWrapText(true);
@@ -209,9 +209,9 @@ public class Screeners {
 
     public static Optional<ButtonType> showConfirm(String text){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation Dialog");
+        alert.setTitle(Localization.getString("dialog.confirm.title"));
         alert.setHeaderText(text);
-        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+        alert.getButtonTypes().setAll(Dialogs.YES, Dialogs.NO, Dialogs.CANCEL);
         return alert.showAndWait();
     }
 

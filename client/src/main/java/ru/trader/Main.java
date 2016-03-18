@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.controllers.Dialogs;
 import ru.trader.controllers.MainController;
 import ru.trader.controllers.Screeners;
 import ru.trader.view.support.Localization;
@@ -76,6 +77,7 @@ public class Main extends Application {
         MainController.getWorld().refresh();
         loadMainScene();
         loadResources();
+        Dialogs.initButtons();
         primaryStage.show();
         if (Main.SETTINGS.helper().isVisible()){
             Screeners.showHelper();
@@ -90,8 +92,8 @@ public class Main extends Application {
             try {
                 if (World.getMarket().isChange()) {
                     Optional<ButtonType> res = Screeners.showConfirm(Localization.getString("dialog.confirm.save"));
-                    if (res.isPresent() && res.get() == ButtonType.YES) World.save();
-                    else if (!res.isPresent() || res.get() == ButtonType.CANCEL) {
+                    if (res.isPresent() && res.get() == Dialogs.YES) World.save();
+                    else if (!res.isPresent() || res.get() == Dialogs.CANCEL) {
                         we.consume();
                         return;
                     }

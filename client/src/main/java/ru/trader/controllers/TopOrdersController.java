@@ -41,9 +41,9 @@ public class TopOrdersController {
         if (owner != null) dlg.initOwner(owner.getScene().getWindow());
         dlg.setTitle(Localization.getString("topOrders.title"));
         dlg.getDialogPane().setContent(content);
-        dlg.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        dlg.getDialogPane().getButtonTypes().addAll(Dialogs.OK, Dialogs.CANCEL);
         dlg.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
+            if (dialogButton == Dialogs.OK) {
                 return order;
             }
             return null;

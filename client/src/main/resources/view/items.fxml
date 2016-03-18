@@ -12,7 +12,7 @@
       fx:controller="ru.trader.controllers.ItemsController">
     <TableView fx:id="tblItems" editable="true" VBox.vgrow="ALWAYS" prefWidth="1195.0">
         <columns>
-            <TableColumn editable="true" minWidth="200.0" text="%market.item.name">
+            <TableColumn editable="true" minWidth="200.0" text="%market.item">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
             <TableColumn editable="true" resizable="false" text="%market.offer.buy">

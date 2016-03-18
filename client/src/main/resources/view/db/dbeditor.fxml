@@ -10,10 +10,10 @@
     <Tab text="%market.items">
         <fx:include fx:id="items" source="items.fxml"/>
     </Tab>
-    <Tab text="Системы">
+    <Tab text="%market.systems">
         <fx:include fx:id="systems" source="systems.fxml"/>
     </Tab>
-    <Tab text="Станции">
+    <Tab text="%market.stations">
         <fx:include fx:id="stations" source="stations.fxml"/>
     </Tab>
 </TabPane>

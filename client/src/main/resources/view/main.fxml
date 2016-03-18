@@ -62,7 +62,7 @@
            <Tab text="%main.tab.search">
                <fx:include source="search.fxml"/>
            </Tab>
-           <Tab fx:id="track" text="Текущий маршрут">
+           <Tab fx:id="track" text="%main.tab.route">
                <fx:include source="routeTrack.fxml"/>
            </Tab>
        </TabPane>

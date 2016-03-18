@@ -13,7 +13,7 @@
       fx:controller="ru.trader.db.controllers.SystemsController">
     <TableView fx:id="tblSystems" editable="true" VBox.vgrow="ALWAYS" prefWidth="800">
         <columns>
-            <TableColumn minWidth="200" text="Название">
+            <TableColumn minWidth="200" text="%market.system.name">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
             <TableColumn minWidth="60" text="X">
@@ -31,10 +31,10 @@
             <TableColumn fx:id="government" minWidth="100" text="%market.government">
                 <cellValueFactory><WritablePropertyValueFactory property="government"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="power" minWidth="100" text="Сила">
+            <TableColumn fx:id="power" minWidth="100" text="%market.power">
                 <cellValueFactory><WritablePropertyValueFactory property="power"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="powerState" minWidth="100" text="Статус">
+            <TableColumn fx:id="powerState" minWidth="100" text="%market.powerState">
                 <cellValueFactory><WritablePropertyValueFactory property="powerState"/></cellValueFactory>
             </TableColumn>
 
@@ -45,9 +45,9 @@
         <contextMenu>
             <ContextMenu>
                 <items>
-                    <MenuItem text="Добавить" onAction="#add" />
-                    <MenuItem text="Редактировать" onAction="#edit" />
-                    <MenuItem text="Удалить" onAction="#remove" />
+                    <MenuItem text="%dialog.button.add" onAction="#add" />
+                    <MenuItem text="%dialog.button.edit" onAction="#edit" />
+                    <MenuItem text="%dialog.button.remove" onAction="#remove" />
                 </items>
             </ContextMenu>
         </contextMenu>

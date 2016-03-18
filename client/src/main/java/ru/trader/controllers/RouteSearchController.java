@@ -1,10 +1,7 @@
 package ru.trader.controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import ru.trader.analysis.CrawlerSpecificator;
 import ru.trader.model.*;
 import ru.trader.view.support.autocomplete.AutoCompletion;
@@ -26,7 +23,7 @@ public class RouteSearchController {
     @FXML
     private ComboBox<String> toStation;
     @FXML
-    private CheckBox cbFast;
+    private RadioButton rbByTime;
     @FXML
     private CheckBox cbFullScan;
     @FXML
@@ -103,7 +100,7 @@ public class RouteSearchController {
         StationModel tS = t != null ? t.get(toStation.getValue()) : ModelFabric.NONE_STATION;
 
         CrawlerSpecificator specificator = new CrawlerSpecificator();
-        specificator.setByTime(cbFast.isSelected());
+        specificator.setByTime(rbByTime.isSelected());
         specificator.setFullScan(cbFullScan.isSelected());
         missionsList.getItems().forEach(m -> m.toSpecification(specificator));
         market.getRoutes(f, fS, t, tS, profile.getBalance(), specificator, routes -> {

@@ -43,7 +43,7 @@ public class DurationField extends TextField {
     public DurationField() {
         super();
         converter = new DurationStringConverter();
-        tooltip.setText("Wrong duration format, use like 1w1d1h1m1s");
+        tooltip.setText(Localization.getString("message.wrongDuration"));
         tooltip.setAutoHide(true);
         wrong.addListener((ob, o ,n) -> {
             if (n) {
@@ -87,7 +87,7 @@ public class DurationField extends TextField {
     }
 
     private static class DurationStringConverter extends StringConverter<Duration> {
-        private static final Pattern PATTERN = Pattern.compile("^(?:([0-9]+)w)?(?:([0-9]+)d)?(?:([0-9]+)h)?(?:([0-9]+)m)?(?:([0-9]+)s)?$", Pattern.CASE_INSENSITIVE);
+        private static final Pattern PATTERN = Pattern.compile("^(?:([0-9]+)[wн])?(?:([0-9]+)[dд])?(?:([0-9]+)[hч])?(?:([0-9]+)[mм])?(?:([0-9]+)[sс])?$", Pattern.CASE_INSENSITIVE);
 
         private static long parseLong(String value){
             if (value == null) return 0;

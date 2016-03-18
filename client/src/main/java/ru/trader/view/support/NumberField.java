@@ -59,7 +59,7 @@ public class NumberField extends TextField {
         NumberFormat f = new DecimalFormat(format, new DecimalFormatSymbols(Locale.ENGLISH));
         f.setGroupingUsed(false);
         converter = new NumberStringConverter(f);
-        tooltip.setText("Wrong number");
+        tooltip.setText(Localization.getString("message.wrongNumber"));
         tooltip.setAutoHide(true);
         wrong.addListener((ob, o ,n) -> {
             if (n) {

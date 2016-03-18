@@ -36,10 +36,10 @@ public class ProgressController {
         vbox.setPrefSize(300, 100);
 
         dlg.getDialogPane().setContent(vbox);
-        dlg.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+        dlg.getDialogPane().getButtonTypes().addAll(Dialogs.CANCEL);
 
         dlg.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.CANCEL) {
+            if (dialogButton == Dialogs.CANCEL) {
                 if (task != null){
                     task.stop();
                 }

@@ -113,11 +113,10 @@ public class FilterController {
         dlg = new Dialog<>();
         if (owner != null) dlg.initOwner(owner.getScene().getWindow());
         dlg.setTitle(Localization.getString("filter.title"));
-        ButtonType saveButton = new ButtonType(Localization.getString("dialog.button.save"), ButtonBar.ButtonData.OK_DONE);
         dlg.getDialogPane().setContent(content);
-        dlg.getDialogPane().getButtonTypes().addAll(saveButton, ButtonType.CANCEL);
+        dlg.getDialogPane().getButtonTypes().addAll(Dialogs.SAVE, Dialogs.CANCEL);
         dlg.setResultConverter(dialogButton -> {
-            if (dialogButton == saveButton) {
+            if (dialogButton == Dialogs.SAVE) {
                 save();
                 return this.filter;
             }

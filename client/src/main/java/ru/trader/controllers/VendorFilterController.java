@@ -2,8 +2,6 @@ package ru.trader.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.GridPane;
@@ -77,11 +75,10 @@ public class VendorFilterController {
         dlg = new Dialog<>();
         if (owner != null) dlg.initOwner(owner.getScene().getWindow());
         dlg.setTitle(Localization.getString("filter.title"));
-        ButtonType saveButton = new ButtonType(Localization.getString("dialog.button.save"), ButtonBar.ButtonData.OK_DONE);
         dlg.getDialogPane().setContent(content);
-        dlg.getDialogPane().getButtonTypes().addAll(saveButton, ButtonType.CANCEL);
+        dlg.getDialogPane().getButtonTypes().addAll(Dialogs.SAVE, Dialogs.CANCEL);
         dlg.setResultConverter(dialogButton -> {
-            if (dialogButton == saveButton) {
+            if (dialogButton == Dialogs.SAVE) {
                 save();
                 return this.filter;
             }

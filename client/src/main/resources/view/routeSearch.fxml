@@ -6,7 +6,8 @@
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.RouteSearchController">
     <TitledPane text="%router.pane.route" minHeight="80" collapsible="false">
-        <VBox spacing="4">
+    <HBox>
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
             <HBox spacing="10" alignment="CENTER">
                 <HBox spacing="2" alignment="BASELINE_LEFT">
                     <Label text="%router.pane.route.from" />
@@ -20,14 +21,20 @@
                     <ComboBox fx:id="toStation" minWidth="140"/>
                     <Button minWidth="30" onAction="#loop"><graphic><Glyph text="FontAwesome|RETWEET"/></graphic></Button>
                 </HBox>
-                <CheckBox fx:id="cbFast" text="%router.pane.route.fast"/>
-                <CheckBox fx:id="cbFullScan" selected="true" text="Глубокий поиск"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER">
                 <Button prefWidth="80" text="%router.button.search" onAction="#search" />
                 <Button prefWidth="80" text="%router.button.top" onAction="#searchTop" />
             </HBox>
         </VBox>
+        <VBox spacing="4" maxWidth="200">
+            <Label text="%router.search.type" />
+            <fx:define><ToggleGroup fx:id="searchType" /></fx:define>
+            <RadioButton fx:id="rbByTime" text="%router.search.byTime" toggleGroup="$searchType"/>
+            <RadioButton text="%router.search.byProfit" selected="true" toggleGroup="$searchType"/>
+            <CheckBox fx:id="cbFullScan" selected="true" text="%router.search.full"/>
+        </VBox>
+    </HBox>
     </TitledPane>
     <TitledPane text="%router.pane.missions" collapsible="false">
         <HBox spacing="10">

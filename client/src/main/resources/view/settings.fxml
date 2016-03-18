@@ -19,32 +19,32 @@
         <NumberField fx:id="emdnUpdateTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 -->
     <Label text="EDCE" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"/>
-    <Label text="Включить" GridPane.rowIndex="1"/>
+    <Label text="%settings.edce.on" GridPane.rowIndex="1"/>
     <CheckBox fx:id="edceActive" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-    <Label text="Интервал" GridPane.rowIndex="2" />
+    <Label text="%settings.edce.interval" GridPane.rowIndex="2" />
     <NumberField fx:id="edceInterval" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="2" />
     <Label text="%settings.performance" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"  GridPane.rowIndex="3"/>
-    <Label text="Прыжков:" GridPane.rowIndex="4" />
+    <Label text="%settings.performance.jumps" GridPane.rowIndex="4" />
     <NumberField fx:id="jumps" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-    <Label text="Посадок:" GridPane.rowIndex="5" />
+    <Label text="%settings.performance.landings" GridPane.rowIndex="5" />
     <NumberField fx:id="lands" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-    <Label text="Количество маршрутов:" GridPane.rowIndex="6" />
+    <Label text="%settings.performance.limit" GridPane.rowIndex="6" />
     <NumberField fx:id="routesCount" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-    <Label text="Параметры поиска" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"  GridPane.rowIndex="7"/>
-    <Label text="Стоимость 1т топлива:" GridPane.rowIndex="8" />
+    <Label text="%settings.search" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"  GridPane.rowIndex="7"/>
+    <Label text="%settings.search.fuelPrice" GridPane.rowIndex="8" />
     <NumberField fx:id="fuelPrice" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-    <Label text="Тип маршрутов:" GridPane.rowIndex="9" />
+    <Label text="%settings.search.pathType" GridPane.rowIndex="9" />
     <ComboBox fx:id="pathPriority" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-    <Label text="Время гиперпрыжка:" GridPane.rowIndex="10" />
+    <Label text="%settings.search.times.jump" GridPane.rowIndex="10" />
     <NumberField fx:id="jumpTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-    <Label text="Время посадки:" GridPane.rowIndex="11" />
+    <Label text="%settings.search.times.landing" GridPane.rowIndex="11" />
     <NumberField fx:id="landingTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-    <Label text="Время взлета:" GridPane.rowIndex="12" />
+    <Label text="%settings.search.times.takeoff" GridPane.rowIndex="12" />
     <NumberField fx:id="takeoffTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-    <Label text="Время перезарядки FSD:" GridPane.rowIndex="13" />
+    <Label text="%settings.search.times.recharge" GridPane.rowIndex="13" />
     <NumberField fx:id="rechargeTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="13" />
-    <Label text="Горячие клавиши" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"  GridPane.rowIndex="14"/>
-    <Label text="Точка маршрута достигнута:" GridPane.rowIndex="15" />
+    <Label text="%settings.hotkeys" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"  GridPane.rowIndex="14"/>
+    <Label text="%settings.hotkeys.complete" GridPane.rowIndex="15" />
     <TextField fx:id="completeKeyText" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="15" />
 
 </GridPane>
