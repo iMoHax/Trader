@@ -14,12 +14,12 @@ public enum POWER {
         }
     },
     DELAINE {
-        // Control Systems: All weapons/slaves/narcotics legalised
+        // Control Systems: All weapons/slaves/narcotics/medicals legalised
         @Override
         public boolean isLegal(FACTION faction, Item item, POWER_STATE state) {
             if (state == POWER_STATE.CONTROL){
                 String groupId = item.getGroup() != null ? item.getGroup().getName() : null;
-                return groupId != null && (WEAPONS_GRP.equals(groupId) || SLAVES_GRP.equals(groupId) || NARCOTICS_GRP.equals(groupId));
+                return groupId != null && (WEAPONS_GRP.equals(groupId) || SLAVES_GRP.equals(groupId) || NARCOTICS_GRP.equals(groupId) || MEDICINE_GRP.equals(groupId));
             }
             return super.isLegal(faction, item, state);
         }
@@ -56,15 +56,15 @@ public enum POWER {
     },
     YONG_RUI,
     ANTAL   {
-        // Exploited Systems: All Slaves, Narcotics and non-basic medicines banned
-        // Control Systems: All Slaves, Narcotics and non-basic medicines banned
+        // Exploited Systems: All Slaves, Narcotics and non-basic/agri medicines banned
+        // Control Systems: All Slaves, Narcotics and non-basic/agri medicines banned
         @Override
         public boolean isIllegal(FACTION faction, Item item, POWER_STATE state) {
             if (state == POWER_STATE.CONTROL || state == POWER_STATE.EXPLOITED){
                 String groupId = item.getGroup() != null ? item.getGroup().getName() : null;
                 String itemId = item.getName();
                 return groupId != null && (SLAVES_GRP.equals(groupId) || NARCOTICS_GRP.equals(groupId)
-                        || MEDICINE_GRP.equals(groupId) && !BASIC_MEDICINES.equals(itemId)
+                        || MEDICINE_GRP.equals(groupId) && !BASIC_MEDICINES.equals(itemId) && !AGRI_MEDICINE.equals(itemId)
                 );
             }
             return super.isIllegal(faction, item, state);
@@ -100,6 +100,7 @@ public enum POWER {
     private final static String MEDICINE_GRP="medicines";
     private final static String IMPERIAL_SLAVES="imperialslaves";
     private final static String BASIC_MEDICINES="basicmedicines";
+    private final static String AGRI_MEDICINE="agriculturalmedicines";
 
     public boolean isLegal(FACTION faction, Item item, POWER_STATE state){
         return false;
