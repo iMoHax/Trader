@@ -21,12 +21,12 @@
             <NumberField fx:id="balance" />
             <Label text="%profile.system" />
             <HBox>
-                <TextField fx:id="systemText" />
+                <TextField fx:id="systemText" minWidth="100"/>
                 <Button fx:id="btnAddSystem" minWidth="30"><graphic><Glyph text="FontAwesome|EDIT"/></graphic></Button>
             </HBox>
             <Label text="%profile.station" />
             <HBox>
-                <ComboBox fx:id="station" />
+                <ComboBox fx:id="station" minWidth="100"/>
                 <Button fx:id="btnAddStation" minWidth="30"><graphic><Glyph text="FontAwesome|EDIT"/></graphic></Button>
             </HBox>
             <Label text="%profile.docked" />
@@ -52,4 +52,9 @@
         <graphic><Glyph text="FontAwesome|ROCKET"/></graphic>
     </ToggleButton>
     <ToggleButton fx:id="btnEDCE" text="EDCE"/>
+    <HBox HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT">
+        <Label fx:id="warningIcon" styleClass="icon-warning" prefWidth="30" prefHeight="30" visible="false">
+            <graphic><Glyph text="FontAwesome|WARNING" /></graphic>
+        </Label>
+    </HBox>
 </HBox>

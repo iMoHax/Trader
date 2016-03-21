@@ -3,6 +3,7 @@ package ru.trader.controllers;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import org.slf4j.Logger;
@@ -66,6 +67,8 @@ public class OffersController {
     private CheckBox cbLargeLandpad;
     @FXML
     private TitledPane stationPane;
+    @FXML
+    private Node warningIcon;
 
     private final List<OfferModel> sells = FXCollections.observableArrayList();
     private final List<OfferModel> buys = FXCollections.observableArrayList();
@@ -171,6 +174,7 @@ public class OffersController {
             sells.addAll(station.getSells());
             buys.addAll(station.getBuys());
         }
+        updateIcons();
     }
 
     private void sort(){
@@ -197,6 +201,20 @@ public class OffersController {
 
     public StationModel getStation() {
         return station;
+    }
+
+    private void updateIcons(){
+        SystemModel s = getSystem();
+        if (!s.isCorrect()){
+            warningIcon.setVisible(true);
+            return;
+        }
+        StationModel st = getStation();
+        if (!st.isCorrect()){
+            warningIcon.setVisible(true);
+            return;
+        }
+        warningIcon.setVisible(false);
     }
 
     @FXML

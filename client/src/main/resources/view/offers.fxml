@@ -13,6 +13,18 @@
     <fx:define><Insets fx:id="stationsMargin" left="5" right="5" /></fx:define>
     <fx:define><Insets fx:id="stationsPadding" left="12" right="10" /></fx:define>
 
+    <fx:define>
+        <ContextMenu fx:id="editMenu">
+            <items>
+                <MenuItem text="%main.menu.edit.editSystem" onAction="#editSystem" />
+                <SeparatorMenuItem />
+                <MenuItem text="%main.menu.edit.addStation" onAction="#addStation" />
+                <MenuItem text="%main.menu.edit.editStation" onAction="#editStation" />
+                <MenuItem text="%main.menu.edit.removeStation" onAction="#removeStation" />
+            </items>
+        </ContextMenu>
+    </fx:define>
+
     <columnConstraints>
         <ColumnConstraints minWidth="270" maxWidth="270"/>
         <ColumnConstraints fillWidth="true"/>
@@ -24,17 +36,7 @@
         </TitledPane>
         <TitledPane VBox.vgrow="ALWAYS" text="%market.stations" collapsible="false">
             <ListView fx:id="stationsList">
-                <contextMenu>
-                    <ContextMenu>
-                        <items>
-                            <MenuItem text="%main.menu.edit.editSystem" onAction="#editSystem" />
-                            <SeparatorMenuItem />
-                            <MenuItem text="%main.menu.edit.addStation" onAction="#addStation" />
-                            <MenuItem text="%main.menu.edit.editStation" onAction="#editStation" />
-                            <MenuItem text="%main.menu.edit.removeStation" onAction="#removeStation" />
-                        </items>
-                    </ContextMenu>
-                </contextMenu>
+                <contextMenu><fx:reference source="editMenu"/></contextMenu>
             </ListView>
         </TitledPane>
     </VBox>
@@ -47,7 +49,8 @@
                     <ColumnConstraints minWidth="100" />
                     <ColumnConstraints minWidth="140" />
                     <ColumnConstraints minWidth="110" />
-                    <ColumnConstraints minWidth="140" hgrow="ALWAYS" />
+                    <ColumnConstraints minWidth="140" />
+                    <ColumnConstraints hgrow="ALWAYS" />
                 </columnConstraints>
                 <Label text="%label.station.type" />
                 <Label fx:id="type" GridPane.columnIndex="1"/>
@@ -55,6 +58,12 @@
                 <Label fx:id="faction" GridPane.columnIndex="3" />
                 <Label text="%label.government" GridPane.columnIndex="4" />
                 <Label fx:id="government" GridPane.columnIndex="5" />
+                <HBox GridPane.columnIndex="6" GridPane.rowSpan="2" alignment="TOP_RIGHT">
+                    <Label fx:id="warningIcon" styleClass="icon-warning" prefWidth="30" prefHeight="30" visible="false">
+                        <graphic><Glyph text="FontAwesome|WARNING" /></graphic>
+                    </Label>
+                </HBox>
+
                 <Label text="%label.station.distance" GridPane.rowIndex="1" />
                 <Label fx:id="distance" GridPane.rowIndex="1" GridPane.columnIndex="1" />
                 <Label text="%label.economic" GridPane.rowIndex="1" GridPane.columnIndex="2" />
@@ -62,7 +71,7 @@
                 <Label fx:id="subeconomic"  GridPane.rowIndex="1" GridPane.columnIndex="4" GridPane.columnSpan="2"/>
 
                 <Label text="%label.station.services" GridPane.rowIndex="2"/>
-                <TilePane GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.hgrow="ALWAYS"
+                <TilePane GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.hgrow="ALWAYS"
                           hgap="5" vgap="5" prefColumns="5" tileAlignment="BASELINE_LEFT">
                     <CheckBox fx:id="cbMarket" text="%services.MARKET"/>
                     <CheckBox fx:id="cbBlackMarket" text="%services.BLACK_MARKET"/>
@@ -75,6 +84,7 @@
                     <CheckBox fx:id="cbLargeLandpad" text="%services.LARGE_LANDPAD"/>
                 </TilePane>
             </GridPane>
+        <contextMenu><fx:reference source="editMenu"/></contextMenu>
     </TitledPane>
     <Accordion GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
         <panes>

@@ -178,6 +178,12 @@ public class StationModel {
         return station.getModifiedTime();
     }
 
+    public boolean isCorrect(){
+        return !station.getName().isEmpty() && station.getType() != null && station.getDistance() > 0
+               && station.getFaction() != null && station.getGovernment() != null
+               && station.getEconomic() != null && station.getSubEconomic() != null;
+    }
+
     @Override
     public String toString() {
         if (LOG.isTraceEnabled()){

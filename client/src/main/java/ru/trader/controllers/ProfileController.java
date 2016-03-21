@@ -5,9 +5,11 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
+import org.controlsfx.glyphfont.Glyph;
 import ru.trader.Main;
 import ru.trader.ServicesManager;
 import ru.trader.core.Engine;
@@ -55,6 +57,8 @@ public class ProfileController {
     private ToggleButton btnHelper;
     @FXML
     private ToggleButton btnEDCE;
+    @FXML
+    private Node warningIcon;
 
     private AutoCompletion<SystemModel> system;
     private ProfileModel profile;
@@ -74,6 +78,7 @@ public class ProfileController {
                 profile.setStation(ModelFabric.NONE_STATION);
             });
         });
+        system.valueProperty().addListener(i -> updateIcons());
         engine.setItems(FXCollections.observableList(Engine.getEngines()));
         engine.setConverter(new EngineStringConverter());
         btnAddSystem.setOnAction(e -> {
@@ -185,9 +190,27 @@ public class ProfileController {
         bind();
     }
 
+    private StationModel getStation(){
+        return getStation(station.getValue());
+    }
+
     private StationModel getStation(String name){
         SystemModel s = system.getValue();
         return s == null ? ModelFabric.NONE_STATION : s.get(name);
+    }
+
+    private void updateIcons(){
+        SystemModel s = system.getValue();
+        if (!s.isCorrect()){
+            warningIcon.setVisible(true);
+            return;
+        }
+        StationModel st = getStation();
+        if (!st.isCorrect()){
+            warningIcon.setVisible(true);
+            return;
+        }
+        warningIcon.setVisible(false);
     }
 
     private void bind(){

@@ -216,6 +216,46 @@ public class ModelFabric {
         }
 
         @Override
+        public FACTION getFaction() {
+            return FACTION.NONE;
+        }
+
+        @Override
+        public void setFaction(FACTION faction) {
+            throw new UnsupportedOperationException("Is fake system, change unsupported");
+        }
+
+        @Override
+        public GOVERNMENT getGovernment() {
+            return GOVERNMENT.NONE;
+        }
+
+        @Override
+        public void setGovernment(GOVERNMENT government) {
+            throw new UnsupportedOperationException("Is fake system, change unsupported");
+        }
+
+        @Override
+        public POWER getPower() {
+            return POWER.NONE;
+        }
+
+        @Override
+        public void setPower(POWER power) {
+            throw new UnsupportedOperationException("Is fake system, change unsupported");
+        }
+
+        @Override
+        public POWER_STATE getPowerState() {
+            return POWER_STATE.NONE;
+        }
+
+        @Override
+        public void setPowerState(POWER_STATE powerState) {
+            throw new UnsupportedOperationException("Is fake system, change unsupported");
+        }
+
+        @Override
         public StationModel get(String name) {
             return ModelFabric.NONE_STATION;
         }
@@ -238,6 +278,16 @@ public class ModelFabric {
         @Override
         public StationModel add(String name) {
             throw new UnsupportedOperationException("Is fake system, change unsupported");
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return true;
+        }
+
+        @Override
+        public boolean isCorrect() {
+            return true;
         }
 
         @Override
@@ -268,8 +318,38 @@ public class ModelFabric {
         }
 
         @Override
+        public STATION_TYPE getType() {
+            return STATION_TYPE.STARPORT;
+        }
+
+        @Override
+        public void setType(STATION_TYPE type) {
+            throw new UnsupportedOperationException("Is fake station, unsupported");
+        }
+
+        @Override
+        public ECONOMIC_TYPE getEconomic() {
+            return ECONOMIC_TYPE.NONE;
+        }
+
+        @Override
+        public void setEconomic(ECONOMIC_TYPE economic) {
+            throw new UnsupportedOperationException("Is fake station, unsupported");
+        }
+
+        @Override
+        public ECONOMIC_TYPE getSubEconomic() {
+            return ECONOMIC_TYPE.NONE;
+        }
+
+        @Override
+        public void setSubEconomic(ECONOMIC_TYPE economic) {
+            throw new UnsupportedOperationException("Is fake station, unsupported");
+        }
+
+        @Override
         public FACTION getFaction() {
-            throw  new UnsupportedOperationException("Is fake station, unsupported");
+            return FACTION.NONE;
         }
 
         @Override
@@ -279,7 +359,7 @@ public class ModelFabric {
 
         @Override
         public GOVERNMENT getGovernment() {
-            throw  new UnsupportedOperationException("Is fake station, unsupported");
+            return GOVERNMENT.NONE;
         }
 
         @Override
@@ -360,6 +440,12 @@ public class ModelFabric {
         @Override
         public double getDistance(StationModel other) {
             throw  new UnsupportedOperationException("Is fake station, unsupported");
+        }
+
+
+        @Override
+        public boolean isCorrect(){
+            return true;
         }
 
         @Override

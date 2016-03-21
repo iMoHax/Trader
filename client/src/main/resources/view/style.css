@@ -239,3 +239,9 @@ HBox.fields-group hbox-margin{
 .service-warning {
     -fx-text-fill: red;
 }
+
+.icon-warning {
+    -fx-light-text-color: orange;
+    -fx-mid-text-color: orange;
+    -fx-dark-text-color: orange;
+}

@@ -160,6 +160,14 @@ public class SystemModel {
         return system.isEmpty();
     }
 
+    public boolean isCorrect(){
+        return !system.getName().isEmpty() && (system.getX() != 0 || system.getY() != 0 || system.getZ() != 0 )
+                && system.getFaction() != null && system.getGovernment() != null
+                && system.getPower() != null && system.getPowerState() != null
+                && (system.getFaction() == FACTION.NONE || !system.isEmpty());
+    }
+
+
     @Override
     public String toString() {
         if (LOG.isTraceEnabled()){
