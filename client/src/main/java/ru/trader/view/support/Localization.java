@@ -17,7 +17,7 @@ public class Localization {
         new Locale("en", "US")
     };
 
-    private static ResourceBundle rb = ResourceBundle.getBundle("locale", DEFAULT, loader);
+    private static ResourceBundle rb = ResourceBundle.getBundle("locale", DEFAULT, loader, new ReusingResourceBundleControl());
     private static Locale locale = DEFAULT;
 
 
@@ -53,7 +53,7 @@ public class Localization {
     }
 
     public static ResourceBundle getResources(Locale locale){
-        return ResourceBundle.getBundle("locale", locale, loader);
+        return ResourceBundle.getBundle("locale", locale, loader, new ReusingResourceBundleControl());
     }
 
     public static ResourceBundle getResources(){
