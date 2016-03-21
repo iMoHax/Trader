@@ -27,6 +27,8 @@
                 <contextMenu>
                     <ContextMenu>
                         <items>
+                            <MenuItem text="%main.menu.edit.editSystem" onAction="#editSystem" />
+                            <SeparatorMenuItem />
                             <MenuItem text="%main.menu.edit.addStation" onAction="#addStation" />
                             <MenuItem text="%main.menu.edit.editStation" onAction="#editStation" />
                             <MenuItem text="%main.menu.edit.removeStation" onAction="#removeStation" />
@@ -36,32 +38,43 @@
             </ListView>
         </TitledPane>
     </VBox>
-    <TitledPane fx:id="stationPane" GridPane.columnIndex="1" maxHeight="60" collapsible="false">
-        <VBox>
-            <HBox spacing="4">
-                <Label text="%offers.text.distance"/>
-                <Label fx:id="distance" minWidth="60"/>
-                <Label text="%market.allegiance"/>
-                <Label fx:id="faction" minWidth="60"/>
-                <Label text="%market.government"/>
-                <Label fx:id="government" minWidth="60"/>
-            </HBox>
-            <HBox spacing="4">
-            <Label text="%offers.text.services"/>
-            <TilePane hgap="5" vgap="5" prefColumns="5" tileAlignment="BASELINE_LEFT">
-                <CheckBox fx:id="cbMarket" text="%services.MARKET"/>
-                <CheckBox fx:id="cbBlackMarket" text="%services.BLACK_MARKET"/>
-                <CheckBox fx:id="cbRefuel" text="%services.REFUEL"/>
-                <CheckBox fx:id="cbRepair" text="%services.REPAIR"/>
-                <CheckBox fx:id="cbMunition" text="%services.MUNITION"/>
-                <CheckBox fx:id="cbOutfit" text="%services.OUTFIT"/>
-                <CheckBox fx:id="cbShipyard" text="%services.SHIPYARD"/>
-                <CheckBox fx:id="cbMediumLandpad" text="%services.MEDIUM_LANDPAD"/>
-                <CheckBox fx:id="cbLargeLandpad" text="%services.LARGE_LANDPAD"/>
-            </TilePane>
-        </HBox>
-        </VBox>
+    <TitledPane fx:id="stationPane" GridPane.columnIndex="1"
+                minHeight="120" maxHeight="120" collapsible="false">
+            <GridPane hgap="4" vgap="4">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="80"/>
+                    <ColumnConstraints minWidth="140" />
+                    <ColumnConstraints minWidth="100" />
+                    <ColumnConstraints minWidth="140" />
+                    <ColumnConstraints minWidth="110" />
+                    <ColumnConstraints minWidth="140" hgrow="ALWAYS" />
+                </columnConstraints>
+                <Label text="%label.station.type" />
+                <Label fx:id="type" GridPane.columnIndex="1"/>
+                <Label text="%label.allegiance" GridPane.columnIndex="2"/>
+                <Label fx:id="faction" GridPane.columnIndex="3" />
+                <Label text="%label.government" GridPane.columnIndex="4" />
+                <Label fx:id="government" GridPane.columnIndex="5" />
+                <Label text="%label.station.distance" GridPane.rowIndex="1" />
+                <Label fx:id="distance" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                <Label text="%label.economic" GridPane.rowIndex="1" GridPane.columnIndex="2" />
+                <Label fx:id="economic" GridPane.rowIndex="1" GridPane.columnIndex="3" />
+                <Label fx:id="subeconomic"  GridPane.rowIndex="1" GridPane.columnIndex="4" GridPane.columnSpan="2"/>
 
+                <Label text="%label.station.services" GridPane.rowIndex="2"/>
+                <TilePane GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.hgrow="ALWAYS"
+                          hgap="5" vgap="5" prefColumns="5" tileAlignment="BASELINE_LEFT">
+                    <CheckBox fx:id="cbMarket" text="%services.MARKET"/>
+                    <CheckBox fx:id="cbBlackMarket" text="%services.BLACK_MARKET"/>
+                    <CheckBox fx:id="cbRefuel" text="%services.REFUEL"/>
+                    <CheckBox fx:id="cbRepair" text="%services.REPAIR"/>
+                    <CheckBox fx:id="cbMunition" text="%services.MUNITION"/>
+                    <CheckBox fx:id="cbOutfit" text="%services.OUTFIT"/>
+                    <CheckBox fx:id="cbShipyard" text="%services.SHIPYARD"/>
+                    <CheckBox fx:id="cbMediumLandpad" text="%services.MEDIUM_LANDPAD"/>
+                    <CheckBox fx:id="cbLargeLandpad" text="%services.LARGE_LANDPAD"/>
+                </TilePane>
+            </GridPane>
     </TitledPane>
     <Accordion GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
         <panes>

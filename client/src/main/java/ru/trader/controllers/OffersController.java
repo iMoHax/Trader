@@ -11,10 +11,7 @@ import ru.trader.core.SERVICE_TYPE;
 import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.model.support.ChangeMarketListener;
-import ru.trader.view.support.FactionStringConverter;
-import ru.trader.view.support.GovernmentStringConverter;
-import ru.trader.view.support.Localization;
-import ru.trader.view.support.ViewUtils;
+import ru.trader.view.support.*;
 import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
@@ -38,11 +35,17 @@ public class OffersController {
     @FXML
     private TableView<OfferModel> tblBuy;
     @FXML
+    private Label type;
+    @FXML
     private Label faction;
     @FXML
     private Label government;
     @FXML
     private Label distance;
+    @FXML
+    private Label economic;
+    @FXML
+    private Label subeconomic;
     @FXML
     private CheckBox cbMarket;
     @FXML
@@ -134,9 +137,12 @@ public class OffersController {
         sells.clear();
         buys.clear();
         stationPane.setText(station.getName());
+        type.setText("");
         distance.setText("");
         government.setText("");
         faction.setText("");
+        economic.setText("");
+        subeconomic.setText("");
         cbMarket.setSelected(false);
         cbBlackMarket.setSelected(false);
         cbRefuel.setSelected(false);
@@ -147,9 +153,12 @@ public class OffersController {
         cbMediumLandpad.setSelected(false);
         cbLargeLandpad.setSelected(false);
         if (!ModelFabric.isFake(station)){
+            type.setText(StationTypeStringConverter.toLocalizationString(station.getType()));
             faction.setText(FactionStringConverter.toLocalizationString(station.getFaction()));
             government.setText(GovernmentStringConverter.toLocalizationString(station.getGovernment()));
             distance.setText(String.valueOf(station.getDistance()));
+            economic.setText(EconomicTypeStringConverter.toLocalizationString(station.getEconomic()));
+            subeconomic.setText(EconomicTypeStringConverter.toLocalizationString(station.getSubEconomic()));
             cbMarket.setSelected(station.hasService(SERVICE_TYPE.MARKET));
             cbBlackMarket.setSelected(station.hasService(SERVICE_TYPE.BLACK_MARKET));
             cbRefuel.setSelected(station.hasService(SERVICE_TYPE.REFUEL));
@@ -194,6 +203,14 @@ public class OffersController {
     private void currentSystem(){
         ProfileModel profile = MainController.getProfile();
         system.setValue(profile.getSystem());
+    }
+
+    @FXML
+    private void editSystem() {
+        SystemModel s = getSystem();
+        if (!ModelFabric.isFake(s)){
+            Screeners.showSystemsEditor(s);
+        }
     }
 
     @FXML
