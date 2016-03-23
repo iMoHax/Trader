@@ -142,7 +142,7 @@ public class RouteEntry {
         return orders.stream().filter(o -> o.fixed).collect(Collectors.toList());
     }
 
-    void reserve(final long count, final long cargo){
+    boolean reserve(final long count, final long cargo){
         long empty = cargo - getCargo();
         long need = count - empty;
         if (need > 0){
@@ -159,6 +159,7 @@ public class RouteEntry {
             }
         }
         reserved += count;
+        return need <= 0;
     }
 
     void fill(long count){

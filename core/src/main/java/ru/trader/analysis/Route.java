@@ -167,22 +167,30 @@ public class Route implements Comparable<Route> {
         return -1;
     }
 
-    public void reserve(final RouteReserve reserve){
+    public boolean reserve(final RouteReserve reserve){
         for (Route.LoopIterator iterator = loopIterator(reserve.getFromIndex()); iterator.hasNext(); ) {
             RouteEntry entry = iterator.next();
             if (entry.isTransit()) continue;
             if (iterator.getRealIndex() == reserve.getToIndex() && (reserve.getFromIndex() != reserve.getToIndex() || iterator.getIndex() > 0)) {
                 break;
             }
-            entry.reserve(reserve.getCount(), cargo);
+            if (!entry.reserve(reserve.getCount(), cargo)){
+                return false;
+            }
         }
         if (reserve.getOrder() != null) {
             entries.get(reserve.getFromIndex()).addOrder(reserve.getOrder());
         }
+        return true;
     }
 
-    public void reserve(Collection<RouteReserve> reserves){
-        reserves.forEach(this::reserve);
+    public boolean reserve(Collection<RouteReserve> reserves){
+        for (RouteReserve reserve : reserves) {
+            if (!reserve(reserve)){
+                return false;
+            }
+        }
+        return true;
     }
 
     public void unreserve(final RouteReserve reserve){
@@ -266,6 +274,13 @@ public class Route implements Comparable<Route> {
             entry = next;
         }
         LOG.trace("new stats profit={}, distance={}, lands={}, fuel={}, time={}", profit, distance, lands, fuel, time);
+    }
+
+    public boolean isOverload(){
+        for (RouteEntry entry : entries) {
+            if (entry.getCargo() > cargo) return true;
+        }
+        return false;
     }
 
     @Override

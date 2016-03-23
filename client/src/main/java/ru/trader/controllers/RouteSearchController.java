@@ -8,6 +8,8 @@ import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Optional;
 
 public class RouteSearchController {
@@ -104,11 +106,16 @@ public class RouteSearchController {
         specificator.setFullScan(cbFullScan.isSelected());
         missionsList.getItems().forEach(m -> m.toSpecification(specificator));
         market.getRoutes(f, fS, t, tS, profile.getBalance(), specificator, routes -> {
+            for (Iterator<RouteModel> iterator = routes.iterator(); iterator.hasNext(); ) {
+                RouteModel route = iterator.next();
+                Collection<MissionModel> notAdded = route.addAll(0, missionsList.getItems());
+                if (!notAdded.isEmpty()){
+                    iterator.remove();
+                }
+            }
             Optional<RouteModel> path = Screeners.showRouters(routes);
             if (path.isPresent()) {
-                RouteModel route = path.get();
-                route.addAll(0, missionsList.getItems());
-                profile.setRoute(route);
+                profile.setRoute(path.get());
                 Screeners.showTrackTab();
             }
         });

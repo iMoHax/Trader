@@ -223,20 +223,22 @@ public class RouteModel {
         if (offer != null){
             Collection<RouteReserve> reserves = RouteFiller.getReserves(_route, offset, offer);
             if (!reserves.isEmpty()) {
-                _route.reserve(reserves);
-                mission.setReserves(reserves);
-                completeIndex = RouteReserve.getCompleteIndex(reserves, offset);
-                refresh();
+                if (_route.reserve(reserves)){
+                    mission.setReserves(reserves);
+                    completeIndex = RouteReserve.getCompleteIndex(reserves, offset);
+                    refresh();
+                }
             }
         } else
         if (mission.isDelivery()){
             RouteReserve reserve = RouteFiller.getReserves(_route, offset, ModelFabric.get(mission.getTarget()), mission.getCount());
             if (reserve != null) {
-                _route.reserve(reserve);
-                mission.setReserves(Collections.singleton(reserve));
-                completeIndex = reserve.getToIndex();
-                for (RouteEntryModel entry : entries) {
-                    entry.refresh(market);
+                if (_route.reserve(reserve)){
+                    mission.setReserves(Collections.singleton(reserve));
+                    completeIndex = reserve.getToIndex();
+                    for (RouteEntryModel entry : entries) {
+                        entry.refresh(market);
+                    }
                 }
             }
         } else
@@ -264,17 +266,19 @@ public class RouteModel {
                     reserves = RouteFiller.getReserves(_route, offset, offer);
                 }
                 if (!reserves.isEmpty()) {
-                    _route.reserve(reserves);
-                    mission.setReserves(reserves);
-                    completeIndex = RouteReserve.getCompleteIndex(reserves, offset);
+                    if (_route.reserve(reserves)){
+                        mission.setReserves(reserves);
+                        completeIndex = RouteReserve.getCompleteIndex(reserves, offset);
+                    }
                 }
             } else
             if (mission.isDelivery()){
                 RouteReserve reserve = RouteFiller.getReserves(_route, offset, ModelFabric.get(mission.getTarget()), mission.getCount());
                 if (reserve != null) {
-                    _route.reserve(reserve);
-                    mission.setReserves(Collections.singleton(reserve));
-                    completeIndex = reserve.getToIndex();
+                    if (_route.reserve(reserve)){
+                        mission.setReserves(Collections.singleton(reserve));
+                        completeIndex = reserve.getToIndex();
+                    }
                 }
             } else
             if (mission.isCourier()){
