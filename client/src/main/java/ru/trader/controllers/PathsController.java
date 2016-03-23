@@ -9,6 +9,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TableView;
 import ru.trader.Main;
+import ru.trader.model.OrderModel;
 import ru.trader.model.RouteModel;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.view.support.Localization;
@@ -19,7 +20,11 @@ import java.util.Optional;
 public class PathsController {
     @FXML
     private TableView<RouteModel> tblPaths;
+    @FXML
+    private TableView<OrderModel> tblOrders;
+
     private final List<RouteModel> paths = FXCollections.observableArrayList();
+    private final ObservableList<OrderModel> orders = FXCollections.observableArrayList();
     private final ListChangeListener<RouteModel> PATHS_CHANGE_LISTENER = l -> {
         while (l.next()) {
             if (l.wasAdded()) {
@@ -35,8 +40,19 @@ public class PathsController {
     @FXML
     private void initialize() {
         BindingsHelper.setTableViewItems(tblPaths, paths);
+        tblOrders.setItems(orders);
+        tblPaths.getSelectionModel().selectedItemProperty().addListener((ov, o, n) ->{
+            if (n != null){
+                fillOrders(n);
+            } else {
+                orders.clear();
+            }
+        });
     }
 
+    private void fillOrders(RouteModel route) {
+        orders.setAll(route.getOrders());
+    }
 
     private void createDialog(Parent owner, Parent content){
         dlg = new Dialog<>();

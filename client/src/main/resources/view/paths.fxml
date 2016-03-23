@@ -8,7 +8,10 @@
 <?import ru.trader.view.support.cells.DoubleCell?>
 <?import ru.trader.view.support.cells.PathRouteCell?>
 <?import ru.trader.view.support.cells.TimeCell?>
-<HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<?import javafx.scene.layout.VBox?>
+<?import ru.trader.view.support.cells.OfferCellValueImpl?>
+<?import ru.trader.view.support.cells.OrderDecoratedRow?>
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.PathsController" styleClass="dialog"
       prefWidth="1050">
     <TableView fx:id="tblPaths" editable="true">
@@ -55,4 +58,41 @@
             </ContextMenu>
         </contextMenu>
     </TableView>
-</HBox>
+    <TitledPane maxHeight="200" collapsible="false">
+        <TableView fx:id="tblOrders">
+            <rowFactory><OrderDecoratedRow /></rowFactory>
+            <columns>
+                <TableColumn minWidth="150" text="%market.system">
+                    <cellValueFactory><PropertyValueFactory property="system"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="150" text="%market.order.seller">
+                    <cellValueFactory><PropertyValueFactory property="station"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="150" text="%market.item">
+                    <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="80" text="%market.offer.price">
+                    <cellFactory><DoubleCell/></cellFactory>
+                    <cellValueFactory><PropertyValueFactory property="price"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="80" text="%market.order.count">
+                    <cellValueFactory><PropertyValueFactory property="count"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="170" text="%market.order.buyer">
+                    <cellValueFactory><OfferCellValueImpl property="buyOffer"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="80" text="%market.order.distance">
+                    <cellFactory><DistanceCell /></cellFactory>
+                    <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="80" text="%market.order.profit">
+                    <cellFactory><DoubleCell/></cellFactory>
+                    <cellValueFactory><PropertyValueFactory property="profit"/></cellValueFactory>
+                </TableColumn>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+    </TitledPane>
+</VBox>
