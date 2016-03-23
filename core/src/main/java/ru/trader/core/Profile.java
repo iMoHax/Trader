@@ -28,13 +28,13 @@ public class Profile {
     public Profile(Ship ship) {
         this.ship = ship;
         refill = true;
-        jumps = 4;
+        jumps = 3;
         lands = 4;
         routesCount = 30;
         distanceTime = 0.3;
         fuelPrice = 100;
         landingTime = 80;
-        orbitalTime = 30;
+        orbitalTime = 100;
         takeoffTime = 40;
         jumpTime = 32;
         rechargeTime = 12;
@@ -226,14 +226,14 @@ public class Profile {
             profile.setStation(null);
         }
         profile.setDocked(Boolean.valueOf(values.getProperty("profile.docked","false")));
-        profile.setJumps(Integer.valueOf(values.getProperty("profile.jumps", "4")));
+        profile.setJumps(Integer.valueOf(values.getProperty("profile.jumps", "3")));
         profile.setLands(Integer.valueOf(values.getProperty("profile.lands", "4")));
         profile.setPathPriority(PATH_PRIORITY.valueOf(values.getProperty("profile.search.priority", "FAST")));
-        profile.setRoutesCount(Integer.valueOf(values.getProperty("profile.search.routes", "100")));
+        profile.setRoutesCount(Integer.valueOf(values.getProperty("profile.search.routes", "30")));
         profile.setFuelPrice(Double.valueOf(values.getProperty("profile.search.fuel.price", "100")));
         profile.setDistanceTime(Double.valueOf(values.getProperty("profile.search.times.distance", "0.3")));
         profile.setLandingTime(Double.valueOf(values.getProperty("profile.search.times.landing", "80")));
-        profile.setOrbitalTime(Double.valueOf(values.getProperty("profile.search.times.orbital", "30")));
+        profile.setOrbitalTime(Double.valueOf(values.getProperty("profile.search.times.orbital", "100")));
         profile.setTakeoffTime(Double.valueOf(values.getProperty("profile.search.times.takeoff", "40")));
         profile.setJumpTime(Double.valueOf(values.getProperty("profile.search.times.jump", "32")));
         profile.setRechargeTime(Double.valueOf(values.getProperty("profile.search.times.recharge", "12")));
