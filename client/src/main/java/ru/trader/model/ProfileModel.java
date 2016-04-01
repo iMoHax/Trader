@@ -60,7 +60,7 @@ public class ProfileModel {
             LOG.debug("Change docked, old: {}, new: {}", o, n);
             if (!n && route.getValue() != null) {getRoute().updateCurrentEntry(getSystem(), getStation(), true);}
         });
-        shipMass.addListener((ov, o, n) -> LOG.debug("Change ship mass, old: {}, new: {}", o, n));
+        shipMass.addListener((ov, o, n) -> LOG.debug("Change ship laden mass, old: {}, new: {}", o, n));
         shipTank.addListener((ov, o, n) -> LOG.debug("Change ship tank, old: {}, new: {}", o, n));
         shipCargo.addListener((ov, o, n) -> LOG.debug("Change ship cargo, old: {}, new: {}", o, n));
         shipEngine.addListener((ov, o, n) -> LOG.debug("Change ship engine, old: {}, new: {}", o, n));
@@ -152,25 +152,25 @@ public class ProfileModel {
         return shipMass.get();
     }
 
-    public DoubleProperty shipMassProperty() {
+    public ReadOnlyDoubleProperty shipMassProperty() {
         return shipMass;
     }
 
     public void setShipMass(double shipMass) {
-        profile.getShip().setMass(shipMass);
-        this.shipMass.set(shipMass);
+        updateUnladenMass(shipMass);
     }
 
     public double getShipTank() {
         return shipTank.get();
     }
 
-    public DoubleProperty shipTankProperty() {
+    public ReadOnlyDoubleProperty shipTankProperty() {
         return shipTank;
     }
 
     public void setShipTank(double shipTank) {
         profile.getShip().setTank(shipTank);
+        updateUnladenMass(getShipMass());
         this.shipTank.set(shipTank);
     }
 
@@ -178,12 +178,13 @@ public class ProfileModel {
         return shipCargo.get();
     }
 
-    public IntegerProperty shipCargoProperty() {
+    public ReadOnlyIntegerProperty shipCargoProperty() {
         return shipCargo;
     }
 
     public void setShipCargo(int shipCargo) {
         profile.getShip().setCargo(shipCargo);
+        updateUnladenMass(getShipMass());
         this.shipCargo.set(shipCargo);
     }
 
@@ -228,6 +229,12 @@ public class ProfileModel {
         route.setValue(null);
     }
 
+    private void updateUnladenMass(double ladenMass){
+        double unladenMass = ladenMass - profile.getShip().getTank() - profile.getShip().getCargo();
+        profile.getShip().setMass(unladenMass);
+        this.shipMass.set(profile.getShip().getLadenMass());
+    }
+
     private void refresh(){
         name.setValue(profile.getName());
         balance.setValue(profile.getBalance());
@@ -235,7 +242,7 @@ public class ProfileModel {
         station.setValue(market.getModeler().get(profile.getStation()));
         docked.setValue(profile.isDocked());
         Ship ship = profile.getShip();
-        shipMass.setValue(ship.getMass());
+        shipMass.setValue(ship.getLadenMass());
         shipTank.setValue(ship.getTank());
         shipCargo.setValue(ship.getCargo());
         shipEngine.setValue(ship.getEngine());
