@@ -6,7 +6,7 @@ public enum POWER {
         // Control Systems: Imperial Slaves banned
         @Override
         public boolean isIllegal(FACTION faction, Item item, POWER_STATE state) {
-            if (state == POWER_STATE.CONTROL || state == POWER_STATE.EXPLOITED){
+            if (state != null && (state.isControl() || state.isExploited())){
                 String itemId = item.getName();
                 return itemId != null && IMPERIAL_SLAVES.equals(itemId);
             }
@@ -17,7 +17,7 @@ public enum POWER {
         // Control Systems: All weapons/slaves/narcotics/medicals legalised
         @Override
         public boolean isLegal(FACTION faction, Item item, POWER_STATE state) {
-            if (state == POWER_STATE.CONTROL){
+            if (state != null && state.isControl()){
                 String groupId = item.getGroup() != null ? item.getGroup().getName() : null;
                 return groupId != null && (WEAPONS_GRP.equals(groupId) || SLAVES_GRP.equals(groupId) || NARCOTICS_GRP.equals(groupId) || MEDICINE_GRP.equals(groupId));
             }
@@ -29,7 +29,7 @@ public enum POWER {
         // Control Systems: Imperial Slaves legalised
         @Override
         public boolean isLegal(FACTION faction, Item item, POWER_STATE state) {
-            if (state == POWER_STATE.CONTROL){
+            if (state != null && state.isControl()){
                 String itemId = item.getName();
                 return itemId != null && IMPERIAL_SLAVES.equals(itemId);
             }
@@ -43,11 +43,11 @@ public enum POWER {
         // Control Systems: Imperial Slaves banned
         @Override
         public boolean isIllegal(FACTION faction, Item item, POWER_STATE state) {
-            if (state == POWER_STATE.CONTROL){
+            if (state != null && state.isControl()){
                 String itemId = item.getName();
                 return itemId != null && IMPERIAL_SLAVES.equals(itemId);
             } else
-            if (state == POWER_STATE.EXPLOITED){
+            if (state != null && state.isExploited()){
                 String itemId = item.getName();
                 return itemId != null && IMPERIAL_SLAVES.equals(itemId) && (faction != null && faction != FACTION.EMPIRE);
             }
@@ -60,7 +60,7 @@ public enum POWER {
         // Control Systems: All Slaves, Narcotics and non-basic/agri medicines banned
         @Override
         public boolean isIllegal(FACTION faction, Item item, POWER_STATE state) {
-            if (state == POWER_STATE.CONTROL || state == POWER_STATE.EXPLOITED){
+            if (state != null && (state.isControl() || state.isExploited())){
                 String groupId = item.getGroup() != null ? item.getGroup().getName() : null;
                 String itemId = item.getName();
                 return groupId != null && (SLAVES_GRP.equals(groupId) || NARCOTICS_GRP.equals(groupId)
@@ -74,7 +74,7 @@ public enum POWER {
         // Control Systems: Imperial Slaves banned
         @Override
         public boolean isIllegal(FACTION faction, Item item, POWER_STATE state) {
-            if (state == POWER_STATE.CONTROL){
+            if (state != null && state.isControl()){
                 String itemId = item.getName();
                 return itemId != null && IMPERIAL_SLAVES.equals(itemId);
             }
@@ -85,7 +85,7 @@ public enum POWER {
         // Control Systems: Imperial Slaves legalised
         @Override
         public boolean isLegal(FACTION faction, Item item, POWER_STATE state) {
-            if (state == POWER_STATE.CONTROL){
+            if (state != null && state.isControl()){
                 String itemId = item.getName();
                 return itemId != null && IMPERIAL_SLAVES.equals(itemId);
             }
