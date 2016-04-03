@@ -62,10 +62,6 @@ public class OffersController {
     @FXML
     private CheckBox cbShipyard;
     @FXML
-    private CheckBox cbMediumLandpad;
-    @FXML
-    private CheckBox cbLargeLandpad;
-    @FXML
     private TitledPane stationPane;
     @FXML
     private Node warningIcon;
@@ -153,8 +149,6 @@ public class OffersController {
         cbRepair.setSelected(false);
         cbOutfit.setSelected(false);
         cbShipyard.setSelected(false);
-        cbMediumLandpad.setSelected(false);
-        cbLargeLandpad.setSelected(false);
         if (!ModelFabric.isFake(station)){
             type.setText(StationTypeStringConverter.toLocalizationString(station.getType()));
             faction.setText(FactionStringConverter.toLocalizationString(station.getFaction()));
@@ -169,8 +163,6 @@ public class OffersController {
             cbRepair.setSelected(station.hasService(SERVICE_TYPE.REPAIR));
             cbOutfit.setSelected(station.hasService(SERVICE_TYPE.OUTFIT));
             cbShipyard.setSelected(station.hasService(SERVICE_TYPE.SHIPYARD));
-            cbMediumLandpad.setSelected(station.hasService(SERVICE_TYPE.MEDIUM_LANDPAD));
-            cbLargeLandpad.setSelected(station.hasService(SERVICE_TYPE.LARGE_LANDPAD));
             sells.addAll(station.getSells());
             buys.addAll(station.getBuys());
         }

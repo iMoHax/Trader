@@ -161,9 +161,9 @@ public class MarketTest  extends Assert {
 
         Vendor vendor3 = place2.addVendor("Vendor 3");
         vendor3.add(SERVICE_TYPE.OUTFIT);
-        vendor3.add(SERVICE_TYPE.LARGE_LANDPAD);
-        vendor3.add(SERVICE_TYPE.MEDIUM_LANDPAD);
-        vendor3.remove(SERVICE_TYPE.LARGE_LANDPAD);
+        vendor3.add(SERVICE_TYPE.SHIPYARD);
+        vendor3.add(SERVICE_TYPE.REFUEL);
+        vendor3.remove(SERVICE_TYPE.SHIPYARD);
 
         int c = 3;
         for (Vendor vendor : market.getVendors()) {
@@ -173,9 +173,9 @@ public class MarketTest  extends Assert {
                 assertEquals(100, vendor.getDistance(), 0.001);
                 assertTrue(vendor.has(SERVICE_TYPE.MARKET));
                 assertTrue(vendor.has(SERVICE_TYPE.OUTFIT));
-                assertFalse(vendor.has(SERVICE_TYPE.LARGE_LANDPAD));
+                assertFalse(vendor.has(SERVICE_TYPE.SHIPYARD));
                 assertFalse(vendor.has(SERVICE_TYPE.BLACK_MARKET));
-                assertFalse(vendor.has(SERVICE_TYPE.MEDIUM_LANDPAD));
+                assertFalse(vendor.has(SERVICE_TYPE.REFUEL));
                 c--;
             } else
             if ("Vendor 2".equals(vendor.getName())){
@@ -184,9 +184,9 @@ public class MarketTest  extends Assert {
                 assertEquals(40, vendor.getDistance(), 0.001);
                 assertFalse(vendor.has(SERVICE_TYPE.MARKET));
                 assertFalse(vendor.has(SERVICE_TYPE.OUTFIT));
-                assertFalse(vendor.has(SERVICE_TYPE.LARGE_LANDPAD));
+                assertFalse(vendor.has(SERVICE_TYPE.SHIPYARD));
                 assertFalse(vendor.has(SERVICE_TYPE.BLACK_MARKET));
-                assertFalse(vendor.has(SERVICE_TYPE.MEDIUM_LANDPAD));
+                assertFalse(vendor.has(SERVICE_TYPE.REFUEL));
                 c--;
             } else
             if ("Vendor 3".equals(vendor.getName())){
@@ -195,9 +195,9 @@ public class MarketTest  extends Assert {
                 assertEquals(0, vendor.getDistance(), 0.001);
                 assertFalse(vendor.has(SERVICE_TYPE.MARKET));
                 assertTrue(vendor.has(SERVICE_TYPE.OUTFIT));
-                assertFalse(vendor.has(SERVICE_TYPE.LARGE_LANDPAD));
+                assertFalse(vendor.has(SERVICE_TYPE.SHIPYARD));
                 assertFalse(vendor.has(SERVICE_TYPE.BLACK_MARKET));
-                assertTrue(vendor.has(SERVICE_TYPE.MEDIUM_LANDPAD));
+                assertTrue(vendor.has(SERVICE_TYPE.REFUEL));
                 c--;
             } else c = -1;
 

@@ -6,15 +6,19 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
+import org.controlsfx.control.CheckComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.MarketFilter;
 import ru.trader.core.OFFER_TYPE;
 import ru.trader.core.SERVICE_TYPE;
+import ru.trader.core.STATION_TYPE;
 import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.model.support.ChangeMarketListener;
 import ru.trader.view.support.NumberField;
+import ru.trader.view.support.ServiceTypeStringConverter;
+import ru.trader.view.support.StationTypeStringConverter;
 import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
@@ -39,23 +43,9 @@ public class SearchController {
     @FXML
     private NumberField distance;
     @FXML
-    private CheckBox cbMarket;
+    private CheckComboBox<STATION_TYPE> stationTypes;
     @FXML
-    private CheckBox cbBlackMarket;
-    @FXML
-    private CheckBox cbRefuel;
-    @FXML
-    private CheckBox cbRepair;
-    @FXML
-    private CheckBox cbMunition;
-    @FXML
-    private CheckBox cbOutfit;
-    @FXML
-    private CheckBox cbShipyard;
-    @FXML
-    private CheckBox cbMediumLandpad;
-    @FXML
-    private CheckBox cbLargeLandpad;
+    private CheckComboBox<SERVICE_TYPE> services;
     @FXML
     private TableView<ResultEntry> tblResults;
 
@@ -68,6 +58,10 @@ public class SearchController {
     @FXML
     private void initialize() {
         init();
+        stationTypes.setConverter(new StationTypeStringConverter());
+        stationTypes.getItems().setAll(STATION_TYPE.values());
+        services.setConverter(new ServiceTypeStringConverter());
+        services.getItems().setAll(SERVICE_TYPE.values());
         rbBuyer.setToggleGroup(offerType);
         rbBuyer.setUserData(OFFER_TYPE.BUY);
         rbSeller.setToggleGroup(offerType);
@@ -114,15 +108,8 @@ public class SearchController {
     private void searchStations(){
         MarketFilter filter = new MarketFilter();
         filter.setDistance(distance.getValue().doubleValue());
-        if (cbMarket.isSelected()) filter.add(SERVICE_TYPE.MARKET); else filter.remove(SERVICE_TYPE.MARKET);
-        if (cbBlackMarket.isSelected()) filter.add(SERVICE_TYPE.BLACK_MARKET); else filter.remove(SERVICE_TYPE.BLACK_MARKET);
-        if (cbRefuel.isSelected()) filter.add(SERVICE_TYPE.REFUEL); else filter.remove(SERVICE_TYPE.REFUEL);
-        if (cbMunition.isSelected()) filter.add(SERVICE_TYPE.MUNITION); else filter.remove(SERVICE_TYPE.MUNITION);
-        if (cbRepair.isSelected()) filter.add(SERVICE_TYPE.REPAIR); else filter.remove(SERVICE_TYPE.REPAIR);
-        if (cbOutfit.isSelected()) filter.add(SERVICE_TYPE.OUTFIT); else filter.remove(SERVICE_TYPE.OUTFIT);
-        if (cbShipyard.isSelected()) filter.add(SERVICE_TYPE.SHIPYARD); else filter.remove(SERVICE_TYPE.SHIPYARD);
-        if (cbMediumLandpad.isSelected()) filter.add(SERVICE_TYPE.MEDIUM_LANDPAD); else filter.remove(SERVICE_TYPE.MEDIUM_LANDPAD);
-        if (cbLargeLandpad.isSelected()) filter.add(SERVICE_TYPE.LARGE_LANDPAD); else filter.remove(SERVICE_TYPE.LARGE_LANDPAD);
+        stationTypes.getCheckModel().getCheckedItems().forEach(filter::add);
+        services.getCheckModel().getCheckedItems().forEach(filter::add);
         ItemModel item = items.getValue();
         if (ModelFabric.isFake(item)){
             Collection<StationModel> stations = market.getStations(filter);

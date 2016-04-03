@@ -54,10 +54,10 @@
                 </columnConstraints>
                 <Label text="%label.station.type" />
                 <Label fx:id="type" GridPane.columnIndex="1"/>
-                <Label text="%label.government" GridPane.columnIndex="4" />
-                <Label fx:id="government" GridPane.columnIndex="5" />
-                <Label text="%label.allegiance" GridPane.columnIndex="2"/>
-                <Label fx:id="faction" GridPane.columnIndex="3" />
+                <Label text="%label.government" GridPane.columnIndex="2" />
+                <Label fx:id="government" GridPane.columnIndex="3" />
+                <Label text="%label.allegiance" GridPane.columnIndex="4"/>
+                <Label fx:id="faction" GridPane.columnIndex="5" />
                 <HBox GridPane.columnIndex="6" GridPane.rowSpan="2" alignment="TOP_RIGHT">
                     <Label fx:id="warningIcon" styleClass="icon-warning" prefWidth="30" prefHeight="30" visible="false">
                         <graphic><Glyph text="FontAwesome|WARNING" /></graphic>
@@ -80,8 +80,6 @@
                     <CheckBox fx:id="cbMunition" text="%services.MUNITION"/>
                     <CheckBox fx:id="cbOutfit" text="%services.OUTFIT"/>
                     <CheckBox fx:id="cbShipyard" text="%services.SHIPYARD"/>
-                    <CheckBox fx:id="cbMediumLandpad" text="%services.MEDIUM_LANDPAD"/>
-                    <CheckBox fx:id="cbLargeLandpad" text="%services.LARGE_LANDPAD"/>
                 </TilePane>
             </GridPane>
         <contextMenu><fx:reference source="editMenu"/></contextMenu>

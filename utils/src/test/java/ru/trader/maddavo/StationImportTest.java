@@ -38,18 +38,19 @@ public class StationImportTest  extends Assert {
 
     private Market createMarket(){
         Market market = new SimpleMarket();
-        market.addPlace("1 Hydrae",0,0,0);
+        market.addPlace("1 Hydrae", 0, 0, 0);
         market.addPlace("1 Kappa Cygni", 0, 0, 0);
         Place system = market.addPlace("10 CANUM VENATICORUM", 0, 0, 0);
         system.setFaction(FACTION.FEDERATION);
         system.setGovernment(GOVERNMENT.PRISON_COLONY);
 
         Vendor station = system.addVendor("Trevithick Hub");
+        station.setType(STATION_TYPE.OUTPOST);
         station.setDistance(2000);
         station.add(SERVICE_TYPE.MARKET);
         station.add(SERVICE_TYPE.BLACK_MARKET);
         station.add(SERVICE_TYPE.OUTFIT);
-        station.add(SERVICE_TYPE.MEDIUM_LANDPAD);
+
         station.setFaction(FACTION.ALLIANCE);
         station.setGovernment(GOVERNMENT.COMMUNISM);
 
@@ -81,10 +82,9 @@ public class StationImportTest  extends Assert {
 
         Vendor station =  market.get("1 Hydrae").get("Hieb Orbital");
         assertNotNull(station);
+        assertEquals(STATION_TYPE.OUTPOST, station.getType());
         assertEquals(160, station.getDistance(), 0.00001);
         assertFalse(station.has(SERVICE_TYPE.BLACK_MARKET));
-        assertTrue(station.has(SERVICE_TYPE.MEDIUM_LANDPAD));
-        assertFalse(station.has(SERVICE_TYPE.LARGE_LANDPAD));
         assertTrue(station.has(SERVICE_TYPE.MARKET));
         assertFalse(station.has(SERVICE_TYPE.SHIPYARD));
         assertFalse(station.has(SERVICE_TYPE.OUTFIT));
@@ -92,12 +92,11 @@ public class StationImportTest  extends Assert {
 
         station =  market.get("1 Hydrae").get("Voss Hub");
         assertNotNull(station);
+        assertEquals(STATION_TYPE.STARPORT, station.getType());
         assertNull(station.getFaction());
         assertNull(station.getGovernment());
         assertEquals(823, station.getDistance(), 0.00001);
         assertTrue(station.has(SERVICE_TYPE.BLACK_MARKET));
-        assertTrue(station.has(SERVICE_TYPE.MEDIUM_LANDPAD));
-        assertTrue(station.has(SERVICE_TYPE.LARGE_LANDPAD));
         assertTrue(station.has(SERVICE_TYPE.MARKET));
         assertTrue(station.has(SERVICE_TYPE.SHIPYARD));
         assertFalse(station.has(SERVICE_TYPE.OUTFIT));
@@ -107,8 +106,6 @@ public class StationImportTest  extends Assert {
         assertNotNull(station);
         assertEquals(0, station.getDistance(), 0.00001);
         assertFalse(station.has(SERVICE_TYPE.BLACK_MARKET));
-        assertFalse(station.has(SERVICE_TYPE.MEDIUM_LANDPAD));
-        assertFalse(station.has(SERVICE_TYPE.LARGE_LANDPAD));
         assertFalse(station.has(SERVICE_TYPE.MARKET));
         assertTrue(station.has(SERVICE_TYPE.SHIPYARD));
         assertFalse(station.has(SERVICE_TYPE.OUTFIT));
@@ -121,12 +118,11 @@ public class StationImportTest  extends Assert {
 
         station = place.get("Trevithick Hub");
         assertNotNull(station);
+        assertEquals(STATION_TYPE.STARPORT, station.getType());
         assertEquals(FACTION.ALLIANCE, station.getFaction());
         assertEquals(GOVERNMENT.COMMUNISM, station.getGovernment());
         assertEquals(957, station.getDistance(), 0.00001);
         assertFalse(station.has(SERVICE_TYPE.BLACK_MARKET));
-        assertTrue(station.has(SERVICE_TYPE.MEDIUM_LANDPAD));
-        assertTrue(station.has(SERVICE_TYPE.LARGE_LANDPAD));
         assertFalse(station.has(SERVICE_TYPE.MARKET));
         assertFalse(station.has(SERVICE_TYPE.SHIPYARD));
         assertTrue(station.has(SERVICE_TYPE.OUTFIT));
@@ -134,12 +130,11 @@ public class StationImportTest  extends Assert {
 
         station =  market.get("10 CANUM VENATICORUM").get("Litke Port");
         assertNotNull(station);
+        assertEquals(STATION_TYPE.OUTPOST, station.getType());
         assertEquals(FACTION.EMPIRE, station.getFaction());
         assertEquals(GOVERNMENT.CONFEDERACY, station.getGovernment());
         assertEquals(2000, station.getDistance(), 0.00001);
         assertTrue(station.has(SERVICE_TYPE.BLACK_MARKET));
-        assertTrue(station.has(SERVICE_TYPE.MEDIUM_LANDPAD));
-        assertFalse(station.has(SERVICE_TYPE.LARGE_LANDPAD));
         assertTrue(station.has(SERVICE_TYPE.MARKET));
         assertTrue(station.has(SERVICE_TYPE.SHIPYARD));
         assertTrue(station.has(SERVICE_TYPE.OUTFIT));

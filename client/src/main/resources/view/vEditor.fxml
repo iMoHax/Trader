@@ -56,8 +56,6 @@
                 </VBox>
                 <VBox spacing="5">
                     <CheckBox fx:id="cbShipyard" text="%services.SHIPYARD"/>
-                    <CheckBox fx:id="cbMediumLandpad" text="%services.MEDIUM_LANDPAD"/>
-                    <CheckBox fx:id="cbLargeLandpad" text="%services.LARGE_LANDPAD"/>
                 </VBox>
             </HBox>
         </VBox>
