@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.cell.*?>
-<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.control.*?>
-
-
-<?import ru.trader.view.support.cells.OfferCellValueImpl?>
-<?import ru.trader.view.support.cells.DoubleCell?>
-
+<?import javafx.scene.layout.VBox?>
 <?import ru.trader.view.support.cells.WritablePropertyValueFactory?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.db.controllers.SystemsController">
@@ -25,18 +21,19 @@
             <TableColumn minWidth="60" text="Z">
                 <cellValueFactory><PropertyValueFactory property="z"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="faction" minWidth="100" text="%market.allegiance">
-                <cellValueFactory><WritablePropertyValueFactory property="faction"/></cellValueFactory>
-            </TableColumn>
             <TableColumn fx:id="government" minWidth="100" text="%market.government">
                 <cellValueFactory><WritablePropertyValueFactory property="government"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="power" minWidth="100" text="%market.power">
-                <cellValueFactory><WritablePropertyValueFactory property="power"/></cellValueFactory>
+            <TableColumn fx:id="faction" minWidth="100" text="%market.allegiance">
+                <cellValueFactory><WritablePropertyValueFactory property="faction"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="powerState" minWidth="100" text="%market.powerState">
                 <cellValueFactory><WritablePropertyValueFactory property="powerState"/></cellValueFactory>
             </TableColumn>
+            <TableColumn fx:id="power" minWidth="100" text="%market.power">
+                <cellValueFactory><WritablePropertyValueFactory property="power"/></cellValueFactory>
+            </TableColumn>
+
 
         </columns>
         <columnResizePolicy>

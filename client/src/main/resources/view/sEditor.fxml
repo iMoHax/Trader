@@ -55,17 +55,17 @@
             <TableColumn fx:id="clnName" minWidth="180.0" text="%market.systems">
                 <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="clnFaction" minWidth="100" text="%market.allegiance">
-                <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
-            </TableColumn>
             <TableColumn fx:id="clnGovernment" minWidth="100" text="%market.government">
                 <cellValueFactory><PropertyValueFactory property="government"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="clnPower" minWidth="100" text="%market.power">
-                <cellValueFactory><PropertyValueFactory property="power"/></cellValueFactory>
+            <TableColumn fx:id="clnFaction" minWidth="100" text="%market.allegiance">
+                <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="clnPowerState" minWidth="100" text="%market.powerState">
                 <cellValueFactory><PropertyValueFactory property="powerState"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="clnPower" minWidth="100" text="%market.power">
+                <cellValueFactory><PropertyValueFactory property="power"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="clnX" minWidth="60.0" text="x">
                 <cellValueFactory><PropertyValueFactory property="x"/></cellValueFactory>

@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.cell.*?>
-<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.control.*?>
-
-
-<?import ru.trader.view.support.cells.OfferCellValueImpl?>
-<?import ru.trader.view.support.cells.DoubleCell?>
-
-<?import ru.trader.view.support.cells.WritablePropertyValueFactory?>
+<?import javafx.scene.layout.VBox?>
+<?import ru.trader.view.support.cells.*?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.db.controllers.StationsController">
     <TableView fx:id="tblStations" editable="true" VBox.vgrow="ALWAYS" prefWidth="800">
@@ -22,11 +18,11 @@
             <TableColumn fx:id="type" minWidth="100" text="%market.station.type">
                 <cellValueFactory><WritablePropertyValueFactory property="type"/></cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="faction" minWidth="100" text="%market.allegiance">
-                <cellValueFactory><WritablePropertyValueFactory property="faction"/></cellValueFactory>
-            </TableColumn>
             <TableColumn fx:id="government" minWidth="100" text="%market.government">
                 <cellValueFactory><WritablePropertyValueFactory property="government"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="faction" minWidth="100" text="%market.allegiance">
+                <cellValueFactory><WritablePropertyValueFactory property="faction"/></cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="economic" minWidth="100" text="%market.economic">
                 <cellValueFactory><WritablePropertyValueFactory property="economic"/></cellValueFactory>

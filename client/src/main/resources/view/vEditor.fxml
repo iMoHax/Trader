@@ -14,12 +14,12 @@
     <TextField fx:id="name" GridPane.columnSpan="2" alignment="CENTER" />
     <HBox GridPane.rowIndex="1" GridPane.columnSpan="2" spacing="10" alignment="CENTER">
         <VBox prefWidth="200" alignment="CENTER">
-            <Label text="%market.allegiance"/>
-            <ComboBox fx:id="faction" maxWidth="200" />
-        </VBox>
-        <VBox prefWidth="200" alignment="CENTER">
             <Label text="%market.government"/>
             <ComboBox fx:id="government" maxWidth="200" />
+        </VBox>
+        <VBox prefWidth="200" alignment="CENTER">
+            <Label text="%market.allegiance"/>
+            <ComboBox fx:id="faction" maxWidth="200" />
         </VBox>
     </HBox>
     <HBox GridPane.rowIndex="2" GridPane.columnSpan="2" spacing="10" alignment="CENTER">
@@ -39,7 +39,7 @@
     <HBox GridPane.rowIndex="3" GridPane.columnIndex="1" spacing="4">
         <VBox prefWidth="200" alignment="CENTER">
             <Label text="%vEditor.text.distance"/>
-            <NumberField fx:id="distance" maxWidth="60" />
+            <NumberField fx:id="distance" maxWidth="100" />
         </VBox>
         <VBox HBox.hgrow="ALWAYS" alignment="CENTER">
             <Label text="%vEditor.text.services"/>
