@@ -157,7 +157,9 @@ public class ProfileModel {
     }
 
     public void setShipMass(double shipMass) {
-        updateUnladenMass(shipMass);
+        double unladenMass = shipMass - profile.getShip().getTank() - profile.getShip().getCargo();
+        profile.getShip().setMass(unladenMass);
+        this.shipMass.set(profile.getShip().getLadenMass());
     }
 
     public double getShipTank() {
@@ -170,7 +172,7 @@ public class ProfileModel {
 
     public void setShipTank(double shipTank) {
         profile.getShip().setTank(shipTank);
-        updateUnladenMass(getShipMass());
+        this.shipMass.set(profile.getShip().getLadenMass());
         this.shipTank.set(shipTank);
     }
 
@@ -184,7 +186,7 @@ public class ProfileModel {
 
     public void setShipCargo(int shipCargo) {
         profile.getShip().setCargo(shipCargo);
-        updateUnladenMass(getShipMass());
+        this.shipMass.set(profile.getShip().getLadenMass());
         this.shipCargo.set(shipCargo);
     }
 
@@ -227,12 +229,6 @@ public class ProfileModel {
 
     public void clearRoute(){
         route.setValue(null);
-    }
-
-    private void updateUnladenMass(double ladenMass){
-        double unladenMass = ladenMass - profile.getShip().getTank() - profile.getShip().getCargo();
-        profile.getShip().setMass(unladenMass);
-        this.shipMass.set(profile.getShip().getLadenMass());
     }
 
     private void refresh(){
