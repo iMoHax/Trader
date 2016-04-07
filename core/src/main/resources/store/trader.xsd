@@ -149,6 +149,8 @@
             <xs:enumeration value="CONTROL"/>
             <xs:enumeration value="EXPLOITED"/>
             <xs:enumeration value="EXPANSION"/>
+            <xs:enumeration value="CONTESTED"/>
+            <xs:enumeration value="HEADQUARTERS"/>
             <xs:enumeration value="NONE"/>
         </xs:restriction>
     </xs:simpleType>
