@@ -2,6 +2,7 @@ package ru.trader.view.support;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
@@ -19,6 +20,7 @@ import java.util.List;
 public class Track {
     private final static String CSS_ROUTE = "route";
     private final static String CSS_ROUTE_ENTRY = "route-entry";
+    private final static String CSS_ROUTE_CURRENT_ENTRY = "route-current-entry";
     private final static String CSS_ROUTE_MARKER = "route-marker";
     private final static String CSS_SYSTEM = "route-system";
     private final static String CSS_ICONS = "route-icons";
@@ -38,6 +40,7 @@ public class Track {
         active = new SimpleIntegerProperty(-1);
         node.getStyleClass().add(CSS_ROUTE);
         build();
+        route.currentEntryProperty().addListener((ov , o, n) -> updateCurrentEntry(o.intValue(), n.intValue()));
     }
 
     private void build(){
@@ -62,6 +65,7 @@ public class Track {
             });
             entryNodes.add(entryNode);
         }
+        updateCurrentEntry(-1, route.getCurrentEntry());
     }
 
     private VBox buildStationNode(RouteEntryModel entry){
@@ -129,5 +133,14 @@ public class Track {
 
     public Node getNode() {
         return node;
+    }
+
+    private void updateCurrentEntry(int oldIndex, int newIndex){
+        if (oldIndex != -1){
+            entryNodes.get(oldIndex).getStyleClass().remove(CSS_ROUTE_CURRENT_ENTRY);
+        }
+        if (newIndex != -1){
+            entryNodes.get(newIndex).getStyleClass().add(CSS_ROUTE_CURRENT_ENTRY);
+        }
     }
 }
