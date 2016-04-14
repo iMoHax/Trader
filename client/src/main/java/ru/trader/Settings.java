@@ -121,7 +121,7 @@ public class Settings {
         profile.getShip().setCargo(cargo);
     }
 
-    public int getCargo(){
+    public long getCargo(){
         return profile.getShip().getCargo();
     }
 

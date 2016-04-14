@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class Ship {
     private final static int REFILL_FUEL_STEP = 10;
 
-    private int cargo;
+    private long cargo;
     private Engine engine;
     private double tank;
     private double mass;
@@ -32,11 +32,11 @@ public class Ship {
         return ship != null ? new Ship(ship) : ship;
     }
 
-    public int getCargo() {
+    public long getCargo() {
         return cargo;
     }
 
-    public void setCargo(int cargo) {
+    public void setCargo(long cargo) {
         this.cargo = cargo;
         clearCache();
     }

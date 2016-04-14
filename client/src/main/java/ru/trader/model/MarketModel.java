@@ -193,14 +193,12 @@ public class MarketModel {
         return BindingsHelper.observableList(analyzer.getSystems(filter), modeler::get);
     }
 
-    public void getOrders(StationModel from, double balance, Consumer<ObservableList<OrderModel>> result) {
-        getOrders(ModelFabric.NONE_SYSTEM, from, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, balance, result);
+    public void getOrders(StationModel from, Profile profile, Consumer<ObservableList<OrderModel>> result) {
+        getOrders(ModelFabric.NONE_SYSTEM, from, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, profile, result);
     }
 
-    public void getOrders(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo, double balance, Consumer<ObservableList<OrderModel>> result) {
+    public void getOrders(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo, Profile profile, Consumer<ObservableList<OrderModel>> result) {
         ProgressController progress = new ProgressController(Screeners.getMainScreen(), Localization.getString("analyzer.orders.title"));
-        Profile profile = Profile.clone(ModelFabric.get(MainController.getProfile()));
-        profile.setBalance(balance);
         OrdersSearchTask task = new OrdersSearchTask(this,
                 ModelFabric.get(from), ModelFabric.get(stationFrom), ModelFabric.get(to), ModelFabric.get(stationTo),
                 profile
@@ -216,10 +214,8 @@ public class MarketModel {
         });
     }
 
-    public void getOrders(StationModel seller, Collection<StationModel> buyers, double balance, Consumer<ObservableList<OrderModel>> result) {
+    public void getOrders(StationModel seller, Collection<StationModel> buyers, Profile profile, Consumer<ObservableList<OrderModel>> result) {
         ProgressController progress = new ProgressController(Screeners.getMainScreen(), Localization.getString("analyzer.orders.title"));
-        Profile profile = Profile.clone(ModelFabric.get(MainController.getProfile()));
-        profile.setBalance(balance);
         List<Vendor> vendors = buyers.stream().map(ModelFabric::get).collect(Collectors.toList());
         OrdersSearchTask task = new OrdersSearchTask(this, ModelFabric.get(seller), vendors, profile);
         progress.run(task, order -> {
@@ -233,7 +229,9 @@ public class MarketModel {
     }
 
     public void getTop(double balance, Consumer<ObservableList<OrderModel>> result){
-        getOrders(ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, balance, result);
+        Profile profile = Profile.clone(ModelFabric.get(MainController.getProfile()));
+        profile.setBalance(balance);
+        getOrders(ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, ModelFabric.NONE_SYSTEM, ModelFabric.NONE_STATION, profile, result);
     }
 
     public void getRoutes(StationModel stationFrom, StationModel stationTo, double balance, CrawlerSpecificator specificator, Consumer<ObservableList<RouteModel>> result) {

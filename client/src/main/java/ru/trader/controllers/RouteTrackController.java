@@ -3,15 +3,14 @@ package ru.trader.controllers;
 import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import ru.trader.Main;
 import ru.trader.analysis.CrawlerSpecificator;
+import ru.trader.core.Profile;
 import ru.trader.model.*;
-import ru.trader.model.support.BindingsHelper;
 import ru.trader.view.support.Track;
 import ru.trader.view.support.ViewUtils;
 import ru.trader.view.support.autocomplete.AutoCompletion;
@@ -23,7 +22,6 @@ import ru.trader.view.support.cells.OrderListCell;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class RouteTrackController {
 
@@ -306,16 +304,19 @@ public class RouteTrackController {
             if (entry.isTransit()) return;
             StationModel seller = entry.getStation();
             if (ModelFabric.isFake(seller)) return;
+            Profile profile = Profile.clone(ModelFabric.get(MainController.getProfile()));
+            profile.setBalance(route.getBalance(startIndex));
+            profile.getShip().setCargo(route.getCargo(startIndex));
             if (startIndex != route.getJumps()){
                 Collection<StationModel> buyers = route.getStations(startIndex);
-                route.getMarket().getOrders(seller, buyers, route.getBalance(startIndex), orders -> {
+                route.getMarket().getOrders(seller, buyers, profile, orders -> {
                     Optional<OrderModel> order = Screeners.showOrders(orders);
                     if (order.isPresent()){
                         route.add(startIndex, order.get());
                     }
                 });
             } else {
-                route.getMarket().getOrders(seller, route.getBalance(startIndex), orders -> {
+                route.getMarket().getOrders(seller, profile, orders -> {
                     Optional<OrderModel> order = Screeners.showOrders(orders);
                     if (order.isPresent()){
                         updateRoute(route.add(order.get()));

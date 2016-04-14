@@ -365,6 +365,10 @@ public class RouteModel {
         return balance;
     }
 
+    public long getCargo(int index){
+        return _route.getCargo() - entries.get(index).getCargo();
+    }
+
     public int getCurrentEntry() {
         return currentEntry.get();
     }

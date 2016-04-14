@@ -130,6 +130,10 @@ public class RouteEntryModel {
         return new FilteredList<>(missions, MissionModel::isCompleted);
     }
 
+    public long getCargo() {
+        return entry.getCargo();
+    }
+
     void refresh(MarketModel market){
         orders.clear();
         orders.addAll(BindingsHelper.observableList(entry.getOrders(), market.getModeler()::get));
