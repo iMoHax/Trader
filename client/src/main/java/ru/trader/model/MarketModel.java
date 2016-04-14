@@ -240,10 +240,15 @@ public class MarketModel {
         getRoutes(stationFrom.getSystem(), stationFrom, stationTo.getSystem(), stationTo, balance, specificator, result);
     }
 
+
     public void getRoutes(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo, double balance, CrawlerSpecificator specificator, Consumer<ObservableList<RouteModel>> result) {
-        ProgressController progress = new ProgressController(Screeners.getMainScreen(), Localization.getString("analyzer.routes.title"));
         Profile profile = Profile.clone(ModelFabric.get(MainController.getProfile()));
         profile.setBalance(balance);
+        getRoutes(from, stationFrom, to, stationTo, profile, specificator, result);
+    }
+
+    public void getRoutes(SystemModel from, StationModel stationFrom, SystemModel to, StationModel stationTo, Profile profile, CrawlerSpecificator specificator, Consumer<ObservableList<RouteModel>> result) {
+        ProgressController progress = new ProgressController(Screeners.getMainScreen(), Localization.getString("analyzer.routes.title"));
         RoutesSearchTask task = new RoutesSearchTask(this,
                 ModelFabric.get(from), ModelFabric.get(stationFrom), ModelFabric.get(to), ModelFabric.get(stationTo),
                 profile, specificator
