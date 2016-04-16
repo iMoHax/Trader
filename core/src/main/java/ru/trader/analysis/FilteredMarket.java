@@ -3,7 +3,6 @@ package ru.trader.analysis;
 import ru.trader.core.*;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.NavigableSet;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -88,7 +87,7 @@ public class FilteredMarket {
         if (disableFilter){
             return res;
         }
-        return res.filter(o -> !filter.isFiltered(o));
+        return res.filter(o -> !MarketUtils.isIncorrect(o) && !filter.isFiltered(o));
     }
 
     public FilteredVendor getFiltered(Vendor vendor){
