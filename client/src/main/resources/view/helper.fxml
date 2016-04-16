@@ -23,7 +23,7 @@
             <Label fx:id="stationDistance" text="123456 ls" styleClass="text-small"/>
         </VBox>
     </HBox>
-    <HBox fx:id="refuelGroup"><Label text="%helper.refuel" /><Label fx:id="refuel" /></HBox>
+    <HBox fx:id="refuelGroup" spacing="5"><Label text="%helper.refuel" /><Label fx:id="refuel" /></HBox>
     <HBox>
         <ToggleButton fx:id="infoBtn" minWidth="30">
             <graphic><Glyph text="FontAwesome|INFO"/></graphic>

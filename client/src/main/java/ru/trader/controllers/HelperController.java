@@ -20,7 +20,10 @@ import ru.trader.KeyBinding;
 import ru.trader.Main;
 import ru.trader.model.*;
 import ru.trader.view.support.ViewUtils;
-import ru.trader.view.support.cells.*;
+import ru.trader.view.support.cells.OfferDecoratedListCell;
+import ru.trader.view.support.cells.OrderDecoratedListCell;
+import ru.trader.view.support.cells.OrderListCell;
+import ru.trader.view.support.cells.StationListCell;
 
 import javax.swing.*;
 
@@ -214,7 +217,7 @@ public class HelperController {
                 distance.setText("");
                 stationDistance.setText("");
             }
-            refuel.setText(String.valueOf(entry.getRefill()));
+            refuel.setText(ViewUtils.fuelToString(entry.getRefill(), MainController.getProfile().getShipTank()));
             buyOrders.setItems(entry.orders());
             sellOrders.setItems(entry.sellOrders());
             missions.setItems(entry.getCompletedMissions());

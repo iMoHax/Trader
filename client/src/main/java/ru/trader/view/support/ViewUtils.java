@@ -6,7 +6,9 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.control.*;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
+import javafx.scene.control.TableView;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -96,4 +98,9 @@ public class ViewUtils {
         return buf.toString();
     }
 
+
+    public static String fuelToString(double fuel, double tank){
+        if (tank == 0) return String.format("%.0f t", fuel);
+        return String.format("%.1f%%", fuel*100 / tank);
+    }
 }

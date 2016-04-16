@@ -148,7 +148,7 @@ public class RouteTrackController {
             station.setText(entry.getStation().getName());
             system.setText(entry.getStation().getSystem().getName());
             time.setText(ViewUtils.timeToString(entry.getTime()));
-            refuel.setText(String.valueOf(entry.getRefill()));
+            refuel.setText(ViewUtils.fuelToString(entry.getRefill(), MainController.getProfile().getShipTank()));
             buyOrders.setItems(entry.orders());
             sellOrders.setItems(entry.sellOrders());
             missionsList.setItems(entry.missions());
