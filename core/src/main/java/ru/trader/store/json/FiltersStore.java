@@ -30,6 +30,7 @@ public class FiltersStore {
     private static final String DEFAULT_VENDOR_FILTER_KEY = "default";
     private static final String VENDOR_FILTERS_FIELD = "stations";
     private static final String LEGAL_ONLY_FIELD = "legalOnly";
+    private static final String SELL_ILLEGAL_ONLY_FIELD = "illegalOnly";
     private static final String DONT_SELL_FIELD = "notSell";
     private static final String DONT_BUY_FIELD = "notBuy";
     private static final String SELL_FILTER_FIELD = "excludeSell";
@@ -95,6 +96,7 @@ public class FiltersStore {
     private void write(String key, VendorFilter filter, JsonGenerator generator) throws IOException {
         generator.writeObjectFieldStart(key);
         generator.writeBooleanField(DISABLE_FIELD, filter.isDisable());
+        generator.writeBooleanField(SELL_ILLEGAL_ONLY_FIELD, filter.isIllegalOnly());
         generator.writeBooleanField(LEGAL_ONLY_FIELD, filter.isSkipIllegal());
         generator.writeBooleanField(DONT_SELL_FIELD, filter.isDontSell());
         generator.writeBooleanField(DONT_BUY_FIELD, filter.isDontBuy());
@@ -196,6 +198,7 @@ public class FiltersStore {
         filter.setDisable(node.get(DISABLE_FIELD).asBoolean());
         filter.setSkipIllegal(node.get(LEGAL_ONLY_FIELD).asBoolean());
         filter.dontSell(node.get(DONT_SELL_FIELD).asBoolean());
+        filter.setIllegalOnly(node.get(SELL_ILLEGAL_ONLY_FIELD).asBoolean());
         filter.dontBuy(node.get(DONT_BUY_FIELD).asBoolean());
         Iterator<JsonNode> iterator = node.get(SELL_FILTER_FIELD).elements();
         while (iterator.hasNext()) {

@@ -57,6 +57,7 @@ public class FiltersStoreTest extends Assert {
         VendorFilter vendorFilter = new VendorFilter();
         vendorFilter.setDisable(true);
         vendorFilter.setSkipIllegal(true);
+        vendorFilter.setIllegalOnly(true);
         vendorFilter.dontBuy(true);
         vendorFilter.addSellExclude(gold);
         vendorFilter.addSellExclude(tea);
@@ -102,6 +103,7 @@ public class FiltersStoreTest extends Assert {
 
     private void assertFilter(VendorFilter expected, VendorFilter actual){
         assertEquals(expected.isDisable(), actual.isDisable());
+        assertEquals(expected.isIllegalOnly(), actual.isIllegalOnly());
         assertEquals(expected.isSkipIllegal(), actual.isSkipIllegal());
         assertEquals(expected.isDontBuy(), actual.isDontBuy());
         assertEquals(expected.isDontSell(), actual.isDontSell());

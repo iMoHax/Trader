@@ -3,11 +3,13 @@
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.trader.controllers.VendorFilterController"
               styleClass="dialog" spacing="10">
         <HBox spacing="10">
+            <CheckBox fx:id="cbIllegalOnly" text="%filter.stations.illegalOnly"/>
             <CheckBox fx:id="cbSkipIllegal" text="%filter.stations.legalOnly"/>
+        </HBox>
+        <HBox spacing="10">
             <CheckBox fx:id="cbDontSell" text="%filter.stations.notBuy"/>
             <CheckBox fx:id="cbDontBuy" text="%filter.stations.notSell"/>
         </HBox>
-
         <VBox spacing="4">
             <Label text="%filter.stations.label.notBuy"/>
             <ScrollPane maxHeight="200" maxWidth="400">

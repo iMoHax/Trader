@@ -11,6 +11,7 @@ public class VendorFilter {
 
     private boolean disable;
     private boolean skipIllegal;
+    private boolean illegalOnly;
     private boolean dontBuy;
     private boolean dontSell;
     private final Collection<Item> buyExcludes;
@@ -20,6 +21,7 @@ public class VendorFilter {
         buyExcludes = new ArrayList<>();
         sellExcludes = new ArrayList<>();
         skipIllegal = false;
+        illegalOnly = false;
     }
 
     public boolean isDisable() {
@@ -36,6 +38,14 @@ public class VendorFilter {
 
     public void setSkipIllegal(boolean skipIllegal) {
         this.skipIllegal = skipIllegal;
+    }
+
+    public boolean isIllegalOnly() {
+        return illegalOnly;
+    }
+
+    public void setIllegalOnly(boolean illegalOnly) {
+        this.illegalOnly = illegalOnly;
     }
 
     public boolean isDontBuy() {
@@ -91,17 +101,17 @@ public class VendorFilter {
         if (skipIllegal && offer.isIllegal()) return true;
         switch (offer.getType()) {
             case SELL: return dontSell || sellExcludes.contains(offer.getItem());
-            case BUY: return dontBuy || buyExcludes.contains(offer.getItem());
+            case BUY: return dontBuy || (illegalOnly && !offer.isIllegal()) || buyExcludes.contains(offer.getItem());
         }
         return false;
     }
 
     public boolean isFiltered(Vendor vendor, Item item, OFFER_TYPE offerType){
         if (disable) return false;
-        if (skipIllegal && (item.isIllegal(vendor))) return true;
+        if (skipIllegal && item.isIllegal(vendor)) return true;
         switch (offerType) {
             case SELL: return dontSell || sellExcludes.contains(item);
-            case BUY: return dontBuy || buyExcludes.contains(item);
+            case BUY: return dontBuy || (illegalOnly && !item.isIllegal(vendor)) || buyExcludes.contains(item);
         }
         return false;
     }

@@ -33,6 +33,8 @@ public class VendorFilterController {
     private CheckBox cbDontBuy;
     @FXML
     private CheckBox cbSkipIllegal;
+    @FXML
+    private CheckBox cbIllegalOnly;
 
     private VendorFilter filter;
     private Dialog<VendorFilter> dlg;
@@ -89,6 +91,7 @@ public class VendorFilterController {
 
     private void fill(VendorFilter filter){
         this.filter = filter;
+        cbIllegalOnly.setSelected(filter.isIllegalOnly());
         cbSkipIllegal.setSelected(filter.isSkipIllegal());
         cbDontSell.setSelected(filter.isDontSell());
         cbDontBuy.setSelected(filter.isDontBuy());
@@ -112,6 +115,7 @@ public class VendorFilterController {
 
     private void save() {
         LOG.trace("Old filter", filter);
+        filter.setIllegalOnly(cbIllegalOnly.isSelected());
         filter.setSkipIllegal(cbSkipIllegal.isSelected());
         filter.dontSell(cbDontSell.isSelected());
         filter.dontBuy(cbDontBuy.isSelected());
