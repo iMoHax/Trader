@@ -5,6 +5,7 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.CheckComboBox?>
+<?import org.controlsfx.glyphfont.Glyph?>
 <?import ru.trader.view.support.cells.DistanceCell?>
 <?import ru.trader.view.support.NumberField?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
@@ -24,13 +25,16 @@
                 <ColumnConstraints minWidth="150" maxWidth="150"/>
             </columnConstraints>
             <Label text="%search.text.from" />
-            <TextField fx:id="sourceText" prefWidth="150" GridPane.columnIndex="1" />
+            <HBox GridPane.columnIndex="1">
+                <TextField fx:id="sourceText" prefWidth="150" />
+                <Button minWidth="30" onAction="#currentAsSource"><graphic><Glyph text="FontAwesome|MAP_MARKER"/></graphic></Button>
+            </HBox>
             <HBox GridPane.columnSpan="2" GridPane.rowIndex="1" spacing="10" alignment="BOTTOM_CENTER">
                 <RadioButton fx:id="rbSeller" text="%market.order.seller"/>
                 <RadioButton fx:id="rbBuyer" text="%market.order.buyer" />
             </HBox>
             <Label text="%search.text.item" GridPane.rowIndex="2"/>
-            <ComboBox fx:id="items" prefWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <TextField fx:id="itemText" prefWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
             <Label text="%search.text.distance" GridPane.rowIndex="3" />
             <NumberField fx:id="distance" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label text="%label.station.type" GridPane.rowIndex="4"/>

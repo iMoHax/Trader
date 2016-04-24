@@ -3,10 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import ru.trader.view.support.cells.ItemListCell?>
-<?import ru.trader.view.support.ItemStringConverter?>
-<?import ru.trader.view.support.NumberField?>
 <?import ru.trader.view.support.DurationField?>
+<?import ru.trader.view.support.NumberField?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="ru.trader.controllers.MissionsController"
           hgap="10" vgap="5">
@@ -37,10 +35,7 @@
     <Label GridPane.rowIndex="1" text="%missions.label.starport"/>
     <TextField fx:id="starportText" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
     <Label GridPane.rowIndex="2" text="%missions.label.cargo"/>
-    <ComboBox fx:id="cargo" GridPane.rowIndex="2" GridPane.columnIndex="1">
-        <cellFactory><ItemListCell /></cellFactory>
-        <converter><ItemStringConverter /></converter>
-    </ComboBox>
+    <TextField fx:id="itemText" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
     <Label GridPane.rowIndex="3" text="%missions.label.quantity"/>
     <NumberField fx:id="quantity" GridPane.rowIndex="3" GridPane.columnIndex="1" value="0"/>
     <Label GridPane.rowIndex="4" text="%missions.label.leftTime"/>

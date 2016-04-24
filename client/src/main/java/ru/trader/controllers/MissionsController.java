@@ -3,7 +3,6 @@ package ru.trader.controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -12,6 +11,7 @@ import ru.trader.view.support.DurationField;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
+import ru.trader.view.support.autocomplete.ItemsProvider;
 import ru.trader.view.support.autocomplete.StationsProvider;
 
 import java.time.Duration;
@@ -23,7 +23,8 @@ public class MissionsController {
     private TextField starportText;
     private AutoCompletion<StationModel> starport;
     @FXML
-    private ComboBox<ItemModel> cargo;
+    private TextField itemText;
+    private AutoCompletion<ItemModel> cargo;
     @FXML
     private NumberField quantity;
     @FXML
@@ -55,7 +56,7 @@ public class MissionsController {
             if (courierBtn.equals(n)){
                 missionType = MISSION_TYPE.COURIER;
                 starportText.setDisable(false);
-                cargo.setDisable(true);
+                itemText.setDisable(true);
                 quantity.setDisable(true);
                 leftTime.setDisable(false);
                 reward.setDisable(false);
@@ -63,7 +64,7 @@ public class MissionsController {
             if (deliveryBtn.equals(n)){
                 missionType = MISSION_TYPE.DELIVERY;
                 starportText.setDisable(false);
-                cargo.setDisable(true);
+                itemText.setDisable(true);
                 quantity.setDisable(false);
                 leftTime.setDisable(false);
                 reward.setDisable(false);
@@ -74,14 +75,14 @@ public class MissionsController {
                     starport.setValue(station);
                 }
                 starportText.setDisable(false);
-                cargo.setDisable(false);
+                itemText.setDisable(false);
                 quantity.setDisable(false);
                 leftTime.setDisable(false);
                 reward.setDisable(false);
             } else {
                 missionType = null;
                 starportText.setDisable(true);
-                cargo.setDisable(true);
+                itemText.setDisable(true);
                 quantity.setDisable(true);
                 leftTime.setDisable(true);
                 reward.setDisable(true);
@@ -95,7 +96,6 @@ public class MissionsController {
 
     void init(){
         MarketModel world = MainController.getWorld();
-        cargo.setItems(world.itemsProperty());
         StationsProvider provider = new StationsProvider(world);
         if (starport == null){
             starport = new AutoCompletion<>(starportText, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_STATION, provider.getConverter());
@@ -103,14 +103,21 @@ public class MissionsController {
             starport.setSuggestions(provider.getPossibleSuggestions());
             starport.setConverter(provider.getConverter());
         }
+        ItemsProvider itemsProvider = new ItemsProvider(world);
+        if (cargo == null){
+            cargo = new AutoCompletion<>(itemText, new CachedSuggestionProvider<>(itemsProvider), ModelFabric.NONE_ITEM, itemsProvider.getConverter());
+        } else {
+            cargo.setSuggestions(itemsProvider.getPossibleSuggestions());
+            cargo.setConverter(itemsProvider.getConverter());
+        }
     }
 
     void setStations(ObservableList<String> stationNames) {
         starport.setSuggestions(stationNames);
     }
 
-    void setItems(ObservableList<ItemModel> items){
-        cargo.setItems(items);
+    void setItems(ObservableList<String> itemNames){
+        cargo.setSuggestions(itemNames);
     }
 
     public void add(){
@@ -119,13 +126,13 @@ public class MissionsController {
         long count = quantity.getValue().longValue();
         Duration time = leftTime.getValue();
         double profit = reward.getValue().doubleValue();
-        if (station != null && profit > 0){
+        if (!ModelFabric.isFake(station) && profit > 0){
             switch (missionType){
                 case COURIER: missions.add(new MissionModel(station, time, profit));
                     break;
                 case DELIVERY: if (count > 0) missions.add(new MissionModel(station, count, time, profit));
                     break;
-                case SUPPLY: if (item != null && count > 0) missions.add(new MissionModel(station, item, count, time, profit));
+                case SUPPLY: if (!ModelFabric.isFake(item) && count > 0) missions.add(new MissionModel(station, item, count, time, profit));
                     break;
             }
         }

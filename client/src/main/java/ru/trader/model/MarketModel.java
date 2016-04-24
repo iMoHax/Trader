@@ -20,6 +20,7 @@ import ru.trader.model.support.Notificator;
 import ru.trader.services.OrdersSearchTask;
 import ru.trader.services.RoutesSearchTask;
 import ru.trader.view.support.Localization;
+import ru.trader.view.support.autocomplete.ItemsProvider;
 import ru.trader.view.support.autocomplete.StationsProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
 
@@ -40,8 +41,10 @@ public class MarketModel {
 
     private final ObservableList<String> systemNames;
     private final ObservableList<String> stationNames;
+    private final ObservableList<String> itemNames;
     private final SystemsProvider systemsProvider;
     private final StationsProvider stationsProvider;
+    private final ItemsProvider itemsProvider;
     private final ListProperty<GroupModel> groups;
     private final ListProperty<ItemModel> items;
 
@@ -55,8 +58,11 @@ public class MarketModel {
         items.sort(ItemModel::compareTo);
         systemNames = new SimpleListProperty<>(FXCollections.observableArrayList(market.getPlaceNames()));
         stationNames = new SimpleListProperty<>(FXCollections.observableArrayList(market.getVendorNames()));
+        List<String> iNames = items.stream().map(ItemModel::getName).collect(Collectors.toList());
+        itemNames = new SimpleListProperty<>(FXCollections.observableArrayList(iNames));
         systemsProvider = new SystemsProvider(this);
         stationsProvider = new StationsProvider(this);
+        itemsProvider = new ItemsProvider(this);
     }
 
     public MarketAnalyzer getAnalyzer() {
@@ -79,12 +85,20 @@ public class MarketModel {
         return stationNames;
     }
 
+    public ObservableList<String> getItemNames() {
+        return itemNames;
+    }
+
     public SystemsProvider getSystemsProvider() {
         return systemsProvider;
     }
 
     public StationsProvider getStationsProvider() {
         return stationsProvider;
+    }
+
+    public ItemsProvider getItemsProvider() {
+        return itemsProvider;
     }
 
     public SystemModel get(String name){
@@ -159,6 +173,7 @@ public class MarketModel {
         LOG.info("Add item {} to market {}", item, this);
         notificator.sendAdd(item);
         items.add(item);
+        itemNames.add(item.getName());
         return item;
     }
 
@@ -167,6 +182,7 @@ public class MarketModel {
         market.remove(ModelFabric.get(item));
         notificator.sendRemove(item);
         items.remove(item);
+        itemNames.remove(item.getName());
     }
 
     ItemStat getStat(OFFER_TYPE type, Item item){
@@ -333,5 +349,7 @@ public class MarketModel {
         groups.get().forEach(GroupModel::updateName);
         items.get().forEach(ItemModel::updateName);
         items.sort(ItemModel::compareTo);
+        List<String> iNames = items.stream().map(ItemModel::getName).collect(Collectors.toList());
+        itemNames.setAll(iNames);
     }
 }

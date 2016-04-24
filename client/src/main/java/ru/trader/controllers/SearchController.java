@@ -2,10 +2,11 @@ package ru.trader.controllers;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.util.StringConverter;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import org.controlsfx.control.CheckComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +22,8 @@ import ru.trader.view.support.ServiceTypeStringConverter;
 import ru.trader.view.support.StationTypeStringConverter;
 import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
+import ru.trader.view.support.autocomplete.ItemsProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
-import ru.trader.view.support.cells.CustomListCell;
 
 import java.util.Collection;
 import java.util.List;
@@ -39,7 +40,8 @@ public class SearchController {
     @FXML
     private RadioButton rbBuyer;
     @FXML
-    private ComboBox<ItemModel> items;
+    private TextField itemText;
+    private AutoCompletion<ItemModel> items;
     @FXML
     private NumberField distance;
     @FXML
@@ -50,7 +52,6 @@ public class SearchController {
     private TableView<ResultEntry> tblResults;
 
     private final List<ResultEntry> results = FXCollections.observableArrayList();
-    private final ObservableList<ItemModel> itemsList = FXCollections.observableArrayList();
     private final ToggleGroup offerType = new ToggleGroup();
 
     private MarketModel market;
@@ -67,20 +68,7 @@ public class SearchController {
         rbSeller.setToggleGroup(offerType);
         rbSeller.setUserData(OFFER_TYPE.SELL);
         rbSeller.setSelected(true);
-        items.setCellFactory(new CustomListCell<>(ItemModel::getName));
-        items.setConverter(new StringConverter<ItemModel>() {
-            @Override
-            public String toString(ItemModel item) {
-                return item.getName();
-            }
-
-            @Override
-            public ItemModel fromString(String string) {
-                throw new UnsupportedOperationException("Is not editable field");
-            }
-        });
         BindingsHelper.setTableViewItems(tblResults, results);
-        items.setItems(itemsList);
     }
 
     void init(){
@@ -88,20 +76,19 @@ public class SearchController {
         market = MainController.getMarket();
         market.getNotificator().add(searchChangeListener);
         SystemsProvider provider = market.getSystemsProvider();
-        if (source != null) source.dispose();
-        source = new AutoCompletion<>(sourceText, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
-        itemsList.clear();
-        itemsList.add(ModelFabric.NONE_ITEM);
-        itemsList.addAll(market.itemsProperty().get());
-    }
-
-
-    private void addItem(ItemModel item){
-        itemsList.add(item);
-    }
-
-    private void removeItem(ItemModel item){
-        itemsList.remove(item);
+        if (source == null) {
+            source = new AutoCompletion<>(sourceText, new CachedSuggestionProvider<>(provider), ModelFabric.NONE_SYSTEM, provider.getConverter());
+        } else {
+            source.setSuggestions(provider.getPossibleSuggestions());
+            source.setConverter(provider.getConverter());
+        }
+        ItemsProvider itemsProvider = market.getItemsProvider();
+        if (items == null){
+            items = new AutoCompletion<>(itemText, new CachedSuggestionProvider<>(itemsProvider), ModelFabric.NONE_ITEM, itemsProvider.getConverter());
+        } else {
+            items.setSuggestions(itemsProvider.getPossibleSuggestions());
+            items.setConverter(itemsProvider.getConverter());
+        }
     }
 
     @FXML
@@ -136,7 +123,10 @@ public class SearchController {
         }
     }
 
-
+    @FXML
+    private void currentAsSource(){
+        source.setValue(MainController.getProfile().getSystem());
+    }
 
     public class ResultEntry {
         private final StationModel station;
@@ -193,15 +183,7 @@ public class SearchController {
     }
 
     private final ChangeMarketListener searchChangeListener = new ChangeMarketListener() {
-        @Override
-        public void add(ItemModel item) {
-            addItem(item);
-        }
 
-        @Override
-        public void remove(ItemModel item) {
-            removeItem(item);
-        }
     };
 
 }

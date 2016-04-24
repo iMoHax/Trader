@@ -38,6 +38,7 @@ public class AutoCompletion<T> {
         this.converter = converter;
         this.notFoundItem = notFoundItem;
         this.suggestionProvider = suggestionProvider;
+        completion.setValue(notFoundItem);
         binding = new AutoTextFieldBinding(textField, suggestionProvider);
         binding.setOnAutoCompleted(e -> completion.setValue(converter.fromString(e.getCompletion())));
     }
