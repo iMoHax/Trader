@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ModelFabric {
 
@@ -106,6 +107,10 @@ public class ModelFabric {
     public static Item get(ItemModel item){
         if (isFake(item)) return null;
         return item.getItem();
+    }
+
+    public static Collection<Item> get(Collection<ItemModel> items){
+        return items.stream().map(ModelFabric::get).collect(Collectors.toList());
     }
 
     public OfferModel get(Offer offer){

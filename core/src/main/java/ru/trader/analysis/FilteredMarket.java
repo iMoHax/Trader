@@ -3,8 +3,11 @@ package ru.trader.analysis;
 import ru.trader.core.*;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.NavigableSet;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FilteredMarket {
@@ -84,6 +87,33 @@ public class FilteredMarket {
             res = offers.stream();
         else
             res = offers.descendingSet().stream();
+        if (disableFilter){
+            return res;
+        }
+        return res.filter(o -> !MarketUtils.isIncorrect(o) && !filter.isFiltered(o));
+    }
+
+    public Stream<Offer> getOffers(OFFER_TYPE offerType, Collection<Item> items){
+        final Set<Vendor> vendors = new HashSet<>();
+        Stream<Offer> res = null;
+        for (Item item : items) {
+            NavigableSet<Offer> offers = market.getStat(offerType, item).getOffers();
+            Stream<Offer> s;
+            if (offerType.getOrder() > 0)
+                s = offers.stream().filter(o -> vendors.contains(o.getVendor()));
+            else
+                s = offers.descendingSet().stream().filter(o -> vendors.contains(o.getVendor()));
+
+            Collection<Vendor> v = offers.stream().map(Offer::getVendor).collect(Collectors.toList());
+            if (res == null){
+                res = s;
+                vendors.addAll(v);
+            } else {
+                res = Stream.concat(res, s);
+                vendors.retainAll(v);
+            }
+        }
+        if (res == null) return Stream.empty();
         if (disableFilter){
             return res;
         }

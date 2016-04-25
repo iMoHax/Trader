@@ -193,6 +193,10 @@ public class MarketModel {
         return BindingsHelper.observableList(analyzer.getOffers(offerType, ModelFabric.get(item), filter), modeler::get);
     }
 
+    public ObservableList<OfferModel> getOffers(OFFER_TYPE offerType, Collection<ItemModel> items, MarketFilter filter){
+        return BindingsHelper.observableList(analyzer.getOffers(offerType, ModelFabric.get(items), filter), modeler::get);
+    }
+
     public ObservableList<StationModel> getStations(){
         return BindingsHelper.observableList(market.getVendors(), modeler::get);
     }

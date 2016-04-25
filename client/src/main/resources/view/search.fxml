@@ -35,14 +35,22 @@
             </HBox>
             <Label text="%search.text.item" GridPane.rowIndex="2"/>
             <TextField fx:id="itemText" prefWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-            <Label text="%search.text.distance" GridPane.rowIndex="3" />
-            <NumberField fx:id="distance" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label text="%label.station.type" GridPane.rowIndex="4"/>
-            <CheckComboBox fx:id="stationTypes" prefWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Label text="%label.station.services" GridPane.rowIndex="5"/>
-            <CheckComboBox fx:id="services" prefWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-            <Separator GridPane.columnSpan="2" GridPane.rowIndex="6" GridPane.margin="$separator_margin"/>
-            <HBox GridPane.columnSpan="2" GridPane.rowIndex="7" spacing="10" alignment="CENTER">
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="3" spacing="4" alignment="CENTER">
+                <ListView fx:id="itemsList" HBox.hgrow="ALWAYS" maxHeight="100"/>
+                <VBox spacing="4">
+                    <Button prefWidth="30" onAction="#addItem"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
+                    <Button prefWidth="30" onAction="#removeItem"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
+                    <Button prefWidth="30" onAction="#clearItems"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
+                </VBox>
+            </HBox>
+            <Label text="%search.text.distance" GridPane.rowIndex="4" />
+            <NumberField fx:id="distance" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="%label.station.type" GridPane.rowIndex="5"/>
+            <CheckComboBox fx:id="stationTypes" prefWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label text="%label.station.services" GridPane.rowIndex="6"/>
+            <CheckComboBox fx:id="services" prefWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+            <Separator GridPane.columnSpan="2" GridPane.rowIndex="7" GridPane.margin="$separator_margin"/>
+            <HBox GridPane.columnSpan="2" GridPane.rowIndex="8" spacing="10" alignment="CENTER">
                 <Button text="%search.button.find" onAction="#searchStations" />
             </HBox>
         </GridPane>

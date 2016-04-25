@@ -3,10 +3,7 @@ package ru.trader.controllers;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import org.controlsfx.control.CheckComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +21,7 @@ import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.ItemsProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
+import ru.trader.view.support.cells.ItemListCell;
 
 import java.util.Collection;
 import java.util.List;
@@ -41,7 +39,9 @@ public class SearchController {
     private RadioButton rbBuyer;
     @FXML
     private TextField itemText;
-    private AutoCompletion<ItemModel> items;
+    private AutoCompletion<ItemModel> itemField;
+    @FXML
+    private ListView<ItemModel> itemsList;
     @FXML
     private NumberField distance;
     @FXML
@@ -59,6 +59,8 @@ public class SearchController {
     @FXML
     private void initialize() {
         init();
+        itemsList.setItems(FXCollections.observableArrayList());
+        itemsList.setCellFactory(new ItemListCell());
         stationTypes.setConverter(new StationTypeStringConverter());
         stationTypes.getItems().setAll(STATION_TYPE.values());
         services.setConverter(new ServiceTypeStringConverter());
@@ -83,11 +85,11 @@ public class SearchController {
             source.setConverter(provider.getConverter());
         }
         ItemsProvider itemsProvider = market.getItemsProvider();
-        if (items == null){
-            items = new AutoCompletion<>(itemText, new CachedSuggestionProvider<>(itemsProvider), ModelFabric.NONE_ITEM, itemsProvider.getConverter());
+        if (itemField == null){
+            itemField = new AutoCompletion<>(itemText, new CachedSuggestionProvider<>(itemsProvider), ModelFabric.NONE_ITEM, itemsProvider.getConverter());
         } else {
-            items.setSuggestions(itemsProvider.getPossibleSuggestions());
-            items.setConverter(itemsProvider.getConverter());
+            itemField.setSuggestions(itemsProvider.getPossibleSuggestions());
+            itemField.setConverter(itemsProvider.getConverter());
         }
     }
 
@@ -97,13 +99,19 @@ public class SearchController {
         filter.setDistance(distance.getValue().doubleValue());
         stationTypes.getCheckModel().getCheckedItems().forEach(filter::add);
         services.getCheckModel().getCheckedItems().forEach(filter::add);
-        ItemModel item = items.getValue();
-        if (ModelFabric.isFake(item)){
+        ItemModel item = itemField.getValue();
+        Collection<ItemModel> items = itemsList.getItems();
+        if (ModelFabric.isFake(item) && items.isEmpty()){
             Collection<StationModel> stations = market.getStations(filter);
             fill(stations);
         } else {
             OFFER_TYPE oType = (OFFER_TYPE) offerType.getSelectedToggle().getUserData();
-            Collection<OfferModel> offers = market.getOffers(oType, item, filter);
+            Collection<OfferModel> offers;
+            if (items.isEmpty()) {
+                offers = market.getOffers(oType, item, filter);
+            } else {
+                offers = market.getOffers(oType, items, filter);
+            }
             fill(offers);
         }
     }
@@ -126,6 +134,28 @@ public class SearchController {
     @FXML
     private void currentAsSource(){
         source.setValue(MainController.getProfile().getSystem());
+    }
+
+    @FXML
+    private void addItem(){
+        ItemModel item = itemField.getValue();
+        if (!ModelFabric.isFake(item)){
+            if (itemsList.getItems().contains(item)) return;
+            itemsList.getItems().add(item);
+        }
+    }
+
+    @FXML
+    private void removeItem(){
+        int index = itemsList.getSelectionModel().getSelectedIndex();
+        if (index != -1){
+            itemsList.getItems().remove(index);
+        }
+    }
+
+    @FXML
+    private void clearItems(){
+        itemsList.getItems().clear();
     }
 
     public class ResultEntry {

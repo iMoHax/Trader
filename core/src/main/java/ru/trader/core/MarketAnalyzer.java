@@ -39,6 +39,10 @@ public class MarketAnalyzer {
         return market.getOffers(offerType, item).filter(o -> !filter.isFiltered(o.getVendor())).collect(Collectors.toList());
     }
 
+    public List<Offer> getOffers(OFFER_TYPE offerType, Collection<Item> items, MarketFilter filter){
+        return market.getOffers(offerType, items).filter(o -> !filter.isFiltered(o.getVendor())).collect(Collectors.toList());
+    }
+
     public List<Vendor> getVendors(MarketFilter filter){
         return market.getVendors().filter(v -> !filter.isFiltered(v)).collect(Collectors.toList());
     }
