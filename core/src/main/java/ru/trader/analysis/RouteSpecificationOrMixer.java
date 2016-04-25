@@ -49,10 +49,20 @@ public class RouteSpecificationOrMixer<T> implements RouteSpecificationMixer<T>,
     }
 
     @Override
-    public int matchCount() {
+    public int maxMatches() {
+        int res = 0;
+        for (RouteSpecification<T> specification : specifications) {
+            res = Math.max(res, specification.maxMatches());
+        }
+        return res;
+    }
+
+    @Override
+    public int minMatches() {
+        if (specifications.isEmpty()) return 0;
         int res = Integer.MAX_VALUE;
         for (RouteSpecification<T> specification : specifications) {
-            res = Math.min(res, specification.matchCount());
+            res = Math.min(res, specification.minMatches());
         }
         return res;
     }
@@ -146,7 +156,7 @@ public class RouteSpecificationOrMixer<T> implements RouteSpecificationMixer<T>,
             int hard2 = getHard(o2);
             int cmp = Integer.compare(hard1, hard2);
             if (cmp != 0) return cmp;
-            return Integer.compare(o1.matchCount(), o2.matchCount());
+            return Integer.compare(o1.minMatches(), o2.minMatches());
         }
     }
 }

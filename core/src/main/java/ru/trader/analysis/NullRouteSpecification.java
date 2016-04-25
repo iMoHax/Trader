@@ -21,7 +21,7 @@ public class NullRouteSpecification<T> implements RouteSpecification<T> {
     }
 
     @Override
-    public int matchCount() {
+    public int maxMatches() {
         return 1;
     }
 }

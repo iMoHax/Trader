@@ -7,16 +7,19 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public interface CrawlerSpecification<T> {
-    public RouteSpecification<T> routeSpecification();
+    RouteSpecification<T> routeSpecification();
 
-    public Consumer<List<Edge<T>>> onFoundFunc();
+    Consumer<List<Edge<T>>> onFoundFunc();
 
-    public Function<Traversal<T>, Object> getGroupGetter(boolean target);
+    Function<Traversal<T>, Object> getGroupGetter(boolean target);
 
-    public int getGroupCount();
+    int getGroupCount();
 
-    public default int getMinLands(){
-        return routeSpecification() != null ? routeSpecification().matchCount() : 1;
+    default int getMinLands(){
+        return routeSpecification() != null ? routeSpecification().minMatches() : 1;
     }
 
+    default int getMaxLands(){
+        return routeSpecification() != null ? routeSpecification().maxMatches() : 1;
+    }
 }

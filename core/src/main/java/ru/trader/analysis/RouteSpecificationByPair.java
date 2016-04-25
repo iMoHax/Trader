@@ -3,7 +3,10 @@ package ru.trader.analysis;
 import ru.trader.analysis.graph.Edge;
 import ru.trader.analysis.graph.Traversal;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
 
 public class RouteSpecificationByPair<T> implements RouteSpecification<T> {
     private final Collection<T> first;
@@ -78,7 +81,7 @@ public class RouteSpecificationByPair<T> implements RouteSpecification<T> {
     }
 
     @Override
-    public int matchCount() {
+    public int maxMatches() {
         return 2;
     }
 

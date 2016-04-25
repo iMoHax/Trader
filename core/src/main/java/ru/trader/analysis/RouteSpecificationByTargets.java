@@ -3,7 +3,9 @@ package ru.trader.analysis;
 import ru.trader.analysis.graph.Edge;
 import ru.trader.analysis.graph.Traversal;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Optional;
 
 public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
     private final Collection<T> targets;
@@ -74,13 +76,13 @@ public class RouteSpecificationByTargets<T> implements RouteSpecification<T> {
         if (targets.isEmpty()) return 0;
         if (checkTime()){
             long time = edge.getTime();
-            if (targetOnly && (time < start || time > end)) return matchCount();
+            if (targetOnly && (time < start || time > end)) return maxMatches();
         }
         return all ? containsAll(edge, entry) : containsAny(edge, entry);
     }
 
     @Override
-    public int matchCount() {
+    public int maxMatches() {
         if (targets.isEmpty()) return 0;
         return all ? targets.size() : 1;
     }

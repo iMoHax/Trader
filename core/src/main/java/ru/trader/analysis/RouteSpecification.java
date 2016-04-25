@@ -5,17 +5,18 @@ import ru.trader.analysis.graph.Traversal;
 
 public interface RouteSpecification<T> {
 
-    public boolean specified(Edge<T> edge, Traversal<T> entry);
+    boolean specified(Edge<T> edge, Traversal<T> entry);
            default boolean content(Edge<T> edge, Traversal<T> entry){return specified(edge, entry);}
-    public default int lastFound(Edge<T> edge, Traversal<T> entry){
-        return specified(edge, entry) ? 0 : matchCount();
+    default int lastFound(Edge<T> edge, Traversal<T> entry){
+        return specified(edge, entry) ? 0 : minMatches();
     }
-    public default int matchCount(){return 1;}
-    public default boolean updateMutated(){return false;}
-    public default boolean mutable(){return false;}
-    public default void update(Traversal<T> entry){}
-    public default long getStart(){return 0;}
-    public default long getEnd(){return Long.MAX_VALUE;}
+    default int maxMatches(){return 1;}
+    default int minMatches(){return maxMatches();}
+    default boolean updateMutated(){return false;}
+    default boolean mutable(){return false;}
+    default void update(Traversal<T> entry){}
+    default long getStart(){return 0;}
+    default long getEnd(){return Long.MAX_VALUE;}
 
     default RouteSpecification<T> and(final RouteSpecification<T> other){
         if (other instanceof RouteSpecificationAndMixer){

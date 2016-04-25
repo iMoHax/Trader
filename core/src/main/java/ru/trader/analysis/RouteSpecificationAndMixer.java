@@ -53,10 +53,19 @@ public class RouteSpecificationAndMixer<T> implements RouteSpecificationMixer<T>
     }
 
     @Override
-    public int matchCount() {
+    public int maxMatches() {
         int res = 0;
         for (RouteSpecification<T> specification : specifications) {
-            res += specification.matchCount();
+            res += specification.maxMatches();
+        }
+        return res;
+    }
+
+    @Override
+    public int minMatches() {
+        int res = 0;
+        for (RouteSpecification<T> specification : specifications) {
+            res += specification.minMatches();
         }
         return res;
     }
@@ -112,7 +121,7 @@ public class RouteSpecificationAndMixer<T> implements RouteSpecificationMixer<T>
 
     private int getMinHope(Collection<RouteSpecification<T>> specifications){
         if (specifications.isEmpty()) return -1;
-        return specifications.stream().mapToInt(RouteSpecification::matchCount).sum();
+        return specifications.stream().mapToInt(RouteSpecification::minMatches).sum();
     }
 
     private void collapse(RouteSpecification<T> specification){
