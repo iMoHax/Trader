@@ -9,7 +9,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
-import org.controlsfx.glyphfont.Glyph;
 import ru.trader.Main;
 import ru.trader.ServicesManager;
 import ru.trader.core.Engine;
@@ -67,7 +66,6 @@ public class ProfileController {
     @FXML
     private void initialize() {
         init();
-        profile = MainController.getProfile();
         system.valueProperty().addListener((ov, o, n) -> {
             doAndConsumeChanges(() -> {
                 station.setItems(n.getStationNamesList());
@@ -126,6 +124,7 @@ public class ProfileController {
     }
 
     void init(){
+        profile = MainController.getProfile();
         MarketModel world = MainController.getWorld();
         world.getNotificator().add(marketChangeListener);
         SystemsProvider provider = world.getSystemsProvider();

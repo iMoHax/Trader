@@ -310,6 +310,7 @@ public class MainController {
         if (world != null) world.getModeler().clear();
         world = new MarketModel(World.getMarket());
         market = world;
+        profile = world.getModeler().get(ModelFabric.get(profile));
         Screeners.reinitAll();
     }
 
