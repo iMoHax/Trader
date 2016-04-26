@@ -16,7 +16,7 @@ public class StationHandler extends CSVParseHandler {
 
     @Override
     protected void doWork(String[] values) {
-        //unq:name@System.system_id,unq:name,ls_from_star,blackmarket,max_pad_size,market,shipyard,modified
+        //unq:name@System.system_id,unq:name,ls_from_star,blackmarket,max_pad_size,market,shipyard,modified,outfitting,rearm,refuel,repair,planetary
         Place system = market.get(values[0]);
         if (system == null){
             LOG.warn("Not found system {}", values[0]);
@@ -41,10 +41,25 @@ public class StationHandler extends CSVParseHandler {
         if ("Y".equals(values[6])) adding.add(SERVICE_TYPE.SHIPYARD);
         if ("N".equals(values[6])) removing.add(SERVICE_TYPE.SHIPYARD);
 
-        STATION_TYPE type = null;
-        if ("M".equals(values[4])) {type = STATION_TYPE.OUTPOST;}
-        if ("L".equals(values[4])) {type = STATION_TYPE.STARPORT;}
+        if ("Y".equals(values[8])) adding.add(SERVICE_TYPE.OUTFIT);
+        if ("N".equals(values[8])) removing.add(SERVICE_TYPE.OUTFIT);
 
+        if ("Y".equals(values[9])) adding.add(SERVICE_TYPE.MUNITION);
+        if ("N".equals(values[9])) removing.add(SERVICE_TYPE.MUNITION);
+
+        if ("Y".equals(values[10])) adding.add(SERVICE_TYPE.REFUEL);
+        if ("N".equals(values[10])) removing.add(SERVICE_TYPE.REFUEL);
+
+        if ("Y".equals(values[11])) adding.add(SERVICE_TYPE.REPAIR);
+        if ("N".equals(values[11])) removing.add(SERVICE_TYPE.REPAIR);
+
+        STATION_TYPE type = null;
+        if ("Y".equals(values[12])){
+            type = STATION_TYPE.PLANETARY_OUTPOST;
+        } else {
+            if ("M".equals(values[4])) {type = STATION_TYPE.OUTPOST;}
+            if ("L".equals(values[4])) {type = STATION_TYPE.STARPORT;}
+        }
         updateStation(system, values[1], type, distance, adding, removing);
     }
 
