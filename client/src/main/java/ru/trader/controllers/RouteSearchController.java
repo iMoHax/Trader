@@ -45,7 +45,7 @@ public class RouteSearchController {
         initListeners();
     }
 
-    private void init(){
+    void init(){
         market = MainController.getMarket();
         SystemsProvider provider = market.getSystemsProvider();
         if (fromSystem == null){

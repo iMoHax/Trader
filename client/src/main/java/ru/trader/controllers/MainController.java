@@ -10,9 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import ru.trader.Main;
 import ru.trader.World;
-import ru.trader.maddavo.Parser;
 import ru.trader.model.*;
+import ru.trader.services.MaddavoParserTask;
 import ru.trader.view.support.Localization;
+import ru.trader.view.support.ViewUtils;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
@@ -44,6 +45,12 @@ public class MainController {
     private OffersController offersController;
     @FXML
     private ItemsController itemsController;
+    @FXML
+    private RouteSearchController routesController;
+    @FXML
+    private SearchController searchController;
+    @FXML
+    private RouteTrackController routeController;
     @FXML
     private TabPane tabs;
     @FXML
@@ -104,8 +111,12 @@ public class MainController {
     }
 
     void init(){
+        profController.init();
         itemsController.init();
         offersController.init();
+        routesController.init();
+        searchController.init();
+        routeController.init();
         //TODO: add init all controllers
     }
 
@@ -266,34 +277,22 @@ public class MainController {
 
     public void impMadSystems() {
         chooseFile(new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv"), file -> {
-            try {
-                Parser.parseSystems(file, World.getMarket());
-                reload();
-            } catch (IOException e) {
-                LOG.error("Error on import file", e);
-            }
+            MaddavoParserTask task = new MaddavoParserTask(file, MaddavoParserTask.FILE_TYPE.SYSTEMS, World.getMarket());
+            Screeners.showProgress(Localization.getString("message.import.systems"), task, () -> ViewUtils.doFX(this::reload));
         });
     }
 
     public void impMadStations() {
         chooseFile(new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv"), file -> {
-            try {
-                Parser.parseStations(file, World.getMarket());
-                reload();
-            } catch (IOException e) {
-                LOG.error("Error on import file", e);
-            }
+            MaddavoParserTask task = new MaddavoParserTask(file, MaddavoParserTask.FILE_TYPE.STATIONS, World.getMarket());
+            Screeners.showProgress(Localization.getString("message.import.stations"), task, () -> ViewUtils.doFX(this::reload));
         });
     }
 
     public void impMadOffers() {
         chooseFile(new FileChooser.ExtensionFilter("Prices files (*.prices)", "*.prices"), file -> {
-            try {
-                Parser.parsePrices(file, World.getMarket());
-                reload();
-            } catch (IOException e) {
-                LOG.error("Error on import file", e);
-            }
+            MaddavoParserTask task = new MaddavoParserTask(file, MaddavoParserTask.FILE_TYPE.PRICES, World.getMarket());
+            Screeners.showProgress(Localization.getString("message.import.prices"), task, () -> ViewUtils.doFX(this::reload));
         });
     }
 

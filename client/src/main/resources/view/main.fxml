@@ -57,13 +57,13 @@
                <fx:include fx:id="offers" source="offers.fxml"/>
            </Tab>
            <Tab text="%main.tab.routes">
-               <fx:include source="routeSearch.fxml"/>
+               <fx:include fx:id="routes" source="routeSearch.fxml"/>
            </Tab>
            <Tab text="%main.tab.search">
-               <fx:include source="search.fxml"/>
+               <fx:include fx:id="search" source="search.fxml"/>
            </Tab>
            <Tab fx:id="track" text="%main.tab.route">
-               <fx:include source="routeTrack.fxml"/>
+               <fx:include fx:id="route" source="routeTrack.fxml"/>
            </Tab>
        </TabPane>
    </center>

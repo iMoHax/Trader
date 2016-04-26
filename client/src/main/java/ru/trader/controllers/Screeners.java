@@ -1,6 +1,7 @@
 package ru.trader.controllers;
 
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -23,6 +24,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class Screeners {
 
@@ -310,6 +312,17 @@ public class Screeners {
         dialog.showAndWait();
     }
 
+    public static void showProgress(String title, Task<Void> task, Runnable onSuccess){
+        showProgress(title, task, (t) -> onSuccess.run(), true);
+    }
+
+    public static <T> void showProgress(String title, Task<T> task, Consumer<T> onSuccess, boolean showFinishInfo){
+        ProgressController progress = new ProgressController(mainScreen, title);
+        progress.run(task, t -> {
+            if (showFinishInfo) showInfo(title, Localization.getString("message.finish"), null);
+            onSuccess.accept(t);
+        });
+    }
 
     public static void showHelper(){
         helperController.show(helperScreen, false);

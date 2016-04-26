@@ -8,7 +8,6 @@ import ru.trader.analysis.AnalysisCallBack;
 import ru.trader.core.MarketAnalyzer;
 import ru.trader.core.Profile;
 import ru.trader.model.MarketModel;
-import ru.trader.model.ProfileModel;
 import ru.trader.view.support.Localization;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -50,8 +49,10 @@ public abstract class AnalyzerTask<T> extends Task<T> {
 
     }
 
-    public void stop(){
+    @Override
+    public boolean cancel(boolean mayInterruptIfRunning) {
         callback.cancel();
+        return mayInterruptIfRunning && super.cancel(true);
     }
 
     private class AnalyzerCallBack extends AnalysisCallBack {

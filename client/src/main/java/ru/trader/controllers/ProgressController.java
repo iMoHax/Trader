@@ -1,13 +1,13 @@
 package ru.trader.controllers;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.scene.Parent;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.VBox;
-import ru.trader.services.*;
 
 import java.util.function.Consumer;
 
@@ -15,7 +15,7 @@ public class ProgressController {
     private Label text;
     private ProgressBar bar;
     private Dialog<ButtonType> dlg;
-    private AnalyzerTask task;
+    private Task task;
 
 
     public ProgressController(Parent owner, String title) {
@@ -40,15 +40,15 @@ public class ProgressController {
 
         dlg.setResultConverter(dialogButton -> {
             if (dialogButton == Dialogs.CANCEL) {
-                if (task != null){
-                    task.stop();
+                if (task != null) {
+                    task.cancel(false);
                 }
             }
             return dialogButton;
         });
     }
 
-    private <T> void bind(AnalyzerTask<T> task, Consumer<T> onSuccess){
+    private <T> void bind(Task<T> task, Consumer<T> onSuccess){
         bar.progressProperty().bind(task.progressProperty());
         text.textProperty().bind(task.messageProperty());
         this.task = task;
@@ -75,11 +75,20 @@ public class ProgressController {
         task = null;
     }
 
-    public <T> void run(AnalyzerTask<T> task, Consumer<T> onSuccess){
+    public <T> void run(Task<T> task, Consumer<T> onSuccess){
         bind(task, onSuccess);
         Platform.runLater(dlg::show);
-        new Thread(task).start();
+        Thread th = new Thread(task);
+        th.setDaemon(true);
+        th.start();
     }
 
-
+    public <T> void run(Task<T> task){
+        bind(task, t -> {
+        });
+        Platform.runLater(dlg::show);
+        Thread th = new Thread(task);
+        th.setDaemon(true);
+        th.start();
+    }
 }
