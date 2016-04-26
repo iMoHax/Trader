@@ -7,6 +7,7 @@ public abstract class AbstractMarket implements Market {
     private final static Logger LOG = LoggerFactory.getLogger(AbstractMarket.class);
 
     private boolean change;
+    private boolean batch;
 
     protected abstract Place createPlace(String name, double x, double y, double z);
     protected abstract Group createGroup(String name, GROUP_TYPE type);
@@ -17,6 +18,25 @@ public abstract class AbstractMarket implements Market {
     protected abstract void removePlace(Place place);
     protected abstract void addItem(Item item);
     protected abstract void removeItem(Item item);
+    protected void executeBatch(){}
+
+    @Override
+    public void startBatch() {
+        LOG.debug("Start batch");
+        batch = true;
+    }
+
+    @Override
+    public final void doBatch() {
+        LOG.debug("End batch, updated");
+        executeBatch();
+        batch = false;
+    }
+
+    @Override
+    public boolean isBatch() {
+        return batch;
+    }
 
     @Override
     public final void add(Place place){

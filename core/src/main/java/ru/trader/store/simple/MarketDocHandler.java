@@ -59,6 +59,7 @@ public class MarketDocHandler extends DefaultHandler {
     @Override
     public void startDocument() throws SAXException {
         world = new SimpleMarket();
+        world.startBatch();
     }
 
     @Override
@@ -95,6 +96,7 @@ public class MarketDocHandler extends DefaultHandler {
 
     @Override
     public void endDocument() throws SAXException {
+        world.doBatch();
         world.commit();
     }
 

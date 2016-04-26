@@ -4,8 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.DoubleSummaryStatistics;
+import java.util.NavigableSet;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Collectors;
 
 public class SimpleItemStat extends AbstractItemStat {
     private final static Logger LOG = LoggerFactory.getLogger(SimpleItemStat.class);
@@ -32,6 +36,16 @@ public class SimpleItemStat extends AbstractItemStat {
             double price = offer.getPrice();
             sum += price;
             avg = sum / offers.size();
+            LOG.trace("After this = {}", this);
+        }
+    }
+
+    synchronized void putAll(Collection<Offer> offers){
+        LOG.trace("Put offers to item stat {}", this);
+        if (this.offers.addAll(offers)){
+            DoubleSummaryStatistics stat = this.offers.stream().collect(Collectors.summarizingDouble(Offer::getPrice));
+            sum = stat.getSum();
+            avg = stat.getAverage();
             LOG.trace("After this = {}", this);
         }
     }

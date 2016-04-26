@@ -15,22 +15,23 @@ public class Parser {
     private boolean canceled;
 
     public void parseSystems(File file, Market market) throws IOException {
-        parseFile(file, new SystemHandler(market), 1);
+        parseFile(file, new SystemHandler(market), 1, market);
 
     }
 
     public void parseStations(File file, Market market) throws IOException {
-        parseFile(file, new StationHandler(market), 1);
+        parseFile(file, new StationHandler(market), 1, market);
 
     }
 
     public void parsePrices(File file, Market market) throws IOException {
-        parseFile(file, new OffersHandler(market, true), 0);
+        parseFile(file, new OffersHandler(market, true), 0, market);
 
     }
 
-    private void parseFile(File file, ParseHandler handler, int skip) throws IOException {
+    private void parseFile(File file, ParseHandler handler, int skip, Market market) throws IOException {
         canceled = false;
+        market.startBatch();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             int row = 0;
             String line;
@@ -40,6 +41,8 @@ public class Parser {
                 if (row <= skip) continue;
                 handler.parse(line);
             }
+        } finally {
+            market.doBatch();
         }
     }
 

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class SimpleMarket extends AbstractMarket {
     private final static Logger LOG = LoggerFactory.getLogger(SimpleMarket.class);
@@ -147,6 +148,7 @@ public class SimpleMarket extends AbstractMarket {
 
     @Override
     protected void onAdd(Vendor vendor) {
+        if (isBatch()) return;
         LOG.trace("Cached on add vendor {}", vendor);
         Collection<Offer> offers = vendor.getAllSellOffers();
         for (Offer offer : offers) {
@@ -160,6 +162,7 @@ public class SimpleMarket extends AbstractMarket {
 
     @Override
     protected void onRemove(Vendor vendor) {
+        if (isBatch()) return;
         LOG.trace("Remove cache of vendor {}", vendor);
         Collection<Offer> offers = vendor.getAllSellOffers();
         for (Offer offer : offers) {
@@ -173,12 +176,14 @@ public class SimpleMarket extends AbstractMarket {
 
     @Override
     protected void onAdd(Offer offer) {
+        if (isBatch()) return;
         LOG.trace("Cached on add offer {}", offer);
         put(getItemCache(offer.getType()), offer);
     }
 
     @Override
     protected void onRemove(Offer offer) {
+        if (isBatch()) return;
         LOG.trace("Remove cache of offer {}", offer);
         remove(getItemCache(offer.getType()), offer);
     }
@@ -189,6 +194,50 @@ public class SimpleMarket extends AbstractMarket {
         systems.remove(place);
         super.updateName(place, name);
         systems.add(place);
+    }
+
+    @Override
+    public void startBatch() {
+        super.startBatch();
+        sellItems.clear();
+        buyItems.clear();
+    }
+
+    @Override
+    protected void executeBatch() {
+        recreateCaches();
+        super.executeBatch();
+    }
+
+    private void recreateCaches(){
+        Map<Item, Collection<Offer>> sellOffers = new HashMap<>();
+        Map<Item, Collection<Offer>> buyOffers = new HashMap<>();
+
+        systems.stream().flatMap(s -> s.get().stream())
+                .flatMap(v -> Stream.concat(v.getAllSellOffers().stream(), v.getAllBuyOffers().stream()))
+                .forEach(o -> {
+                    Map<Item, Collection<Offer>> m = o.getType() == OFFER_TYPE.SELL ? sellOffers : buyOffers;
+                    Collection<Offer> offers = m.get(o.getItem());
+                    if (offers == null){
+                        offers = new ArrayList<>(1000);
+                        m.put(o.getItem(), offers);
+                    }
+                    offers.add(o);
+                });
+        for (Iterator<Map.Entry<Item, Collection<Offer>>> iterator = sellOffers.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry<Item, Collection<Offer>> entry = iterator.next();
+            SimpleItemStat stat = new SimpleItemStat(entry.getKey(), OFFER_TYPE.SELL);
+            stat.putAll(entry.getValue());
+            sellItems.put(stat.getItem(), stat);
+            iterator.remove();
+        }
+        for (Iterator<Map.Entry<Item, Collection<Offer>>> iterator = buyOffers.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry<Item, Collection<Offer>> entry = iterator.next();
+            SimpleItemStat stat = new SimpleItemStat(entry.getKey(), OFFER_TYPE.BUY);
+            stat.putAll(entry.getValue());
+            buyItems.put(stat.getItem(), stat);
+            iterator.remove();
+        }
     }
 
 }

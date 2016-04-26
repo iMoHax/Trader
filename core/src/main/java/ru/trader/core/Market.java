@@ -1,9 +1,16 @@
 package ru.trader.core;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public interface Market {
+
+    void startBatch();
+    void doBatch();
+    boolean isBatch();
 
     void add(Place place);
     Place addPlace(String name, double x, double y, double z);
@@ -109,6 +116,7 @@ public interface Market {
     }
 
     default void add(Market market){
+        startBatch();
         // add groups
         Collection<Group> groups = market.getGroups();
         HashMap<Group, Group> mapGroups = new HashMap<>(groups.size(), 0.9f);
@@ -182,6 +190,7 @@ public interface Market {
                 }
             }
         }
+        doBatch();
     }
     
     default void clear(){
@@ -210,6 +219,7 @@ public interface Market {
 
 
     default void clear(boolean offers, boolean vendors, boolean places, boolean items, boolean groups){
+        startBatch();
         if (places){
             Collection<Place> p = new ArrayList<>(get());
             for (Place place : p) {
@@ -238,6 +248,7 @@ public interface Market {
                 remove(group);
             }
         }
+        doBatch();
     }
 
 }
