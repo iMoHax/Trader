@@ -9,9 +9,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MarketStreamWriter {
@@ -51,7 +49,9 @@ public class MarketStreamWriter {
     protected void writeItems() throws XMLStreamException {
         out.writeStartElement(MarketDocHandler.ITEM_LIST);
         Group group = null;
-        for (Item entry : market.getItems()) {
+        List<Item> sortedItems = new ArrayList<>(market.getItems());
+        sortedItems.sort(itemComparator);
+        for (Item entry : sortedItems) {
             if (group!=entry.getGroup()){
                 if (group != null) out.writeEndElement();
                 group = entry.getGroup();
@@ -183,4 +183,16 @@ public class MarketStreamWriter {
         }
         return res;
     }
+
+    private final static Comparator<Item> itemComparator = (i1, i2) -> {
+        Group g1 = i1.getGroup();
+        Group g2 = i2.getGroup();
+        if (g1 == null) return -1;
+        if (g2 == null) return 1;
+        int cmp = g1.getType().compareTo(g2.getType());
+        if (cmp != 0) return cmp;
+        cmp = g1.getName().compareTo(g2.getName());
+        if (cmp != 0) return cmp;
+        return i1.getName().compareTo(i2.getName());
+    };
 }
