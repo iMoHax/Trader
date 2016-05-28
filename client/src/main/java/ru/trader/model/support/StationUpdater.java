@@ -31,6 +31,7 @@ public class StationUpdater {
 
     public StationUpdater(MarketModel market) {
         this.market = market;
+        market.getNotificator().add(marketListener);
         this.offers = BindingsHelper.observableList(MainController.getMarket().itemsProperty(), FakeOffer::new);
         this.name = new SimpleStringProperty();
         this.type = new SimpleObjectProperty<>();
@@ -206,7 +207,13 @@ public class StationUpdater {
     }
 
     public void add(int index, ItemModel item){
-        offers.add(index, new FakeOffer(item));
+        Optional<FakeOffer> offer = getOffer(item);
+        if (offer.isPresent()){
+            offers.remove(offer.get());
+            offers.add(index, offer.get());
+        } else {
+            offers.add(index, new FakeOffer(item));
+        }
     }
 
     public StationModel commit(){
@@ -476,4 +483,15 @@ public class StationUpdater {
         }
     }
 
+    private final ChangeMarketListener marketListener = new ChangeMarketListener(){
+        @Override
+        public void add(ItemModel item) {
+            offers.add(new FakeOffer(item));
+        }
+
+        @Override
+        public void remove(ItemModel item) {
+            offers.removeIf(o -> o.hasItem(item));
+        }
+    };
 }

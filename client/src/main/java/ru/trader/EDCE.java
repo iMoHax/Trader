@@ -17,6 +17,9 @@ import ru.trader.edce.entities.System;
 import ru.trader.model.*;
 import ru.trader.model.support.StationUpdater;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,23 +84,27 @@ public class EDCE {
                 cache.remove(0);
             }
             Platform.runLater(() -> {
-                checkCmd(packet.getCommander());
-                if (checkSystem(packet.getLastSystem())){
-                    if (packet.getCommander().isDocked()) {
-                        checkStarport(packet.getLastStarport());
-                        profile.setDocked(true);
-                    } else {
-                        profile.setDocked(false);
-                        profile.setStation(ModelFabric.NONE_STATION);
-                    }
-                }
-                checkShip(packet.getShip());
+                imp(packet);
                 forceUpdate = false;
             });
         } catch (IOException e) {
             LOG.warn("Error on parse json:");
             LOG.warn("{}", json);
         }
+    }
+
+    private void imp(EDPacket packet){
+        checkCmd(packet.getCommander());
+        if (checkSystem(packet.getLastSystem())){
+            if (packet.getCommander().isDocked()) {
+                checkStarport(packet.getLastStarport());
+                profile.setDocked(true);
+            } else {
+                profile.setDocked(false);
+                profile.setStation(ModelFabric.NONE_STATION);
+            }
+        }
+        checkShip(packet.getShip());
     }
 
     private void checkCmd(Commander commander){
@@ -153,6 +160,17 @@ public class EDCE {
                 continue;
             }
             Optional<ItemModel> item = world.getItem(id);
+            if (!item.isPresent()){
+                LOG.warn("Not found {}, id={}, adding", commodity, id);
+                String gid = Converter.getGroupId(commodity.getCategoryname());
+                Optional<GroupModel> group = world.getGroups().stream().filter(g -> g.getId().equals(gid)).findAny();
+                if (group.isPresent()) {
+                    ItemModel i = world.add(id, group.get());
+                    item = Optional.ofNullable(i);
+                } else {
+                    LOG.warn("Not found group, id={}, skip item", gid);
+                }
+            }
             if (item.isPresent()){
                 Optional<StationUpdater.FakeOffer> offer = updater.getOffer(item.get());
                 if (offer.isPresent()){
@@ -160,8 +178,6 @@ public class EDCE {
                 } else {
                     LOG.error("Not found offer in updater, item: {}", item.get());
                 }
-            } else {
-                LOG.warn("Not found {}, id={}", commodity, id);
             }
         }
         Shipyard shipyard = starport.getShips();
@@ -303,6 +319,17 @@ public class EDCE {
         }
     }
 
-
+    public void parseFile(File file) {
+        String line = null;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))){
+            while ((line = reader.readLine()) != null){
+                EDPacket packet = EDCEParser.parseJSON(line);
+                imp(packet);
+            }
+        } catch (IOException e) {
+            LOG.warn("Error on parse json:");
+            LOG.warn("{}", line);
+        }
+    }
 
 }

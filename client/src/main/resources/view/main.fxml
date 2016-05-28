@@ -19,6 +19,7 @@
                        <MenuItem text="%market.offers" onAction="#impMadOffers"/>
                    </Menu>
                    <MenuItem text="XML" onAction="#importWorld"/>
+                   <MenuItem text="EDCE JSON" onAction="#importEDCE"/>
                </Menu>
                <MenuItem text="%main.menu.file.export" onAction="#exportWorld"/>
            </Menu>

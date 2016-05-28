@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import ru.trader.Main;
+import ru.trader.ServicesManager;
 import ru.trader.World;
 import ru.trader.model.*;
 import ru.trader.services.MaddavoParserTask;
@@ -122,6 +123,18 @@ public class MainController {
 
     public void initEDCE(){
         profController.initEDCEBtn();
+    }
+
+    @FXML
+    private void importEDCE() {
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON files (*.json)", "*.json");
+        fileChooser.getExtensionFilters().add(extFilter);
+        fileChooser.setInitialDirectory(new File("."));
+        File file = fileChooser.showOpenDialog(null);
+        if (file !=null) {
+            ServicesManager.getEdce().parseFile(file);
+        }
     }
 
     public void save() {
