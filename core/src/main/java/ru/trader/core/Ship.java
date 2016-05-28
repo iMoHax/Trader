@@ -29,7 +29,7 @@ public class Ship {
     }
 
     public static Ship clone(Ship ship){
-        return ship != null ? new Ship(ship) : ship;
+        return ship != null ? new Ship(ship) : null;
     }
 
     public long getCargo() {
@@ -223,7 +223,12 @@ public class Ship {
         String e = values.getProperty("ship.engine","2E");
         Matcher matcher = ENGINE_REGEXP.matcher(e);
         if (matcher.find()){
-            ship.setEngine(Integer.valueOf(matcher.group(1)), matcher.group(2).charAt(0));
+            double optMass = Double.valueOf(values.getProperty("ship.engine.optmass", "-1"));
+            if (optMass != -1) {
+                ship.setEngine(new ModEngine(Integer.valueOf(matcher.group(1)), matcher.group(2).charAt(0), optMass));
+            } else {
+                ship.setEngine(Integer.valueOf(matcher.group(1)), matcher.group(2).charAt(0));
+            }
         }
         return ship;
     }
@@ -233,5 +238,10 @@ public class Ship {
         values.setProperty("ship.cargo", String.valueOf(cargo));
         values.setProperty("ship.tank", String.valueOf(tank));
         values.setProperty("ship.engine", String.valueOf(engine.getClazz()) + engine.getRating());
+        double optMass = -1;
+        if (engine instanceof ModEngine){
+            optMass = engine.getOptMass();
+        }
+        values.setProperty("ship.engine.optmass", String.valueOf(optMass));
     }
 }

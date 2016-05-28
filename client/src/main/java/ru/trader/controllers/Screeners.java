@@ -12,6 +12,7 @@ import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import ru.trader.EMDNUpdater;
+import ru.trader.core.Engine;
 import ru.trader.core.MarketFilter;
 import ru.trader.core.VendorFilter;
 import ru.trader.db.controllers.DBEditorController;
@@ -42,6 +43,7 @@ public class Screeners {
     private static Parent helperScreen;
     private static Parent vFilterScreen;
     private static Parent dbEditorScreen;
+    private static Parent engineModScreen;
 
     private static MainController mainController;
     private static ItemDescController itemDescController;
@@ -57,6 +59,7 @@ public class Screeners {
     private static HelperController helperController;
     private static VendorFilterController vFilterController;
     private static DBEditorController dbEditorController;
+    private static EngineModController engineModController;
 
     private static FXMLLoader initLoader(URL url){
         FXMLLoader loader = new FXMLLoader(url, Localization.getResources());
@@ -172,6 +175,13 @@ public class Screeners {
         dbEditorScreen = loader.load();
         addStylesheet(dbEditorScreen);
         dbEditorController = loader.getController();
+    }
+
+    public static void loadEngineModStage(URL fxml) throws IOException {
+        FXMLLoader loader =  initLoader(fxml);
+        engineModScreen = loader.load();
+        addStylesheet(engineModScreen);
+        engineModController = loader.getController();
     }
 
     public static void show(Node node){
@@ -346,6 +356,10 @@ public class Screeners {
 
     public static boolean showFilter(VendorFilter filter) {
         return vFilterController.showEditDialog(mainScreen, vFilterScreen, filter);
+    }
+
+    public static Optional<Engine> showModEngine(){
+        return engineModController.showDialog(mainScreen, engineModScreen);
     }
 
     public static void reinitAll() {

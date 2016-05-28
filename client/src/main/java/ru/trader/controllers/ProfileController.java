@@ -8,18 +8,19 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
-import javafx.util.StringConverter;
 import ru.trader.Main;
 import ru.trader.ServicesManager;
 import ru.trader.core.Engine;
 import ru.trader.model.*;
 import ru.trader.model.support.ChangeMarketListener;
+import ru.trader.view.support.EngineStringConverter;
 import ru.trader.view.support.NumberField;
 import ru.trader.view.support.ViewUtils;
 import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
 
+import java.util.Optional;
 
 
 public class ProfileController {
@@ -198,6 +199,14 @@ public class ProfileController {
         return s == null ? ModelFabric.NONE_STATION : s.get(name);
     }
 
+    @FXML
+    private void modEngine(){
+        Optional<Engine> engine = Screeners.showModEngine();
+        if (engine.isPresent()){
+            this.engine.setValue(engine.get());
+        }
+    }
+
     private void updateIcons(){
         SystemModel s = system.getValue();
         if (!s.isCorrect()){
@@ -271,17 +280,5 @@ public class ProfileController {
             });
         }
     };
-
-    private class EngineStringConverter extends StringConverter<Engine> {
-        @Override
-        public String toString(Engine engine) {
-            return ""+engine.getClazz()+engine.getRating();
-        }
-
-        @Override
-        public Engine fromString(String string) {
-            throw new UnsupportedOperationException();
-        }
-    }
 
 }

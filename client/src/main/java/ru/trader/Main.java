@@ -119,6 +119,7 @@ public class Main extends Application {
         Screeners.loadHelperStage(getUrl("helper.fxml"));
         Screeners.loadVendorFilterStage(getUrl("vFilter.fxml"));
         Screeners.loadDBEditorStage(getUrl("db/dbeditor.fxml"));
+        Screeners.loadEngineModStage(getUrl("engineMod.fxml"));
     }
 
     private static URL getUrl(String filename) throws MalformedURLException {

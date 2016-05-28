@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import org.controlsfx.glyphfont.Glyph?>
-<?import ru.trader.view.support.NumberField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.glyphfont.*?>
+<?import ru.trader.view.support.NumberField?>
 <HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.ProfileController"
       spacing="4" >
@@ -40,18 +39,19 @@
             <Label text="%profile.ship.mass" />
             <NumberField fx:id="mass" maxWidth="60"/>
             <Label text="%profile.ship.engine" />
-            <ComboBox fx:id="engine" maxWidth="60"/>
+            <ComboBox fx:id="engine" maxWidth="100" minHeight="25"/>
+            <Button minWidth="30" minHeight="25" onAction="#modEngine"><graphic><Glyph text="FontAwesome|GEAR"/></graphic></Button>
             <Label text="%profile.ship.jump" />
             <Label fx:id="jumpRange"/>
         </HBox>
     </StackPane>
-    <ToggleButton minWidth="30" onAction="#toggleShipInfo">
+    <ToggleButton minWidth="30" minHeight="25" onAction="#toggleShipInfo">
         <graphic><Glyph text="FontAwesome|SPACE_SHUTTLE"/></graphic>
     </ToggleButton>
-    <ToggleButton fx:id="btnHelper" minWidth="30">
+    <ToggleButton fx:id="btnHelper" minWidth="30" minHeight="25">
         <graphic><Glyph text="FontAwesome|ROCKET"/></graphic>
     </ToggleButton>
-    <ToggleButton fx:id="btnEDCE" text="EDCE"/>
+    <ToggleButton fx:id="btnEDCE" text="EDCE" minHeight="25"/>
     <HBox HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT">
         <Label fx:id="warningIcon" styleClass="icon-warning" prefWidth="30" prefHeight="30" visible="false">
             <graphic><Glyph text="FontAwesome|WARNING" /></graphic>
