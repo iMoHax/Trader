@@ -118,6 +118,35 @@ public class Converter {
         ITEM_ID.put(128049233L, "personalweapons");
         ITEM_ID.put(128049235L, "reactivearmour");
 
+        ITEM_ID.put(128673850L, "hydrogen_peroxide");
+        ITEM_ID.put(128673851L, "liquid_oxygen");
+        ITEM_ID.put(128049166L, "water");
+        ITEM_ID.put(128682048L, "survival_equipment");
+        ITEM_ID.put(128673856L, "cmm_composite");
+        ITEM_ID.put(128673855L, "insulating_membrane");
+        ITEM_ID.put(128673861L, "emergency_power_cells");
+        ITEM_ID.put(128673866L, "exhaust_manifold");
+        ITEM_ID.put(128673860L, "hn_shock_mount");
+        ITEM_ID.put(128682046L, "advanced_medicines");
+        ITEM_ID.put(128673845L, "praseodymium");
+        ITEM_ID.put(128673847L, "samarium");
+        ITEM_ID.put(128673848L, "low_temperature_diamond");
+        ITEM_ID.put(128673873L, "micro_controllers");
+        ITEM_ID.put(128682044L, "conductive_fabrics");
+        ITEM_ID.put(128673853L, "lithium_hydroxide");
+        ITEM_ID.put(128673854L, "methane_clathrate");
+        ITEM_ID.put(128682045L, "military_grade_fabrics");
+        ITEM_ID.put(128673868L, "heatsink_interlink");
+        ITEM_ID.put(128673869L, "magnetic_emitter_coil");
+        ITEM_ID.put(128673862L, "power_converter");
+        ITEM_ID.put(128673863L, "power_grid_assembly");
+        ITEM_ID.put(128673846L, "bromellite");
+        ITEM_ID.put(128673852L, "methanol_monohydrate_crystals");
+        ITEM_ID.put(128673875L, "diagnostic_sensor");
+        ITEM_ID.put(128682047L, "medical_diagnostic_equipment");
+        ITEM_ID.put(128673867L, "reinforced_mounting_plate");
+
+
         GROUP_ID.put("Chemicals", "chemicals");
         GROUP_ID.put("Consumer Items", "consumer_items");
         GROUP_ID.put("Foods", "foods");
