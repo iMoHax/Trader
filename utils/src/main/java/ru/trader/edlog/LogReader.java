@@ -34,10 +34,15 @@ public class LogReader implements LogHandler {
     }
 
     private void readFile(){
+        readFile(false);
+    }
+
+    private void readFile(boolean skip){
         LOG.trace("Read file {}", file);
         String line;
         try {
             while ((line = reader.readLine()) != null){
+                if (skip) continue;
                 outLine(line);
             }
         } catch (IOException e) {
@@ -53,7 +58,7 @@ public class LogReader implements LogHandler {
     public void createFile(Path file) {
         if (file.toString().matches(pattern)){
             changeFile(file.toFile());
-            readFile();
+            readFile(true);
         } else {
             LOG.trace("{} Is not log file, skip", file);
         }
@@ -65,7 +70,7 @@ public class LogReader implements LogHandler {
             File f = file.toFile();
             if (this.file == null){
                 changeFile(f);
-                readFile();
+                readFile(true);
             } else {
                 if (this.file.equals(f)){
                     readFile();
