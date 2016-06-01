@@ -10,7 +10,7 @@ public class LogReader implements LogHandler {
     private final static Logger LOG = LoggerFactory.getLogger(LogReader.class);
 
     private final String pattern;
-    private BufferedReader reader;
+    private RandomAccessFile reader;
     private File file;
 
     public LogReader(String pattern) {
@@ -20,13 +20,11 @@ public class LogReader implements LogHandler {
     private void changeFile(File file){
         if (this.file != null && this.file.equals(file)) return;
         LOG.trace("Watch new file {}", file);
-        FileReader fileReader;
         try {
-            fileReader = new FileReader(file);
             if (reader != null){
                 closeReader();
             }
-            reader = new BufferedReader(fileReader);
+            reader = new RandomAccessFile(file, "r");
             this.file = file;
         } catch (FileNotFoundException e) {
             LOG.error("Not found log file", e);
@@ -80,6 +78,13 @@ public class LogReader implements LogHandler {
             LOG.trace("{} Is not log file, skip", file);
         }
 
+    }
+
+    @Override
+    public void notChanges() {
+        if (file != null){
+            readFile();
+        }
     }
 
     private void closeReader(){

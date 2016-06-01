@@ -6,5 +6,6 @@ public interface LogHandler {
 
     void createFile(Path file);
     void updateFile(Path file);
+    void notChanges();
     void close();
 }

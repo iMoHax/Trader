@@ -3,6 +3,7 @@ package ru.trader.edlog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.concurrent.TimeUnit;
@@ -13,7 +14,7 @@ public class LogWatcher {
     private final Path dir;
     private final LogHandler handler;
     private WatchService watcher;
-    private boolean notCancel;
+    private boolean run;
     private Thread thread;
 
     public LogWatcher(String dir, LogHandler handler) {
@@ -29,6 +30,7 @@ public class LogWatcher {
                 watch();
             }
         };
+        thread.setDaemon(true);
     }
 
     public void start() throws IOException {
@@ -38,15 +40,32 @@ public class LogWatcher {
         }
         watcher = FileSystems.getDefault().newWatchService();
         dir.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
-        notCancel = true;
+        Path last = getLastModify();
+        if (last != null) handler.createFile(last);
+        run = true;
         thread.start();
+    }
+
+    private Path getLastModify(){
+        File last = null;
+        File[] files = dir.toFile().listFiles();
+        if (files == null) return null;
+        for (File file : files) {
+            if (last == null || last.lastModified() < file.lastModified()){
+                last = file;
+            }
+        }
+        return last != null ? last.toPath() : null;
     }
 
     private void watch(){
         try {
-            while (notCancel) {
+            while (run) {
                 WatchKey key = watcher.poll(5, TimeUnit.SECONDS);
-                if (key == null) continue;
+                if (key == null){
+                    handler.notChanges();
+                    continue;
+                }
                 for (WatchEvent<?> event: key.pollEvents()) {
                     WatchEvent.Kind<?> kind = event.kind();
                     if (kind == StandardWatchEventKinds.OVERFLOW) {
@@ -93,6 +112,6 @@ public class LogWatcher {
 
     public void stop(){
         LOG.debug("Stop log watch service");
-        notCancel = false;
+        run = false;
     }
 }
