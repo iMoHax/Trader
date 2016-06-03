@@ -8,9 +8,9 @@ import java.util.regex.Pattern;
 
 public class EDLogReader extends LogReader {
     private final static Logger LOG = LoggerFactory.getLogger(EDLogReader.class);
-    private final static String LOG_FILE_PATTERN = ".+NetLog\\.log$";
-    private final static Pattern SYSTEM_CHANGE_REGEXP = Pattern.compile("System (.+) pos (-?[\\d\\.]+),(-?[\\d\\.]+),(-?[\\d\\.]+)");
-    private final static Pattern UNDOCK_REGEXP = Pattern.compile("undocked");
+    private final static String LOG_FILE_PATTERN = ".+netLog\\..+\\.log$";
+    private final static Pattern SYSTEM_CHANGE_REGEXP = Pattern.compile("System:\"(.+)\" StarPos:\\((-?[\\d\\.]+),(-?[\\d\\.]+),(-?[\\d\\.]+)\\)ly  Supercruise");
+    private final static Pattern UNDOCK_REGEXP = Pattern.compile("Commander Put Undocked");
 
     public EDLogReader() {
         super(LOG_FILE_PATTERN);
