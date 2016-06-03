@@ -21,23 +21,21 @@ public class Settings {
     private final File file;
     private Profile profile;
     private final EDCESettings edce;
+    private final EDLogSettings edlog;
     private final HelperSettings helper;
     private final JsonStore jsonStore;
     private MarketFilter filter = new MarketFilter();
 
 
     public Settings() {
-        this.file = null;
-        profile = new Profile(new Ship());
-        edce = new EDCESettings();
-        helper = new HelperSettings();
-        jsonStore = new JsonStore();
+        this(null);
     }
 
     public Settings(File file) {
         this.file = file;
         profile = new Profile(new Ship());
         edce = new EDCESettings();
+        edlog = new EDLogSettings();
         helper = new HelperSettings();
         jsonStore = new JsonStore();
     }
@@ -53,6 +51,7 @@ public class Settings {
         }
         profile = Profile.readFrom(values, market);
         edce.readFrom(values);
+        edlog.readFrom(values);
         helper.readFrom(values);
     }
 
@@ -60,6 +59,7 @@ public class Settings {
         try (OutputStream os = new FileOutputStream(file)) {
             profile.writeTo(values);
             edce.writeTo(values);
+            edlog.writeTo(values);
             helper.writeTo(values);
             values.store(os, "settings");
             jsonStore.saveFilter(filter);
@@ -165,6 +165,10 @@ public class Settings {
         return edce;
     }
 
+    public EDLogSettings edlog(){
+        return edlog;
+    }
+
     public HelperSettings helper(){
         return helper;
     }
@@ -230,6 +234,52 @@ public class Settings {
 
 
     }
+
+    public final class EDLogSettings {
+        private final BooleanProperty active;
+        private final StringProperty logDir;
+
+        public EDLogSettings() {
+            active = new SimpleBooleanProperty();
+            logDir = new SimpleStringProperty();
+        }
+
+        public boolean isActive() {
+            return active.get();
+        }
+
+        public BooleanProperty activeProperty() {
+            return active;
+        }
+
+        public void setActive(boolean active) {
+            this.active.set(active);
+        }
+
+        public String getLogDir() {
+            return logDir.get();
+        }
+
+        public StringProperty logDirProperty() {
+            return logDir;
+        }
+
+        public void setLogDir(String logDir) {
+            this.logDir.set(logDir);
+        }
+
+        public void readFrom(Properties values){
+            setActive(!"0".equals(values.getProperty("edlog.active", "0")));
+            setLogDir(values.getProperty("edlog.dir", "%ProgramFiles%/Frontier/Products/elite-dangerous-64/logs"));
+        }
+
+        public void writeTo(Properties values){
+            values.setProperty("edlog.active", isActive() ? "1":"0");
+            values.setProperty("edlog.dir", getLogDir());
+        }
+
+    }
+
 
     public final class HelperSettings {
         private final IntegerProperty x;

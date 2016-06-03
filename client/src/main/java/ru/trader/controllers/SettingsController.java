@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.Main;
@@ -16,6 +18,7 @@ import ru.trader.view.support.ViewUtils;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
+import java.io.File;
 
 public class SettingsController {
     private final static Logger LOG = LoggerFactory.getLogger(SettingsController.class);
@@ -54,6 +57,11 @@ public class SettingsController {
     private CheckBox edceActive;
     @FXML
     private NumberField edceInterval;
+
+    @FXML
+    private CheckBox edLogActive;
+    @FXML
+    private TextField edLogDir;
 
     @FXML
     private TextField completeKeyText;
@@ -106,6 +114,9 @@ public class SettingsController {
         edceActive.setSelected(Main.SETTINGS.edce().isActive());
         edceInterval.setValue(Main.SETTINGS.edce().getInterval());
 
+        edLogActive.setSelected(Main.SETTINGS.edlog().isActive());
+        edLogDir.setText(Main.SETTINGS.edlog().getLogDir());
+
         completeKey = Main.SETTINGS.helper().getCompleteKey();
         completeKeyText.setText(ViewUtils.keyToString(completeKey));
     }
@@ -152,6 +163,14 @@ public class SettingsController {
         Main.SETTINGS.edce().setActive(edceActive.isSelected());
         Main.SETTINGS.edce().setInterval(edceInterval.getValue().intValue());
 
+        if (edLogActive.isSelected()){
+            Main.SETTINGS.edlog().setLogDir(edLogDir.getText());
+            Main.SETTINGS.edlog().setActive(edLogActive.isSelected());
+        } else {
+            Main.SETTINGS.edlog().setActive(edLogActive.isSelected());
+            Main.SETTINGS.edlog().setLogDir(edLogDir.getText());
+        }
+
         Main.SETTINGS.helper().setCompleteKey(completeKey);
     }
 
@@ -163,4 +182,15 @@ public class SettingsController {
         dlg.showAndWait();
     }
 
+    @FXML
+    private void selectLogDir(){
+        DirectoryChooser dirChooser = new DirectoryChooser();
+        File dir = new File(edLogDir.getText());
+        if (!dir.exists()) dir = new File(".");
+        dirChooser.setInitialDirectory(dir);
+        File file = dirChooser.showDialog(null);
+        if (file !=null) {
+            edLogDir.setText(file.getAbsolutePath());
+        }
+    }
 }

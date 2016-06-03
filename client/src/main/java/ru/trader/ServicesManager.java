@@ -10,6 +10,7 @@ import java.io.IOException;
 public class ServicesManager {
     private final static Logger LOG = LoggerFactory.getLogger(ServicesManager.class);
     private static EDCE edce;
+    private static EDLogWatcher logWatcher;
 
     public static EDCE getEdce() {
         return edce;
@@ -18,11 +19,13 @@ public class ServicesManager {
     public static void runAll(){
         runEDCE();
         runEMDN();
+        runLogWatcher();
     }
 
     public static void stopAll(){
         stopEDCE();
         stopEMDN();
+        stopLogWatcher();
     }
 
     private static void runEDCE() {
@@ -51,4 +54,16 @@ public class ServicesManager {
     private static void stopEMDN(){
         EMDNUpdater.shutdown();
     }
+
+    private static void runLogWatcher(){
+        logWatcher = new EDLogWatcher(MainController.getProfile(), MainController.getWorld());
+    }
+
+    private static void stopLogWatcher(){
+        if (logWatcher != null){
+            logWatcher.shutdown();
+        }
+    }
+
+
 }

@@ -1,6 +1,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import ru.trader.view.support.*?>
+<?import org.controlsfx.glyphfont.Glyph?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.trader.controllers.SettingsController"
               styleClass="dialog" vgap="4" hgap="8">
         <columnConstraints>
@@ -48,6 +49,15 @@
     <Label text="%settings.hotkeys" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"  GridPane.rowIndex="15"/>
     <Label text="%settings.hotkeys.complete" GridPane.rowIndex="16" />
     <TextField fx:id="completeKeyText" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="16" />
+    <Label text="ED Log Watcher" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"   GridPane.rowIndex="17"/>
+    <Label text="%settings.edlog.on" GridPane.rowIndex="18"/>
+    <CheckBox fx:id="edLogActive" GridPane.columnIndex="1" GridPane.rowIndex="18"/>
+    <Label text="%settings.edlog.dir" GridPane.rowIndex="19" />
+    <HBox maxWidth="260" GridPane.columnIndex="1" GridPane.rowIndex="19">
+        <TextField fx:id="edLogDir" />
+        <Button minWidth="30" minHeight="25" onAction="#selectLogDir"><graphic><Glyph text="FontAwesome|FOLDER_OPEN"/></graphic></Button>
+
+    </HBox>
 
 </GridPane>
 
