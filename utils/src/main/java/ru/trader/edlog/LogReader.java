@@ -31,16 +31,19 @@ public class LogReader implements LogHandler {
         }
     }
 
-    private void readFile(){
-        readFile(false);
+    private void seekToEnd(){
+        try {
+            reader.seek(file.length());
+        } catch (IOException e) {
+            LOG.error("Error on read log file",e);
+        }
     }
 
-    private void readFile(boolean skip){
+    private void readFile(){
         LOG.trace("Read file {}", file);
         String line;
         try {
             while ((line = reader.readLine()) != null){
-                if (skip) continue;
                 outLine(line);
             }
         } catch (IOException e) {
@@ -56,7 +59,7 @@ public class LogReader implements LogHandler {
     public void createFile(Path file) {
         if (file.toString().matches(pattern)){
             changeFile(file.toFile());
-            readFile(true);
+            seekToEnd();
         } else {
             LOG.trace("{} Is not log file, skip", file);
         }
@@ -68,7 +71,7 @@ public class LogReader implements LogHandler {
             File f = file.toFile();
             if (this.file == null){
                 changeFile(f);
-                readFile(true);
+                seekToEnd();
             } else {
                 if (this.file.equals(f)){
                     readFile();
