@@ -11,38 +11,35 @@ import java.util.concurrent.TimeUnit;
 public class LogWatcher {
     private final static Logger LOG = LoggerFactory.getLogger(LogWatcher.class);
 
-    private final Path dir;
+    private Path dir;
     private final LogHandler handler;
     private WatchService watcher;
-    private boolean run;
-    private Thread thread;
+    private WatcherThread thread;
 
-    public LogWatcher(String dir, LogHandler handler) {
-        this(FileSystems.getDefault().getPath(dir), handler);
-    }
-
-    public LogWatcher(Path dir, LogHandler handler) {
-        this.dir = dir;
+    public LogWatcher(LogHandler handler) {
         this.handler = handler;
-        thread = new Thread(){
-            @Override
-            public void run() {
-                watch();
-            }
-        };
-        thread.setDaemon(true);
+        thread = null;
     }
 
-    public void start() throws IOException {
+    public boolean isRun() {
+        return thread != null && thread.isAlive();
+    }
+
+    public void start(String dir) throws IOException {
+        start(FileSystems.getDefault().getPath(dir));
+    }
+
+    public void start(Path dir) throws IOException {
         LOG.debug("Start log watch service, dir {}", dir);
-        if (watcher != null){
+        if (thread != null){
             throw new IllegalStateException("Watch service already started");
         }
+        this.dir = dir;
         watcher = FileSystems.getDefault().newWatchService();
         dir.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
         Path last = getLastModify();
         if (last != null) handler.createFile(last);
-        run = true;
+        thread = new WatcherThread();
         thread.start();
     }
 
@@ -58,53 +55,13 @@ public class LogWatcher {
         return last != null ? last.toPath() : null;
     }
 
-    private void watch(){
-        try {
-            while (run) {
-                WatchKey key = watcher.poll(5, TimeUnit.SECONDS);
-                if (key == null){
-                    handler.notChanges();
-                    continue;
-                }
-                for (WatchEvent<?> event: key.pollEvents()) {
-                    WatchEvent.Kind<?> kind = event.kind();
-                    if (kind == StandardWatchEventKinds.OVERFLOW) {
-                        continue;
-                    }
-                    @SuppressWarnings("unchecked")
-                    WatchEvent<Path> ev = (WatchEvent<Path>)event;
-                    Path filename = ev.context();
-                    Path file = dir.resolve(filename);
-                    if (ev.kind() == StandardWatchEventKinds.ENTRY_CREATE){
-                        LOG.trace("File {} was created", file);
-                        handler.createFile(file);
-                    } else
-                    if (ev.kind() == StandardWatchEventKinds.ENTRY_MODIFY){
-                        LOG.trace("File {} was modified", file);
-                        handler.updateFile(file);
-                    }
-                }
-
-                boolean valid = key.reset();
-                if (!valid) {
-                    break;
-                }
-            }
-        } catch (InterruptedException | ClosedWatchServiceException e) {
-            if (!Thread.currentThread().isInterrupted()){
-                Thread.currentThread().interrupt();
-            }
-        } finally {
-            close();
-        }
-
-    }
-
     private void close() {
-        if (watcher != null) try {
-            watcher.close();
-        } catch (IOException e) {
-            LOG.warn("Error on close log watcher", e);
+        if (watcher != null){
+            try {
+                watcher.close();
+            } catch (IOException e) {
+                LOG.warn("Error on close log watcher", e);
+            }
         }
         handler.close();
         watcher = null;
@@ -112,6 +69,62 @@ public class LogWatcher {
 
     public void stop(){
         LOG.debug("Stop log watch service");
-        run = false;
+        if (thread != null){
+            thread.cancel();
+            thread = null;
+        }
+        close();
+    }
+
+    private class WatcherThread extends Thread {
+        private boolean run;
+
+        private WatcherThread() {
+            this.setDaemon(true);
+        }
+
+        public void cancel(){
+            run = false;
+        }
+
+        @Override
+        public void run() {
+            run = true;
+            try {
+                while (run) {
+                    WatchKey key = watcher.poll(5, TimeUnit.SECONDS);
+                    if (key == null){
+                        handler.notChanges();
+                        continue;
+                    }
+                    for (WatchEvent<?> event: key.pollEvents()) {
+                        WatchEvent.Kind<?> kind = event.kind();
+                        if (kind == StandardWatchEventKinds.OVERFLOW) {
+                            continue;
+                        }
+                        @SuppressWarnings("unchecked")
+                        WatchEvent<Path> ev = (WatchEvent<Path>)event;
+                        Path filename = ev.context();
+                        Path file = dir.resolve(filename);
+                        if (ev.kind() == StandardWatchEventKinds.ENTRY_CREATE){
+                            LOG.trace("File {} was created", file);
+                            handler.createFile(file);
+                        } else
+                        if (ev.kind() == StandardWatchEventKinds.ENTRY_MODIFY){
+                            LOG.trace("File {} was modified", file);
+                            handler.updateFile(file);
+                        }
+                    }
+
+                    boolean valid = key.reset();
+                    if (!valid) {
+                        break;
+                    }
+                }
+            } catch (InterruptedException | ClosedWatchServiceException e) {
+                cancel();
+            }
+            run = false;
+        }
     }
 }

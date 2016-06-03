@@ -24,8 +24,8 @@ public class LogWatcherTest {
         LOG.info("Test log watcher");
         LogHandler handler = new LogReader(".+\\.log$");
         String path = readLine("Watch dir:");
-        LogWatcher watcher = new LogWatcher(path, handler);
-        watcher.start();
+        LogWatcher watcher = new LogWatcher(handler);
+        watcher.start(path);
         Thread.sleep(5*60*1000);
         watcher.stop();
     }

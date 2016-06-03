@@ -19,7 +19,7 @@ public class LogReader implements LogHandler {
 
     private void changeFile(File file){
         if (this.file != null && this.file.equals(file)) return;
-        LOG.trace("Watch new file {}", file);
+        LOG.debug("Watch file {}", file);
         try {
             if (reader != null){
                 closeReader();
@@ -94,6 +94,8 @@ public class LogReader implements LogHandler {
         if (reader == null) return;
         try {
             reader.close();
+            reader = null;
+            file = null;
         } catch (IOException e) {
             LOG.warn("Error on close old reader", e);
         }
