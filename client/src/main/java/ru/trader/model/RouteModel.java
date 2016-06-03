@@ -96,7 +96,7 @@ public class RouteModel {
 
     public RouteEntryModel getLast(){
         if (entries.size() == 1) return entries.get(0);
-        return entries.get(entries.size()-1);
+        return entries.get(entries.size() - 1);
     }
 
     public double getDistance() {
@@ -178,7 +178,7 @@ public class RouteModel {
     }
 
     public RouteModel add(SystemModel system){
-        RouteEntryModel last = entries.get(entries.size()-1);
+        RouteEntryModel last = entries.get(entries.size() - 1);
         StationModel fromStation = last.getStation();
         RouteModel path = market.getPath(fromStation.getSystem(), fromStation, system, ModelFabric.NONE_STATION);
         return add(path);
@@ -206,8 +206,8 @@ public class RouteModel {
 
     public RouteModel dropLast(){
         Route res = Route.clone(_route);
-        res.dropTo(entries.size()-2);
-        return copyFill(res, entries.size()-2);
+        res.dropTo(entries.size() - 2);
+        return copyFill(res, entries.size() - 2);
     }
 
     public RouteModel remove(OrderModel order) {
@@ -320,9 +320,17 @@ public class RouteModel {
         refresh();
     }
 
+    public Collection<StationModel> getStations(){
+        return getStations(currentEntry.get()-1, false);
+    }
+
     public Collection<StationModel> getStations(int offset){
+        return getStations(offset, false);
+    }
+
+    public Collection<StationModel> getStations(int offset, boolean incudeLoop){
         Collection<StationModel> res = new HashSet<>();
-        int startIndex = _route.isLoop() ? 1 : offset+1;
+        int startIndex = incudeLoop && _route.isLoop() ? 1 : offset+1;
         if (startIndex >= entries.size()) return res;
         entries.subList(startIndex, entries.size()).stream()
                 .filter(e -> !e.isTransit())

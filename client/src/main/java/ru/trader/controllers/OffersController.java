@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.core.Profile;
 import ru.trader.core.SERVICE_TYPE;
 import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
@@ -17,6 +18,7 @@ import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -272,6 +274,33 @@ public class OffersController {
         LOG.info("Refresh lists");
         tblSell.getItems().forEach(OfferModel::refresh);
         tblBuy.getItems().forEach(OfferModel::refresh);
+    }
+
+    private void showOffers(Collection<StationModel> buyers){
+        StationModel seller = getStation();
+        MarketModel market = MainController.getMarket();
+        Profile profile = ModelFabric.get(MainController.getProfile());
+        if (ModelFabric.isFake(seller)) return;
+        if (buyers == null){
+            market.getOrders(seller, profile, Screeners::showOrders);
+        } else {
+            market.getOrders(seller, buyers, profile, Screeners::showOrders);
+        }
+
+    }
+
+    @FXML
+    private void showOffersByRoute(){
+        ProfileModel profile = MainController.getProfile();
+        RouteModel route = profile.getRoute();
+        if (route == null) return;
+        Collection<StationModel> buyers = route.getStations();
+        showOffers(buyers);
+    }
+
+    @FXML
+    private void showOffers(){
+        showOffers(null);
     }
 
     private final ChangeMarketListener offersChangeListener = new ChangeMarketListener() {

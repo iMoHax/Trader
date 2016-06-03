@@ -45,6 +45,7 @@
             <GridPane hgap="4" vgap="4">
                 <columnConstraints>
                     <ColumnConstraints minWidth="80"/>
+                    <ColumnConstraints minWidth="80"/>
                     <ColumnConstraints minWidth="140" />
                     <ColumnConstraints minWidth="100" />
                     <ColumnConstraints minWidth="140" />
@@ -52,27 +53,34 @@
                     <ColumnConstraints minWidth="140" />
                     <ColumnConstraints hgrow="ALWAYS" />
                 </columnConstraints>
-                <Label text="%label.station.type" />
-                <Label fx:id="type" GridPane.columnIndex="1"/>
-                <Label text="%label.government" GridPane.columnIndex="2" />
-                <Label fx:id="government" GridPane.columnIndex="3" />
-                <Label text="%label.allegiance" GridPane.columnIndex="4"/>
-                <Label fx:id="faction" GridPane.columnIndex="5" />
-                <HBox GridPane.columnIndex="6" GridPane.rowSpan="2" alignment="TOP_RIGHT">
+                <HBox GridPane.columnIndex="7" GridPane.rowSpan="2" alignment="TOP_RIGHT">
                     <Label fx:id="warningIcon" styleClass="icon-warning" prefWidth="30" prefHeight="30" visible="false">
                         <graphic><Glyph text="FontAwesome|WARNING" /></graphic>
                     </Label>
                 </HBox>
+                <HBox GridPane.rowIndex="2" spacing="4" alignment="BOTTOM_CENTER">
+                    <Button minWidth="30" minHeight="25" onAction="#showOffers"><graphic><Glyph text="FontAwesome|EXCHANGE"/></graphic></Button>
+                    <Button minWidth="30" minHeight="25" onAction="#showOffersByRoute"><graphic><Glyph text="FontAwesome|SHARE"/></graphic></Button>
+                </HBox>
 
-                <Label text="%label.station.distance" GridPane.rowIndex="1" />
-                <Label fx:id="distance" GridPane.rowIndex="1" GridPane.columnIndex="1" />
-                <Label text="%label.economic" GridPane.rowIndex="1" GridPane.columnIndex="2" />
-                <Label fx:id="economic" GridPane.rowIndex="1" GridPane.columnIndex="3" />
-                <Label fx:id="subeconomic"  GridPane.rowIndex="1" GridPane.columnIndex="4" GridPane.columnSpan="2"/>
+                <Label text="%label.station.type" GridPane.columnIndex="1"/>
+                <Label fx:id="type" GridPane.columnIndex="2"/>
+                <Label text="%label.government" GridPane.columnIndex="3" />
+                <Label fx:id="government" GridPane.columnIndex="4" />
+                <Label text="%label.allegiance" GridPane.columnIndex="5"/>
+                <Label fx:id="faction" GridPane.columnIndex="6" />
 
-                <Label text="%label.station.services" GridPane.rowIndex="2"/>
-                <TilePane GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.hgrow="ALWAYS"
-                          hgap="5" vgap="5" prefColumns="5" tileAlignment="BASELINE_LEFT">
+
+                <Label text="%label.station.distance" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Label fx:id="distance" GridPane.rowIndex="1" GridPane.columnIndex="2" />
+                <Label text="%label.economic" GridPane.rowIndex="1" GridPane.columnIndex="3" />
+                <Label fx:id="economic" GridPane.rowIndex="1" GridPane.columnIndex="4" />
+                <Label fx:id="subeconomic"  GridPane.rowIndex="1" GridPane.columnIndex="5" GridPane.columnSpan="2"/>
+
+
+                <Label text="%label.station.services" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                <TilePane GridPane.rowIndex="2" GridPane.columnIndex="2" GridPane.columnSpan="6" GridPane.hgrow="ALWAYS"
+                          hgap="5" vgap="5" prefColumns="4" tileAlignment="BASELINE_LEFT">
                     <CheckBox fx:id="cbMarket" text="%services.MARKET"/>
                     <CheckBox fx:id="cbBlackMarket" text="%services.BLACK_MARKET"/>
                     <CheckBox fx:id="cbRefuel" text="%services.REFUEL"/>
