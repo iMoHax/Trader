@@ -6,7 +6,7 @@
 
     <groupId>trader</groupId>
     <artifactId>Trader</artifactId>
-    <version>2.0.1</version>
+    <version>2.1</version>
 
     <organization>
         <name>Open Software</name>
@@ -134,6 +134,7 @@
                     <jvmArgs>
                         <jvmArg>-Xmx1G</jvmArg>
                     </jvmArgs>
+                    <appName>Trader</appName>
                 </configuration>
             </plugin>
         </plugins>
