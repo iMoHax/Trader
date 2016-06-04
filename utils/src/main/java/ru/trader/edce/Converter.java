@@ -145,7 +145,13 @@ public class Converter {
         ITEM_ID.put(128673875L, "diagnostic_sensor");
         ITEM_ID.put(128682047L, "medical_diagnostic_equipment");
         ITEM_ID.put(128673867L, "reinforced_mounting_plate");
-
+        ITEM_ID.put(128673859L, "articulation_motors");
+        ITEM_ID.put(128673870L, "modular_terminals");
+        ITEM_ID.put(128673864L, "power_transfer_conduits");
+        ITEM_ID.put(128673865L, "radiation_baffle");
+        ITEM_ID.put(128673874L, "ion_distributor");
+        ITEM_ID.put(128673871L, "nanobreakers");
+        ITEM_ID.put(128673872L, "telemetry_suite");
 
         GROUP_ID.put("Chemicals", "chemicals");
         GROUP_ID.put("Consumer Items", "consumer_items");

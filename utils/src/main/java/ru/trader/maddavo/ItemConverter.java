@@ -127,6 +127,42 @@ public class ItemConverter {
         IDS.put("non-lethal weapons", "nonlethalweapons");
         IDS.put("personal weapons", "personalweapons");
         IDS.put("reactive armour", "reactivearmour");
+
+        IDS.put("Hydrogen Peroxide", "hydrogen_peroxide");
+        IDS.put("Liquid Oxygen", "liquid_oxygen");
+        IDS.put("Water", "water");
+        IDS.put("Survival Equipment", "survival_equipment");
+        IDS.put("CMM Composite", "cmm_composite");
+        IDS.put("Insulating Membrane", "insulating_membrane");
+        IDS.put("Emergency Power Cells", "emergency_power_cells");
+        IDS.put("Exhaust Manifold", "exhaust_manifold");
+        IDS.put("HN Shock Mount", "hn_shock_mount");
+        IDS.put("Advanced Medicines", "advanced_medicines");
+        IDS.put("Praseodymium", "praseodymium");
+        IDS.put("Samarium", "samarium");
+        IDS.put("Low Temperature Diamond", "low_temperature_diamond");
+        IDS.put("Micro Controllers", "micro_controllers");
+        IDS.put("Conductive Fabrics", "conductive_fabrics");
+        IDS.put("Lithium Hydroxide", "lithium_hydroxide");
+        IDS.put("Methane Clathrate", "methane_clathrate");
+        IDS.put("Military Grade Fabrics", "military_grade_fabrics");
+        IDS.put("Heatsink Interlink", "heatsink_interlink");
+        IDS.put("Magnetic Emitter Coil", "magnetic_emitter_coil");
+        IDS.put("Power Converter", "power_converter");
+        IDS.put("Energy Grid Assembly", "power_grid_assembly");
+        IDS.put("Bromellite", "bromellite");
+        IDS.put("Methanol Monohydrate", "methanol_monohydrate_crystals");
+        IDS.put("Hardware Diagnostic Sensor", "diagnostic_sensor");
+        IDS.put("Medical Diagnostic Equipment", "medical_diagnostic_equipment");
+        IDS.put("Reinforced Mounting Plate", "reinforced_mounting_plate");
+        IDS.put("Articulation Motors", "articulation_motors");
+        IDS.put("Modular Terminals", "modular_terminals");
+        IDS.put("Power Transfer Conduits", "power_transfer_conduits");
+        IDS.put("Radiation Baffle", "radiation_baffle");
+        IDS.put("Ion Distributor", "ion_distributor");
+        IDS.put("Nanobreakers", "nanobreakers");
+        IDS.put("Telemetry Suite", "telemetry_suite");
+
     }
 
     public static String getItemId(String name){
