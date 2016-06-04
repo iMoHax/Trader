@@ -23,14 +23,14 @@
         </header>
 
         <section id="downloads" class="clearfix">
-          <a href="https://github.com/iMoHax/Trader/releases/download/v.2.0.1/Trader2.0.1.zip" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/iMoHax/Trader/releases/download/v.2.1/Trader2.1.zip" id="download-zip" class="button"><span>Download .zip</span></a>
           <a href="https://github.com/iMoHax/Trader" id="view-on-github" class="button"><span>View on GitHub</span></a>
         </section>
 
         <hr>
 
         <section id="main_content">
-            <h1><a id="trader" class="anchor" href="#trader" aria-hidden="true"><span class="octicon octicon-link"></span></a>Trader</h1>
+            <h1><a id="trader" class="anchor" href="#trader" aria-hidden="true"><span class="octicon octicon-link"></span></a>Trader 2.1</h1>
             <p>Программа для анализа цен и планирования маршрута в Elite:Dangerous.</p>
             <p><strong>Основные возможности:</strong></p>
             <ul>
@@ -45,6 +45,7 @@
                 <li>Поддержка Elite Dangerous: Horizons 2.1</li>
                 <li>Импорт данных с сайта <a href="http://www.davek.com.au/td">Maddavo's Market Share</a></li>
                 <li>Поддержка EDCE API</li>
+                <li>Мониторинг лог файла Elite Dangerous</li>
             </ul>
         </section>
 
@@ -54,6 +55,24 @@
               <h1>Документация</h1>
               <h3><a href="interface.html">Описание интерфейса</a></h3>
               <h3><a href="gettingStart.html">Начало работы</a></h3>
+
+              <hr>
+              <h2>Сохранение настроек при обновлении</h2>
+              <p>Для сохранения ваших настроек, необходимо скопировать из папки app со старой версией программы
+                  в папку app с новой версией программы следующие файлы:
+              </p>
+              <ul>
+                  <li><strong>profile.properties</strong> - настройки и данные о профиле</li>
+                  <li><strong>filters.cfg</strong> - параметры фильтров для станций</li>
+              </ul>
+              <p>Если хотите сохранить свои данные по системам и станциям, то необходимо импортировать эти данные,
+                  для чего:
+              </p>
+              <ol>
+                  <li>В меню <strong>Файл</strong> выбрать пункт <strong>Импорт/XML</strong></li>
+                  <li>Из папки app со старой версией программы выбрать файл world.xml и нажать кнопку <strong>Открыть</strong></li>
+                  <li>Дождаться окончание импорта и перезагрузить программу</li>
+              </ol>
 
               <hr>
               <h2>Импорт данных с сайта <a href="http://www.davek.com.au/td">Maddavo's Market Share</a></h2>
