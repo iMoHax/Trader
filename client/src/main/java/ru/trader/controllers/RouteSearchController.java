@@ -4,14 +4,18 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import ru.trader.analysis.CrawlerSpecificator;
 import ru.trader.core.Profile;
+import ru.trader.core.Vendor;
 import ru.trader.model.*;
 import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
+import ru.trader.view.support.autocomplete.StationsProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
+import ru.trader.view.support.cells.CustomListCell;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class RouteSearchController {
 
@@ -33,6 +37,11 @@ public class RouteSearchController {
     private ListView<MissionModel> missionsList;
     @FXML
     private MissionsController missionsController;
+    @FXML
+    private TextField includeStarportText;
+    private AutoCompletion<StationModel> includeStarport;
+    @FXML
+    private ListView<StationModel> includesStations;
 
     private MarketModel market;
     private ProfileModel profile;
@@ -42,6 +51,7 @@ public class RouteSearchController {
         init();
         profile = MainController.getProfile();
         missionsList.setItems(missionsController.getMissions());
+        includesStations.setCellFactory(new CustomListCell<>(StationModel::getFullName));
         initListeners();
     }
 
@@ -62,6 +72,14 @@ public class RouteSearchController {
         }
         fromStation.setValue(ModelFabric.NONE_STATION.getName());
         toStation.setValue(ModelFabric.NONE_STATION.getName());
+        StationsProvider stationsProvider = market.getStationsProvider();
+        if (includeStarport == null){
+            includeStarport = new AutoCompletion<>(includeStarportText, new CachedSuggestionProvider<>(stationsProvider), ModelFabric.NONE_STATION, stationsProvider.getConverter());
+        } else {
+            includeStarport.setSuggestions(stationsProvider.getPossibleSuggestions());
+            includeStarport.setConverter(stationsProvider.getConverter());
+        }
+
     }
 
     private void initListeners(){
@@ -105,6 +123,8 @@ public class RouteSearchController {
         CrawlerSpecificator specificator = new CrawlerSpecificator();
         specificator.setByTime(rbByTime.isSelected());
         specificator.setFullScan(cbFullScan.isSelected());
+        Collection<Vendor> starports = includesStations.getItems().stream().map(ModelFabric::get).collect(Collectors.toList());
+        specificator.all(starports);
         missionsList.getItems().forEach(m -> m.toSpecification(specificator));
         market.getRoutes(f, fS, t, tS, profile.getBalance(), specificator, routes -> {
             for (Iterator<RouteModel> iterator = routes.iterator(); iterator.hasNext(); ) {
@@ -173,6 +193,26 @@ public class RouteSearchController {
     @FXML
     private void clearMissions(){
         missionsController.clear();
+    }
 
+    @FXML
+    private void addStarport(){
+        StationModel station = includeStarport.getValue();
+        if (!ModelFabric.isFake(station)){
+            includesStations.getItems().add(station);
+        }
+    }
+
+    @FXML
+    private void removeStarport(){
+        int index = includesStations.getSelectionModel().getSelectedIndex();
+        if (index >= 0){
+            includesStations.getItems().remove(index);
+        }
+    }
+
+    @FXML
+    private void clearStarports(){
+        includesStations.getItems().clear();
     }
 }

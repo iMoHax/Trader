@@ -37,17 +37,33 @@
         </VBox>
     </HBox>
     </TitledPane>
-    <TitledPane text="%router.pane.missions" collapsible="false">
-        <HBox spacing="10">
-            <fx:include fx:id="missions" source="missions.fxml"/>
-            <HBox spacing="4" maxHeight="200">
-                <VBox spacing="4" alignment="TOP_RIGHT">
-                    <Button prefWidth="30" onAction="#addMission"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
-                    <Button prefWidth="30" onAction="#removeMission"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
-                    <Button prefWidth="30" onAction="#clearMissions"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
-                </VBox>
-                <ListView fx:id="missionsList" />
+    <HBox>
+        <TitledPane text="%router.pane.missions" collapsible="false">
+            <HBox spacing="10" minHeight="210" maxHeight="210">
+                <fx:include fx:id="missions" source="missions.fxml"/>
+                <HBox spacing="4" maxHeight="200">
+                    <VBox spacing="4" alignment="TOP_RIGHT">
+                        <Button prefWidth="30" onAction="#addMission"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
+                        <Button prefWidth="30" onAction="#removeMission"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
+                        <Button prefWidth="30" onAction="#clearMissions"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
+                    </VBox>
+                    <ListView fx:id="missionsList" />
+                </HBox>
             </HBox>
-        </HBox>
-    </TitledPane>
+        </TitledPane>
+        <TitledPane text="%router.pane.includeStations" collapsible="false">
+            <VBox minHeight="210" maxHeight="210" spacing="4">
+                <TextField fx:id="includeStarportText" prefWidth="150"/>
+                <HBox spacing="4" alignment="CENTER" VBox.vgrow="ALWAYS">
+                    <ListView fx:id="includesStations" HBox.hgrow="ALWAYS"/>
+                    <VBox spacing="4">
+                        <Button prefWidth="30" onAction="#addStarport"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
+                        <Button prefWidth="30" onAction="#removeStarport"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
+                        <Button prefWidth="30" onAction="#clearStarports"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </TitledPane>
+    </HBox>
+
 </VBox>
