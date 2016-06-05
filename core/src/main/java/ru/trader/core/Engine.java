@@ -8,7 +8,7 @@ public class Engine {
     private int clazz;
 
     private final static char MAX_ENGINE_RATING = 'E';
-    private final static int MAX_ENGINE_CLASS = 6;
+    private final static int MAX_ENGINE_CLASS = 7;
     //FSD multiplier by FSD Rating A,B,C ... etc * 0.001
     //http://elite-dangerous.wikia.com/wiki/Frame_Shift_Drive
     private final static double[] FSD_MULT = {0.012,0.010,0.008,0.010,0.011};
@@ -22,7 +22,8 @@ public class Engine {
             {150.0,     125.0,      100.0, 	     90.0, 	     80.0},
             {525.0,     438.0,      350.0, 	     315.0,      280.0},
             {1050.0, 	875.0,      700.0, 	     630.0,      560.0},
-            {1800.0,	1500.0, 	1200.0, 	 1080.0, 	 960.0}
+            {1800.0,	1500.0, 	1200.0, 	 1080.0, 	 960.0},
+            {2700.0,    2250.0,     1800.0,      1620.0,     1440.0}
     };
     //FSD Max fuel per jump [class][rating]
     private final static double[][] FSD_MAX_FUEL= {
@@ -32,7 +33,8 @@ public class Engine {
             {1.80, 	 1.50, 	 1.20, 	 1.20, 	 1.20},
             {3.00, 	 2.50, 	 2.00, 	 2.00, 	 2.00},
             {5.00, 	 4.10, 	 3.30, 	 3.30, 	 3.30},
-            {8.00, 	 6.60, 	 5.30, 	 5.30, 	 5.30}
+            {8.00, 	 6.60, 	 5.30, 	 5.30, 	 5.30},
+            {12.80,  10.60,  8.50,   8.50,   8.50}
     };
 
     public Engine(int clazz, char rating) {
