@@ -162,7 +162,9 @@ public class ItemConverter {
         IDS.put("Ion Distributor", "ion_distributor");
         IDS.put("Nanobreakers", "nanobreakers");
         IDS.put("Telemetry Suite", "telemetry_suite");
-
+        IDS.put("Jadeite", "jadeite");
+        IDS.put("Moissanite", "moissanite");
+        IDS.put("Taaffeite", "taaffeite");
     }
 
     public static String getItemId(String name){

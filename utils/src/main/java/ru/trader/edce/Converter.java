@@ -152,7 +152,9 @@ public class Converter {
         ITEM_ID.put(128673874L, "ion_distributor");
         ITEM_ID.put(128673871L, "nanobreakers");
         ITEM_ID.put(128673872L, "telemetry_suite");
-
+        ITEM_ID.put(128672776L, "jadeite");
+        ITEM_ID.put(128672296L, "moissanite");
+        ITEM_ID.put(128672775L, "taaffeite");
         GROUP_ID.put("Chemicals", "chemicals");
         GROUP_ID.put("Consumer Items", "consumer_items");
         GROUP_ID.put("Foods", "foods");
