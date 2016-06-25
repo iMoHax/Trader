@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 public class SimpleMarket extends AbstractMarket {
     private final static Logger LOG = LoggerFactory.getLogger(SimpleMarket.class);
 
-    protected Set<Place> systems;
+    protected Map<String, Place> systems;
     protected List<Item> items;
     protected List<Group> groups;
 
@@ -23,7 +23,7 @@ public class SimpleMarket extends AbstractMarket {
     }
 
     protected void init() {
-        systems = new TreeSet<>();
+        systems = new TreeMap<>();
         items = new  ArrayList<>();
         groups = new ArrayList<>();
     }
@@ -58,6 +58,11 @@ public class SimpleMarket extends AbstractMarket {
     }
 
     @Override
+    public Place get(String name) {
+        return systems.get(name.toUpperCase());
+    }
+
+    @Override
     protected Place createPlace(String name, double x, double y, double z) {
         return new SimplePlace(name, x, y, z);
     }
@@ -74,7 +79,7 @@ public class SimpleMarket extends AbstractMarket {
 
     @Override
     protected void addPlace(Place place) {
-        systems.add(place);
+        systems.put(place.getName().toUpperCase(), place);
         for (Vendor vendor : place.get()) {
             onAdd(vendor);
         }
@@ -82,7 +87,7 @@ public class SimpleMarket extends AbstractMarket {
 
     @Override
     protected void removePlace(Place place) {
-        systems.remove(place);
+        systems.remove(place.getName().toUpperCase());
         for (Vendor vendor : place.get()) {
             onRemove(vendor);
         }
@@ -122,7 +127,7 @@ public class SimpleMarket extends AbstractMarket {
 
     @Override
     public Collection<Place> get() {
-        return systems;
+        return systems.values();
     }
 
     @Override
@@ -191,9 +196,9 @@ public class SimpleMarket extends AbstractMarket {
     @Override
     protected void updateName(AbstractPlace place, String name) {
         LOG.trace("Replace system {} on change name", place);
-        systems.remove(place);
+        systems.remove(place.getName().toUpperCase());
         super.updateName(place, name);
-        systems.add(place);
+        systems.put(place.getName().toUpperCase(), place);
     }
 
     @Override
@@ -213,7 +218,7 @@ public class SimpleMarket extends AbstractMarket {
         Map<Item, Collection<Offer>> sellOffers = new HashMap<>();
         Map<Item, Collection<Offer>> buyOffers = new HashMap<>();
 
-        systems.stream().flatMap(s -> s.get().stream())
+        systems.values().stream().flatMap(s -> s.get().stream())
                 .flatMap(v -> Stream.concat(v.getAllSellOffers().stream(), v.getAllBuyOffers().stream()))
                 .forEach(o -> {
                     Map<Item, Collection<Offer>> m = o.getType() == OFFER_TYPE.SELL ? sellOffers : buyOffers;
