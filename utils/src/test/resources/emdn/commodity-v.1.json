@@ -1,0 +1,117 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://schemas.elite-markets.net/eddn/commodity/1#",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "$schemaRef": {
+            "id": "#$schemaRef",
+            "type": "string",
+            "additionalProperties": false
+        },
+        "header": {
+            "id": "#header",
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+                "uploaderID": {
+                    "id": "#uploaderID",
+                    "type": "string",
+                    "additionalProperties": false
+                },
+                "softwareName": {
+                    "id": "#softwareName",
+                    "type": "string",
+                    "additionalProperties": false
+                },
+                "softwareVersion": {
+                    "id": "#softwareVersion",
+                    "type": "string",
+                    "additionalProperties": false
+                },
+                "gatewayTimestamp": {
+                    "id": "#gatewayTimestamp",
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Timestamp upon receipt at the gateway. If present, this property will be overwritten by the gateway; submitters are not intended to populate this property.",
+                    "additionalProperties": false
+                }
+            }
+        },
+        "message": {
+            "id": "#message",
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+                "systemName": {
+                    "id": "#systemName",
+                    "type": "string",
+                    "additionalProperties": false
+                },
+                "stationName": {
+                    "id": "#stationName",
+                    "type": "string",
+                    "additionalProperties": false
+                },
+                "itemName": {
+                    "id": "#itemName",
+                    "type": "string",
+                    "additionalProperties": false
+                },
+                "buyPrice": {
+                    "id": "#buyPrice",
+                    "type": "integer",
+                    "description": "Price to buy from the market",
+                    "additionalProperties": false
+                },
+                "stationStock": {
+                    "id": "#stationStock",
+                    "type": "integer",
+                    "additionalProperties": false
+                },
+                "supplyLevel": {
+                    "$ref": "#/definitions/levelType"
+                },
+                "sellPrice": {
+                    "id": "#sellPrice",
+                    "type": "integer",
+                    "description": "Price to sell to the market",
+                    "additionalProperties": false
+                },
+                "demand": {
+                    "id": "#demand",
+                    "type": "integer",
+                    "additionalProperties": false
+                },
+                "demandLevel": {
+                    "$ref": "#/definitions/levelType"
+                },
+                "timestamp": {
+                    "id": "#timestamp",
+                    "type": "string",
+                    "format": "date-time",
+                    "additionalProperties": false
+                }
+            },
+            "required": [
+                "systemName",
+                "stationName",
+                "itemName",
+                "stationStock",
+                "sellPrice",
+                "demand",
+                "timestamp"
+            ]
+        }
+    },
+    "required": [
+        "$schemaRef",
+        "header",
+        "message"
+    ],
+    "definitions" : {
+        "levelType" : {
+            "enum": ["Low", "Med", "High"]
+        }
+    }
+}

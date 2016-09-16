@@ -1,0 +1,13 @@
+{
+    "$schemaRef": "http://schemas.elite-markets.net/eddn/commodity/1",
+    "header": {
+    },
+    "message": {
+        "itemName": "Gold",
+        "buyPrice": 1024,
+        "stationStock": 7,
+        "sellPrice": 1138,
+        "demand": 42,
+        "timestamp": "2014-11-17T12:34:56+00:00"
+    }
+}
