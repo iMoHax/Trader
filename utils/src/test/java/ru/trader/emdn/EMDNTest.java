@@ -4,9 +4,13 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EMDNTest extends Assert {
-    private final static EMDN  markettool = new EMDN("tcp://localhost:9050", true);
+    private final static Logger LOG = LoggerFactory.getLogger(EMDNTest.class);
+
+    private final static EMDN  markettool = new EMDN("tcp://localhost:9050", (m)->{LOG.debug("Receive message: {}", m);});
     
     private final static EMDNEmul server = new EMDNEmul("tcp://localhost:9050");
 
@@ -20,14 +24,6 @@ public class EMDNTest extends Assert {
     public void testGetData() throws Exception {
         // wait submit
         Thread.sleep(4000);
-        Station station = markettool.get("Eranin");
-        assertNotNull(station);
-        ItemData itemData = station.getData("cropharvesters");
-        assertNotNull(itemData);
-        assertEquals(0,itemData.getBuy(), 0.0001);
-        assertEquals(0,itemData.getStock());
-        assertEquals(2318,itemData.getSell(), 0.0001);
-        assertEquals(16472,itemData.getDemand());
     }
 
     @After

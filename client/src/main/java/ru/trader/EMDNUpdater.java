@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.trader.controllers.MainController;
 import ru.trader.emdn.EMDN;
 import ru.trader.emdn.ItemData;
-import ru.trader.emdn.Station;
+import ru.trader.emdn.entities.Station;
 import ru.trader.model.MarketModel;
 import ru.trader.model.support.StationUpdater;
 
@@ -21,16 +21,10 @@ public class EMDNUpdater {
     private static long interval;
 
     public static void updateFromEMDN(StationUpdater updater){
-        Station emdnData = emdn.get(updater.getName());
-        if (emdnData != null){
-            update(updater, emdnData);
-        } else {
-            LOG.trace("Not found in EMDN");
-        }
     }
 
     private static void update(StationUpdater updater, Station emdnData){
-        LOG.trace("Update {} from EMDN", updater.getName());
+/*        LOG.trace("Update {} from EMDN", updater.getName());
         for (StationUpdater.FakeOffer offer : updater.getOffers()) {
             if (offer.getItem().isMarketItem()){
                 ItemData data = emdnData.getData(offer.getItem().getId());
@@ -45,7 +39,7 @@ public class EMDNUpdater {
             } else {
                 LOG.trace("Is not market item, skip");
             }
-        }
+        }*/
     }
 
     static void init(){
@@ -121,9 +115,8 @@ public class EMDNUpdater {
 
         @Override
         public void run() {
-            market.getSystemNames().forEach(system -> {
+/*            market.getSystemNames().forEach(system -> {
                 LOG.trace("Auto update {}", system);
-                Station emdnData = emdn.pop(system);
                 if (emdnData != null){
                     //TODO: implement new model
                     //updater.init(system);
@@ -133,7 +126,7 @@ public class EMDNUpdater {
                 } else {
                     LOG.trace("Not found in EMDN");
                 }
-            });
+            });*/
         }
     }
 
