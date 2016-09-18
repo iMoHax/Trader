@@ -73,8 +73,9 @@ public class Receiver implements Runnable {
                         byte[] receivedData = subscriber.recv(ZMQ.PAIR);
                         LOG.trace("Received data: {}", receivedData);
                         if (receivedData == null) continue;
-    //                    receivedData = decompress(receivedData);
+                        receivedData = decompress(receivedData);
                         String marketJson = new String(receivedData, "UTF-8");
+                        LOG.trace("Decompress message: {}", marketJson);
                         builder.append(marketJson);
                         if (!subscriber.hasReceiveMore()){
                             Message message = parser.parse(builder.toString());

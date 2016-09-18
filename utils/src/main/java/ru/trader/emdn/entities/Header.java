@@ -41,6 +41,6 @@ public class Header {
                 ", softwareName='" + softwareName + '\'' +
                 ", softwareVersion='" + softwareVersion + '\'' +
                 ", gatewayTimestamp=" + gatewayTimestamp +
-                "} " + super.toString();
+                '}';
     }
 }

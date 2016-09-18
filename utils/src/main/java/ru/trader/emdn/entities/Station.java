@@ -25,6 +25,6 @@ public class Station {
         return "Station{" +
                 "name='" + name + '\'' +
                 ", id=" + id +
-                "} " + super.toString();
+                "} ";
     }
 }

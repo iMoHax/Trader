@@ -73,6 +73,6 @@ public class Item {
                 ", sellPrice=" + sellPrice +
                 ", demand=" + demand +
                 ", demandLevel=" + demandLevel +
-                "} " + super.toString();
+                "} ";
     }
 }

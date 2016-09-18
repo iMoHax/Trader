@@ -34,6 +34,6 @@ public class Message {
                 "schemaRef='" + schemaRef + '\'' +
                 ", header=" + header +
                 ", body=" + body +
-                "} " + super.toString();
+                "} ";
     }
 }

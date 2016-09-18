@@ -43,4 +43,14 @@ public class Body {
     public void addAll(Collection<Item> items){
         commodities.addAll(items);
     }
+
+    @Override
+    public String toString() {
+        return "Body{" +
+                "system=" + system +
+                ", station=" + station +
+                ", timestamp=" + timestamp +
+                ", commodities=" + commodities +
+                '}';
+    }
 }
