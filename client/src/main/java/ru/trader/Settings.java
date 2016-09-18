@@ -90,7 +90,7 @@ public class Settings {
     }
 
     public String getEMDNSub(){
-        return values.getProperty("emdn.sub","tcp://firehose.elite-market-data.net:9050");
+        return values.getProperty("emdn.sub","tcp://eddn-relay.elite-markets.net:9500");
     }
 
     public void setEMDNUpdateOnly(boolean updateOnly){

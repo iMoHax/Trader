@@ -9,7 +9,6 @@ import javafx.util.Callback;
 import javafx.util.converter.LongStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.trader.EMDNUpdater;
 import ru.trader.core.*;
 import ru.trader.model.ItemModel;
 import ru.trader.model.StationModel;
@@ -221,10 +220,6 @@ public class StationEditorController {
         items.requestFocus();
         items.getSelectionModel().select(index, items.getColumns().get(0));
         ViewUtils.show(items, index);
-    }
-
-    public void updateFromEMDN(){
-        EMDNUpdater.updateFromEMDN(updater);
     }
 
     private class FakeOfferDecoratedRow extends DecoratedRowFactory<StationUpdater.FakeOffer> {
