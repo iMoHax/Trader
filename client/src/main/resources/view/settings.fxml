@@ -9,11 +9,6 @@
             <ColumnConstraints minWidth="260"  maxWidth="260"/>
         </columnConstraints>
 <!--
-        <Label text="%settings.emdn" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"/>
-        <Label text="%settings.emdn.on" GridPane.rowIndex="1"/>
-        <CheckBox fx:id="emdnOn" GridPane.columnIndex="1" GridPane.rowIndex="1" disable="true"/>
-        <Label text="%settings.emdn.sub" GridPane.rowIndex="2" />
-        <TextField fx:id="emdnSubServ" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <Label text="%settings.emdn.updateOnly" GridPane.rowIndex="3" />
         <CheckBox fx:id="emdnUpdateOnly" GridPane.columnIndex="1" GridPane.rowIndex="3" />
         <Label text="%settings.emdn.auto" GridPane.rowIndex="4" />
@@ -58,6 +53,11 @@
         <Button minWidth="30" minHeight="25" onAction="#selectLogDir"><graphic><Glyph text="FontAwesome|FOLDER_OPEN"/></graphic></Button>
 
     </HBox>
+    <Label text="%settings.emdn" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2" GridPane.rowIndex="20"/>
+    <Label text="%settings.emdn.on" GridPane.rowIndex="21"/>
+    <CheckBox fx:id="emdnOn" GridPane.columnIndex="1" GridPane.rowIndex="21"/>
+    <Label text="%settings.emdn.sub" GridPane.rowIndex="22" />
+    <TextField fx:id="emdnSubServ" GridPane.columnIndex="1" GridPane.rowIndex="22" />
 
 </GridPane>
 

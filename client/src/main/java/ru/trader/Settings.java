@@ -93,22 +93,6 @@ public class Settings {
         return values.getProperty("emdn.sub","tcp://eddn-relay.elite-markets.net:9500");
     }
 
-    public void setEMDNUpdateOnly(boolean updateOnly){
-        values.setProperty("emdn.updateOnly", updateOnly ? "1":"0");
-    }
-
-    public boolean getEMDNUpdateOnly(){
-        return !"0".equals(values.getProperty("emdn.updateOnly","1"));
-    }
-
-    public void setEMDNAutoUpdate(long autoUpdate){
-        values.setProperty("emdn.auto", String.valueOf(autoUpdate));
-    }
-
-    public long getEMDNAutoUpdate(){
-        return Long.valueOf(values.getProperty("emdn.auto", "0"));
-    }
-
     public void setBalance(double balance){
         profile.setBalance(balance);
     }

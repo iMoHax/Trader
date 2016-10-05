@@ -29,6 +29,7 @@ public class EMDN {
 
     public void start(){
         if (isActive()) return;
+        LOG.info("Start EMDN client");
         if (executor == null) {
             executor = Executors.newSingleThreadExecutor();
         }

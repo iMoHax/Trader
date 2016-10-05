@@ -10,6 +10,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.EMDNUpdater;
 import ru.trader.Main;
 import ru.trader.core.Profile;
 import ru.trader.view.support.Localization;
@@ -27,10 +28,6 @@ public class SettingsController {
     private CheckBox emdnOn;
     @FXML
     private TextField emdnSubServ;
-    @FXML
-    private CheckBox emdnUpdateOnly;
-    @FXML
-    private NumberField emdnUpdateTime;
 
     @FXML
     private NumberField jumps;
@@ -92,13 +89,6 @@ public class SettingsController {
     }
 
     private void init(){
-/*
-        emdnSubServ.setText(Main.SETTINGS.getEMDNSub());
-        emdnOn.setSelected(Main.SETTINGS.getEMDNActive());
-        emdnUpdateOnly.setSelected(Main.SETTINGS.getEMDNUpdateOnly());
-        emdnUpdateTime.setValue(Main.SETTINGS.getEMDNAutoUpdate());
-*/
-
         Profile profile =Main.SETTINGS.getProfile();
         jumps.setValue(profile.getJumps());
         lands.setValue(profile.getLands());
@@ -113,6 +103,9 @@ public class SettingsController {
 
         edceActive.setSelected(Main.SETTINGS.edce().isActive());
         edceInterval.setValue(Main.SETTINGS.edce().getInterval());
+
+        emdnSubServ.setText(Main.SETTINGS.getEMDNSub());
+        emdnOn.setSelected(Main.SETTINGS.getEMDNActive());
 
         edLogActive.setSelected(Main.SETTINGS.edlog().isActive());
         edLogDir.setText(Main.SETTINGS.edlog().getLogDir());
@@ -137,17 +130,6 @@ public class SettingsController {
     }
 
     private void save() {
-/*
-        Main.SETTINGS.setEMDNSub(emdnSubServ.getText());
-        EMDNUpdater.setSub(emdnSubServ.getText());
-        Main.SETTINGS.setEMDNActive(emdnOn.isSelected());
-        EMDNUpdater.setActivate(emdnOn.isSelected());
-        Main.SETTINGS.setEMDNUpdateOnly(emdnUpdateOnly.isSelected());
-        EMDNUpdater.setUpdateOnly(emdnUpdateOnly.isSelected());
-        Main.SETTINGS.setEMDNAutoUpdate(emdnUpdateTime.getValue().longValue());
-        EMDNUpdater.setInterval(emdnUpdateTime.getValue().longValue());
-*/
-
         Profile profile =Main.SETTINGS.getProfile();
         profile.setJumps(jumps.getValue().intValue());
         profile.setLands(lands.getValue().intValue());
@@ -162,6 +144,11 @@ public class SettingsController {
 
         Main.SETTINGS.edce().setActive(edceActive.isSelected());
         Main.SETTINGS.edce().setInterval(edceInterval.getValue().intValue());
+
+        Main.SETTINGS.setEMDNSub(emdnSubServ.getText());
+        EMDNUpdater.setSub(emdnSubServ.getText());
+        Main.SETTINGS.setEMDNActive(emdnOn.isSelected());
+        EMDNUpdater.setActivate(emdnOn.isSelected());
 
         if (edLogActive.isSelected()){
             Main.SETTINGS.edlog().setLogDir(edLogDir.getText());
