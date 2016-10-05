@@ -15,9 +15,11 @@ import java.util.function.Consumer;
 public class EMDNUpdater {
     private final static Logger LOG = LoggerFactory.getLogger(EMDNUpdater.class);
     private static EMDN emdn;
+    private static MarketUpdater updater;
 
     static void init(){
-        emdn = new EMDN(Main.SETTINGS.getEMDNSub(), new MarketUpdater(MainController.getWorld()));
+        updater = new MarketUpdater(MainController.getWorld());
+        emdn = new EMDN(Main.SETTINGS.getEMDNSub(), updater);
         setActivate(Main.SETTINGS.getEMDNActive());
     }
 
@@ -37,14 +39,25 @@ public class EMDNUpdater {
         }
     }
 
+    public static void setWorld(MarketModel world){
+        if (updater != null){
+            updater.setWorld(world);
+        }
+    }
+
 
     private static class MarketUpdater implements Consumer<Message> {
-        private final StationUpdater updater;
-        private final MarketModel world;
+        private StationUpdater updater;
+        private MarketModel world;
 
         public MarketUpdater(MarketModel world) {
             this.world = world;
             this.updater = new StationUpdater(world);
+        }
+
+        public void setWorld(MarketModel world){
+            this.updater = new StationUpdater(world);
+            this.world = world;
         }
 
         @Override

@@ -11,6 +11,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import ru.trader.EMDNUpdater;
 import ru.trader.core.Engine;
 import ru.trader.core.MarketFilter;
 import ru.trader.core.VendorFilter;
@@ -368,6 +369,7 @@ public class Screeners {
         filterController.init();
         vFilterController.init();
         dbEditorController.init();
+        EMDNUpdater.setWorld(MainController.getWorld());
     }
 
 }
