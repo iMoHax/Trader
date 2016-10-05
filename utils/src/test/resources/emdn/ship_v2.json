@@ -1,0 +1,21 @@
+{
+    "header": {
+        "softwareVersion": "2.1.7.2",
+        "gatewayTimestamp": "2016-10-05T13:16:12.490637Z",
+        "softwareName": "E:D Market Connector [Windows]",
+        "uploaderID": "Amadeus Sheperd"
+    },
+    "$schemaRef": "http://schemas.elite-markets.net/eddn/shipyard/2",
+    "message": {
+        "systemName": "Sothis",
+        "ships": [
+            "Adder",
+            "Eagle",
+            "Hauler",
+            "SideWinder",
+            "Type7"
+        ],
+        "stationName": "Newholm Station",
+        "timestamp": "2016-10-05T13:15:51Z"
+    }
+}

@@ -9,11 +9,13 @@ public class Body {
     private final Station station;
     private LocalDateTime timestamp;
     private final Collection<Item> commodities;
+    private final Collection<Ship> ships;
 
     public Body(StarSystem system, Station station) {
         this.system = system;
         this.station = station;
         commodities = new ArrayList<>();
+        ships = new ArrayList<>();
     }
 
     public StarSystem getSystem() {
@@ -44,6 +46,18 @@ public class Body {
         commodities.addAll(items);
     }
 
+    public Collection<Ship> getShips() {
+        return ships;
+    }
+
+    public void add(Ship ship){
+        ships.add(ship);
+    }
+
+    public void addShips(Collection<Ship> ships){
+        this.ships.addAll(ships);
+    }
+
     @Override
     public String toString() {
         return "Body{" +
@@ -51,6 +65,7 @@ public class Body {
                 ", station=" + station +
                 ", timestamp=" + timestamp +
                 ", commodities=" + commodities +
+                ", ships=" + ships +
                 '}';
     }
 }

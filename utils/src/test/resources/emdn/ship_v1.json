@@ -1,0 +1,24 @@
+{
+    "header": {
+        "softwareVersion": "2.1.6.1",
+        "gatewayTimestamp": "2016-10-05T13:53:33.930428Z",
+        "softwareName": "E:D Market Connector [Mac OS]",
+        "uploaderID": "Marek Ce'ex"
+    },
+    "$schemaRef": "http://schemas.elite-markets.net/eddn/shipyard/1",
+    "message": {
+        "systemName": "Venegana",
+        "ships": [
+            "Sidewinder",
+            "Eagle",
+            "Asp",
+            "Asp Scout",
+            "Adder",
+            "Anaconda",
+            "Type-7 Transporter",
+            "Federal Gunship"
+        ],
+        "stationName": "Shull Ring",
+        "timestamp": "2016-10-05T13:53:25Z"
+    }
+}

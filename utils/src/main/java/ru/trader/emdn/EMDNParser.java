@@ -44,6 +44,8 @@ public class EMDNParser {
     }
 
     private enum PARSERS {
+        V1_SHIPYARD("http://schemas.elite-markets.net/eddn/shipyard/1"),
+        V2_SHIPYARD("http://schemas.elite-markets.net/eddn/shipyard/2"),
         V1("http://schemas.elite-markets.net/eddn/commodity/1"){
             @Override
             protected Body parseBody(JsonNode node) {
@@ -191,7 +193,8 @@ public class EMDNParser {
             JsonNode stationName = node.get("stationName");
             JsonNode timestamp = node.get("timestamp");
             JsonNode commodities = node.get("commodities");
-            if (systemName == null || stationName == null || timestamp == null || commodities == null){
+            JsonNode ships = node.get("ships");
+            if (systemName == null || stationName == null || timestamp == null || (commodities == null && ships == null)){
                 LOG.warn("Body EDDN message don't have required fields");
                 return null;
             }
@@ -200,7 +203,12 @@ public class EMDNParser {
             LocalDateTime dt = LocalDateTime.parse(timestamp.asText(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             Body body = new Body(starSystem, station);
             body.setTimestamp(dt);
-            body.addAll(parseCommodities(commodities));
+            if (commodities != null){
+                body.addAll(parseCommodities(commodities));
+            }
+            if (ships != null){
+                body.addShips(parseShips(ships));
+            }
             return body;
         }
 
@@ -231,6 +239,17 @@ public class EMDNParser {
                     item.setDemandLevel(LEVEL_TYPE.fromJSON(demandLevel.asText()));
                 }
                 res.add(item);
+            }
+            return res;
+        }
+
+        protected Collection<Ship> parseShips(JsonNode ships) {
+            Collection<Ship> res = new ArrayList<>();
+            for (Iterator<JsonNode> iterator = ships.elements(); iterator.hasNext(); ) {
+                JsonNode node = iterator.next();
+                String name = node.asText();
+                Ship ship = new Ship(name);
+                res.add(ship);
             }
             return res;
         }

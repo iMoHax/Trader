@@ -255,4 +255,107 @@ public class ParserTest extends Assert {
 
     }
 
+    @Test
+    public void testParseShipV1() throws Exception {
+        EMDNParser parser = new EMDNParser();
+
+        try (InputStream is = getClass().getResourceAsStream("/emdn/ship_v1.json")) {
+            String json = TestUtils.read(is);
+            Message message = parser.parse(json);
+            assertNotNull(message);
+            assertEquals("http://schemas.elite-markets.net/eddn/shipyard/1", message.getSchemaRef());
+            Header header = message.getHeader();
+            assertNotNull(header);
+            assertEquals("Marek Ce'ex", header.getUploaderId());
+            assertEquals("E:D Market Connector [Mac OS]", header.getSoftwareName());
+            assertEquals("2.1.6.1", header.getSoftwareVersion());
+            assertEquals(LocalDateTime.of(2016, 10, 5, 13, 53, 33, 930428000), header.getGatewayTimestamp());
+            Body body = message.getBody();
+            assertNotNull(body);
+            assertEquals(LocalDateTime.of(2016, 10, 5, 13, 53, 25), body.getTimestamp());
+            StarSystem system = body.getSystem();
+            assertNotNull(system);
+            assertEquals("Venegana", system.getName());
+            assertNull(system.getId());
+            assertNull(system.getAddress());
+            Station station = body.getStation();
+            assertNotNull(station);
+            assertEquals("Shull Ring", station.getName());
+            assertNull(station.getId());
+            Collection<Item> items = body.getCommodities();
+            assertNotNull(items);
+            assertEquals(0, items.size());
+            Collection<Ship> ships = body.getShips();
+            assertNotNull(ships);
+            assertEquals(8, ships.size());
+            int found = 0;
+            for (Ship ship : ships) {
+                assertNotNull(ship);
+                if ("Sidewinder".equals(ship.getName())){
+                    found++;
+                    assertNull(ship.getId());
+                    assertNull(ship.getPrice());
+                } else
+                if ("Type-7 Transporter".equals(ship.getName())){
+                    found++;
+                    assertNull(ship.getId());
+                    assertNull(ship.getPrice());
+                }
+            }
+            assertEquals("Expected ships not found", 2, found);
+        }
+    }
+
+
+    @Test
+    public void testParseShipV2() throws Exception {
+        EMDNParser parser = new EMDNParser();
+
+        try (InputStream is = getClass().getResourceAsStream("/emdn/ship_v2.json")) {
+            String json = TestUtils.read(is);
+            Message message = parser.parse(json);
+            assertNotNull(message);
+            assertEquals("http://schemas.elite-markets.net/eddn/shipyard/2", message.getSchemaRef());
+            Header header = message.getHeader();
+            assertNotNull(header);
+            assertEquals("Amadeus Sheperd", header.getUploaderId());
+            assertEquals("E:D Market Connector [Windows]", header.getSoftwareName());
+            assertEquals("2.1.7.2", header.getSoftwareVersion());
+            assertEquals(LocalDateTime.of(2016, 10, 5, 13, 16, 12, 490637000), header.getGatewayTimestamp());
+            Body body = message.getBody();
+            assertNotNull(body);
+            assertEquals(LocalDateTime.of(2016, 10, 5, 13, 15, 51), body.getTimestamp());
+            StarSystem system = body.getSystem();
+            assertNotNull(system);
+            assertEquals("Sothis", system.getName());
+            assertNull(system.getId());
+            assertNull(system.getAddress());
+            Station station = body.getStation();
+            assertNotNull(station);
+            assertEquals("Newholm Station", station.getName());
+            assertNull(station.getId());
+            Collection<Item> items = body.getCommodities();
+            assertNotNull(items);
+            assertEquals(0, items.size());
+            Collection<Ship> ships = body.getShips();
+            assertNotNull(ships);
+            assertEquals(5, ships.size());
+            int found = 0;
+            for (Ship ship : ships) {
+                assertNotNull(ship);
+                if ("SideWinder".equals(ship.getName())){
+                    found++;
+                    assertNull(ship.getId());
+                    assertNull(ship.getPrice());
+                } else
+                if ("Type7".equals(ship.getName())){
+                    found++;
+                    assertNull(ship.getId());
+                    assertNull(ship.getPrice());
+                }
+            }
+            assertEquals("Expected ships not found", 2, found);
+        }
+    }
+
 }
