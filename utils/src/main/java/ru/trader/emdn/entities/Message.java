@@ -1,37 +1,37 @@
 package ru.trader.emdn.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+import ru.trader.store.imp.entities.StarSystemData;
 
 public class Message {
-    @JsonProperty("$schemaRef")
-    private String schemaRef;
-
+    private SUPPORT_VERSIONS version;
     private Header header;
+    private JsonNode body;
 
-    private Body body;
-
-    public Message(String schemaRef, Header header, Body body) {
-        this.schemaRef = schemaRef;
+    public Message(SUPPORT_VERSIONS version, Header header, JsonNode body) {
+        this.version = version;
         this.header = header;
         this.body = body;
     }
 
-    public String getSchemaRef() {
-        return schemaRef;
+    public SUPPORT_VERSIONS getVersion() {
+        return version;
     }
 
     public Header getHeader() {
         return header;
     }
 
-    public Body getBody() {
-        return body;
+    public StarSystemData getImportData(){
+        return new EDDNSystemData(body, version);
+
     }
+
 
     @Override
     public String toString() {
         return "Message{" +
-                "schemaRef='" + schemaRef + '\'' +
+                "version='" + version + '\'' +
                 ", header=" + header +
                 ", body=" + body +
                 "} ";

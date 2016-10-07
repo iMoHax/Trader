@@ -4,11 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.controllers.MainController;
 import ru.trader.emdn.EMDN;
-import ru.trader.emdn.entities.Item;
 import ru.trader.emdn.entities.Message;
 import ru.trader.model.*;
 import ru.trader.model.support.StationUpdater;
+import ru.trader.store.imp.entities.ItemData;
+import ru.trader.store.imp.entities.StarSystemData;
+import ru.trader.store.imp.entities.StationData;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -64,39 +67,46 @@ public class EMDNUpdater {
         public void accept(Message message) {
             if (world == null || message == null) return;
             LOG.trace("Update station from EDDN: {}", message);
-            SystemModel system = world.get(message.getBody().getSystem().getName());
+            StarSystemData data = message.getImportData();
+            SystemModel system = world.get(data.getName());
             if (!ModelFabric.isFake(system)) {
-                StationModel station = system.get(message.getBody().getStation().getName());
-                if (!ModelFabric.isFake(station)){
-                    updater.edit(station);
-                    for (Item commodity : message.getBody().getCommodities()) {
-                        String id = commodity.getName().toLowerCase().replace(" ","_");
-                        Optional<ItemModel> item = world.getItem(id);
-                        if (item.isPresent()) {
-                            Optional<StationUpdater.FakeOffer> offer = updater.getOffer(item.get());
-                            if (offer.isPresent()){
-                                fillOffers(offer.get(), commodity);
+                Collection<StationData> stations = data.getStations();
+                if (stations == null) return;
+                for (StationData stationData : stations) {
+                    StationModel station = system.get(stationData.getName());
+                    if (!ModelFabric.isFake(station)){
+                        Collection<ItemData> commodities = stationData.getCommodities();
+                        if (commodities == null) return;
+                        updater.edit(station);
+                        for (ItemData commodity : commodities) {
+                            String id = commodity.getName().toLowerCase().replace(" ","_");
+                            Optional<ItemModel> item = world.getItem(id);
+                            if (item.isPresent()) {
+                                Optional<StationUpdater.FakeOffer> offer = updater.getOffer(item.get());
+                                if (offer.isPresent()){
+                                    fillOffers(offer.get(), commodity);
+                                } else {
+                                    LOG.error("Not found offer in updater, item: {}", item.get());
+                                }
                             } else {
-                                LOG.error("Not found offer in updater, item: {}", item.get());
+                                LOG.warn("Not found item {}, id={}", commodity, id);
                             }
-                        } else {
-                            LOG.warn("Not found item {}, id={}", commodity, id);
                         }
+                        updater.commit();
+                        updater.reset();
+                    } else {
+                        LOG.trace("Station not found");
                     }
-                    updater.commit();
-                    updater.reset();
-                } else {
-                    LOG.trace("Station not found");
                 }
             } else {
                 LOG.trace("System not found");
             }
         }
 
-        private void fillOffers(StationUpdater.FakeOffer offer, Item commodity) {
-            offer.setSprice(commodity.getBuyPrice());
+        private void fillOffers(StationUpdater.FakeOffer offer, ItemData commodity) {
+            offer.setSprice(commodity.getSellOfferPrice());
             offer.setSupply(commodity.getSupply());
-            offer.setBprice(commodity.getSellPrice());
+            offer.setBprice(commodity.getBuyOfferPrice());
             offer.setDemand(commodity.getDemand());
         }
 
