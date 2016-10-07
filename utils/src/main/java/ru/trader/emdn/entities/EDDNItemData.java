@@ -71,8 +71,11 @@ public class EDDNItemData extends ItemDataBase {
             case V1:
                 n = node.get("stationStock");
                 break;
-            default:
+            case V2:
                 n = node.get("supply");
+                break;
+            default:
+                n = node.get("stock");
                 break;
         }
         if (n != null && n.isNumber()){

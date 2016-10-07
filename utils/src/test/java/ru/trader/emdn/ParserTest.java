@@ -445,4 +445,74 @@ public class ParserTest extends Assert {
         }
     }
 
+
+    @Test
+    public void testParseV3() throws Exception {
+        EMDNParser parser = new EMDNParser();
+
+        try (InputStream is = getClass().getResourceAsStream("/emdn/v3.json")) {
+            String json = TestUtils.read(is);
+            Message message = parser.parse(json);
+            assertNotNull(message);
+            assertEquals(SUPPORT_VERSIONS.V3, message.getVersion());
+            Header header = message.getHeader();
+            assertNotNull(header);
+            assertEquals("Gorthok", header.getUploaderId());
+            assertEquals("E:D Market Connector [Windows]", header.getSoftwareName());
+            assertEquals("2.1.7.2", header.getSoftwareVersion());
+            assertEquals(LocalDateTime.of(2016, 10, 7, 12, 40, 4, 453634000), header.getGatewayTimestamp());
+            StarSystemData data = message.getImportData();
+            assertNotNull(data);
+            assertEquals("LP 30-55", data.getName());
+            Collection<StationData> stations = data.getStations();
+            assertNotNull(stations);
+            assertEquals(1, stations.size());
+            StationData station = stations.iterator().next();
+            assertNotNull(station);
+            assertEquals("Crown Platform", station.getName());
+            assertEquals(LocalDateTime.of(2016, 10, 7, 12, 40, 3), station.getModifiedTime());
+            Collection<ItemData> items = station.getCommodities();
+            assertNotNull(items);
+            assertEquals(70, items.size());
+            int found = 0;
+            for (ItemData item : items) {
+                assertNotNull(item);
+                if ("Insulating Membrane".equals(item.getName())){
+                    found++;
+                    assertEquals(7234, item.getSellOfferPrice());
+                    assertEquals(24, item.getSupply());
+                    assertEquals(7156, item.getBuyOfferPrice());
+                    assertEquals(1, item.getDemand());
+                    assertNull(item.getId());
+                    assertNull(item.getGroup());
+                } else
+                if ("Rutile".equals(item.getName())){
+                    found++;
+                    assertEquals(0, item.getSellOfferPrice());
+                    assertEquals(0, item.getSupply());
+                    assertEquals(328, item.getBuyOfferPrice());
+                    assertEquals(11005, item.getDemand());
+                    assertNull(item.getId());
+                    assertNull(item.getGroup());
+                }
+            }
+            assertEquals("Expected items not found", 2, found);
+
+            assertNull(data.getId());
+            assertNull(data.getFaction());
+            assertNull(data.getGovernment());
+            assertNull(data.getPower());
+            assertNull(data.getPowerState());
+            assertNull(station.getId());
+            assertNull(station.getType());
+            assertNull(station.getFaction());
+            assertNull(station.getGovernment());
+            assertNull(station.getEconomic());
+            assertNull(station.getSubEconomic());
+            assertNull(station.getServices());
+            assertNull(station.getShips());
+            assertNull(station.getModules());
+        }
+    }
+
 }
