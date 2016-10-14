@@ -1,5 +1,6 @@
 package ru.trader.analysis;
 
+import org.jetbrains.annotations.Nullable;
 import ru.trader.analysis.graph.Edge;
 import ru.trader.core.Offer;
 import ru.trader.core.Vendor;
@@ -165,6 +166,7 @@ public class CrawlerSpecificator {
         if (res) return true;
         for (TimeEntry<Offer> entry : offers){
             Offer offer = entry.obj;
+            if (offer.getVendor().equals(vendor)) return true;
             Offer sell = vendor.getSell(offer.getItem());
             res = sell != null && sell.getCount() >= offer.getCount();
             if (res) return true;
@@ -172,12 +174,23 @@ public class CrawlerSpecificator {
         return false;
     }
 
-    public Collection<Vendor> getVendors(Collection<Vendor> vendors){
-        Set<Vendor> v = containsAny.stream().map(e -> e.obj).collect(Collectors.toSet());
-        any.stream().map(e -> e.obj).forEach(v::add);
-        all.stream().map(e -> e.obj).forEach(v::add);
-        offers.stream().map(e -> e.obj.getVendor()).forEach(v::add);
-        v.addAll(vendors);
+    public Set<Vendor> getVendors(Collection<Scorer.Rating> vendors){
+        Set<Vendor> v = all.stream().map(e -> e.obj).collect(Collectors.toSet());
+        if (containsAny.size() > 0){
+            vendors.stream().filter(r -> contains(containsAny, r.getVendor())).sorted().limit(5).forEach(r -> v.add(r.getVendor()));
+        }
+        if (any.size() > 0){
+            vendors.stream().filter(r -> contains(any, r.getVendor())).sorted().limit(5).forEach(r -> v.add(r.getVendor()));
+        }
+
+        for (TimeEntry<Offer> entry : offers) {
+            vendors.stream().filter(r -> {
+                Offer offer = entry.obj;
+                if (offer.getVendor().equals(r.getVendor())) return true;
+                Offer sell = r.getVendor().getSell(offer.getItem());
+                return sell != null && sell.getCount() >= offer.getCount();
+            }).sorted().limit(5).forEach(r -> v.add(r.getVendor()));
+        }
         return v;
     }
 

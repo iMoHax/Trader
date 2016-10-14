@@ -15,6 +15,7 @@ public class Profile {
     private int lands;
     private boolean refill;
     private int routesCount;
+    private double minVendorRating;
     //Scorer multipliers
     private double distanceTime;
     private double jumpTime;
@@ -31,6 +32,7 @@ public class Profile {
         jumps = 3;
         lands = 4;
         routesCount = 30;
+        minVendorRating = 7;
         distanceTime = 0.3;
         fuelPrice = 100;
         landingTime = 80;
@@ -49,6 +51,7 @@ public class Profile {
         this.lands = profile.lands;
         this.refill = profile.refill;
         this.routesCount = profile.routesCount;
+        this.minVendorRating = profile.minVendorRating;
         this.distanceTime = profile.distanceTime;
         this.jumpTime = profile.jumpTime;
         this.landingTime = profile.landingTime;
@@ -142,6 +145,14 @@ public class Profile {
         this.routesCount = routesCount;
     }
 
+    public double getMinVendorRating() {
+        return minVendorRating;
+    }
+
+    public void setMinVendorRating(double minVendorRating) {
+        this.minVendorRating = minVendorRating;
+    }
+
     public double getDistanceTime() {
         return distanceTime;
     }
@@ -230,6 +241,7 @@ public class Profile {
         profile.setLands(Integer.valueOf(values.getProperty("profile.lands", "4")));
         profile.setPathPriority(PATH_PRIORITY.valueOf(values.getProperty("profile.search.priority", "FAST")));
         profile.setRoutesCount(Integer.valueOf(values.getProperty("profile.search.routes", "30")));
+        profile.setMinVendorRating(Double.valueOf(values.getProperty("profile.search.minRating", "7")));
         profile.setFuelPrice(Double.valueOf(values.getProperty("profile.search.fuel.price", "100")));
         profile.setDistanceTime(Double.valueOf(values.getProperty("profile.search.times.distance", "0.3")));
         profile.setLandingTime(Double.valueOf(values.getProperty("profile.search.times.landing", "80")));
@@ -250,6 +262,7 @@ public class Profile {
         values.setProperty("profile.lands", String.valueOf(lands));
         values.setProperty("profile.search.priority", String.valueOf(pathPriority));
         values.setProperty("profile.search.routes", String.valueOf(routesCount));
+        values.setProperty("profile.search.minRating", String.valueOf(minVendorRating));
         values.setProperty("profile.search.fuel.price", String.valueOf(fuelPrice));
         values.setProperty("profile.search.times.distance", String.valueOf(distanceTime));
         values.setProperty("profile.search.times.landing", String.valueOf(landingTime));

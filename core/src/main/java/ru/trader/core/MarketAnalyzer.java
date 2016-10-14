@@ -296,13 +296,26 @@ public class MarketAnalyzer {
 
     private Collection<Vendor> getVendors(CrawlerSpecificator specificator, boolean withTransit){
         List<Vendor> transits = withTransit ? market.get().map(Place::asTransit).collect(Collectors.toList()) : new ArrayList<>();
-        Collection<Vendor> vendors;
+        Set<Vendor> vendors;
         if (!specificator.isFullScan() || specificator.getMinHop() >= profile.getLands()){
-            vendors = market.getMarkets().filter(specificator::contains).collect(Collectors.toList());
+            vendors = market.getMarkets().filter(specificator::contains).collect(Collectors.toSet());
         } else {
-            vendors = market.getMarkets().collect(Collectors.toList());
+            vendors = market.getMarkets().collect(Collectors.toSet());
         }
-        vendors = specificator.getVendors(vendors);
+        Scorer.RatingComputer ratings = searcher.getScorer().getRatingComputer(vendors);
+        Collection<Scorer.Rating> removes = new ArrayList<>(500);
+        vendors.removeIf(v -> {
+            Scorer.Rating rating = ratings.getRating(v);
+            if (rating.getRate() <= profile.getMinVendorRating()){
+                if (specificator.contains(v)){
+                    removes.add(rating);
+                }
+                return true;
+            }
+            return false;
+        });
+
+        vendors.addAll(specificator.getVendors(removes));
         vendors.addAll(transits);
         return vendors;
     }

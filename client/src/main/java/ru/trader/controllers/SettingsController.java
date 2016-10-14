@@ -36,6 +36,8 @@ public class SettingsController {
     @FXML
     private NumberField routesCount;
     @FXML
+    private NumberField minVendorRating;
+    @FXML
     private NumberField fuelPrice;
     @FXML
     private ComboBox<Profile.PATH_PRIORITY> pathPriority;
@@ -93,6 +95,7 @@ public class SettingsController {
         jumps.setValue(profile.getJumps());
         lands.setValue(profile.getLands());
         routesCount.setValue(profile.getRoutesCount());
+        minVendorRating.setValue(profile.getMinVendorRating());
         fuelPrice.setValue(profile.getFuelPrice());
         pathPriority.setValue(profile.getPathPriority());
         jumpTime.setValue(profile.getJumpTime());
@@ -134,6 +137,7 @@ public class SettingsController {
         profile.setJumps(jumps.getValue().intValue());
         profile.setLands(lands.getValue().intValue());
         profile.setRoutesCount(routesCount.getValue().intValue());
+        profile.setMinVendorRating(minVendorRating.getValue().doubleValue());
         profile.setFuelPrice(fuelPrice.getValue().intValue());
         profile.setPathPriority(pathPriority.getValue());
         profile.setJumpTime(jumpTime.getValue().intValue());

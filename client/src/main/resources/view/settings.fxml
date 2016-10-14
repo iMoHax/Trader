@@ -2,8 +2,9 @@
 <?import javafx.scene.layout.*?>
 <?import ru.trader.view.support.*?>
 <?import org.controlsfx.glyphfont.Glyph?>
-<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.trader.controllers.SettingsController"
-              styleClass="dialog" vgap="4" hgap="8">
+<ScrollPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.trader.controllers.SettingsController"
+            styleClass="dialog">
+<GridPane vgap="4" hgap="8">
         <columnConstraints>
             <ColumnConstraints />
             <ColumnConstraints minWidth="260"  maxWidth="260"/>
@@ -26,38 +27,40 @@
     <NumberField fx:id="lands" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="5" />
     <Label text="%settings.performance.limit" GridPane.rowIndex="6" />
     <NumberField fx:id="routesCount" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-    <Label text="%settings.search" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"  GridPane.rowIndex="7"/>
-    <Label text="%settings.search.fuelPrice" GridPane.rowIndex="8" />
-    <NumberField fx:id="fuelPrice" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-    <Label text="%settings.search.pathType" GridPane.rowIndex="9" />
-    <ComboBox fx:id="pathPriority" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-    <Label text="%settings.search.times.jump" GridPane.rowIndex="10" />
-    <NumberField fx:id="jumpTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-    <Label text="%settings.search.times.landing" GridPane.rowIndex="11" />
-    <NumberField fx:id="landingTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-    <Label text="%settings.search.times.orbital" GridPane.rowIndex="12" />
-    <NumberField fx:id="orbitalTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-    <Label text="%settings.search.times.takeoff" GridPane.rowIndex="13" />
-    <NumberField fx:id="takeoffTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="13" />
-    <Label text="%settings.search.times.recharge" GridPane.rowIndex="14" />
-    <NumberField fx:id="rechargeTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="14" />
-    <Label text="%settings.hotkeys" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"  GridPane.rowIndex="15"/>
-    <Label text="%settings.hotkeys.complete" GridPane.rowIndex="16" />
-    <TextField fx:id="completeKeyText" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="16" />
-    <Label text="ED Log Watcher" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"   GridPane.rowIndex="17"/>
-    <Label text="%settings.edlog.on" GridPane.rowIndex="18"/>
-    <CheckBox fx:id="edLogActive" GridPane.columnIndex="1" GridPane.rowIndex="18"/>
-    <Label text="%settings.edlog.dir" GridPane.rowIndex="19" />
-    <HBox maxWidth="260" GridPane.columnIndex="1" GridPane.rowIndex="19">
+    <Label text="%settings.performance.minVendorRating" GridPane.rowIndex="7" />
+    <NumberField fx:id="minVendorRating" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+    <Label text="%settings.search" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"  GridPane.rowIndex="8"/>
+    <Label text="%settings.search.fuelPrice" GridPane.rowIndex="9" />
+    <NumberField fx:id="fuelPrice" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+    <Label text="%settings.search.pathType" GridPane.rowIndex="10" />
+    <ComboBox fx:id="pathPriority" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+    <Label text="%settings.search.times.jump" GridPane.rowIndex="11" />
+    <NumberField fx:id="jumpTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+    <Label text="%settings.search.times.landing" GridPane.rowIndex="12" />
+    <NumberField fx:id="landingTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+    <Label text="%settings.search.times.orbital" GridPane.rowIndex="13" />
+    <NumberField fx:id="orbitalTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+    <Label text="%settings.search.times.takeoff" GridPane.rowIndex="14" />
+    <NumberField fx:id="takeoffTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="14" />
+    <Label text="%settings.search.times.recharge" GridPane.rowIndex="15" />
+    <NumberField fx:id="rechargeTime" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="15" />
+    <Label text="%settings.hotkeys" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"  GridPane.rowIndex="16"/>
+    <Label text="%settings.hotkeys.complete" GridPane.rowIndex="17" />
+    <TextField fx:id="completeKeyText" maxWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="17" />
+    <Label text="ED Log Watcher" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2"   GridPane.rowIndex="18"/>
+    <Label text="%settings.edlog.on" GridPane.rowIndex="19"/>
+    <CheckBox fx:id="edLogActive" GridPane.columnIndex="1" GridPane.rowIndex="19"/>
+    <Label text="%settings.edlog.dir" GridPane.rowIndex="20" />
+    <HBox maxWidth="260" GridPane.columnIndex="1" GridPane.rowIndex="20">
         <TextField fx:id="edLogDir" />
         <Button minWidth="30" minHeight="25" onAction="#selectLogDir"><graphic><Glyph text="FontAwesome|FOLDER_OPEN"/></graphic></Button>
 
     </HBox>
-    <Label text="%settings.emdn" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2" GridPane.rowIndex="20"/>
-    <Label text="%settings.emdn.on" GridPane.rowIndex="21"/>
-    <CheckBox fx:id="emdnOn" GridPane.columnIndex="1" GridPane.rowIndex="21"/>
-    <Label text="%settings.emdn.sub" GridPane.rowIndex="22" />
-    <TextField fx:id="emdnSubServ" GridPane.columnIndex="1" GridPane.rowIndex="22" />
+    <Label text="%settings.emdn" styleClass="settings-group" GridPane.halignment="CENTER" GridPane.columnSpan="2" GridPane.rowIndex="21"/>
+    <Label text="%settings.emdn.on" GridPane.rowIndex="22"/>
+    <CheckBox fx:id="emdnOn" GridPane.columnIndex="1" GridPane.rowIndex="22"/>
+    <Label text="%settings.emdn.sub" GridPane.rowIndex="23" />
+    <TextField fx:id="emdnSubServ" GridPane.columnIndex="1" GridPane.rowIndex="23" />
 
 </GridPane>
-
+</ScrollPane>

@@ -36,7 +36,7 @@ public class ScorerTest extends Assert {
         profile.setBalance(1000000);
         Scorer scorer = new Scorer(fWorld, profile);
 
-        double avgProfit = scorer.getAvgProfit() * profile.getShip().getCargo();
+        double avgProfit = 750 * profile.getShip().getCargo();
 
         double score = scorer.getScore(scorer.getAvgDistance(), 0, 1, 1, 0, 4);
         double score1 = scorer.getScore(scorer.getAvgDistance(), avgProfit/2, 1, 1, 0, 4);
