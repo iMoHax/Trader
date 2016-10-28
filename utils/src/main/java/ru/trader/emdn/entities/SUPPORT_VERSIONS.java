@@ -9,14 +9,18 @@ public enum SUPPORT_VERSIONS {
 
     private final String schema;
 
+    public String getSchema() {
+        return schema;
+    }
+
     private SUPPORT_VERSIONS(String schema) {
         this.schema = schema;
     }
 
     public static SUPPORT_VERSIONS getVersion(String schema){
         for (SUPPORT_VERSIONS parser : SUPPORT_VERSIONS.values()) {
-                if (parser.schema.equals(schema)) return parser;
-            }
-            return null;
+            if (parser.schema.equals(schema)) return parser;
         }
+        return null;
     }
+}

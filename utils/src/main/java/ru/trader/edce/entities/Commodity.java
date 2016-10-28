@@ -1,6 +1,7 @@
 package ru.trader.edce.entities;
 
 
+import java.util.List;
 import java.util.Objects;
 
 public class Commodity {
@@ -8,11 +9,13 @@ public class Commodity {
     private String name;
     private long buyPrice;
     private long sellPrice;
+    private long meanPrice;
     private int demandBracket;
     private int stockBracket;
     private long stock;
     private long demand;
     private String categoryname;
+    private List<String> statusFlags;
 
     public long getId() {
         return id;
@@ -46,6 +49,14 @@ public class Commodity {
         this.sellPrice = sellPrice;
     }
 
+    public long getMeanPrice() {
+        return meanPrice;
+    }
+
+    public void setMeanPrice(long meanPrice) {
+        this.meanPrice = meanPrice;
+    }
+
     public int getDemandBracket() {
         return demandBracket;
     }
@@ -66,12 +77,20 @@ public class Commodity {
         return stockBracket != 0 ? stock : 0;
     }
 
+    public long getRawStock() {
+        return stock;
+    }
+
     public void setStock(long stock) {
         this.stock = stock;
     }
 
     public long getDemand() {
         return demandBracket != 0 ? demand : 0;
+    }
+
+    public long getRawDemand() {
+        return demand;
     }
 
     public void setDemand(long demand) {
@@ -84,6 +103,14 @@ public class Commodity {
 
     public void setCategoryname(String categoryname) {
         this.categoryname = categoryname;
+    }
+
+    public List<String> getStatusFlags() {
+        return statusFlags;
+    }
+
+    public void setStatusFlags(List<String> statusFlags) {
+        this.statusFlags = statusFlags;
     }
 
     @Override
