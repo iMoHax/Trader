@@ -196,15 +196,11 @@ public class MarketAnalyzer {
     public Collection<Route> getTopRoutes(int limit){
         LOG.debug("Get top {}", limit);
         LimitedQueue<Route> top = new LimitedQueue<>(limit);
-        Collection<Vendor> vendors = getVendors(new CrawlerSpecificator(), true);
+        Collection<Vendor> vendors = getVendors(new CrawlerSpecificator(), false, 9);
         callback.start(vendors.size());
-        Iterator<Vendor> iterator = market.getMarkets(false).iterator();
-        while (iterator.hasNext()){
-            Vendor vendor = iterator.next();
+        for (Vendor vendor : vendors) {
             if (callback.isCancel()) break;
-            CrawlerSpecificator specificator = new CrawlerSpecificator();
-            specificator.target(vendor);
-            Collection<Route> paths = searcher.search(vendor, vendor, vendors, 3, specificator);
+            Collection<Route> paths = getRoutes(vendor, vendor);
             top.addAll(paths);
             callback.inc();
         }
@@ -295,6 +291,10 @@ public class MarketAnalyzer {
     }
 
     private Collection<Vendor> getVendors(CrawlerSpecificator specificator, boolean withTransit){
+        return getVendors(specificator, withTransit, profile.getMinVendorRating());
+
+    }
+    private Collection<Vendor> getVendors(CrawlerSpecificator specificator, boolean withTransit, double minRating){
         List<Vendor> transits = withTransit ? market.get().map(Place::asTransit).collect(Collectors.toList()) : new ArrayList<>();
         Set<Vendor> vendors;
         if (!specificator.isFullScan() || specificator.getMinHop() >= profile.getLands()){
@@ -306,7 +306,7 @@ public class MarketAnalyzer {
         Collection<Scorer.Rating> removes = new ArrayList<>(500);
         vendors.removeIf(v -> {
             Scorer.Rating rating = ratings.getRating(v);
-            if (rating.getRate() <= profile.getMinVendorRating()){
+            if (rating.getRate() <= minRating){
                 if (specificator.contains(v)){
                     removes.add(rating);
                 }
