@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.trader.emdn.entities.*;
+import ru.trader.emdn.entities.Header;
+import ru.trader.emdn.entities.Message;
+import ru.trader.emdn.entities.SUPPORT_VERSIONS;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -33,7 +35,7 @@ public class EMDNParser {
         String schema = node.get("$schemaRef").asText("");
         SUPPORT_VERSIONS version = SUPPORT_VERSIONS.getVersion(schema);
         if (version == null){
-            LOG.warn("Unknown EDDN message schema {}", schema);
+            LOG.trace("Unknown EDDN message schema {}", schema);
             return null;
         }
         return parse(node, version);

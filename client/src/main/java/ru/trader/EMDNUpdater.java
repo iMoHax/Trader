@@ -7,6 +7,7 @@ import ru.trader.emdn.EMDN;
 import ru.trader.emdn.entities.Message;
 import ru.trader.model.*;
 import ru.trader.model.support.StationUpdater;
+import ru.trader.store.imp.ItemCorrector;
 import ru.trader.store.imp.entities.ItemData;
 import ru.trader.store.imp.entities.StarSystemData;
 import ru.trader.store.imp.entities.StationData;
@@ -79,7 +80,7 @@ public class EMDNUpdater {
                         if (commodities == null) return;
                         updater.edit(station);
                         for (ItemData commodity : commodities) {
-                            String id = commodity.getName().toLowerCase().replace(" ","_");
+                            String id = ItemCorrector.getItemId(commodity.getName());
                             Optional<ItemModel> item = world.getItem(id);
                             if (item.isPresent()) {
                                 Optional<StationUpdater.FakeOffer> offer = updater.getOffer(item.get());

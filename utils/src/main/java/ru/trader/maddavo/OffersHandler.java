@@ -3,6 +3,7 @@ package ru.trader.maddavo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
+import ru.trader.store.imp.ItemCorrector;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -135,7 +136,7 @@ public class OffersHandler implements ParseHandler {
             Double sell = getDoubleValue(matcher.group(3));
             Long demand = getLongValue(matcher.group(4));
             Long supply = getLongValue(matcher.group(6));
-            Item item = items.get(ItemConverter.getItemId(name));
+            Item item = items.get(ItemCorrector.getItemId(name));
             if (item != null){
                 if (buy != null && buy > 0){
                     buyUpdates.put(item, new OfferData(buy, demand));
