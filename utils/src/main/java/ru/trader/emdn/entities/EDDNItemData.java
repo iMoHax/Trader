@@ -67,18 +67,25 @@ public class EDDNItemData extends ItemDataBase {
     @Override
     public long getSupply() {
         JsonNode n;
+        JsonNode ln;
         switch (version) {
             case V1:
                 n = node.get("stationStock");
+                ln = node.get("supplyLevel");
                 break;
             case V2:
                 n = node.get("supply");
+                ln = node.get("supplyLevel");
                 break;
             default:
                 n = node.get("stock");
+                ln = node.get("stockBracket");
                 break;
         }
         if (n != null && n.isNumber()){
+            if (ln != null && (ln.isNumber() && ln.asInt() == 0 || ln.asText().isEmpty())){
+                return 0;
+            }
             return n.asLong();
         } else {
             throw new ImportDataError("EDDN message don't have commodity supply");
@@ -88,7 +95,20 @@ public class EDDNItemData extends ItemDataBase {
     @Override
     public long getDemand() {
         JsonNode n = node.get("demand");
+        JsonNode ln;
+        switch (version) {
+            case V1:
+            case V2:
+                ln = node.get("demandLevel");
+                break;
+            default:
+                ln = node.get("demandBracket");
+                break;
+        }
         if (n != null && n.isNumber()){
+            if (ln != null && (ln.isNumber() && ln.asInt() == 0 || ln.asText().isEmpty())){
+                return 0;
+            }
             return n.asLong();
         } else {
             throw new ImportDataError("EDDN message don't have commodity demand");

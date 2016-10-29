@@ -8,7 +8,9 @@ import org.junit.rules.ExpectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.TestUtils;
-import ru.trader.emdn.entities.*;
+import ru.trader.emdn.entities.Header;
+import ru.trader.emdn.entities.Message;
+import ru.trader.emdn.entities.SUPPORT_VERSIONS;
 import ru.trader.store.imp.ImportDataError;
 import ru.trader.store.imp.entities.ItemData;
 import ru.trader.store.imp.entities.ShipData;
@@ -482,7 +484,7 @@ public class ParserTest extends Assert {
                     assertEquals(7234, item.getSellOfferPrice());
                     assertEquals(24, item.getSupply());
                     assertEquals(7156, item.getBuyOfferPrice());
-                    assertEquals(1, item.getDemand());
+                    assertEquals(0, item.getDemand());
                     assertNull(item.getId());
                     assertNull(item.getGroup());
                 } else
