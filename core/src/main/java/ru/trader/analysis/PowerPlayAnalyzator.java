@@ -6,7 +6,6 @@ import ru.trader.core.Market;
 import ru.trader.core.Place;
 import ru.trader.core.StarSystemFilter;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -32,7 +31,27 @@ public class PowerPlayAnalyzator {
         this.starSystemFilter = starSystemFilter;
     }
 
-    public Collection<Place> getNear(Collection<Place> starSystems, Collection<Place> centers, double radius, double maxDistance){
+    public Collection<Place> getControlling(Place starSystem){
+        return getControlling(starSystem, market.get(), CONTROLLING_RADIUS);
+    }
+
+    public Collection<Place> getIntersects(Collection<Place> starSystems){
+        return getIntersects(market.get(), starSystems, CONTROLLING_RADIUS);
+    }
+
+    public Collection<Place> getIntersects(Place starSystem, Collection<Place> starSystems){
+        return getIntersects(starSystem, market.get(), starSystems, CONTROLLING_RADIUS);
+    }
+
+
+    public static Collection<Place> getControlling(Place starSystem, Collection<Place> starSystems, double radius){
+        return starSystems.stream()
+                .filter(new Controlling(starSystem, radius))
+                .collect(Collectors.toList());
+    }
+
+
+    public static Collection<Place> getNear(Collection<Place> starSystems, Collection<Place> centers, double radius, double maxDistance){
         return starSystems.stream()
                 .filter(new FarDropper(centers, maxDistance))
                 .filter(intersectsAnyPredicate(centers, radius).negate())
@@ -40,24 +59,21 @@ public class PowerPlayAnalyzator {
                 .collect(Collectors.toList());
     }
 
-
-
-
-    public Collection<Place> getIntersects(Place checkedSystem, Collection<Place> starSystems, Collection<Place> centers, double radius){
+    public static Collection<Place> getIntersects(Place checkedSystem, Collection<Place> starSystems, Collection<Place> centers, double radius){
         return starSystems.stream()
                 .filter(new FarDropper(centers, radius))
                 .filter(intersectsPredicate(checkedSystem, centers, radius))
                 .collect(Collectors.toList());
     }
 
-    public Collection<Place> getIntersects(Collection<Place> starSystems, Collection<Place> centers, double radius){
+    public static Collection<Place> getIntersects(Collection<Place> starSystems, Collection<Place> centers, double radius){
         return starSystems.stream()
                 .filter(new FarDropper(centers, radius))
                 .filter(intersectsPredicate(centers, radius))
                 .collect(Collectors.toList());
     }
 
-    private Predicate<Place> intersectsAnyPredicate(Collection<Place> places, double radius){
+    private static Predicate<Place> intersectsAnyPredicate(Collection<Place> places, double radius){
         Predicate<Place> intersects = null;
         for (Place place : places) {
             if (intersects == null) intersects = new Controlling(place, radius);
@@ -67,7 +83,7 @@ public class PowerPlayAnalyzator {
     }
 
 
-    private Predicate<Place> intersectsPredicate(Collection<Place> places, double radius){
+    private static Predicate<Place> intersectsPredicate(Collection<Place> places, double radius){
         Predicate<Place> intersects = null;
         for (Place place : places) {
             if (intersects == null) intersects = new Controlling(place, radius);
@@ -76,11 +92,11 @@ public class PowerPlayAnalyzator {
         return intersects;
     }
 
-    private Predicate<Place> intersectsPredicate(Place checkedPlace, Collection<Place> places, double radius){
+    private static Predicate<Place> intersectsPredicate(Place checkedPlace, Collection<Place> places, double radius){
         return new Controlling(checkedPlace, radius).and(intersectsAnyPredicate(places, radius));
     }
 
-    private class Controlling implements Predicate<Place> {
+    private static class Controlling implements Predicate<Place> {
         private final Place center;
         private final double radius;
 
@@ -91,6 +107,7 @@ public class PowerPlayAnalyzator {
 
         @Override
         public boolean test(Place place) {
+            if (place == center) return false;
             double distance = center.getDistance(place);
             LOG.trace("Check {}, distance to {} = {}, radius = {}", place, center, distance, radius);
             return distance <= radius;
@@ -98,7 +115,7 @@ public class PowerPlayAnalyzator {
     }
 
 
-    private class FarDropper implements Predicate<Place> {
+    private static class FarDropper implements Predicate<Place> {
         private double minX;
         private double maxX;
         private double minY;
@@ -148,7 +165,7 @@ public class PowerPlayAnalyzator {
         }
     }
 
-    private class DistanceComparator implements Comparator<Place> {
+    private static class DistanceComparator implements Comparator<Place> {
         private final Collection<Place> centers;
         private final HashMap<Place, Double> distances;
 

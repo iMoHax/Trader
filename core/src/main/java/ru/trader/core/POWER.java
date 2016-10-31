@@ -92,6 +92,7 @@ public enum POWER {
             return super.isLegal(faction, item, state);
         }
     },
+    GROM,
     NONE;
 
     private final static String WEAPONS_GRP="weapons";
