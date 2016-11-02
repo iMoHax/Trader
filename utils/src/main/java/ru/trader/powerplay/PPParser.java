@@ -37,6 +37,10 @@ public class PPParser {
         parseFile(file, 1, FILE_TYPE.SYSTEMS);
     }
 
+    public void parsePrediction(File file) throws IOException {
+        parseFile(file, 1, FILE_TYPE.PREDICTION);
+    }
+
     private void parseFile(File file, int skip, FILE_TYPE type) throws IOException {
         canceled = false;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -50,7 +54,7 @@ public class PPParser {
                 switch (type) {
                     case SYSTEMS: parseSystemsFile(values);
                         break;
-                    case PREPARE:
+                    case PREDICTION: parsePredictionFile(values);
                         break;
                 }
             }
@@ -81,6 +85,21 @@ public class PPParser {
     }
 
 
+    public void parsePredictionFile(String[] values)  {
+        //"Name","Power","Value","Status","Reason","Cost","Comand Points"
+        String starSystemName = getName(values[0]);
+        POWER power = getPower(values[1]);
+        String status = values[3];
+        if (starSystemName == null || power == null) return;
+        Place place = market.get(starSystemName);
+        if (place != null){
+            if ("SUCCESS".equals(status)){
+                place.setPower(power, POWER_STATE.EXPANSION);
+            }
+        } else {
+            LOG.warn("Not found system {} for import powerplay data", starSystemName);
+        }
+    }
 
     private final static Pattern NAME_REGEXP = Pattern.compile("(.+)\\s+\\((\\d+)\\)");
     @Nullable
@@ -166,7 +185,7 @@ public class PPParser {
     }
 
     private enum FILE_TYPE {
-        SYSTEMS, PREPARE
+        SYSTEMS, PREDICTION
     }
 
     private class PowerData {
