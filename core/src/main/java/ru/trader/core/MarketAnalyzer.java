@@ -51,6 +51,10 @@ public class MarketAnalyzer {
         return market.get().filter(p -> !filter.isFiltered(p)).collect(Collectors.toList());
     }
 
+    public List<Place> getSystems(StarSystemFilter filter){
+        return market.get().filter(p -> !filter.isFiltered(p)).collect(Collectors.toList());
+    }
+
     public Collection<Order> getTop(int limit){
         LOG.debug("Get top {}", limit);
         Collection<Place> places = getPlaces();

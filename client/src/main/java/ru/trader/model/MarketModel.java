@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.World;
 import ru.trader.analysis.CrawlerSpecificator;
+import ru.trader.analysis.PowerPlayAnalyzator;
 import ru.trader.analysis.Route;
 import ru.trader.controllers.MainController;
 import ru.trader.controllers.ProgressController;
@@ -67,6 +68,10 @@ public class MarketModel {
 
     public MarketAnalyzer getAnalyzer() {
         return analyzer;
+    }
+
+    public PowerPlayAnalyzator getPowerPlayAnalyzer() {
+        return new PowerPlayAnalyzator(market);
     }
 
     public ModelFabric getModeler() {
@@ -210,6 +215,10 @@ public class MarketModel {
     }
 
     public ObservableList<SystemModel> getSystems(MarketFilter filter){
+        return BindingsHelper.observableList(analyzer.getSystems(filter), modeler::get);
+    }
+
+    public ObservableList<SystemModel> getSystems(StarSystemFilter filter){
         return BindingsHelper.observableList(analyzer.getSystems(filter), modeler::get);
     }
 

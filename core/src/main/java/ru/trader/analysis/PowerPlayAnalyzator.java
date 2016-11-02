@@ -3,6 +3,7 @@ package ru.trader.analysis;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.Market;
+import ru.trader.core.POWER;
 import ru.trader.core.Place;
 import ru.trader.core.StarSystemFilter;
 
@@ -11,6 +12,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PowerPlayAnalyzator {
     private final static Logger LOG = LoggerFactory.getLogger(PowerPlayAnalyzator.class);
@@ -43,6 +45,10 @@ public class PowerPlayAnalyzator {
         return getIntersects(starSystem, market.get(), starSystems, CONTROLLING_RADIUS);
     }
 
+    public Collection<Place> getNear(Collection<Place> starSystems){
+        Stream<Place> candidates = market.get().stream().filter(p -> p.getPower() == POWER.NONE);
+        return getNear(candidates, starSystems, CONTROLLING_RADIUS, CONTROLLING_RADIUS*2);
+    }
 
     public static Collection<Place> getControlling(Place starSystem, Collection<Place> starSystems, double radius){
         return starSystems.stream()
@@ -54,6 +60,13 @@ public class PowerPlayAnalyzator {
     public static Collection<Place> getNear(Collection<Place> starSystems, Collection<Place> centers, double radius, double maxDistance){
         return starSystems.stream()
                 .filter(new FarDropper(centers, maxDistance))
+                .filter(intersectsAnyPredicate(centers, radius).negate())
+                .sorted(new DistanceComparator(centers))
+                .collect(Collectors.toList());
+    }
+
+    public static Collection<Place> getNear(Stream<Place> starSystems, Collection<Place> centers, double radius, double maxDistance){
+        return starSystems.filter(new FarDropper(centers, maxDistance))
                 .filter(intersectsAnyPredicate(centers, radius).negate())
                 .sorted(new DistanceComparator(centers))
                 .collect(Collectors.toList());

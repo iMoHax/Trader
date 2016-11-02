@@ -66,6 +66,9 @@
            <Tab fx:id="track" text="%main.tab.route">
                <fx:include fx:id="route" source="routeTrack.fxml"/>
            </Tab>
+           <Tab text="Поверплей">
+               <fx:include fx:id="pp" source="powerplay.fxml"/>
+           </Tab>
        </TabPane>
    </center>
 

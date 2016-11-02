@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.glyphfont.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import ru.trader.view.support.cells.DistanceCell?>
+<?import org.controlsfx.control.CheckComboBox?>
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ru.trader.controllers.PowerPlayController"
+      prefHeight="500"  >
+    <TitledPane text="Параметры анализа" collapsible="false">
+    <HBox spacing="50" alignment="CENTER" minHeight="210" maxHeight="210">
+        <VBox minWidth="250" maxWidth="250" spacing="4">
+            <Label text="Проверяемая система:" />
+            <HBox spacing="4" alignment="BASELINE_LEFT">
+                <TextField fx:id="checkedSystemText" prefWidth="220"/>
+                <Button minWidth="30" onAction="#currentAsChecked"><graphic><Glyph text="FontAwesome|MAP_MARKER"/></graphic></Button>
+            </HBox>
+        </VBox>
+        <VBox minWidth="250" maxWidth="250" spacing="10" alignment="CENTER_LEFT">
+            <fx:define><ToggleGroup fx:id="analyzeType" /></fx:define>
+            <RadioButton fx:id="rbIntersect" text="Поиск пересечений" selected="true" toggleGroup="$analyzeType"/>
+            <RadioButton fx:id="rbNear" text="Поиск ближайших без пересечений" selected="false" toggleGroup="$analyzeType"/>
+            <RadioButton fx:id="rbMaxIntersect" text="Поиск с максимальным пересечением" selected="false" toggleGroup="$analyzeType"/>
+            <RadioButton fx:id="rbExpansions" text="Ближайшие экспансии" selected="false" toggleGroup="$analyzeType"/>
+            <RadioButton fx:id="rbControlling" text="Системы в подконтрольном радиусе" selected="false" toggleGroup="$analyzeType"/>
+            <HBox alignment="CENTER">
+                <Button prefWidth="120" text="Начать анализ" onAction="#search" />
+            </HBox>
+        </VBox>
+        <VBox minWidth="250" maxWidth="250" spacing="4">
+            <Label text="Контроллируемые системы:" />
+            <HBox spacing="4">
+                <TextField fx:id="controlSystemText" prefWidth="220"/>
+                <Button minWidth="30" onAction="#currentAsControl"><graphic><Glyph text="FontAwesome|MAP_MARKER"/></graphic></Button>
+            </HBox>
+            <HBox HBox.hgrow="ALWAYS" spacing="4">
+                <Label text="Cистемы силы:" minWidth="86" maxWidth="86" />
+                <ComboBox fx:id="cbPower" minWidth="160"/>
+            </HBox>
+            <HBox HBox.hgrow="ALWAYS" spacing="4">
+                <Label text="Состояние:" minWidth="86" maxWidth="86" />
+                <CheckComboBox fx:id="cbStates" minWidth="160" />
+            </HBox>
+            <HBox spacing="4" alignment="CENTER" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+                <ListView fx:id="controlSystems" HBox.hgrow="ALWAYS"/>
+                <VBox spacing="4">
+                    <Button prefWidth="30" onAction="#addControlSystem"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
+                    <Button prefWidth="30" onAction="#removeControlSystem"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
+                    <Button prefWidth="30" onAction="#clearControlSystems"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
+                </VBox>
+            </HBox>
+       </VBox>
+    </HBox>
+    </TitledPane>
+    <TitledPane text="Результаты анализа" collapsible="false">
+        <TableView fx:id="tblResults">
+            <columns>
+                <TableColumn minWidth="200" text="%market.systems">
+                    <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="200" text="%market.government">
+                    <cellValueFactory><PropertyValueFactory property="government"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="180" text="%market.allegiance">
+                    <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="110" text="%market.powerState">
+                    <cellValueFactory><PropertyValueFactory property="powerState"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="110" text="%market.power">
+                    <cellValueFactory><PropertyValueFactory property="power"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="110" text="%market.order.distance" fx:id="sortColumn" sortType="ASCENDING">
+                    <cellFactory><DistanceCell /></cellFactory>
+                </TableColumn>
+                <TableColumn minWidth="80" text="Типы площадок">
+                </TableColumn>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+            <sortOrder>
+                <fx:reference source="sortColumn"/>
+            </sortOrder>
+            <contextMenu>
+                <ContextMenu>
+                    <items>
+                        <MenuItem text="%dialog.button.copy" onAction="#copyToClipboard" />
+                    </items>
+                </ContextMenu>
+            </contextMenu>
+        </TableView>
+    </TitledPane>
+</VBox>
