@@ -17,7 +17,7 @@ public class DistanceCell<T> implements Callback<TableColumn<T, Double>, TableCe
             @Override
             protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) {
+                if (item == null || empty) {
                     setText(null);
                     setGraphic(null);
                 } else {
