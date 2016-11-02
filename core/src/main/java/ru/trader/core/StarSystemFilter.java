@@ -14,14 +14,28 @@ public class StarSystemFilter {
     private final EnumSet<FACTION> factions;
     private final EnumSet<GOVERNMENT> governments;
     private final Collection<Place> excludes;
+    private boolean strong;
 
     public StarSystemFilter() {
+        this(false);
+    }
+
+    public StarSystemFilter(boolean strong) {
         this.powers = EnumSet.noneOf(POWER.class);
         this.states = EnumSet.noneOf(POWER_STATE.class);
         this.factions = EnumSet.noneOf(FACTION.class);
         this.governments = EnumSet.noneOf(GOVERNMENT.class);
         this.excludes = new ArrayList<>();
         this.distances = new ArrayList<>();
+        this.strong = strong;
+    }
+
+    public boolean isStrong() {
+        return strong;
+    }
+
+    public void setStrong(boolean strong) {
+        this.strong = strong;
     }
 
     public Collection<DistanceFilter> getDistanceFilters() {
@@ -137,13 +151,13 @@ public class StarSystemFilter {
         }
         if (excludes.contains(starSystem)) return true;
         POWER power = starSystem.getPower();
-        if (power != null && !powers.isEmpty() && !powers.contains(power)) return true;
+        if ((strong || power != null) && !powers.isEmpty() && !powers.contains(power)) return true;
         POWER_STATE state = starSystem.getPowerState();
-        if (state != null && !states.isEmpty() && !states.contains(state)) return true;
+        if ((strong || state != null) && !states.isEmpty() && !states.contains(state)) return true;
         FACTION faction = starSystem.getFaction();
-        if (faction != null && !factions.isEmpty() && !factions.contains(faction)) return true;
+        if ((strong || faction != null) && !factions.isEmpty() && !factions.contains(faction)) return true;
         GOVERNMENT government = starSystem.getGovernment();
-        if (government != null && !governments.isEmpty() && !governments.contains(government)) return true;
+        if ((strong || government != null) && !governments.isEmpty() && !governments.contains(government)) return true;
         return false;
     }
 
