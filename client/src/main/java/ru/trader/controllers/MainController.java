@@ -13,6 +13,7 @@ import ru.trader.ServicesManager;
 import ru.trader.World;
 import ru.trader.model.*;
 import ru.trader.services.MaddavoParserTask;
+import ru.trader.services.PowerPlayParserTask;
 import ru.trader.view.support.Localization;
 import ru.trader.view.support.ViewUtils;
 
@@ -308,6 +309,24 @@ public class MainController {
             Screeners.showProgress(Localization.getString("message.import.prices"), task, () -> ViewUtils.doFX(this::reload));
         });
     }
+
+    @FXML
+    private void importPowerPlaySystems() {
+        chooseFile(new FileChooser.ExtensionFilter("PowerPlay StarSystems file (StarSystems*.csv)","StarSystems*.csv"), file -> {
+            PowerPlayParserTask task = new PowerPlayParserTask(file, PowerPlayParserTask.FILE_TYPE.SYSTEMS, World.getMarket());
+            Screeners.showProgress(Localization.getString("message.import.systems"), task, () -> ViewUtils.doFX(this::reload));
+        });
+    }
+
+    @FXML
+    private void importPowerPlayPrediction() {
+        chooseFile(new FileChooser.ExtensionFilter("PowerPlay Preparation file (Prediction*.csv)","Prediction*.csv"), file -> {
+            PowerPlayParserTask task = new PowerPlayParserTask(file, PowerPlayParserTask.FILE_TYPE.PREDICTION, World.getMarket());
+            Screeners.showProgress(Localization.getString("message.import.systems"), task, () -> ViewUtils.doFX(this::reload));
+        });
+
+    }
+
 
     private void chooseFile(FileChooser.ExtensionFilter filter, Consumer<File> action) {
         FileChooser fileChooser = new FileChooser();

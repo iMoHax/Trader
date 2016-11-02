@@ -18,6 +18,10 @@
                        <MenuItem text="%market.stations" onAction="#impMadStations"/>
                        <MenuItem text="%market.offers" onAction="#impMadOffers"/>
                    </Menu>
+                   <Menu text="PowerPlay">
+                       <MenuItem text="StarSystem" onAction="#importPowerPlaySystems"/>
+                       <MenuItem text="Prediction" onAction="#importPowerPlayPrediction"/>
+                   </Menu>
                    <MenuItem text="XML" onAction="#importWorld"/>
                    <MenuItem text="EDCE JSON" onAction="#importEDCE"/>
                </Menu>
