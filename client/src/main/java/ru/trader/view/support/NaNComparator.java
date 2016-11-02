@@ -7,6 +7,9 @@ public class NaNComparator<T extends Number> implements Comparator<T> {
 
     @Override
     public int compare(Number n1, Number n2) {
+        if (n1 == null && n2 == null) return 0;
+        if (n1 == null) return -1;
+        if (n2 == null) return 1;
         double d1 = n1.doubleValue();
         double d2 = n2.doubleValue();
         boolean isNaN1 = Double.isNaN(d1);
