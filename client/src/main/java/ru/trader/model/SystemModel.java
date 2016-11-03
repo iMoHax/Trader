@@ -9,6 +9,7 @@ import ru.trader.core.*;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SystemModel {
@@ -167,6 +168,24 @@ public class SystemModel {
                 && (system.getFaction() == FACTION.NONE || !system.isEmpty());
     }
 
+    public String getMaxSizePad(){
+        if (system.isEmpty()) return "-";
+        String size = "M";
+        for (Vendor vendor : system.get()) {
+            STATION_TYPE type = vendor.getType();
+            if (type != null){
+                if (type.hasLargeLandpad()) return "L";
+            } else {
+                size = "?";
+            }
+        }
+        return size;
+    }
+
+    public StationModel getNear(){
+        Optional<Vendor> near = system.get().stream().sorted((v1, v2) -> Double.compare(v1.getDistance(), v2.getDistance())).findFirst();
+        return asModel(near.orElse(null));
+    }
 
     @Override
     public String toString() {

@@ -1,5 +1,6 @@
 package ru.trader.controllers;
 
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -11,6 +12,7 @@ import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.view.support.PowerStateStringConverter;
 import ru.trader.view.support.PowerStringConverter;
+import ru.trader.view.support.ViewUtils;
 import ru.trader.view.support.autocomplete.AutoCompletion;
 import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
@@ -45,12 +47,12 @@ public class PowerPlayController {
     @FXML
     private ListView<SystemModel> controlSystems;
     @FXML
-    private TableView<SystemModel> tblResults;
+    private TableView<ResultEntry> tblResults;
 
     private MarketModel world;
     private ProfileModel profile;
     private PowerPlayAnalyzator analyzator;
-    private final List<SystemModel> result = FXCollections.observableArrayList();
+    private final List<ResultEntry> result = FXCollections.observableArrayList();
 
 
     @FXML
@@ -98,17 +100,17 @@ public class PowerPlayController {
         Collection<Place> controlls = getControlSystems();
         result.clear();
         if (starSystem != null && !controlls.isEmpty()){
-            Collection<Place> intersects = analyzator.getIntersects(starSystem, controlls);
-            result.addAll(BindingsHelper.observableList(intersects, world.getModeler()::get));
+            Collection<PowerPlayAnalyzator.IntersectData> intersects = analyzator.getIntersects(starSystem, controlls);
+            result.addAll(BindingsHelper.observableList(intersects, d -> new ResultEntry(d, starSystem)));
         }
     }
 
     private void getControlling(){
-        Place starSystem = ModelFabric.get(checkedSystem.getValue());
+        final Place starSystem = ModelFabric.get(checkedSystem.getValue());
         result.clear();
         if (starSystem != null){
-            Collection<Place> controllings = analyzator.getControlling(starSystem);
-            result.addAll(BindingsHelper.observableList(controllings, world.getModeler()::get));
+            Collection<PowerPlayAnalyzator.IntersectData> controllings = analyzator.getControlling(starSystem);
+            result.addAll(BindingsHelper.observableList(controllings,d -> new ResultEntry(d, starSystem)));
         }
     }
 
@@ -116,8 +118,17 @@ public class PowerPlayController {
         Collection<Place> controlls = getControlSystems();
         result.clear();
         if (!controlls.isEmpty()){
-            Collection<Place> near = analyzator.getNear(controlls);
-            result.addAll(BindingsHelper.observableList(near, world.getModeler()::get));
+            Collection<PowerPlayAnalyzator.IntersectData> near = analyzator.getNear(controlls);
+            result.addAll(BindingsHelper.observableList(near, ResultEntry::new));
+        }
+    }
+
+    private void getNearExpansions(){
+        Collection<Place> controlls = getControlSystems();
+        result.clear();
+        if (!controlls.isEmpty()){
+            Collection<PowerPlayAnalyzator.IntersectData> near = analyzator.getNearExpansions(controlls);
+            result.addAll(BindingsHelper.observableList(near, ResultEntry::new));
         }
     }
 
@@ -148,7 +159,9 @@ public class PowerPlayController {
         if (rbNear.isSelected()){
             getNear();
         }
-
+        if (rbExpansions.isSelected()){
+            getNearExpansions();
+        }
     }
 
 
@@ -184,10 +197,83 @@ public class PowerPlayController {
 
     @FXML
     private void copyToClipboard(){
-        SystemModel starSystem = tblResults.getSelectionModel().getSelectedItem();
-        if (starSystem != null){
-            Main.copyToClipboard(starSystem.getName());
+        ResultEntry entry = tblResults.getSelectionModel().getSelectedItem();
+        if (entry != null){
+            Main.copyToClipboard(entry.starSystem.getName());
         }
     }
 
+
+    public class ResultEntry {
+        private final SystemModel starSystem;
+        private final StationModel nearStation;
+        private final ReadOnlyDoubleProperty distance;
+        private final ReadOnlyStringProperty maxSizePad;
+        private final ReadOnlyIntegerProperty intersectCount;
+        private final ReadOnlyStringProperty controlling;
+
+        public ResultEntry(PowerPlayAnalyzator.IntersectData data) {
+            this(data, null);
+        }
+
+        public ResultEntry(PowerPlayAnalyzator.IntersectData data, Place from) {
+            starSystem = world.getModeler().get(data.getStarSystem());
+            maxSizePad = new SimpleStringProperty(starSystem.getMaxSizePad());
+            intersectCount = new SimpleIntegerProperty(data.getCount());
+            nearStation = starSystem.getNear();
+            controlling = new SimpleStringProperty(getControllingString(data.getControllingSystems()));
+            distance = new SimpleDoubleProperty(from != null ? from.getDistance(data.getStarSystem()) : Double.NaN);
+        }
+
+        private String getControllingString(Collection<PowerPlayAnalyzator.ControllingData> controllings) {
+            StringBuilder res = new StringBuilder();
+            for (PowerPlayAnalyzator.ControllingData data : controllings) {
+                if (res.length() != 0) res.append("\n");
+                res.append(data.getCenter().getName());
+                res.append(" (").append(ViewUtils.distanceToString(data.getDistance())).append(")");
+            }
+            return res.toString();
+        }
+
+
+        public ReadOnlyStringProperty stationProperty(){
+            return new SimpleStringProperty(String.format("%s (%.0f Ls)", nearStation.getName(), nearStation.getDistance()));
+        }
+
+        public ReadOnlyStringProperty nameProperty(){
+            return starSystem.nameProperty();
+        }
+
+        public GOVERNMENT getGovernment() {
+            return starSystem.getGovernment();
+        }
+
+        public FACTION getFaction() {
+            return starSystem.getFaction();
+        }
+
+        public POWER getPower() {
+            return starSystem.getPower();
+        }
+
+        public POWER_STATE getPowerState() {
+            return starSystem.getPowerState();
+        }
+
+        public ReadOnlyDoubleProperty distanceProperty() {
+            return distance;
+        }
+
+        public ReadOnlyStringProperty maxSizePadProperty() {
+            return maxSizePad;
+        }
+
+        public ReadOnlyIntegerProperty intersectCountProperty() {
+            return intersectCount;
+        }
+
+        public ReadOnlyStringProperty controllingProperty() {
+            return controlling;
+        }
+    }
 }

@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class PPImportTest extends Assert {
 
@@ -42,11 +43,16 @@ public class PPImportTest extends Assert {
 
         PowerPlayAnalyzator analyzator = new PowerPlayAnalyzator(market);
 
-        Collection<Place> intersectsMahon = analyzator.getIntersects(Arrays.asList(opala, gd_319));
-        Collection<Place> intersectsDuval = analyzator.getIntersects(bolg, Arrays.asList(opala, gd_319));
+        Collection<Place> intersectsMahon = analyzator.getIntersects(Arrays.asList(opala, gd_319))
+                .stream().map(PowerPlayAnalyzator.IntersectData::getStarSystem).collect(Collectors.toList());
+        Collection<Place> intersectsDuval = analyzator.getIntersects(bolg, Arrays.asList(opala, gd_319))
+                .stream().map(PowerPlayAnalyzator.IntersectData::getStarSystem).collect(Collectors.toList());
 
-        Collection<Place> exploitedOpala = analyzator.getControlling(opala);
-        Collection<Place> exploitedBolg = analyzator.getControlling(bolg);
+
+        Collection<Place> exploitedOpala = analyzator.getControlling(opala)
+                .stream().map(PowerPlayAnalyzator.IntersectData::getStarSystem).collect(Collectors.toList());
+        Collection<Place> exploitedBolg = analyzator.getControlling(bolg)
+                .stream().map(PowerPlayAnalyzator.IntersectData::getStarSystem).collect(Collectors.toList());
 
         for (Place place : intersectsMahon) {
             assertEquals(POWER_STATE.EXPLOITED, place.getPowerState());

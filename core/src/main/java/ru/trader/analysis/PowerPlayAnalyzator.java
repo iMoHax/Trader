@@ -1,15 +1,12 @@
 package ru.trader.analysis;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.trader.core.Market;
-import ru.trader.core.POWER;
-import ru.trader.core.Place;
-import ru.trader.core.StarSystemFilter;
+import ru.trader.core.*;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -33,59 +30,95 @@ public class PowerPlayAnalyzator {
         this.starSystemFilter = starSystemFilter;
     }
 
-    public Collection<Place> getControlling(Place starSystem){
-        return getControlling(starSystem, market.get(), CONTROLLING_RADIUS);
+    public Collection<IntersectData> getControlling(Place starSystem){
+        Stream<Place> candidates = market.get().stream().filter(p -> p.getFaction() != FACTION.NONE);
+        return getControlling(starSystem, candidates, CONTROLLING_RADIUS).collect(Collectors.toList());
     }
 
-    public Collection<Place> getIntersects(Collection<Place> starSystems){
+    public Collection<IntersectData> getIntersects(Collection<Place> starSystems){
         return getIntersects(market.get(), starSystems, CONTROLLING_RADIUS);
     }
 
-    public Collection<Place> getIntersects(Place starSystem, Collection<Place> starSystems){
-        return getIntersects(starSystem, market.get(), starSystems, CONTROLLING_RADIUS);
+    public Collection<IntersectData> getIntersects(Place starSystem, Collection<Place> starSystems){
+        Stream<Place> candidates = market.get().stream().filter(p -> p.getFaction() != FACTION.NONE);
+        return getIntersects(starSystem, candidates, starSystems, CONTROLLING_RADIUS).collect(Collectors.toList());
     }
 
-    public Collection<Place> getNear(Collection<Place> starSystems){
-        Stream<Place> candidates = market.get().stream().filter(p -> p.getPower() == POWER.NONE);
-        return getNear(candidates, starSystems, CONTROLLING_RADIUS, CONTROLLING_RADIUS*2);
+    public Collection<IntersectData> getNear(Collection<Place> starSystems){
+        Stream<Place> candidates = market.get().stream().filter(p -> p.getPower() == POWER.NONE && p.getFaction() != FACTION.NONE);
+        return getNear(candidates, starSystems, CONTROLLING_RADIUS, CONTROLLING_RADIUS*2).collect(Collectors.toList());
     }
 
-    public static Collection<Place> getControlling(Place starSystem, Collection<Place> starSystems, double radius){
-        return starSystems.stream()
-                .filter(new Controlling(starSystem, radius))
-                .collect(Collectors.toList());
+    public Collection<IntersectData> getNearExpansions(Collection<Place> starSystems){
+        return getNearExpansions(market.get(), starSystems, CONTROLLING_RADIUS * 2);
+    }
+
+    public static Collection<IntersectData> getControlling(Place starSystem, Collection<Place> starSystems, double radius){
+        return getControlling(starSystem, starSystems.stream(), radius).collect(Collectors.toList());
+    }
+
+    public static Stream<IntersectData> getControlling(Place starSystem, Stream<Place> starSystems, double radius){
+        IntersectsMapper controllingMapper = new IntersectsMapper(Collections.singleton(starSystem), radius, true, true);
+        return starSystems
+                .map(controllingMapper)
+                .filter(IntersectData::isIntersect);
     }
 
 
-    public static Collection<Place> getNear(Collection<Place> starSystems, Collection<Place> centers, double radius, double maxDistance){
-        return starSystems.stream()
-                .filter(new FarDropper(centers, maxDistance))
-                .filter(intersectsAnyPredicate(centers, radius).negate())
-                .sorted(new DistanceComparator(centers))
-                .collect(Collectors.toList());
+    public static Collection<IntersectData> getNear(Collection<Place> starSystems, Collection<Place> centers, double radius, double maxDistance){
+        return getNear(starSystems.stream(), centers, radius, maxDistance).collect(Collectors.toList());
     }
 
-    public static Collection<Place> getNear(Stream<Place> starSystems, Collection<Place> centers, double radius, double maxDistance){
+    public static Stream<IntersectData> getNear(Stream<Place> starSystems, Collection<Place> centers, double radius, double maxDistance){
+        IntersectsMapper controllingMapper = new IntersectsMapper(centers, radius, true, true);
+        IntersectsMapper distanceMapper = new IntersectsMapper(centers, maxDistance, false, true);
         return starSystems.filter(new FarDropper(centers, maxDistance))
-                .filter(intersectsAnyPredicate(centers, radius).negate())
-                .sorted(new DistanceComparator(centers))
-                .collect(Collectors.toList());
+                .map(controllingMapper)
+                .filter(d -> d.getCount() == 0)
+                .map(d -> distanceMapper.apply(d.getStarSystem()))
+                .filter(IntersectData::isIntersect)
+                .sorted(new DistanceComparator());
     }
 
-    public static Collection<Place> getIntersects(Place checkedSystem, Collection<Place> starSystems, Collection<Place> centers, double radius){
-        return starSystems.stream()
+    public static Collection<IntersectData> getNearExpansions(Collection<Place> starSystems, Collection<Place> centers, double maxDistance){
+        return getNearExpansions(starSystems.stream(), centers, maxDistance).collect(Collectors.toList());
+    }
+
+    public static Stream<IntersectData> getNearExpansions(Stream<Place> starSystems, Collection<Place> centers,  double maxDistance){
+        IntersectsMapper mapper = new IntersectsMapper(centers, maxDistance, false, true);
+        return starSystems.filter(new FarDropper(centers, maxDistance))
+                .filter(p -> p.getPowerState() == POWER_STATE.EXPANSION)
+                .map(mapper)
+                .sorted(new DistanceComparator());
+    }
+
+
+    public static Collection<IntersectData> getIntersects(Place checkedSystem, Collection<Place> starSystems, Collection<Place> centers, double radius){
+        return getIntersects(checkedSystem, starSystems.stream(), centers, radius).collect(Collectors.toList());
+    }
+
+    public static Stream<IntersectData> getIntersects(Place checkedSystem, Stream<Place> starSystems, Collection<Place> centers, double radius){
+        IntersectsMapper mapper = new IntersectsMapper(centers, radius, true, true);
+        return starSystems
                 .filter(new FarDropper(centers, radius))
-                .filter(intersectsPredicate(checkedSystem, centers, radius))
-                .collect(Collectors.toList());
+                .filter(new Controlling(checkedSystem, radius))
+                .map(mapper)
+                .filter(IntersectData::isIntersect);
     }
 
-    public static Collection<Place> getIntersects(Collection<Place> starSystems, Collection<Place> centers, double radius){
-        return starSystems.stream()
+    public static Collection<IntersectData> getIntersects(Collection<Place> starSystems, Collection<Place> centers, double radius){
+        return getIntersects(starSystems.stream(), centers, radius).collect(Collectors.toList());
+    }
+
+    public static Stream<IntersectData> getIntersects(Stream<Place> starSystems, Collection<Place> centers, double radius){
+        IntersectsMapper mapper = new IntersectsMapper(centers, radius, false, false);
+        final int needCount = centers.size();
+        return starSystems
                 .filter(new FarDropper(centers, radius))
-                .filter(intersectsPredicate(centers, radius))
-                .collect(Collectors.toList());
+                .map(mapper)
+                .filter(d -> d.getCount() == needCount);
     }
-
+/*
     private static Predicate<Place> intersectsAnyPredicate(Collection<Place> places, double radius){
         Predicate<Place> intersects = null;
         for (Place place : places) {
@@ -108,7 +141,7 @@ public class PowerPlayAnalyzator {
     private static Predicate<Place> intersectsPredicate(Place checkedPlace, Collection<Place> places, double radius){
         return new Controlling(checkedPlace, radius).and(intersectsAnyPredicate(places, radius));
     }
-
+ */
     private static class Controlling implements Predicate<Place> {
         private final Place center;
         private final double radius;
@@ -178,37 +211,127 @@ public class PowerPlayAnalyzator {
         }
     }
 
-    private static class DistanceComparator implements Comparator<Place> {
-        private final Collection<Place> centers;
-        private final HashMap<Place, Double> distances;
+    private static class DistanceComparator implements Comparator<IntersectData> {
 
 
-        private DistanceComparator(Collection<Place> centers) {
-            this.centers = centers;
-            distances = new HashMap<>(100);
-
-        }
-
-        private double getMinDistance(Place place){
-            Double distance = distances.get(place);
-            if (distance != null) return distance;
-
-            Collection<Double> ds = new LimitedQueue<>(3, Comparator.naturalOrder());
-            for (Place center : centers) {
-                double d = center.getDistance(place);
-                ds.add(d);
-            }
+        private double getMinDistance(IntersectData data){
+            ControllingData[] contollings = data.contollings;
             double dist = 0;
-            for (Double d : ds) {
-                dist += d;
+            int count = Math.min(3, contollings.length);
+            for (int i = 0; i < count; i++) {
+                dist += contollings[i].distance;
             }
-            distances.put(place, dist);
-            return dist;
+            return dist/count;
         }
 
         @Override
-        public int compare(Place o1, Place o2) {
+        public int compare(IntersectData o1, IntersectData o2) {
             return Double.compare(getMinDistance(o1), getMinDistance(o2));
+        }
+    }
+
+
+    private static class IntersectsMapper implements Function<Place, IntersectData> {
+        private final Collection<Place> centers;
+        private final double radius;
+        private final boolean findAny;
+        private final boolean checkedAll;
+
+        private IntersectsMapper(Collection<Place> centers, double radius, boolean findAny, boolean checkedAll) {
+            this.centers = new ArrayList<>(centers);
+            this.radius = radius;
+            this.findAny = findAny;
+            this.checkedAll = findAny || checkedAll;
+        }
+
+        @Override
+        public IntersectData apply(Place place) {
+            Collection<ControllingData> controllingDatas = null;
+            for (Place center : centers) {
+                if (place == center) continue;
+                double distance = center.getDistance(place);
+                LOG.trace("Check {}, distance to {} = {}, radius = {}", place, center, distance, radius);
+                if (distance <= radius){
+                    if (findAny){
+                        return new IntersectData(place, center, distance);
+                    }
+                    if (controllingDatas == null) controllingDatas = new ArrayList<>(3);
+                    controllingDatas.add(new ControllingData(center, distance));
+                } else {
+                    if (!checkedAll) break;
+                }
+            }
+            if (controllingDatas == null){
+                return new IntersectData(place);
+            }
+            return new IntersectData(place, controllingDatas);
+        }
+    }
+
+
+    public static class IntersectData {
+        private final Place starSystem;
+        private final ControllingData[] contollings;
+
+        public IntersectData(Place starSystem) {
+            this.starSystem = starSystem;
+            this.contollings = new ControllingData[0];
+        }
+
+
+        public IntersectData(Place starSystem, Place control, double distance) {
+            this.starSystem = starSystem;
+            this.contollings = new ControllingData[]{new ControllingData(control,distance)};
+        }
+
+        public IntersectData(Place starSystem, Collection<ControllingData> controlling) {
+            this.starSystem = starSystem;
+            this.contollings = controlling.toArray(new ControllingData[controlling.size()]);
+            Arrays.sort(contollings);
+        }
+
+        public Place getStarSystem() {
+            return starSystem;
+        }
+
+        public Collection<ControllingData> getControllingSystems(){
+            return Arrays.asList(contollings);
+        }
+
+        public int getCount(){
+            return contollings.length;
+        }
+
+        public double getMinDistance(){
+            return contollings.length > 0 ? contollings[0].distance : Double.NaN;
+        }
+
+        public boolean isIntersect(){
+            return contollings.length > 0;
+        }
+    }
+
+    public static class ControllingData implements Comparable<ControllingData> {
+        private final Place center;
+        private final Double distance;
+
+        public ControllingData(Place center, Double distance) {
+            this.center = center;
+            this.distance = distance;
+        }
+
+        public Place getCenter() {
+            return center;
+        }
+
+        public Double getDistance() {
+            return distance;
+        }
+
+        @Override
+        public int compareTo(@NotNull ControllingData o) {
+            Objects.requireNonNull(o, "Not compare with null");
+            return Double.compare(distance, o.distance);
         }
     }
 

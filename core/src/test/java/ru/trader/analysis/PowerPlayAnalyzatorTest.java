@@ -47,10 +47,10 @@ public class PowerPlayAnalyzatorTest extends Assert {
         Collection<Place> centers = new ArrayList<>();
         centers.add(lhs3262);
 
-        Collection<Place> intersects = analyzator.getIntersects(starSystems, centers, 15);
+        Collection<PowerPlayAnalyzator.IntersectData> intersects = analyzator.getIntersects(starSystems, centers, 15);
         LOG.info("Test intersects by LHS 3262, found {}", intersects.size());
-        for (Place intersect : intersects) {
-            assertTrue(lhs3262.getDistance(intersect) <= 15);
+        for (PowerPlayAnalyzator.IntersectData intersect : intersects) {
+            assertTrue(lhs3262.getDistance(intersect.getStarSystem()) <= 15);
         }
         assertTrue(intersects.containsAll(controllingLhs3262));
         assertEquals(controllingLhs3262.size(), intersects.size());
@@ -58,30 +58,30 @@ public class PowerPlayAnalyzatorTest extends Assert {
         centers.add(aulin);
         intersects = analyzator.getIntersects(starSystems, centers, 15);
         LOG.info("Test intersects by LHS 3262 and Aulin, found {}", intersects.size());
-        for (Place intersect : intersects) {
-            assertTrue(lhs3262.getDistance(intersect) <= 15);
-            assertTrue(aulin.getDistance(intersect) <= 15);
+        for (PowerPlayAnalyzator.IntersectData intersect : intersects) {
+            assertTrue(lhs3262.getDistance(intersect.getStarSystem()) <= 15);
+            assertTrue(aulin.getDistance(intersect.getStarSystem()) <= 15);
         }
         assertTrue(intersects.containsAll(expectedIntersect));
         assertEquals(expectedIntersect.size(), intersects.size());
 
         centers.add(morgor);
-        intersects = analyzator.getIntersects(starSystems, centers, 15);
+        intersects = PowerPlayAnalyzator.getIntersects(starSystems, centers, 15);
         LOG.info("Test intersects by LHS 3262 and Aulin and Morgor, found {}", intersects.size());
-        for (Place intersect : intersects) {
-            assertTrue(lhs3262.getDistance(intersect) <= 15);
-            assertTrue(aulin.getDistance(intersect) <= 15);
-            assertTrue(morgor.getDistance(intersect) <= 15);
+        for (PowerPlayAnalyzator.IntersectData intersect : intersects) {
+            assertTrue(lhs3262.getDistance(intersect.getStarSystem()) <= 15);
+            assertTrue(aulin.getDistance(intersect.getStarSystem()) <= 15);
+            assertTrue(morgor.getDistance(intersect.getStarSystem()) <= 15);
         }
         assertTrue(intersects.containsAll(expected3Intersect));
         assertEquals(expected3Intersect.size(), intersects.size());
 
-        intersects = analyzator.getIntersects(starSystems, centers, 12);
+        intersects = PowerPlayAnalyzator.getIntersects(starSystems, centers, 12);
         LOG.info("Test intersects by LHS 3262 and Aulin and Morgor, 12 radius,  found {}", intersects.size());
-        for (Place intersect : intersects) {
-            assertTrue(lhs3262.getDistance(intersect) <= 12);
-            assertTrue(aulin.getDistance(intersect) <= 12);
-            assertTrue(morgor.getDistance(intersect) <= 12);
+        for (PowerPlayAnalyzator.IntersectData intersect : intersects) {
+            assertTrue(lhs3262.getDistance(intersect.getStarSystem()) <= 12);
+            assertTrue(aulin.getDistance(intersect.getStarSystem()) <= 12);
+            assertTrue(morgor.getDistance(intersect.getStarSystem()) <= 12);
         }
         assertEquals(0, intersects.size());
 
@@ -102,41 +102,41 @@ public class PowerPlayAnalyzatorTest extends Assert {
         Collection<Place> centers = new ArrayList<>();
         centers.add(lhs3262);
         centers.add(aulin);
-        Collection<Place> intersects = analyzator.getIntersects(lhs417, starSystems, centers, 12);
+        Collection<PowerPlayAnalyzator.IntersectData> intersects = PowerPlayAnalyzator.getIntersects(lhs417, starSystems, centers, 12);
         LOG.info("Test LHS 417 intersect LHS 3262 or Aulin, found {}", intersects.size());
-        for (Place intersect : intersects) {
-            assertTrue(lhs3262.getDistance(intersect) <= 12 || aulin.getDistance(intersect) <= 12);
-            assertTrue(lhs417.getDistance(intersect) <= 12);
+        for (PowerPlayAnalyzator.IntersectData intersect : intersects) {
+            assertTrue(lhs3262.getDistance(intersect.getStarSystem()) <= 12 || aulin.getDistance(intersect.getStarSystem()) <= 12);
+            assertTrue(lhs417.getDistance(intersect.getStarSystem()) <= 12);
         }
         assertTrue(intersects.containsAll(expectedIntersect));
         assertEquals(expectedIntersect.size(), intersects.size());
 
         centers.add(morgor);
-        intersects = analyzator.getIntersects(lhs417, starSystems, centers, 12);
+        intersects = PowerPlayAnalyzator.getIntersects(lhs417, starSystems, centers, 12);
         LOG.info("Test LHS 417 intersect LHS 3262 or Aulin or Morgor, found {}", intersects.size());
-        for (Place intersect : intersects) {
-            assertTrue(lhs3262.getDistance(intersect) <= 12 || aulin.getDistance(intersect) <= 12 || morgor.getDistance(intersect) <= 12);
-            assertTrue(lhs417.getDistance(intersect) <= 12);
+        for (PowerPlayAnalyzator.IntersectData intersect : intersects) {
+            assertTrue(lhs3262.getDistance(intersect.getStarSystem()) <= 12 || aulin.getDistance(intersect.getStarSystem()) <= 12 || morgor.getDistance(intersect.getStarSystem()) <= 12);
+            assertTrue(lhs417.getDistance(intersect.getStarSystem()) <= 12);
         }
         assertTrue(intersects.containsAll(expected3Intersect));
         assertEquals(expected3Intersect.size(), intersects.size());
 
         centers.clear();
         centers.add(morgor);
-        intersects = analyzator.getIntersects(lhs417, starSystems, centers, 12);
+        intersects = PowerPlayAnalyzator.getIntersects(lhs417, starSystems, centers, 12);
         LOG.info("Test LHS 417 intersect Morgor, found {}", intersects.size());
-        for (Place intersect : intersects) {
-            assertTrue(morgor.getDistance(intersect) <= 12);
-            assertTrue(lhs417.getDistance(intersect) <= 12);
+        for (PowerPlayAnalyzator.IntersectData intersect : intersects) {
+            assertTrue(morgor.getDistance(intersect.getStarSystem()) <= 12);
+            assertTrue(lhs417.getDistance(intersect.getStarSystem()) <= 12);
         }
         assertEquals(0, intersects.size());
 
         centers.add(aulin);
-        intersects = analyzator.getIntersects(lhs417, starSystems, centers, 12);
+        intersects = PowerPlayAnalyzator.getIntersects(lhs417, starSystems, centers, 12);
         LOG.info("Test LHS 417 intersect Aulin or Morgor, found {}", intersects.size());
-        for (Place intersect : intersects) {
-            assertTrue(aulin.getDistance(intersect) <= 12 || morgor.getDistance(intersect) <= 12);
-            assertTrue(lhs417.getDistance(intersect) <= 12);
+        for (PowerPlayAnalyzator.IntersectData intersect : intersects) {
+            assertTrue(aulin.getDistance(intersect.getStarSystem()) <= 12 || morgor.getDistance(intersect.getStarSystem()) <= 12);
+            assertTrue(lhs417.getDistance(intersect.getStarSystem()) <= 12);
         }
         assertTrue(intersects.containsAll(expected2Intersect));
         assertEquals(expected2Intersect.size(), intersects.size());
@@ -155,11 +155,11 @@ public class PowerPlayAnalyzatorTest extends Assert {
         Collection<Place> centers = new ArrayList<>();
         centers.add(lhs3262);
         centers.add(aulin);
-        Collection<Place> near = analyzator.getNear(starSystems, centers, 15, 30);
+        Collection<PowerPlayAnalyzator.IntersectData> near = PowerPlayAnalyzator.getNear(starSystems, centers, 15, 30);
         LOG.info("Test near by LHS 3262 and Aulin, found {}", near.size());
         assertTrue(near.size() > 0);
-        for (Place place : near) {
-            Collection<Place> intersect = analyzator.getIntersects(place, starSystems, centers, 15);
+        for (PowerPlayAnalyzator.IntersectData place : near) {
+            Collection<PowerPlayAnalyzator.IntersectData> intersect = PowerPlayAnalyzator.getIntersects(place.getStarSystem(), starSystems, centers, 15);
             assertEquals(0, intersect.size());
         }
 

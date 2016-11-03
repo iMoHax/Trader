@@ -74,9 +74,18 @@
                 </TableColumn>
                 <TableColumn minWidth="110" text="%market.order.distance" fx:id="sortColumn" sortType="ASCENDING">
                     <cellFactory><DistanceCell /></cellFactory>
+                    <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
                 </TableColumn>
-                <TableColumn minWidth="80" text="Типы площадок">
+                <TableColumn minWidth="80" text="Тип площадки">
+                    <cellValueFactory><PropertyValueFactory property="maxSizePad"/></cellValueFactory>
                 </TableColumn>
+                <TableColumn minWidth="80" text="Пересечений">
+                    <cellValueFactory><PropertyValueFactory property="intersectCount"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="200" text="Контролируемые системы">
+                    <cellValueFactory><PropertyValueFactory property="controlling"/></cellValueFactory>
+                </TableColumn>
+
             </columns>
             <columnResizePolicy>
                 <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
