@@ -33,6 +33,7 @@ public class PPImportTest extends Assert {
 
         PPParser parser = new PPParser(market);
         parser.parseSystems(new File(getClass().getResource("/pp.csv").getFile()));
+        parser.parsePrediction(new File(getClass().getResource("/pppre.csv").getFile()));
 
         assertEquals(POWER_STATE.CONTROL, opala.getPowerState());
         assertEquals(POWER.MAHON, opala.getPower());

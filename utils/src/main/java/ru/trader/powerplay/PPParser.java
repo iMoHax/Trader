@@ -142,7 +142,7 @@ public class PPParser {
             case "blocked": return POWER_STATE.NONE;
             case "control": return POWER_STATE.CONTROL;
             case "contested": return POWER_STATE.CONTESTED;
-            case "takingControl": return POWER_STATE.EXPANSION;
+            case "takingControl": return POWER_STATE.CONTROL;
             case "turmoil": return POWER_STATE.NONE;
             default:
                 LOG.warn("Unknown power state: {}", value);
