@@ -1,9 +1,9 @@
-package ru.trader.maddavo;
+package ru.trader.store.imp;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ItemConverter {
+public class ItemCorrector {
     private final static Map<String, String> IDS = new HashMap<>(85, 0.9f);
 
 
@@ -38,20 +38,25 @@ public class ItemConverter {
         IDS.put("bootleg liquor", "bootleg_liquor");
         IDS.put("liquor", "liquor");
         IDS.put("narcotics", "basicnarcotics");
+        IDS.put("basic narcotics", "basicnarcotics");
         IDS.put("tobacco", "tobacco");
         IDS.put("wine", "wine");
         IDS.put("atmospheric processors", "atmosphericprocessors");
+        IDS.put("atmospheric extractors", "atmosphericprocessors");
         IDS.put("building fabricators", "building_fabricators");
         IDS.put("crop harvesters", "cropharvesters");
         IDS.put("geological equipment", "geological_equipment");
         IDS.put("marine equipment", "marinesupplies");
+        IDS.put("marine supplies", "marinesupplies");
         IDS.put("microbial furnaces", "microbialfurnaces");
+        IDS.put("heliostatic furnaces", "microbialfurnaces");
         IDS.put("mineral extractors", "mineralextractors");
         IDS.put("power generators", "powergenerators");
         IDS.put("skimmer components", "skimer_components");
         IDS.put("thermal cooling units", "thermal_cooling_units");
         IDS.put("water purifiers", "waterpurifiers");
         IDS.put("agri-medicines", "agriculturalmedicines");
+        IDS.put("agricultural medicines", "agriculturalmedicines");
         IDS.put("basic medicines", "basicmedicines");
         IDS.put("combat stabilisers", "combatstabilisers");
         IDS.put("performance enhancers", "performanceenhancers");
@@ -108,10 +113,14 @@ public class ItemConverter {
         IDS.put("animal monitors", "animalmonitors");
         IDS.put("aquaponic systems", "aquaponicsystems");
         IDS.put("auto-fabricators", "autofabricators");
+        IDS.put("auto fabricators", "autofabricators");
         IDS.put("bioreducing lichen", "bioreducinglichen");
+        IDS.put("bio reducing lichen", "bioreducinglichen");
         IDS.put("computer components", "computercomponents");
         IDS.put("h.e. suits", "hazardousenvironmentsuits");
+        IDS.put("hazardous environment suits", "hazardousenvironmentsuits");
         IDS.put("land enrichment systems", "landenrichmentsystems");
+        IDS.put("terrain enrichment systems", "landenrichmentsystems");
         IDS.put("muon imager", "mu_tom_imager");
         IDS.put("resonating separators", "resonatingseparators");
         IDS.put("robotics", "robotics");
@@ -125,46 +134,49 @@ public class ItemConverter {
         IDS.put("battle weapons", "battleweapons");
         IDS.put("landmines", "landmines");
         IDS.put("non-lethal weapons", "nonlethalweapons");
+        IDS.put("non lethal weapons", "nonlethalweapons");
         IDS.put("personal weapons", "personalweapons");
         IDS.put("reactive armour", "reactivearmour");
 
-        IDS.put("Hydrogen Peroxide", "hydrogen_peroxide");
-        IDS.put("Liquid Oxygen", "liquid_oxygen");
-        IDS.put("Water", "water");
-        IDS.put("Survival Equipment", "survival_equipment");
-        IDS.put("CMM Composite", "cmm_composite");
-        IDS.put("Insulating Membrane", "insulating_membrane");
-        IDS.put("Emergency Power Cells", "emergency_power_cells");
-        IDS.put("Exhaust Manifold", "exhaust_manifold");
-        IDS.put("HN Shock Mount", "hn_shock_mount");
-        IDS.put("Advanced Medicines", "advanced_medicines");
-        IDS.put("Praseodymium", "praseodymium");
-        IDS.put("Samarium", "samarium");
-        IDS.put("Low Temperature Diamond", "low_temperature_diamond");
-        IDS.put("Micro Controllers", "micro_controllers");
-        IDS.put("Conductive Fabrics", "conductive_fabrics");
-        IDS.put("Lithium Hydroxide", "lithium_hydroxide");
-        IDS.put("Methane Clathrate", "methane_clathrate");
-        IDS.put("Military Grade Fabrics", "military_grade_fabrics");
-        IDS.put("Heatsink Interlink", "heatsink_interlink");
-        IDS.put("Magnetic Emitter Coil", "magnetic_emitter_coil");
-        IDS.put("Power Converter", "power_converter");
-        IDS.put("Energy Grid Assembly", "power_grid_assembly");
-        IDS.put("Bromellite", "bromellite");
-        IDS.put("Methanol Monohydrate", "methanol_monohydrate_crystals");
-        IDS.put("Hardware Diagnostic Sensor", "diagnostic_sensor");
-        IDS.put("Medical Diagnostic Equipment", "medical_diagnostic_equipment");
-        IDS.put("Reinforced Mounting Plate", "reinforced_mounting_plate");
-        IDS.put("Articulation Motors", "articulation_motors");
-        IDS.put("Modular Terminals", "modular_terminals");
-        IDS.put("Power Transfer Conduits", "power_transfer_conduits");
-        IDS.put("Radiation Baffle", "radiation_baffle");
-        IDS.put("Ion Distributor", "ion_distributor");
-        IDS.put("Nanobreakers", "nanobreakers");
-        IDS.put("Telemetry Suite", "telemetry_suite");
-        IDS.put("Jadeite", "jadeite");
-        IDS.put("Moissanite", "moissanite");
-        IDS.put("Taaffeite", "taaffeite");
+        IDS.put("hydrogen peroxide", "hydrogen_peroxide");
+        IDS.put("liquid oxygen", "liquid_oxygen");
+        IDS.put("water", "water");
+        IDS.put("survival equipment", "survival_equipment");
+        IDS.put("cmm composite", "cmm_composite");
+        IDS.put("c m m composite", "cmm_composite");
+        IDS.put("insulating membrane", "insulating_membrane");
+        IDS.put("emergency power cells", "emergency_power_cells");
+        IDS.put("exhaust manifold", "exhaust_manifold");
+        IDS.put("hn shock mount", "hn_shock_mount");
+        IDS.put("h n shock mount", "hn_shock_mount");
+        IDS.put("advanced medicines", "advanced_medicines");
+        IDS.put("praseodymium", "praseodymium");
+        IDS.put("samarium", "samarium");
+        IDS.put("low temperature diamond", "low_temperature_diamond");
+        IDS.put("micro controllers", "micro_controllers");
+        IDS.put("conductive fabrics", "conductive_fabrics");
+        IDS.put("lithium hydroxide", "lithium_hydroxide");
+        IDS.put("methane clathrate", "methane_clathrate");
+        IDS.put("military grade fabrics", "military_grade_fabrics");
+        IDS.put("heatsink interlink", "heatsink_interlink");
+        IDS.put("magnetic emitter coil", "magnetic_emitter_coil");
+        IDS.put("power converter", "power_converter");
+        IDS.put("energy grid assembly", "power_grid_assembly");
+        IDS.put("bromellite", "bromellite");
+        IDS.put("methanol monohydrate", "methanol_monohydrate_crystals");
+        IDS.put("hardware diagnostic sensor", "diagnostic_sensor");
+        IDS.put("medical diagnostic equipment", "medical_diagnostic_equipment");
+        IDS.put("reinforced mounting plate", "reinforced_mounting_plate");
+        IDS.put("articulation motors", "articulation_motors");
+        IDS.put("modular terminals", "modular_terminals");
+        IDS.put("power transfer conduits", "power_transfer_conduits");
+        IDS.put("radiation baffle", "radiation_baffle");
+        IDS.put("ion distributor", "ion_distributor");
+        IDS.put("nanobreakers", "nanobreakers");
+        IDS.put("telemetry suite", "telemetry_suite");
+        IDS.put("jadeite", "jadeite");
+        IDS.put("moissanite", "moissanite");
+        IDS.put("taaffeite", "taaffeite");
     }
 
     public static String getItemId(String name){
