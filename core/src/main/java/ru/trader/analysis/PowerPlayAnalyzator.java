@@ -1,6 +1,7 @@
 package ru.trader.analysis;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
@@ -45,7 +46,7 @@ public class PowerPlayAnalyzator {
     }
 
     public Collection<IntersectData> getNear(Collection<Place> starSystems){
-        Stream<Place> candidates = market.get().stream().filter(p -> p.getPower() == POWER.NONE && p.getFaction() != FACTION.NONE);
+        Stream<Place> candidates = market.get().stream().filter(p -> p.getFaction() != FACTION.NONE);
         return getNear(candidates, starSystems, CONTROLLING_RADIUS, CONTROLLING_RADIUS*2).collect(Collectors.toList());
     }
 
@@ -70,12 +71,27 @@ public class PowerPlayAnalyzator {
     }
 
     public static Stream<IntersectData> getNear(Stream<Place> starSystems, Collection<Place> centers, double radius, double maxDistance){
-        IntersectsMapper controllingMapper = new IntersectsMapper(centers, radius, true, true);
         IntersectsMapper distanceMapper = new IntersectsMapper(centers, maxDistance, false, true);
-        return starSystems.filter(new FarDropper(centers, maxDistance))
-                .map(controllingMapper)
-                .filter(d -> d.getCount() == 0)
-                .map(d -> distanceMapper.apply(d.getStarSystem()))
+        Predicate<Place> isControlling = intersectsAnyPredicate(centers, radius);
+
+        Collection<Place> candidates = new ArrayList<>();
+        Collection<Place> checked = new ArrayList<>();
+        starSystems.filter(new FarDropper(centers, maxDistance))
+                .forEach(p -> {
+                    if (isControlling != null && isControlling.test(p)) checked.add(p);
+                    else{
+                        if (p.getPower() == POWER.NONE) {
+                            candidates.add(p);
+                        }
+                    }
+                });
+        candidates.removeAll(centers);
+        Predicate<Place> isCheckedControlling = intersectsAnyPredicate(checked, radius);
+        if (isCheckedControlling == null) isCheckedControlling = p -> false;
+
+        return candidates.stream()
+                .filter(isCheckedControlling.negate())
+                .map(distanceMapper)
                 .filter(IntersectData::isIntersect)
                 .sorted(new DistanceComparator());
     }
@@ -118,7 +134,8 @@ public class PowerPlayAnalyzator {
                 .map(mapper)
                 .filter(d -> d.getCount() == needCount);
     }
-/*
+
+    @Nullable
     private static Predicate<Place> intersectsAnyPredicate(Collection<Place> places, double radius){
         Predicate<Place> intersects = null;
         for (Place place : places) {
@@ -128,20 +145,6 @@ public class PowerPlayAnalyzator {
         return intersects;
     }
 
-
-    private static Predicate<Place> intersectsPredicate(Collection<Place> places, double radius){
-        Predicate<Place> intersects = null;
-        for (Place place : places) {
-            if (intersects == null) intersects = new Controlling(place, radius);
-            else intersects = intersects.and(new Controlling(place, radius));
-        }
-        return intersects;
-    }
-
-    private static Predicate<Place> intersectsPredicate(Place checkedPlace, Collection<Place> places, double radius){
-        return new Controlling(checkedPlace, radius).and(intersectsAnyPredicate(places, radius));
-    }
- */
     private static class Controlling implements Predicate<Place> {
         private final Place center;
         private final double radius;
