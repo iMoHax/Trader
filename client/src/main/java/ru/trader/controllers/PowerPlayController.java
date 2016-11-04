@@ -4,7 +4,9 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import org.controlsfx.control.CheckComboBox;
+import org.controlsfx.control.MasterDetailPane;
 import ru.trader.Main;
 import ru.trader.analysis.PowerPlayAnalyzator;
 import ru.trader.core.*;
@@ -47,12 +49,17 @@ public class PowerPlayController {
     @FXML
     private ListView<SystemModel> controlSystems;
     @FXML
+    private MasterDetailPane resultPane;
+    @FXML
     private TableView<ResultEntry> tblResults;
+    @FXML
+    private TableView<ResultEntry> tblDetail;
 
     private MarketModel world;
     private ProfileModel profile;
     private PowerPlayAnalyzator analyzator;
     private final List<ResultEntry> result = FXCollections.observableArrayList();
+    private final List<ResultEntry> detail = FXCollections.observableArrayList();
 
 
     @FXML
@@ -68,6 +75,7 @@ public class PowerPlayController {
         cbStates.getCheckModel().check(POWER_STATE.HEADQUARTERS);
 
         BindingsHelper.setTableViewItems(tblResults, result);
+        BindingsHelper.setTableViewItems(tblDetail, detail);
 
         initListeners();
     }
@@ -92,6 +100,30 @@ public class PowerPlayController {
     }
 
     private void initListeners(){
+        tblResults.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ESCAPE){
+                if (!tblResults.getSelectionModel().isEmpty()) {
+                    tblResults.getSelectionModel().clearSelection();
+                }
+            }
+        });
+        tblResults.getSelectionModel().selectedItemProperty().addListener((ov, o, n) -> {
+            if (n != null){
+                fillDetail(n.starSystem);
+                resultPane.setShowDetailNode(true);
+            } else {
+                resultPane.setShowDetailNode(false);
+            }
+        });
+    }
+
+    private void fillDetail(SystemModel detailSystem) {
+        final Place starSystem = ModelFabric.get(detailSystem);
+        detail.clear();
+        if (starSystem != null){
+            Collection<PowerPlayAnalyzator.IntersectData> controllings = analyzator.getControlling(starSystem);
+            detail.addAll(BindingsHelper.observableList(controllings,d -> new ResultEntry(d, starSystem)));
+        }
     }
 
 
@@ -150,6 +182,9 @@ public class PowerPlayController {
 
     @FXML
     private void search(){
+        if (controlSystems.getItems().isEmpty()){
+            addControlSystem();
+        }
         if (rbIntersect.isSelected()){
             getIntersects();
         }
@@ -203,6 +238,13 @@ public class PowerPlayController {
         }
     }
 
+    @FXML
+    private void copyDetailToClipboard(){
+        ResultEntry entry = tblDetail.getSelectionModel().getSelectedItem();
+        if (entry != null){
+            Main.copyToClipboard(entry.starSystem.getName());
+        }
+    }
 
     public class ResultEntry {
         private final SystemModel starSystem;

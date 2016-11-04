@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
-<?import org.controlsfx.glyphfont.*?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
-<?import ru.trader.view.support.cells.DistanceCell?>
 <?import org.controlsfx.control.CheckComboBox?>
+<?import org.controlsfx.control.MasterDetailPane?>
+<?import org.controlsfx.glyphfont.*?>
+<?import ru.trader.view.support.cells.*?>
+<?import ru.trader.view.support.*?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.PowerPlayController"
       prefHeight="500"  >
@@ -54,52 +56,93 @@
        </VBox>
     </HBox>
     </TitledPane>
-    <TitledPane text="Результаты анализа" collapsible="false">
-        <TableView fx:id="tblResults">
-            <columns>
-                <TableColumn minWidth="200" text="%market.systems">
-                    <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
-                </TableColumn>
-                <TableColumn minWidth="200" text="%market.government">
-                    <cellValueFactory><PropertyValueFactory property="government"/></cellValueFactory>
-                </TableColumn>
-                <TableColumn minWidth="180" text="%market.allegiance">
-                    <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
-                </TableColumn>
-                <TableColumn minWidth="110" text="%market.powerState">
-                    <cellValueFactory><PropertyValueFactory property="powerState"/></cellValueFactory>
-                </TableColumn>
-                <TableColumn minWidth="110" text="%market.power">
-                    <cellValueFactory><PropertyValueFactory property="power"/></cellValueFactory>
-                </TableColumn>
-                <TableColumn minWidth="110" text="%market.order.distance" fx:id="sortColumn" sortType="ASCENDING">
-                    <cellFactory><DistanceCell /></cellFactory>
-                    <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
-                </TableColumn>
-                <TableColumn minWidth="80" text="Тип площадки">
-                    <cellValueFactory><PropertyValueFactory property="maxSizePad"/></cellValueFactory>
-                </TableColumn>
-                <TableColumn minWidth="80" text="Пересечений">
-                    <cellValueFactory><PropertyValueFactory property="intersectCount"/></cellValueFactory>
-                </TableColumn>
-                <TableColumn minWidth="200" text="Контролируемые системы">
-                    <cellValueFactory><PropertyValueFactory property="controlling"/></cellValueFactory>
-                </TableColumn>
-
-            </columns>
-            <columnResizePolicy>
-                <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
-            </columnResizePolicy>
-            <sortOrder>
-                <fx:reference source="sortColumn"/>
-            </sortOrder>
-            <contextMenu>
-                <ContextMenu>
-                    <items>
-                        <MenuItem text="%dialog.button.copy" onAction="#copyToClipboard" />
-                    </items>
-                </ContextMenu>
-            </contextMenu>
-        </TableView>
-    </TitledPane>
+    <MasterDetailPane fx:id="resultPane" detailSide="RIGHT" prefWidth="1190" dividerPosition="0.566" showDetailNode="false">
+        <masterNode>
+        <TitledPane text="Результаты анализа" collapsible="false">
+            <TableView fx:id="tblResults">
+                <columns>
+                    <TableColumn minWidth="200" text="%market.system">
+                        <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn minWidth="180" text="Пересекается с">
+                        <cellValueFactory><PropertyValueFactory property="controlling"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn minWidth="90" text="Пересечений">
+                        <cellValueFactory><PropertyValueFactory property="intersectCount"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn minWidth="100" text="%market.powerState">
+                        <cellFactory><TextCell><converter><PowerStateStringConverter /></converter></TextCell></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="powerState"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn minWidth="100" text="%market.power">
+                        <cellFactory><TextCell><converter><PowerStringConverter /></converter></TextCell></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="power"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn minWidth="120" text="%market.government">
+                        <cellFactory><TextCell><converter><GovernmentStringConverter /></converter></TextCell></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="government"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn minWidth="120" text="%market.allegiance">
+                        <cellFactory><TextCell><converter><FactionStringConverter /></converter></TextCell></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn minWidth="80" text="%market.order.distance">
+                        <cellFactory><DistanceCell /></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn minWidth="100" text="Тип площадки">
+                        <cellValueFactory><PropertyValueFactory property="maxSizePad"/></cellValueFactory>
+                    </TableColumn>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+                <contextMenu>
+                    <ContextMenu>
+                        <items>
+                            <MenuItem text="%dialog.button.copy" onAction="#copyToClipboard" />
+                        </items>
+                    </ContextMenu>
+                </contextMenu>
+            </TableView>
+        </TitledPane>
+        </masterNode>
+        <detailNode>
+        <TitledPane text="Системы в радиусе 15 LY" collapsible="false">
+            <TableView fx:id="tblDetail">
+                <columns>
+                    <TableColumn minWidth="100" text="%market.system">
+                        <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn minWidth="100" text="%market.powerState">
+                        <cellFactory><TextCell><converter><PowerStateStringConverter /></converter></TextCell></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="powerState"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn minWidth="100" text="%market.power">
+                        <cellFactory><TextCell><converter><PowerStringConverter /></converter></TextCell></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="power"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn minWidth="120" text="%market.government">
+                        <cellFactory><TextCell><converter><GovernmentStringConverter /></converter></TextCell></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="government"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn minWidth="120" text="%market.allegiance">
+                        <cellFactory><TextCell><converter><FactionStringConverter /></converter></TextCell></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
+                    </TableColumn>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+                <contextMenu>
+                    <ContextMenu>
+                        <items>
+                            <MenuItem text="%dialog.button.copy" onAction="#copyDetailToClipboard" />
+                        </items>
+                    </ContextMenu>
+                </contextMenu>
+            </TableView>
+        </TitledPane>
+        </detailNode>
+    </MasterDetailPane>
 </VBox>
