@@ -19,8 +19,28 @@
                 <TextField fx:id="checkedSystemText" prefWidth="220"/>
                 <Button minWidth="30" onAction="#currentAsChecked"><graphic><Glyph text="FontAwesome|MAP_MARKER"/></graphic></Button>
             </HBox>
+            <HBox spacing="4" alignment="CENTER" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+                <ListView fx:id="historySystems" HBox.hgrow="ALWAYS">
+                    <contextMenu>
+                        <ContextMenu>
+                            <items>
+                                <MenuItem text="%dialog.button.copy" accelerator="Shortcut+C" onAction="#copySystemToClipboard" />
+                            </items>
+                        </ContextMenu>
+                    </contextMenu>
+                </ListView>
+                <VBox spacing="4">
+                    <Button prefWidth="30" onAction="#addHistorySystem"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
+                    <Button prefWidth="30" onAction="#removeHistorySystem"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
+                    <Button prefWidth="30" onAction="#clearHistorySystems"><graphic><Glyph text="FontAwesome|TRASH"/></graphic></Button>
+                </VBox>
+            </HBox>
         </VBox>
         <VBox minWidth="250" maxWidth="250" spacing="10" alignment="CENTER_LEFT">
+            <HBox spacing="4">
+                <Label text="Сила:" minWidth="86" maxWidth="86" />
+                <ComboBox fx:id="cbCurrentPower" minWidth="160"/>
+            </HBox>
             <fx:define><ToggleGroup fx:id="analyzeType" /></fx:define>
             <RadioButton fx:id="rbIntersect" text="Поиск пересечений" selected="true" toggleGroup="$analyzeType"/>
             <RadioButton fx:id="rbNear" text="Поиск ближайших без пересечений" selected="false" toggleGroup="$analyzeType"/>
@@ -46,7 +66,15 @@
                 <CheckComboBox fx:id="cbStates" minWidth="160" />
             </HBox>
             <HBox spacing="4" alignment="CENTER" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
-                <ListView fx:id="controlSystems" HBox.hgrow="ALWAYS"/>
+                <ListView fx:id="controlSystems" HBox.hgrow="ALWAYS">
+                    <contextMenu>
+                        <ContextMenu>
+                            <items>
+                                <MenuItem text="%dialog.button.copy" accelerator="Shortcut+C" onAction="#copySystemToClipboard" />
+                            </items>
+                        </ContextMenu>
+                    </contextMenu>
+                </ListView>
                 <VBox spacing="4">
                     <Button prefWidth="30" onAction="#addControlSystem"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
                     <Button prefWidth="30" onAction="#removeControlSystem"><graphic><Glyph text="FontAwesome|MINUS"/></graphic></Button>
@@ -56,42 +84,46 @@
        </VBox>
     </HBox>
     </TitledPane>
-    <MasterDetailPane fx:id="resultPane" detailSide="RIGHT" prefWidth="1190" dividerPosition="0.566" showDetailNode="false">
+    <MasterDetailPane fx:id="resultPane" detailSide="RIGHT" prefWidth="1190" dividerPosition="0.566" showDetailNode="false" VBox.vgrow="ALWAYS">
         <masterNode>
         <TitledPane text="Результаты анализа" collapsible="false">
             <TableView fx:id="tblResults">
                 <columns>
-                    <TableColumn minWidth="200" text="%market.system">
+                    <TableColumn prefWidth="200" text="%market.system">
                         <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn minWidth="180" text="Пересекается с">
+                    <TableColumn prefWidth="180" text="Пересекается с">
                         <cellValueFactory><PropertyValueFactory property="controlling"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn minWidth="90" text="Пересечений">
+                    <TableColumn prefWidth="90" text="Пересечений">
                         <cellValueFactory><PropertyValueFactory property="intersectCount"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn minWidth="100" text="%market.powerState">
+                    <TableColumn prefWidth="100" text="%market.powerState">
                         <cellFactory><TextCell><converter><PowerStateStringConverter /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="powerState"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn minWidth="100" text="%market.power">
+                    <TableColumn prefWidth="100" text="%market.power">
                         <cellFactory><TextCell><converter><PowerStringConverter /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="power"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn minWidth="120" text="%market.government">
+                    <TableColumn prefWidth="120" text="%market.government">
                         <cellFactory><TextCell><converter><GovernmentStringConverter /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="government"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn minWidth="120" text="%market.allegiance">
+                    <TableColumn prefWidth="120" text="%market.allegiance">
                         <cellFactory><TextCell><converter><FactionStringConverter /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn minWidth="80" text="%market.order.distance">
+                    <TableColumn prefWidth="80" text="%market.order.distance">
                         <cellFactory><DistanceCell /></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn minWidth="100" text="Тип площадки">
+                    <TableColumn prefWidth="100" text="Тип площадки">
                         <cellValueFactory><PropertyValueFactory property="maxSizePad"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="80" text="Дистанция до HQ">
+                        <cellFactory><DistanceCell /></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="distanceHQ"/></cellValueFactory>
                     </TableColumn>
                 </columns>
                 <columnResizePolicy>
@@ -100,7 +132,7 @@
                 <contextMenu>
                     <ContextMenu>
                         <items>
-                            <MenuItem text="%dialog.button.copy" onAction="#copyToClipboard" />
+                            <MenuItem text="%dialog.button.copy" accelerator="Shortcut+C" onAction="#copySystemToClipboard" />
                         </items>
                     </ContextMenu>
                 </contextMenu>
@@ -111,22 +143,22 @@
         <TitledPane text="Системы в радиусе 15 LY" collapsible="false">
             <TableView fx:id="tblDetail">
                 <columns>
-                    <TableColumn minWidth="100" text="%market.system">
+                    <TableColumn prefWidth="100" text="%market.system">
                         <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn minWidth="100" text="%market.powerState">
+                    <TableColumn prefWidth="100" text="%market.powerState">
                         <cellFactory><TextCell><converter><PowerStateStringConverter /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="powerState"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn minWidth="100" text="%market.power">
+                    <TableColumn prefWidth="100" text="%market.power">
                         <cellFactory><TextCell><converter><PowerStringConverter /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="power"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn minWidth="120" text="%market.government">
+                    <TableColumn prefWidth="120" text="%market.government">
                         <cellFactory><TextCell><converter><GovernmentStringConverter /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="government"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn minWidth="120" text="%market.allegiance">
+                    <TableColumn prefWidth="120" text="%market.allegiance">
                         <cellFactory><TextCell><converter><FactionStringConverter /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
                     </TableColumn>
@@ -137,7 +169,7 @@
                 <contextMenu>
                     <ContextMenu>
                         <items>
-                            <MenuItem text="%dialog.button.copy" onAction="#copyDetailToClipboard" />
+                            <MenuItem text="%dialog.button.copy" accelerator="Shortcut+C" onAction="#copySystemToClipboard" />
                         </items>
                     </ContextMenu>
                 </contextMenu>

@@ -21,6 +21,7 @@ import ru.trader.view.support.autocomplete.SystemsProvider;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class PowerPlayController {
@@ -31,6 +32,8 @@ public class PowerPlayController {
     @FXML
     private TextField controlSystemText;
     private AutoCompletion<SystemModel> controlSystem;
+    @FXML
+    private ComboBox<POWER> cbCurrentPower;
     @FXML
     private ComboBox<POWER> cbPower;
     @FXML
@@ -47,6 +50,8 @@ public class PowerPlayController {
     @FXML
     private RadioButton rbControlling;
     @FXML
+    private ListView<SystemModel> historySystems;
+    @FXML
     private ListView<SystemModel> controlSystems;
     @FXML
     private MasterDetailPane resultPane;
@@ -57,6 +62,7 @@ public class PowerPlayController {
 
     private MarketModel world;
     private ProfileModel profile;
+    private Optional<SystemModel> hqSystem;
     private PowerPlayAnalyzator analyzator;
     private final List<ResultEntry> result = FXCollections.observableArrayList();
     private final List<ResultEntry> detail = FXCollections.observableArrayList();
@@ -67,6 +73,8 @@ public class PowerPlayController {
         init();
         profile = MainController.getProfile();
 
+        cbCurrentPower.setConverter(new PowerStringConverter());
+        cbCurrentPower.setItems(FXCollections.observableArrayList(POWER.values()));
         cbPower.setConverter(new PowerStringConverter());
         cbPower.setItems(FXCollections.observableArrayList(POWER.values()));
         cbStates.setConverter(new PowerStateStringConverter());
@@ -81,8 +89,17 @@ public class PowerPlayController {
     }
 
     void init(){
+        //TODO: add to screens reinit
+
         world = MainController.getWorld();
         analyzator = world.getPowerPlayAnalyzer();
+        if (cbCurrentPower.getValue() != POWER.NONE && cbCurrentPower.getValue() != null){
+            hqSystem = getHeadquarter(cbCurrentPower.getValue());
+        } else {
+            hqSystem = Optional.empty();
+        }
+        historySystems.getItems().clear();
+        controlSystems.getItems().clear();
 
         SystemsProvider provider = world.getSystemsProvider();
         if (checkedSystem == null){
@@ -99,16 +116,33 @@ public class PowerPlayController {
         }
     }
 
+    private Optional<SystemModel> getHeadquarter(POWER power) {
+        StarSystemFilter filter = new StarSystemFilter(true);
+        filter.add(power);
+        filter.add(POWER_STATE.HEADQUARTERS);
+        return world.getSystems(filter).stream().findFirst();
+    }
+
     private void initListeners(){
+        cbCurrentPower.valueProperty().addListener((ov, o, n) -> {
+            hqSystem = getHeadquarter(n);
+        });
+
+        historySystems.getSelectionModel().selectedItemProperty().addListener((ov, o, n) -> {
+            if (n != null){
+                checkedSystem.setValue(n);
+            }
+        });
+
         tblResults.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ESCAPE){
+            if (e.getCode() == KeyCode.ESCAPE) {
                 if (!tblResults.getSelectionModel().isEmpty()) {
                     tblResults.getSelectionModel().clearSelection();
                 }
             }
         });
         tblResults.getSelectionModel().selectedItemProperty().addListener((ov, o, n) -> {
-            if (n != null){
+            if (n != null) {
                 fillDetail(n.starSystem);
                 resultPane.setShowDetailNode(true);
             } else {
@@ -122,7 +156,7 @@ public class PowerPlayController {
         detail.clear();
         if (starSystem != null){
             Collection<PowerPlayAnalyzator.IntersectData> controllings = analyzator.getControlling(starSystem);
-            detail.addAll(BindingsHelper.observableList(controllings,d -> new ResultEntry(d, starSystem)));
+            detail.addAll(BindingsHelper.observableList(controllings, d -> new ResultEntry(d, starSystem)));
         }
     }
 
@@ -182,6 +216,7 @@ public class PowerPlayController {
 
     @FXML
     private void search(){
+        addHistorySystem();
         if (controlSystems.getItems().isEmpty()){
             addControlSystem();
         }
@@ -231,18 +266,47 @@ public class PowerPlayController {
     }
 
     @FXML
-    private void copyToClipboard(){
-        ResultEntry entry = tblResults.getSelectionModel().getSelectedItem();
-        if (entry != null){
-            Main.copyToClipboard(entry.starSystem.getName());
+    private void addHistorySystem() {
+        addHistorySystem(checkedSystem.getValue());
+    }
+
+    private void addHistorySystem(SystemModel starSystem){
+        if (!ModelFabric.isFake(starSystem)){
+            if (!historySystems.getItems().contains(starSystem)) {
+                historySystems.getItems().add(starSystem);
+            }
         }
     }
 
     @FXML
-    private void copyDetailToClipboard(){
-        ResultEntry entry = tblDetail.getSelectionModel().getSelectedItem();
-        if (entry != null){
-            Main.copyToClipboard(entry.starSystem.getName());
+    private void removeHistorySystem(){
+        int index = historySystems.getSelectionModel().getSelectedIndex();
+        if (index >= 0){
+            historySystems.getItems().remove(index);
+        }
+    }
+
+    @FXML
+    private void clearHistorySystems(){
+        controlSystems.getItems().clear();
+    }
+
+
+    @FXML
+    private void copySystemToClipboard(){
+        SystemModel starSystem = null;
+        if (historySystems.isFocused()) starSystem = historySystems.getSelectionModel().getSelectedItem();
+        if (controlSystems.isFocused()) starSystem = controlSystems.getSelectionModel().getSelectedItem();
+        if (tblResults.isFocused()){
+            ResultEntry entry = tblResults.getSelectionModel().getSelectedItem();
+            starSystem = entry != null ? entry.starSystem : null;
+        }
+        if (tblDetail.isFocused()){
+            ResultEntry entry = tblDetail.getSelectionModel().getSelectedItem();
+            starSystem = entry != null ? entry.starSystem : null;
+        }
+        if (starSystem != null){
+            Main.copyToClipboard(starSystem.getName());
         }
     }
 
@@ -250,6 +314,7 @@ public class PowerPlayController {
         private final SystemModel starSystem;
         private final StationModel nearStation;
         private final ReadOnlyDoubleProperty distance;
+        private final ReadOnlyDoubleProperty distanceHQ;
         private final ReadOnlyStringProperty maxSizePad;
         private final ReadOnlyIntegerProperty intersectCount;
         private final ReadOnlyStringProperty controlling;
@@ -265,6 +330,8 @@ public class PowerPlayController {
             nearStation = starSystem.getNear();
             controlling = new SimpleStringProperty(getControllingString(data.getControllingSystems()));
             distance = new SimpleDoubleProperty(from != null ? from.getDistance(data.getStarSystem()) : Double.NaN);
+            Place hq = ModelFabric.get(hqSystem.orElse(null));
+            distanceHQ = new SimpleDoubleProperty(hq != null ? hq.getDistance(data.getStarSystem()) : Double.NaN);
         }
 
         private String getControllingString(Collection<PowerPlayAnalyzator.ControllingData> controllings) {
@@ -304,6 +371,10 @@ public class PowerPlayController {
 
         public ReadOnlyDoubleProperty distanceProperty() {
             return distance;
+        }
+
+        public ReadOnlyDoubleProperty distanceHQProperty() {
+            return distanceHQ;
         }
 
         public ReadOnlyStringProperty maxSizePadProperty() {
