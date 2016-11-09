@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
@@ -11,6 +12,8 @@
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.trader.controllers.PowerPlayController"
       prefHeight="500"  >
+    <fx:define><Insets fx:id="tablePadding" left="0" right="0" top="0" bottom="0" /></fx:define>
+    <fx:define><Insets fx:id="summPadding" left="4" right="4" top="4" bottom="4" /></fx:define>
     <TitledPane text="Параметры анализа" collapsible="false">
     <HBox spacing="50" alignment="CENTER" minHeight="210" maxHeight="210">
         <VBox minWidth="250" maxWidth="250" spacing="4">
@@ -87,7 +90,8 @@
     <MasterDetailPane fx:id="resultPane" detailSide="RIGHT" prefWidth="1190" dividerPosition="0.566" showDetailNode="false" VBox.vgrow="ALWAYS">
         <masterNode>
         <TitledPane text="Результаты анализа" collapsible="false">
-            <TableView fx:id="tblResults">
+            <VBox spacing="4" padding="$tablePadding">
+            <TableView fx:id="tblResults" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn prefWidth="150" text="%market.system">
                         <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
@@ -125,6 +129,7 @@
                         <cellValueFactory><PropertyValueFactory property="upkeep"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn prefWidth="80" text="Население">
+                        <cellFactory><TextCell><converter><CustomNumberStringConverter pattern="#,##0.##" /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="population"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn prefWidth="100" text="Тип площадки">
@@ -149,11 +154,14 @@
                     </ContextMenu>
                 </contextMenu>
             </TableView>
+                <HBox spacing="4" padding="$summPadding"><Label text="Сумма населения:" /><Label fx:id="resultPopSumm" /></HBox>
+            </VBox>
         </TitledPane>
         </masterNode>
         <detailNode>
         <TitledPane text="Системы в радиусе 15 LY" collapsible="false">
-            <TableView fx:id="tblDetail">
+            <VBox spacing="4" padding="$tablePadding">
+            <TableView fx:id="tblDetail" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn prefWidth="100" text="%market.system">
                         <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
@@ -199,6 +207,8 @@
                     </ContextMenu>
                 </contextMenu>
             </TableView>
+                <HBox spacing="4" padding="$summPadding"><Label text="Сумма населения:" /><Label fx:id="detailPopSumm" /></HBox>
+            </VBox>
         </TitledPane>
         </detailNode>
     </MasterDetailPane>

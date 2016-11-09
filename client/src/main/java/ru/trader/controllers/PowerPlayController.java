@@ -1,10 +1,13 @@
 package ru.trader.controllers;
 
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.MasterDetailPane;
 import ru.trader.Main;
@@ -20,7 +23,6 @@ import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -59,13 +61,17 @@ public class PowerPlayController {
     private TableView<ResultEntry> tblResults;
     @FXML
     private TableView<ResultEntry> tblDetail;
+    @FXML
+    private Label resultPopSumm;
+    @FXML
+    private Label detailPopSumm;
 
     private MarketModel world;
     private ProfileModel profile;
     private Optional<SystemModel> hqSystem;
     private PowerPlayAnalyzator analyzator;
-    private final List<ResultEntry> result = FXCollections.observableArrayList();
-    private final List<ResultEntry> detail = FXCollections.observableArrayList();
+    private final ObservableList<ResultEntry> result = FXCollections.observableArrayList();
+    private final ObservableList<ResultEntry> detail = FXCollections.observableArrayList();
 
 
     @FXML
@@ -81,6 +87,7 @@ public class PowerPlayController {
         cbStates.getItems().setAll(POWER_STATE.values());
         cbStates.getCheckModel().check(POWER_STATE.CONTROL);
         cbStates.getCheckModel().check(POWER_STATE.HEADQUARTERS);
+        cbStates.getCheckModel().check(POWER_STATE.TURMOIL);
 
         BindingsHelper.setTableViewItems(tblResults, result);
         BindingsHelper.setTableViewItems(tblDetail, detail);
@@ -129,7 +136,7 @@ public class PowerPlayController {
         });
 
         historySystems.getSelectionModel().selectedItemProperty().addListener((ov, o, n) -> {
-            if (n != null){
+            if (n != null) {
                 checkedSystem.setValue(n);
             }
         });
@@ -149,6 +156,17 @@ public class PowerPlayController {
                 resultPane.setShowDetailNode(false);
             }
         });
+        NumberStringConverter converter = new NumberStringConverter("#,##0.##");
+        result.addListener((InvalidationListener) i ->
+            resultPopSumm.setText(converter.toString(getPopulationSumm(result)))
+        );
+        detail.addListener((InvalidationListener) i ->
+                        detailPopSumm.setText(converter.toString(getPopulationSumm(detail)))
+        );
+    }
+
+    private long getPopulationSumm(Collection<ResultEntry> collection){
+        return collection.stream().mapToLong(ResultEntry::getPopulation).sum();
     }
 
     private void fillDetail(SystemModel detailSystem) {
@@ -422,6 +440,10 @@ public class PowerPlayController {
 
         public ReadOnlyStringProperty intersectingProperty() {
             return intersecting;
+        }
+
+        public long getPopulation() {
+            return population.get();
         }
 
         public ReadOnlyLongProperty populationProperty() {
