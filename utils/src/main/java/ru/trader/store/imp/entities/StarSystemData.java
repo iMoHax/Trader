@@ -17,6 +17,8 @@ public interface StarSystemData {
     double getY();
     double getZ();
 
+    Long getPopulation();
+
     @Nullable
     FACTION getFaction();
     @Nullable
@@ -25,6 +27,9 @@ public interface StarSystemData {
     POWER getPower();
     @Nullable
     POWER_STATE getPowerState();
+
+    Long getUpkeep();
+    Long getIncome();
 
     @Nullable
     Collection<StationData> getStations();

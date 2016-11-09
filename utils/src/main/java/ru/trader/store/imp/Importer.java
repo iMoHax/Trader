@@ -3,6 +3,7 @@ package ru.trader.store.imp;
 import ru.trader.core.Market;
 import ru.trader.store.imp.entities.StarSystemData;
 
+import java.io.IOException;
 import java.util.EnumSet;
 
 public interface Importer {
@@ -12,11 +13,11 @@ public interface Importer {
     void removeFlag(IMPORT_FLAG flag);
     void setFlags(EnumSet<IMPORT_FLAG> flags);
 
-
-    boolean next();
+    void cancel();
+    boolean next() throws IOException;
     StarSystemData getSystem();
 
-    void imp(Market market);
+    void imp(Market market) throws IOException;
 
 
 }

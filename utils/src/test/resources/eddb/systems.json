@@ -1,0 +1,132 @@
+[
+  {
+    "id": 1,
+    "edsm_id": 12695,
+    "name": "1 G. Caeli",
+    "x": 80.90625,
+    "y": -83.53125,
+    "z": -30.8125,
+    "population": 6544826,
+    "is_populated": true,
+    "government_id": 144,
+    "government": "Patronage",
+    "allegiance_id": 2,
+    "allegiance": "Empire",
+    "state_id": 80,
+    "state": "None",
+    "security_id": 32,
+    "security": "Medium",
+    "primary_economy_id": 4,
+    "primary_economy": "Industrial",
+    "power": null,
+    "power_state": null,
+    "power_state_id": null,
+    "needs_permit": false,
+    "updated_at": 1477792352,
+    "simbad_ref": "",
+    "controlling_minor_faction_id": 31816,
+    "controlling_minor_faction": "1 G. Caeli Empire League",
+    "reserve_type_id": 3,
+    "reserve_type": "Common",
+    "minor_faction_presences": [
+      {
+        "minor_faction_id": 31816,
+        "state_id": 80,
+        "influence": null,
+        "state": "None"
+      },
+      {
+        "minor_faction_id": 54517,
+        "state_id": null,
+        "influence": null,
+        "state": null
+      },
+      {
+        "minor_faction_id": 54518,
+        "state_id": null,
+        "influence": null,
+        "state": null
+      },
+      {
+        "minor_faction_id": 54519,
+        "state_id": null,
+        "influence": null,
+        "state": null
+      },
+      {
+        "minor_faction_id": 74917,
+        "state_id": null,
+        "influence": null,
+        "state": null
+      },
+      {
+        "minor_faction_id": 40897,
+        "state_id": 16,
+        "influence": null,
+        "state": "Boom"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "edsm_id": 3979,
+    "name": "1 Geminorum",
+    "x": 19.78125,
+    "y": 3.5625,
+    "z": -153.8125,
+    "population": 141727,
+    "is_populated": true,
+    "government_id": 96,
+    "government": "Democracy",
+    "allegiance_id": 3,
+    "allegiance": "Federation",
+    "state_id": 72,
+    "state": "Outbreak",
+    "security_id": 32,
+    "security": "Medium",
+    "primary_economy_id": 8,
+    "primary_economy": "Terraforming",
+    "power": null,
+    "power_state": null,
+    "power_state_id": null,
+    "needs_permit": false,
+    "updated_at": 1477865367,
+    "simbad_ref": "1 Geminorum",
+    "controlling_minor_faction_id": 56677,
+    "controlling_minor_faction": "1 Geminorum Liberals",
+    "reserve_type_id": 1,
+    "reserve_type": "Pristine",
+    "minor_faction_presences": [
+      {
+        "minor_faction_id": 56677,
+        "state_id": 72,
+        "influence": null,
+        "state": "Outbreak"
+      },
+      {
+        "minor_faction_id": 56678,
+        "state_id": null,
+        "influence": null,
+        "state": null
+      },
+      {
+        "minor_faction_id": 56679,
+        "state_id": null,
+        "influence": null,
+        "state": null
+      },
+      {
+        "minor_faction_id": 56680,
+        "state_id": 80,
+        "influence": null,
+        "state": "None"
+      },
+      {
+        "minor_faction_id": 56681,
+        "state_id": null,
+        "influence": null,
+        "state": null
+      }
+    ]
+  }
+]

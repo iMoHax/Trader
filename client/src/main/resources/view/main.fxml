@@ -22,6 +22,9 @@
                        <MenuItem text="StarSystem" onAction="#importPowerPlaySystems"/>
                        <MenuItem text="Prediction" onAction="#importPowerPlayPrediction"/>
                    </Menu>
+                   <Menu text="EDDB">
+                       <MenuItem text="%market.systems" onAction="#importEDDBSystems"/>
+                   </Menu>
                    <MenuItem text="XML" onAction="#importWorld"/>
                    <MenuItem text="EDCE JSON" onAction="#importEDCE"/>
                </Menu>

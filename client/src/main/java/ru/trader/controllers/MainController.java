@@ -11,7 +11,9 @@ import org.xml.sax.SAXException;
 import ru.trader.Main;
 import ru.trader.ServicesManager;
 import ru.trader.World;
+import ru.trader.eddb.EDDBParser;
 import ru.trader.model.*;
+import ru.trader.services.ImportTask;
 import ru.trader.services.MaddavoParserTask;
 import ru.trader.services.PowerPlayParserTask;
 import ru.trader.view.support.Localization;
@@ -325,6 +327,15 @@ public class MainController {
             Screeners.showProgress(Localization.getString("message.import.systems"), task, () -> ViewUtils.doFX(this::reload));
         });
 
+    }
+
+    @FXML
+    private void importEDDBSystems() {
+        chooseFile(new FileChooser.ExtensionFilter("EDDB Systems file (systems*.json)","systems*.json"), file -> {
+            EDDBParser parser = EDDBParser.createSystemParser(file);
+            ImportTask task = new ImportTask(parser, World.getMarket());
+            Screeners.showProgress(Localization.getString("message.import.systems"), task, () -> ViewUtils.doFX(this::reload));
+        });
     }
 
 

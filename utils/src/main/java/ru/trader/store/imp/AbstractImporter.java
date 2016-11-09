@@ -5,16 +5,21 @@ import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
 import ru.trader.store.imp.entities.*;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class AbstractImporter implements Importer {
     private final static Logger LOG = LoggerFactory.getLogger(AbstractImporter.class);
     private final EnumSet<IMPORT_FLAG> flags;
+    private boolean canceled;
 
     protected AbstractImporter() {
         this.flags = EnumSet.copyOf(IMPORT_FLAG.ADD_AND_UPDATE);
     }
+
+    protected abstract void before() throws IOException;
+    protected abstract void after() throws IOException;
 
     @Override
     public void addFlag(IMPORT_FLAG flag) {
@@ -33,16 +38,30 @@ public abstract class AbstractImporter implements Importer {
     }
 
     @Override
-    public void imp(Market market){
-        while (next()){
-            StarSystemData systemData = getSystem();
-            Place system = impSystem(market, systemData);
-            if (system != null){
-                Collection<StationData> stations = systemData.getStations();
-                impStations(market, system, stations);
-            } else {
-                LOG.warn("System {} not found", systemData.getName());
+    public void cancel(){
+        this.canceled = true;
+    }
+
+    @Override
+    public void imp(Market market) throws IOException {
+        canceled = false;
+        before();
+        market.startBatch();
+        try {
+            while (next()) {
+                if (canceled) break;
+                StarSystemData systemData = getSystem();
+                Place system = impSystem(market, systemData);
+                if (system != null) {
+                    Collection<StationData> stations = systemData.getStations();
+                    impStations(market, system, stations);
+                } else {
+                    LOG.warn("System {} not found", systemData.getName());
+                }
             }
+        } finally {
+            market.doBatch();
+            after();
         }
     }
 
@@ -65,14 +84,23 @@ public abstract class AbstractImporter implements Importer {
                 (data.getX() != system.getX() || data.getY() != system.getY() || data.getZ() != system.getZ())){
             system.setPosition(data.getX(), data.getY(), data.getZ());
         }
+        if (data.getPopulation() != null){
+            system.setPopulation(data.getPopulation());
+        }
         if (data.getFaction() != null){
             system.setFaction(data.getFaction());
         }
         if (data.getGovernment() != null){
             system.setGovernment(data.getGovernment());
         }
-        if (data.getPower() != null && data.getPowerState() != null){
+        if (data.getPower() != null && data.getPowerState() != null) {
             system.setPower(data.getPower(), data.getPowerState());
+        }
+        if (data.getUpkeep() != null && data.getUpkeep() > 0) {
+            system.setUpkeep(data.getUpkeep());
+        }
+        if (data.getIncome() != null && data.getIncome() > 0) {
+            system.setIncome(data.getIncome());
         }
     }
 

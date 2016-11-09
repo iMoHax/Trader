@@ -73,10 +73,20 @@ public class PPParser {
         String starSystemName = getName(values[0]);
         POWER power = getPower(values[1]);
         POWER_STATE state = getState(values[3]);
+        String upkeep = values[4];
+        String income = values[6];
         if (starSystemName == null || power == null || state == null) return;
-        if (state == POWER_STATE.CONTROL || state == POWER_STATE.EXPANSION){
+        if (state.isControl()){
             Place place = market.get(starSystemName);
             if (place != null){
+                if (upkeep != null){
+                    long value = Long.valueOf(upkeep);
+                    if (value > 0) place.setUpkeep(value);
+                }
+                if (income != null){
+                    long value = Long.valueOf(income);
+                    if (value > 0) place.setIncome(value);
+                }
                 controllingSystems.add(new PowerData(place, power, state));
             } else {
                 LOG.warn("Not found system {} for import powerplay data", starSystemName);
@@ -143,14 +153,13 @@ public class PPParser {
             case "control": return POWER_STATE.CONTROL;
             case "contested": return POWER_STATE.CONTESTED;
             case "takingControl": return POWER_STATE.CONTROL;
-            case "turmoil": return POWER_STATE.NONE;
+            case "turmoil": return POWER_STATE.TURMOIL;
             default:
                 LOG.warn("Unknown power state: {}", value);
         }
         return null;
     }
 
-    private final static double CONTROLLING_RADIUS = 15;
     private void updatePowerState(){
         if (controllingSystems.isEmpty()) return;
         for (Place starSystem : market.get()) {
@@ -164,8 +173,8 @@ public class PPParser {
                         starSystem.setPower(powerData.power, powerData.state);
                     }
                 } else {
-                    if (powerData.state != POWER_STATE.CONTROL) continue;
-                    if (starSystem.getDistance(powerData.starSystem) <= CONTROLLING_RADIUS){
+                    if (!powerData.state.isControl()) continue;
+                    if (starSystem.getDistance(powerData.starSystem) <= Market.CONTROLLING_RADIUS){
                         if (starSystem.getPowerState() == POWER_STATE.EXPLOITED){
                             if (starSystem.getPower() != powerData.power){
                                 starSystem.setPower(powerData.power, POWER_STATE.CONTESTED);

@@ -31,6 +31,12 @@ public abstract class StarSystemDataBase implements StarSystemData {
 
     @Nullable
     @Override
+    public Long getPopulation() {
+        return null;
+    }
+
+    @Nullable
+    @Override
     public FACTION getFaction() {
         return null;
     }
@@ -50,6 +56,18 @@ public abstract class StarSystemDataBase implements StarSystemData {
     @Nullable
     @Override
     public POWER_STATE getPowerState() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public Long getUpkeep() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public Long getIncome() {
         return null;
     }
 
