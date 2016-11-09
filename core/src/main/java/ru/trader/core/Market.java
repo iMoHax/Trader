@@ -5,8 +5,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public interface Market {
+    double CONTROLLING_RADIUS = 15;
 
     void startBatch();
     void doBatch();
@@ -74,6 +76,10 @@ public interface Market {
                 .findFirst();
         return place.isPresent() ? place.get() : null;
     }
+    default Stream<Place> getInControllingRadius(Place controllingSystem){
+        return get().stream().filter(p -> p != controllingSystem && p.getDistance(controllingSystem) <= CONTROLLING_RADIUS);
+    }
+
 
     default Collection<Vendor> getVendors(){
         return getVendors(false);

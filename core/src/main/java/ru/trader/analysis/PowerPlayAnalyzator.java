@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 
 public class PowerPlayAnalyzator {
     private final static Logger LOG = LoggerFactory.getLogger(PowerPlayAnalyzator.class);
-    private final static double CONTROLLING_RADIUS = 15;
 
     private final Market market;
     private StarSystemFilter starSystemFilter;
@@ -33,25 +32,25 @@ public class PowerPlayAnalyzator {
 
     public Collection<IntersectData> getControlling(Place starSystem){
         Stream<Place> candidates = market.get().stream().filter(p -> p.getFaction() != FACTION.NONE);
-        return getControlling(starSystem, candidates, CONTROLLING_RADIUS).collect(Collectors.toList());
+        return getControlling(starSystem, candidates, Market.CONTROLLING_RADIUS).collect(Collectors.toList());
     }
 
     public Collection<IntersectData> getIntersects(Collection<Place> starSystems){
-        return getIntersects(market.get(), starSystems, CONTROLLING_RADIUS);
+        return getIntersects(market.get(), starSystems, Market.CONTROLLING_RADIUS);
     }
 
     public Collection<IntersectData> getIntersects(Place starSystem, Collection<Place> starSystems){
         Stream<Place> candidates = market.get().stream().filter(p -> p.getFaction() != FACTION.NONE);
-        return getIntersects(starSystem, candidates, starSystems, CONTROLLING_RADIUS).collect(Collectors.toList());
+        return getIntersects(starSystem, candidates, starSystems, Market.CONTROLLING_RADIUS).collect(Collectors.toList());
     }
 
     public Collection<IntersectData> getNear(Collection<Place> starSystems){
         Stream<Place> candidates = market.get().stream().filter(p -> p.getFaction() != FACTION.NONE);
-        return getNear(candidates, starSystems, CONTROLLING_RADIUS, CONTROLLING_RADIUS*2).collect(Collectors.toList());
+        return getNear(candidates, starSystems, Market.CONTROLLING_RADIUS, Market.CONTROLLING_RADIUS*2).collect(Collectors.toList());
     }
 
     public Collection<IntersectData> getNearExpansions(Collection<Place> starSystems){
-        return getNearExpansions(market.get(), starSystems, CONTROLLING_RADIUS * 2);
+        return getNearExpansions(market.get(), starSystems, Market.CONTROLLING_RADIUS * 2);
     }
 
     public static Collection<IntersectData> getControlling(Place starSystem, Collection<Place> starSystems, double radius){

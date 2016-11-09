@@ -117,6 +117,11 @@ public class MarketStreamWriter {
         out.writeAttribute(MarketDocHandler.X_ATTR, String.valueOf(place.getX()));
         out.writeAttribute(MarketDocHandler.Y_ATTR, String.valueOf(place.getY()));
         out.writeAttribute(MarketDocHandler.Z_ATTR, String.valueOf(place.getZ()));
+
+        out.writeAttribute(MarketDocHandler.POPULATION_ATTR, String.valueOf(place.getPopulation()));
+        out.writeAttribute(MarketDocHandler.UPKEEP_ATTR, String.valueOf(place.getUpkeep()));
+        out.writeAttribute(MarketDocHandler.INCOME_ATTR, String.valueOf(place.getIncome()));
+
         for (Vendor vendor : place.get()) {
             writeVendor(vendor);
         }

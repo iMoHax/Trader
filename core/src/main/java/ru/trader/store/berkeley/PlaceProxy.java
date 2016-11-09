@@ -45,6 +45,12 @@ public class PlaceProxy extends AbstractPlace {
     }
 
     @Override
+    protected void updatePopulation(long population) {
+        place.setPopulation(population);
+        store.getPlaceAccessor().update(place);
+    }
+
+    @Override
     protected void updateFaction(FACTION faction) {
         place.setFaction(faction);
         store.getPlaceAccessor().update(place);
@@ -63,6 +69,18 @@ public class PlaceProxy extends AbstractPlace {
     }
 
     @Override
+    protected void updateUpkeep(long upkeep) {
+        place.setUpkeep(upkeep);
+        store.getPlaceAccessor().update(place);
+    }
+
+    @Override
+    protected void updateIncome(long income) {
+        place.setIncome(income);
+        store.getPlaceAccessor().update(place);
+    }
+
+    @Override
     protected void updatePosition(double x, double y, double z) {
         place.setPosition(x, y, z);
         store.getPlaceAccessor().update(place);
@@ -70,7 +88,7 @@ public class PlaceProxy extends AbstractPlace {
 
     @Override
     protected void addVendor(Vendor vendor) {
-        store.getVendorAccessor().put(((VendorProxy)vendor).getEntity());
+        store.getVendorAccessor().put(((VendorProxy) vendor).getEntity());
         if (vendors != null || lock.isLocked()) {
             unsafe( (v) -> {
                 if (vendors != null){
@@ -82,7 +100,7 @@ public class PlaceProxy extends AbstractPlace {
 
     @Override
     protected void removeVendor(Vendor vendor) {
-        store.getVendorAccessor().delete(((VendorProxy)vendor).getEntity());
+        store.getVendorAccessor().delete(((VendorProxy) vendor).getEntity());
         if (vendors != null || lock.isLocked()) {
             unsafe( (v) -> {
                 if (vendors != null){
@@ -95,6 +113,11 @@ public class PlaceProxy extends AbstractPlace {
     @Override
     public String getName() {
         return place.getName();
+    }
+
+    @Override
+    public long getPopulation() {
+        return place.getPopulation();
     }
 
     @Override
@@ -115,6 +138,16 @@ public class PlaceProxy extends AbstractPlace {
     @Override
     public POWER_STATE getPowerState() {
         return place.getPowerState();
+    }
+
+    @Override
+    public long getUpkeep() {
+        return place.getUpkeep();
+    }
+
+    @Override
+    public long getIncome() {
+        return place.getIncome();
     }
 
     @Override

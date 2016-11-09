@@ -11,7 +11,7 @@ import ru.trader.core.POWER_STATE;
 
 import java.util.Objects;
 
-@Entity(version = 4)
+@Entity(version = 5)
 public class BDBPlace {
 
     @PrimaryKey(sequence = "P_ID")
@@ -25,11 +25,15 @@ public class BDBPlace {
     private double x;
     private double y;
     private double z;
+    private long population;
 
     private FACTION faction;
     private GOVERNMENT government;
     private POWER power;
     private POWER_STATE powerState;
+
+    private long upkeep;
+    private long income;
 
     private BDBPlace() {
     }
@@ -49,6 +53,14 @@ public class BDBPlace {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getPopulation() {
+        return population;
+    }
+
+    public void setPopulation(long population) {
+        this.population = population;
     }
 
     public FACTION getFaction() {
@@ -78,6 +90,22 @@ public class BDBPlace {
     public void setPower(POWER power, POWER_STATE state) {
         this.power = power;
         this.powerState = state;
+    }
+
+    public long getUpkeep() {
+        return upkeep;
+    }
+
+    public void setUpkeep(long upkeep) {
+        this.upkeep = upkeep;
+    }
+
+    public long getIncome() {
+        return income;
+    }
+
+    public void setIncome(long income) {
+        this.income = income;
     }
 
     public double getX() {

@@ -317,6 +317,7 @@ public class PowerPlayController {
         private final ReadOnlyDoubleProperty distanceHQ;
         private final ReadOnlyStringProperty maxSizePad;
         private final ReadOnlyIntegerProperty intersectCount;
+        private final ReadOnlyStringProperty intersecting;
         private final ReadOnlyStringProperty controlling;
 
         public ResultEntry(PowerPlayAnalyzator.IntersectData data) {
@@ -328,7 +329,8 @@ public class PowerPlayController {
             maxSizePad = new SimpleStringProperty(starSystem.getMaxSizePad());
             intersectCount = new SimpleIntegerProperty(data.getCount());
             nearStation = starSystem.getNear();
-            controlling = new SimpleStringProperty(getControllingString(data.getControllingSystems()));
+            intersecting = new SimpleStringProperty(getControllingString(data.getControllingSystems()));
+            controlling = new SimpleStringProperty(getControllingString(data.getStarSystem()));
             distance = new SimpleDoubleProperty(from != null ? from.getDistance(data.getStarSystem()) : Double.NaN);
             Place hq = ModelFabric.get(hqSystem.orElse(null));
             distanceHQ = new SimpleDoubleProperty(hq != null ? hq.getDistance(data.getStarSystem()) : Double.NaN);
@@ -344,6 +346,15 @@ public class PowerPlayController {
             return res.toString();
         }
 
+        private String getControllingString(Place place) {
+            StringBuilder res = new StringBuilder();
+            for (Place system : place.getControllingSystems()) {
+                if (res.length() != 0) res.append("\n");
+                res.append(system.getName());
+                res.append(" (").append(ViewUtils.distanceToString(system.getDistance(place))).append(")");
+            }
+            return res.toString();
+        }
 
         public ReadOnlyStringProperty stationProperty(){
             return new SimpleStringProperty(String.format("%s (%.0f Ls)", nearStation.getName(), nearStation.getDistance()));
@@ -387,6 +398,10 @@ public class PowerPlayController {
 
         public ReadOnlyStringProperty controllingProperty() {
             return controlling;
+        }
+
+        public ReadOnlyStringProperty intersectingProperty() {
+            return intersecting;
         }
     }
 }

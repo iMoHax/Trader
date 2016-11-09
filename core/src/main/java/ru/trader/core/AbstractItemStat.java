@@ -76,6 +76,8 @@ public abstract class AbstractItemStat implements ItemStat {
             throw new UnsupportedOperationException("Is fake place, change unsupported");
         }
 
+
+
         @Override
         public FACTION getFaction() {
             return FACTION.NONE;
@@ -154,6 +156,41 @@ public abstract class AbstractItemStat implements ItemStat {
         @Override
         public int compareTo(Connectable<Place> o) {
             return 0;
+        }
+
+        @Override
+        public long getPopulation() {
+            return 0;
+        }
+
+        @Override
+        public void setPopulation(long population) {
+            throw new UnsupportedOperationException("Is fake place, change unsupported");
+        }
+
+        @Override
+        public Collection<Place> getControllingSystems() {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public long getUpkeep() {
+            return 0;
+        }
+
+        @Override
+        public void setUpkeep(long upkeep) {
+            throw new UnsupportedOperationException("Is fake place, change unsupported");
+        }
+
+        @Override
+        public long getIncome() {
+            return 0;
+        }
+
+        @Override
+        public void setIncome(long income) {
+            throw new UnsupportedOperationException("Is fake place, change unsupported");
         }
     };
 

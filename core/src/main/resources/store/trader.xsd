@@ -66,6 +66,9 @@
         <xs:attribute name="x" type="xs:double" use="optional"/>
         <xs:attribute name="y" type="xs:double" use="optional"/>
         <xs:attribute name="z" type="xs:double" use="optional"/>
+        <xs:attribute name="population" type="xs:long" use="optional"/>
+        <xs:attribute name="upkeep" type="xs:long" use="optional"/>
+        <xs:attribute name="income" type="xs:long" use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="vendorType" mixed="true">
@@ -151,6 +154,8 @@
             <xs:enumeration value="EXPANSION"/>
             <xs:enumeration value="CONTESTED"/>
             <xs:enumeration value="HEADQUARTERS"/>
+            <xs:enumeration value="TURMOIL"/>
+            <xs:enumeration value="BLOCKED"/>
             <xs:enumeration value="NONE"/>
         </xs:restriction>
     </xs:simpleType>

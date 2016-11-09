@@ -14,10 +14,13 @@ public class SimplePlace extends AbstractPlace {
     private double y;
     private double z;
 
+    private long population;
     private FACTION faction;
     private GOVERNMENT government;
     private POWER power;
     private POWER_STATE powerState;
+    private long upkeep;
+    private long income;
 
 
     public SimplePlace(String name) {
@@ -46,6 +49,11 @@ public class SimplePlace extends AbstractPlace {
     }
 
     @Override
+    public long getPopulation() {
+        return population;
+    }
+
+    @Override
     public FACTION getFaction() {
         return faction;
     }
@@ -63,6 +71,16 @@ public class SimplePlace extends AbstractPlace {
     @Override
     public POWER_STATE getPowerState() {
         return powerState;
+    }
+
+    @Override
+    public long getUpkeep() {
+        return upkeep;
+    }
+
+    @Override
+    public long getIncome() {
+        return income;
     }
 
     @Override
@@ -88,6 +106,21 @@ public class SimplePlace extends AbstractPlace {
     @Override
     protected void updateName(String name) {
         this.name = name;
+    }
+
+    @Override
+    protected void updatePopulation(long population) {
+        this.population = population;
+    }
+
+    @Override
+    protected void updateUpkeep(long upkeep) {
+        this.upkeep = upkeep;
+    }
+
+    @Override
+    protected void updateIncome(long income) {
+        this.income = income;
     }
 
     @Override

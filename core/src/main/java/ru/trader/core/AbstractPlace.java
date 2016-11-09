@@ -5,17 +5,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.analysis.graph.Connectable;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 
 public abstract class AbstractPlace implements Place {
     private final static Logger LOG = LoggerFactory.getLogger(AbstractPlace.class);
     private AbstractMarket market;
 
+    private Collection<Place> controlling;
+
     protected abstract Vendor createVendor(String name);
     protected abstract void updateName(String name);
+    protected abstract void updatePopulation(long population);
     protected abstract void updateFaction(FACTION faction);
     protected abstract void updateGovernment(GOVERNMENT government);
     protected abstract void updatePower(POWER power, POWER_STATE state);
+    protected abstract void updateUpkeep(long upkeep);
+    protected abstract void updateIncome(long income);
     protected abstract void updatePosition(double x, double y, double z);
     protected abstract void addVendor(Vendor vendor);
     protected abstract void removeVendor(Vendor vendor);
@@ -27,6 +35,11 @@ public abstract class AbstractPlace implements Place {
 
     protected final AbstractMarket getMarket(){
         return market;
+    }
+
+    @Override
+    public Collection<Place> getControllingSystems() {
+        return controlling != null ? controlling : Collections.emptyList();
     }
 
     @Override
@@ -48,6 +61,17 @@ public abstract class AbstractPlace implements Place {
             market.setChange(true);
         } else {
             updatePosition(x, y, z);
+        }
+    }
+
+    @Override
+    public final void setPopulation(long population) {
+        if (market != null){
+            LOG.debug("Change population of place {} to {}", this, population);
+            market.updatePopulation(this, population);
+            market.setChange(true);
+        } else {
+            updatePopulation(population);
         }
     }
 
@@ -75,12 +99,39 @@ public abstract class AbstractPlace implements Place {
 
     @Override
     public final void setPower(POWER power, POWER_STATE state){
+        POWER_STATE old = getPowerState();
         if (market != null){
             LOG.debug("Change power of place {} to {} of {}", this, state, power);
             updatePower(power, state);
+            if (!market.isBatch()) {
+                updateControlling(old, state);
+            }
             market.setChange(true);
         } else {
             updatePower(power, state);
+            updateControlling(old, state);
+        }
+    }
+
+    @Override
+    public final void setUpkeep(long upkeep) {
+        if (market != null){
+            LOG.debug("Change upkeep of place {} to {}", this, upkeep);
+            market.updateUpkeep(this, upkeep);
+            market.setChange(true);
+        } else {
+            updateUpkeep(upkeep);
+        }
+    }
+
+    @Override
+    public final void setIncome(long income) {
+        if (market != null){
+            LOG.debug("Change income of place {} to {}", this, income);
+            market.updateIncome(this, income);
+            market.setChange(true);
+        } else {
+            updateIncome(income);
         }
     }
 
@@ -112,6 +163,42 @@ public abstract class AbstractPlace implements Place {
             market.onRemove(vendor);
         } else {
             removeVendor(vendor);
+        }
+    }
+
+    protected void updateControlling(POWER_STATE oldState, POWER_STATE newState){
+        LOG.debug("Update controlling systems, place {}, old = {}, new = {} ", this, oldState, newState);
+        if (market == null) return;
+        if (oldState == null) oldState = POWER_STATE.NONE;
+        if (newState == null) newState = POWER_STATE.NONE;
+        if (oldState.isControl() && !newState.isControl()){
+            market.getInControllingRadius(this).forEach(p -> {
+                if (p instanceof AbstractPlace) ((AbstractPlace)p).removeControlling(this);
+            });
+        }
+        if (!oldState.isControl() && newState.isControl()){
+            market.getInControllingRadius(this).forEach(p -> {
+                if (p instanceof AbstractPlace) ((AbstractPlace)p).addControlling(this);
+            });
+        }
+    }
+
+    protected void addControlling(Place controllingSystem){
+        if (controlling == null){
+            controlling = new ArrayList<>();
+        }
+        controlling.add(controllingSystem);
+    }
+
+    protected void removeControlling(Place controllingSystem){
+        if (controlling != null) {
+            controlling.remove(controllingSystem);
+        }
+    }
+
+    protected void clearControlling() {
+        if (controlling != null){
+            controlling.clear();
         }
     }
 

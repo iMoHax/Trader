@@ -17,6 +17,9 @@ public interface Place extends Connectable<Place> {
     double getZ();
     void setPosition(double x, double y, double z);
 
+    long getPopulation();
+    void setPopulation(long population);
+
     FACTION getFaction();
     void setFaction(FACTION faction);
 
@@ -26,6 +29,12 @@ public interface Place extends Connectable<Place> {
     POWER getPower();
     POWER_STATE getPowerState();
     void setPower(POWER power, POWER_STATE state);
+    Collection<Place> getControllingSystems();
+    long getUpkeep();
+    void setUpkeep(long upkeep);
+    long getIncome();
+    void setIncome(long income);
+
 
     Collection<Vendor> get();
     default Collection<Vendor> get(boolean withTransit){

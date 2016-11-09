@@ -48,6 +48,9 @@ public class MarketDocHandler extends DefaultHandler {
     protected final static String ECONOMIC_ATTR = "economic1";
     protected final static String SUB_ECONOMIC_ATTR = "economic2";
     protected final static String MODIFIED_ATTR = "modified";
+    protected final static String POPULATION_ATTR = "population";
+    protected final static String UPKEEP_ATTR = "upkeep";
+    protected final static String INCOME_ATTR = "income";
 
     protected SimpleMarket world;
     protected Vendor curVendor;
@@ -108,14 +111,16 @@ public class MarketDocHandler extends DefaultHandler {
         String faction = attributes.getValue(FACTION_ATTR);
         String government = attributes.getValue(GOVERNMENT_ATTR);
         LOG.debug("parse place {} position ({};{};{}), faction {}, government {}", name, x, y, z, faction, government);
-        onPlace(name, x != null ? Double.valueOf(x) : 0, y != null ? Double.valueOf(y) : 0, z != null ? Double.valueOf(z) : 0,
-                faction != null ? FACTION.valueOf(faction) : null, government != null ? GOVERNMENT.valueOf(government) : null
+        onPlace(name, asDouble(x), asDouble(y), asDouble(z),
+                asEnum(faction, FACTION.class), asEnum(government, GOVERNMENT.class)
                 );
         String power = attributes.getValue(POWER_ATTR);
         String powerState = attributes.getValue(POWER_STATE_ATTR);
-        if (powerState != null && power != null){
-            updatePlace(POWER.valueOf(power), POWER_STATE.valueOf(powerState));
-        }
+        String population = attributes.getValue(POPULATION_ATTR);
+        String income = attributes.getValue(INCOME_ATTR);
+        String upkeep = attributes.getValue(UPKEEP_ATTR);
+        updatePlace(asEnum(power, POWER.class), asEnum(powerState, POWER_STATE.class),
+                asLong(population), asLong(upkeep), asLong(income));
     }
 
     protected void parseVendor(Attributes attributes) throws SAXException {
@@ -129,9 +134,9 @@ public class MarketDocHandler extends DefaultHandler {
         String modifiedTime = attributes.getValue(MODIFIED_ATTR);
         modified = modifiedTime != null ? LocalDateTime.parse(modifiedTime) : null;
         LOG.debug("parse vendor {}, type {}, distance {}, faction {}, government {}", name, type, distance, faction, government);
-        onVendor(name, type != null ? STATION_TYPE.valueOf(type) : null, distance != null ? Double.valueOf(distance) : 0,
-                faction != null ? FACTION.valueOf(faction) : null, government != null ? GOVERNMENT.valueOf(government) : null);
-        updateVendor(economic != null ? ECONOMIC_TYPE.valueOf(economic) : null, subEconomic != null ? ECONOMIC_TYPE.valueOf(subEconomic) : null);
+        onVendor(name, asEnum(type, STATION_TYPE.class), asDouble(distance),
+                asEnum(faction, FACTION.class), asEnum(government, GOVERNMENT.class));
+        updateVendor(asEnum(economic, ECONOMIC_TYPE.class), asEnum(subEconomic, ECONOMIC_TYPE.class));
     }
 
     protected void parseService(Attributes attributes) throws SAXException {
@@ -206,8 +211,13 @@ public class MarketDocHandler extends DefaultHandler {
         curPlace.setGovernment(government);
     }
 
-    protected void updatePlace(POWER power, POWER_STATE powerState){
-        curPlace.setPower(power, powerState);
+    protected void updatePlace(POWER power, POWER_STATE powerState, long population, long upkeep, long income){
+        if (power != null && powerState != null) {
+            curPlace.setPower(power, powerState);
+        }
+        curPlace.setPopulation(population);
+        curPlace.setUpkeep(upkeep);
+        curPlace.setIncome(income);
     }
 
     protected void onVendor(String name, STATION_TYPE type, double distance, FACTION faction, GOVERNMENT government){
@@ -271,4 +281,18 @@ public class MarketDocHandler extends DefaultHandler {
         throw e;
     }
 
+    private long asLong(String attr){
+        if (attr != null) return Long.valueOf(attr);
+        return 0;
+    }
+
+    private double asDouble(String attr){
+        if (attr != null) return Double.valueOf(attr);
+        return 0;
+    }
+
+    private <T extends Enum<T>> T asEnum(String attr, Class<T> enumClass){
+        if (attr != null) return Enum.valueOf(enumClass, attr);
+        return null;
+    }
 }
