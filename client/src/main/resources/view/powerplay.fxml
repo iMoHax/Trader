@@ -89,11 +89,11 @@
         <TitledPane text="Результаты анализа" collapsible="false">
             <TableView fx:id="tblResults">
                 <columns>
-                    <TableColumn prefWidth="200" text="%market.system">
+                    <TableColumn prefWidth="150" text="%market.system">
                         <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="180" text="Пересекается с">
-                        <cellValueFactory><PropertyValueFactory property="controlling"/></cellValueFactory>
+                    <TableColumn prefWidth="150" text="Пересекается с">
+                        <cellValueFactory><PropertyValueFactory property="intersecting"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn prefWidth="90" text="Пересечений">
                         <cellValueFactory><PropertyValueFactory property="intersectCount"/></cellValueFactory>
@@ -118,8 +118,20 @@
                         <cellFactory><DistanceCell /></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
                     </TableColumn>
+                    <TableColumn prefWidth="80" text="Income">
+                        <cellValueFactory><PropertyValueFactory property="income"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="80" text="Upkeep">
+                        <cellValueFactory><PropertyValueFactory property="upkeep"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="80" text="Население">
+                        <cellValueFactory><PropertyValueFactory property="population"/></cellValueFactory>
+                    </TableColumn>
                     <TableColumn prefWidth="100" text="Тип площадки">
-                        <cellValueFactory><PropertyValueFactory property="maxSizePad"/></cellValueFactory>
+                        <cellValueFactory><PropertyValueFactory property="nearStations"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="150" text="Контролируется">
+                        <cellValueFactory><PropertyValueFactory property="controlling"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn prefWidth="80" text="Дистанция до HQ">
                         <cellFactory><DistanceCell /></cellFactory>
@@ -161,6 +173,19 @@
                     <TableColumn prefWidth="120" text="%market.allegiance">
                         <cellFactory><TextCell><converter><FactionStringConverter /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="80" text="Income">
+                        <cellValueFactory><PropertyValueFactory property="income"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="80" text="Upkeep">
+                        <cellValueFactory><PropertyValueFactory property="upkeep"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="80" text="Население">
+                        <cellFactory><TextCell><converter><CustomNumberStringConverter pattern="#,##0.##" /></converter></TextCell></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="population"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="150" text="Контролируется">
+                        <cellValueFactory><PropertyValueFactory property="controlling"/></cellValueFactory>
                     </TableColumn>
                 </columns>
                 <columnResizePolicy>

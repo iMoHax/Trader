@@ -1,12 +1,15 @@
 package ru.trader.model;
 
-import javafx.beans.property.*;
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.core.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -185,6 +188,33 @@ public class SystemModel {
     public StationModel getNear(){
         Optional<Vendor> near = system.get().stream().sorted((v1, v2) -> Double.compare(v1.getDistance(), v2.getDistance())).findFirst();
         return asModel(near.orElse(null));
+    }
+
+    public Collection<StationModel> getNearByType(){
+        Collection<Vendor> stations = system.get().stream().sorted((v1, v2) ->  Double.compare(v1.getDistance(), v2.getDistance())).collect(Collectors.toList());
+        Collection<StationModel> result = new ArrayList<>(4);
+        boolean findLarge = false, findMedium = false, findPlanetary = false;
+        for (Vendor station : stations) {
+            if (station.getType() != null){
+                if (station.getType().isPlanetary()){
+                    if (!findPlanetary) {
+                        result.add(asModel(station));
+                        findPlanetary = true;
+                    }
+                } else
+                if (station.getType().hasLargeLandpad()){
+                    if (!findLarge) {
+                        result.add(asModel(station));
+                        findLarge = true;
+                    }
+                } else
+                if (!findMedium){
+                    result.add(asModel(station));
+                    findMedium = true;
+                }
+            }
+        }
+        return result;
     }
 
     @Override

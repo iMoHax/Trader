@@ -312,13 +312,15 @@ public class PowerPlayController {
 
     public class ResultEntry {
         private final SystemModel starSystem;
-        private final StationModel nearStation;
+        private final ReadOnlyStringProperty nearStations;
         private final ReadOnlyDoubleProperty distance;
         private final ReadOnlyDoubleProperty distanceHQ;
-        private final ReadOnlyStringProperty maxSizePad;
         private final ReadOnlyIntegerProperty intersectCount;
         private final ReadOnlyStringProperty intersecting;
         private final ReadOnlyStringProperty controlling;
+        private final ReadOnlyLongProperty population;
+        private final ReadOnlyLongProperty upkeep;
+        private final ReadOnlyLongProperty income;
 
         public ResultEntry(PowerPlayAnalyzator.IntersectData data) {
             this(data, null);
@@ -326,14 +328,17 @@ public class PowerPlayController {
 
         public ResultEntry(PowerPlayAnalyzator.IntersectData data, Place from) {
             starSystem = world.getModeler().get(data.getStarSystem());
-            maxSizePad = new SimpleStringProperty(starSystem.getMaxSizePad());
             intersectCount = new SimpleIntegerProperty(data.getCount());
-            nearStation = starSystem.getNear();
+            nearStations = new SimpleStringProperty(getStationsString(starSystem.getNearByType()));
             intersecting = new SimpleStringProperty(getControllingString(data.getControllingSystems()));
             controlling = new SimpleStringProperty(getControllingString(data.getStarSystem()));
             distance = new SimpleDoubleProperty(from != null ? from.getDistance(data.getStarSystem()) : Double.NaN);
             Place hq = ModelFabric.get(hqSystem.orElse(null));
             distanceHQ = new SimpleDoubleProperty(hq != null ? hq.getDistance(data.getStarSystem()) : Double.NaN);
+            population = new SimpleLongProperty(data.getStarSystem().getPopulation());
+            upkeep = new SimpleLongProperty(data.getStarSystem().getUpkeep());
+            income = new SimpleLongProperty(data.getStarSystem().getIncome());
+
         }
 
         private String getControllingString(Collection<PowerPlayAnalyzator.ControllingData> controllings) {
@@ -356,9 +361,28 @@ public class PowerPlayController {
             return res.toString();
         }
 
-        public ReadOnlyStringProperty stationProperty(){
-            return new SimpleStringProperty(String.format("%s (%.0f Ls)", nearStation.getName(), nearStation.getDistance()));
+        private String getStationsString(Collection<StationModel> stations) {
+            StringBuilder res = new StringBuilder();
+            for (StationModel station : stations) {
+                if (res.length() != 0) res.append("\n");
+                if (station.getType() != null){
+                    if (station.getType().isPlanetary()) {
+                        res.append("LP");
+                    } else
+                    if (station.getType().hasLargeLandpad()){
+                        res.append("L");
+                    } else {
+                        res.append("M");
+                    }
+                } else {
+                    res.append("?");
+                }
+                res.append(" - ").append(station.getName());
+                res.append(" (").append(ViewUtils.stationDistanceToString(station.getDistance())).append(")");
+            }
+            return res.toString();
         }
+
 
         public ReadOnlyStringProperty nameProperty(){
             return starSystem.nameProperty();
@@ -388,10 +412,6 @@ public class PowerPlayController {
             return distanceHQ;
         }
 
-        public ReadOnlyStringProperty maxSizePadProperty() {
-            return maxSizePad;
-        }
-
         public ReadOnlyIntegerProperty intersectCountProperty() {
             return intersectCount;
         }
@@ -402,6 +422,22 @@ public class PowerPlayController {
 
         public ReadOnlyStringProperty intersectingProperty() {
             return intersecting;
+        }
+
+        public ReadOnlyLongProperty populationProperty() {
+            return population;
+        }
+
+        public ReadOnlyLongProperty upkeepProperty() {
+            return upkeep;
+        }
+
+        public ReadOnlyLongProperty incomeProperty() {
+            return income;
+        }
+
+        public ReadOnlyStringProperty nearStationsProperty() {
+            return nearStations;
         }
     }
 }
