@@ -16,6 +16,7 @@ import java.awt.event.KeyEvent;
 
 public class ViewUtils {
     public static final String ILLEGAL_ITEM_STYLE = "illegal_item";
+    public static final String DRAG_CSS_CLASS = "dragged";
 
     //Scroll to row if invisible
     public static void show(TableView tableView, int index){

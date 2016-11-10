@@ -249,3 +249,7 @@ HBox.fields-group hbox-margin{
     -fx-mid-text-color: orange;
     -fx-dark-text-color: orange;
 }
+
+.dragged {
+    -fx-base: darkblue;
+}

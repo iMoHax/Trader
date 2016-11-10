@@ -4,9 +4,11 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
+import javafx.scene.input.*;
 import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.MasterDetailPane;
@@ -135,11 +137,23 @@ public class PowerPlayController {
             hqSystem = getHeadquarter(n);
         });
 
+        controlSystems.setOnDragDetected(new StarSystemDragDetect(controlSystems));
+        controlSystems.setOnDragEntered(new StarSystemDragEntered(controlSystems));
+        controlSystems.setOnDragExited(new StarSystemDragExited(controlSystems));
+        controlSystems.setOnDragOver(new StarSystemDragOver(controlSystems));
+        controlSystems.setOnDragDropped(new StarSystemDragDrop(controlSystems));
+
+
         historySystems.getSelectionModel().selectedItemProperty().addListener((ov, o, n) -> {
             if (n != null) {
                 checkedSystem.setValue(n);
             }
         });
+        historySystems.setOnDragDetected(new StarSystemDragDetect(historySystems));
+        historySystems.setOnDragEntered(new StarSystemDragEntered(historySystems));
+        historySystems.setOnDragExited(new StarSystemDragExited(historySystems));
+        historySystems.setOnDragOver(new StarSystemDragOver(historySystems));
+        historySystems.setOnDragDropped(new StarSystemDragDrop(historySystems));
 
         tblResults.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ESCAPE) {
@@ -148,6 +162,7 @@ public class PowerPlayController {
                 }
             }
         });
+        tblResults.setOnDragDetected(new StarSystemDragDetect(tblResults));
         tblResults.getSelectionModel().selectedItemProperty().addListener((ov, o, n) -> {
             if (n != null) {
                 fillDetail(n.starSystem);
@@ -156,6 +171,7 @@ public class PowerPlayController {
                 resultPane.setShowDetailNode(false);
             }
         });
+        tblDetail.setOnDragDetected(new StarSystemDragDetect(tblDetail));
         NumberStringConverter converter = new NumberStringConverter("#,##0.##");
         result.addListener((InvalidationListener) i ->
             resultPopSumm.setText(converter.toString(getPopulationSumm(result)))
@@ -306,7 +322,7 @@ public class PowerPlayController {
 
     @FXML
     private void clearHistorySystems(){
-        controlSystems.getItems().clear();
+        historySystems.getItems().clear();
     }
 
 
@@ -462,4 +478,118 @@ public class PowerPlayController {
             return nearStations;
         }
     }
+
+    private class StarSystemDragDetect implements EventHandler<MouseEvent> {
+        private final Node source;
+
+        public StarSystemDragDetect(TableView<ResultEntry> source) {
+            this.source = source;
+        }
+
+        public StarSystemDragDetect(ListView<SystemModel> source) {
+            this.source = source;
+        }
+
+        @Override
+        public void handle(MouseEvent event) {
+            SystemModel starSystem = getStarSystem();
+            if (starSystem != null) {
+                Dragboard db = source.startDragAndDrop(TransferMode.COPY);
+                ClipboardContent content = new ClipboardContent();
+                content.putString(starSystem.getName());
+                db.setContent(content);
+                event.consume();
+            }
+        }
+
+
+        private SystemModel getStarSystem(){
+            if (source instanceof TableView){
+                @SuppressWarnings("unchecked")
+                TableView<ResultEntry> tbl = (TableView<ResultEntry>) source;
+                ResultEntry entry = tbl.getSelectionModel().getSelectedItem();
+                if (entry != null) return entry.starSystem;
+            } else
+            if (source instanceof ListView){
+                @SuppressWarnings("unchecked")
+                ListView<SystemModel> list = (ListView<SystemModel>) source;
+                SystemModel entry = list.getSelectionModel().getSelectedItem();
+                if (entry != null) return entry;
+            }
+            return null;
+        }
+    }
+
+    private class StarSystemDragDrop implements EventHandler<DragEvent> {
+        private final ListView<SystemModel> target;
+
+        private StarSystemDragDrop(ListView<SystemModel> target) {
+            this.target = target;
+        }
+
+        @Override
+        public void handle(DragEvent event) {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasString()) {
+                SystemModel starSystem = world.get(db.getString());
+                if (!ModelFabric.isFake(starSystem)){
+                    target.getItems().add(starSystem);
+                }
+                success = true;
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        }
+    }
+
+    private class StarSystemDragOver implements EventHandler<DragEvent> {
+        private final ListView<SystemModel> target;
+
+        private StarSystemDragOver(ListView<SystemModel> target) {
+            this.target = target;
+        }
+
+        @Override
+        public void handle(DragEvent event) {
+            if (event.getGestureSource() != target && event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            }
+            event.consume();
+        }
+    }
+
+
+    private class StarSystemDragEntered implements EventHandler<DragEvent> {
+        private final Node target;
+
+        private StarSystemDragEntered(Node target) {
+            this.target = target;
+        }
+
+        @Override
+        public void handle(DragEvent event) {
+            if (event.getGestureSource() != target && event.getDragboard().hasString()) {
+                target.getStyleClass().add(ViewUtils.DRAG_CSS_CLASS);
+            }
+            event.consume();
+        }
+    }
+
+    private class StarSystemDragExited implements EventHandler<DragEvent> {
+        private final Node target;
+
+        private StarSystemDragExited(Node target) {
+            this.target = target;
+        }
+
+        @Override
+        public void handle(DragEvent event) {
+            if (event.getGestureSource() != target && event.getDragboard().hasString()) {
+                target.getStyleClass().remove(ViewUtils.DRAG_CSS_CLASS);
+            }
+            event.consume();
+        }
+    }
+
 }
