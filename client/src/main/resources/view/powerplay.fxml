@@ -14,10 +14,10 @@
       prefHeight="500"  >
     <fx:define><Insets fx:id="tablePadding" left="0" right="0" top="0" bottom="0" /></fx:define>
     <fx:define><Insets fx:id="summPadding" left="4" right="4" top="4" bottom="4" /></fx:define>
-    <TitledPane text="Параметры анализа" collapsible="false">
+    <TitledPane text="%powerplay.analyze.title" collapsible="false">
     <HBox spacing="50" alignment="CENTER" minHeight="210" maxHeight="210">
         <VBox minWidth="250" maxWidth="250" spacing="4">
-            <Label text="Проверяемая система:" />
+            <Label text="%powerplay.label.checked" />
             <HBox spacing="4" alignment="BASELINE_LEFT">
                 <TextField fx:id="checkedSystemText" prefWidth="220"/>
                 <Button minWidth="30" onAction="#currentAsChecked"><graphic><Glyph text="FontAwesome|MAP_MARKER"/></graphic></Button>
@@ -41,31 +41,31 @@
         </VBox>
         <VBox minWidth="250" maxWidth="250" spacing="10" alignment="CENTER_LEFT">
             <HBox spacing="4">
-                <Label text="Сила:" minWidth="86" maxWidth="86" />
+                <Label text="%powerplay.label.headquarter" minWidth="86" maxWidth="86" />
                 <ComboBox fx:id="cbCurrentPower" minWidth="160"/>
             </HBox>
             <fx:define><ToggleGroup fx:id="analyzeType" /></fx:define>
-            <RadioButton fx:id="rbIntersect" text="Поиск пересечений" selected="true" toggleGroup="$analyzeType"/>
-            <RadioButton fx:id="rbNear" text="Поиск ближайших без пересечений" selected="false" toggleGroup="$analyzeType"/>
-            <RadioButton fx:id="rbMaxIntersect" text="Поиск с максимальным пересечением" selected="false" toggleGroup="$analyzeType"/>
-            <RadioButton fx:id="rbExpansions" text="Ближайшие экспансии" selected="false" toggleGroup="$analyzeType"/>
-            <RadioButton fx:id="rbControlling" text="Системы в подконтрольном радиусе" selected="false" toggleGroup="$analyzeType"/>
+            <RadioButton fx:id="rbIntersect" text="%powerplay.analyze.intersect" selected="true" toggleGroup="$analyzeType"/>
+            <RadioButton fx:id="rbNear" text="%powerplay.analyze.near" selected="false" toggleGroup="$analyzeType"/>
+            <RadioButton fx:id="rbMaxIntersect" text="%powerplay.analyze.maxIntersect" selected="false" toggleGroup="$analyzeType"/>
+            <RadioButton fx:id="rbExpansions" text="%powerplay.analyze.expansions" selected="false" toggleGroup="$analyzeType"/>
+            <RadioButton fx:id="rbControlling" text="%powerplay.analyze.controlling" selected="false" toggleGroup="$analyzeType"/>
             <HBox alignment="CENTER">
-                <Button prefWidth="120" text="Начать анализ" onAction="#search" />
+                <Button prefWidth="120" text="%powerplay.analyze.search" onAction="#search" />
             </HBox>
         </VBox>
         <VBox minWidth="250" maxWidth="250" spacing="4">
-            <Label text="Контроллируемые системы:" />
+            <Label text="%powerplay.label.controlling" />
             <HBox spacing="4">
                 <TextField fx:id="controlSystemText" prefWidth="220"/>
                 <Button minWidth="30" onAction="#currentAsControl"><graphic><Glyph text="FontAwesome|MAP_MARKER"/></graphic></Button>
             </HBox>
             <HBox HBox.hgrow="ALWAYS" spacing="4">
-                <Label text="Cистемы силы:" minWidth="86" maxWidth="86" />
+                <Label text="%powerplay.label.power.systems" minWidth="86" maxWidth="86" />
                 <ComboBox fx:id="cbPower" minWidth="160"/>
             </HBox>
             <HBox HBox.hgrow="ALWAYS" spacing="4">
-                <Label text="Состояние:" minWidth="86" maxWidth="86" />
+                <Label text="%powerplay.label.power.state" minWidth="86" maxWidth="86" />
                 <CheckComboBox fx:id="cbStates" minWidth="160" />
             </HBox>
             <HBox spacing="4" alignment="CENTER" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
@@ -89,17 +89,17 @@
     </TitledPane>
     <MasterDetailPane fx:id="resultPane" detailSide="RIGHT" prefWidth="1190" dividerPosition="0.566" showDetailNode="false" VBox.vgrow="ALWAYS">
         <masterNode>
-        <TitledPane text="Результаты анализа" collapsible="false">
+        <TitledPane text="%powerplay.result.title" collapsible="false">
             <VBox spacing="4" padding="$tablePadding">
             <TableView fx:id="tblResults" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn prefWidth="150" text="%market.system">
                         <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="150" text="Пересекается с">
+                    <TableColumn prefWidth="150" text="%powerplay.column.intersecting">
                         <cellValueFactory><PropertyValueFactory property="intersecting"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="90" text="Пересечений">
+                    <TableColumn prefWidth="90" text="%powerplay.column.intersectCount">
                         <cellValueFactory><PropertyValueFactory property="intersectCount"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn prefWidth="100" text="%market.powerState">
@@ -122,23 +122,23 @@
                         <cellFactory><DistanceCell /></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="80" text="Income">
+                    <TableColumn prefWidth="60" text="%market.system.income">
                         <cellValueFactory><PropertyValueFactory property="income"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="80" text="Upkeep">
+                    <TableColumn prefWidth="60" text="%market.system.upkeep">
                         <cellValueFactory><PropertyValueFactory property="upkeep"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="80" text="Население">
+                    <TableColumn prefWidth="80" text="%market.population">
                         <cellFactory><TextCell><converter><CustomNumberStringConverter pattern="#,##0.##" /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="population"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="100" text="Тип площадки">
+                    <TableColumn prefWidth="100" text="%market.station.landpad">
                         <cellValueFactory><PropertyValueFactory property="nearStations"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="150" text="Контролируется">
+                    <TableColumn prefWidth="150" text="%market.system.controlling">
                         <cellValueFactory><PropertyValueFactory property="controlling"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="80" text="Дистанция до HQ">
+                    <TableColumn prefWidth="80" text="%powerplay.column.distanceHQ">
                         <cellFactory><DistanceCell /></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="distanceHQ"/></cellValueFactory>
                     </TableColumn>
@@ -154,12 +154,12 @@
                     </ContextMenu>
                 </contextMenu>
             </TableView>
-                <HBox spacing="4" padding="$summPadding"><Label text="Сумма населения:" /><Label fx:id="resultPopSumm" /></HBox>
+                <HBox spacing="4" padding="$summPadding"><Label text="%powerplay.label.populationSumm" /><Label fx:id="resultPopSumm" /></HBox>
             </VBox>
         </TitledPane>
         </masterNode>
         <detailNode>
-        <TitledPane text="Системы в радиусе 15 LY" collapsible="false">
+        <TitledPane text="%powerplay.detail.title" collapsible="false">
             <VBox spacing="4" padding="$tablePadding">
             <TableView fx:id="tblDetail" VBox.vgrow="ALWAYS">
                 <columns>
@@ -182,17 +182,17 @@
                         <cellFactory><TextCell><converter><FactionStringConverter /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="80" text="Income">
+                    <TableColumn prefWidth="60" text="%market.system.income">
                         <cellValueFactory><PropertyValueFactory property="income"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="80" text="Upkeep">
+                    <TableColumn prefWidth="60" text="%market.system.upkeep">
                         <cellValueFactory><PropertyValueFactory property="upkeep"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="80" text="Население">
+                    <TableColumn prefWidth="80" text="%market.population">
                         <cellFactory><TextCell><converter><CustomNumberStringConverter pattern="#,##0.##" /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="population"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="150" text="Контролируется">
+                    <TableColumn prefWidth="150" text="%market.system.controlling">
                         <cellValueFactory><PropertyValueFactory property="controlling"/></cellValueFactory>
                     </TableColumn>
                 </columns>
@@ -207,7 +207,7 @@
                     </ContextMenu>
                 </contextMenu>
             </TableView>
-                <HBox spacing="4" padding="$summPadding"><Label text="Сумма населения:" /><Label fx:id="detailPopSumm" /></HBox>
+                <HBox spacing="4" padding="$summPadding"><Label text="%powerplay.label.populationSumm" /><Label fx:id="detailPopSumm" /></HBox>
             </VBox>
         </TitledPane>
         </detailNode>

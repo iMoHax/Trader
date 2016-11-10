@@ -98,8 +98,8 @@ public class PowerPlayController {
     }
 
     void init(){
-        //TODO: add to screens reinit
-
+        result.clear();
+        detail.clear();
         world = MainController.getWorld();
         analyzator = world.getPowerPlayAnalyzer();
         if (cbCurrentPower.getValue() != POWER.NONE && cbCurrentPower.getValue() != null){

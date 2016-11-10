@@ -56,6 +56,8 @@ public class MainController {
     @FXML
     private RouteTrackController routeController;
     @FXML
+    private PowerPlayController ppController;
+    @FXML
     private TabPane tabs;
     @FXML
     private Tab track;
@@ -121,7 +123,9 @@ public class MainController {
         routesController.init();
         searchController.init();
         routeController.init();
-        //TODO: add init all controllers
+        if (ppController != null) {
+            ppController.init();
+        }
     }
 
     public void initEDCE(){
