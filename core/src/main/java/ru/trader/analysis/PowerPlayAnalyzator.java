@@ -44,9 +44,14 @@ public class PowerPlayAnalyzator {
         return getIntersects(starSystem, candidates, starSystems, Market.CONTROLLING_RADIUS).collect(Collectors.toList());
     }
 
+    public Collection<IntersectData> getMaxIntersect(Collection<Place> starSystems){
+        Stream<Place> candidates = market.get().stream().filter(p -> p.getFaction() != FACTION.NONE);
+        return getMaxIntersect(candidates, starSystems, Market.CONTROLLING_RADIUS).collect(Collectors.toList());
+    }
+
     public Collection<IntersectData> getNear(Collection<Place> starSystems){
         Stream<Place> candidates = market.get().stream().filter(p -> p.getFaction() != FACTION.NONE);
-        return getNear(candidates, starSystems, Market.CONTROLLING_RADIUS, Market.CONTROLLING_RADIUS*2).collect(Collectors.toList());
+        return getNear(candidates, starSystems, Market.CONTROLLING_RADIUS, Market.CONTROLLING_RADIUS * 2).collect(Collectors.toList());
     }
 
     public Collection<IntersectData> getNearExpansions(Collection<Place> starSystems){
@@ -93,6 +98,37 @@ public class PowerPlayAnalyzator {
                 .map(distanceMapper)
                 .filter(IntersectData::isIntersect)
                 .sorted(new DistanceComparator());
+    }
+
+    public static Stream<IntersectData> getMaxIntersect(Stream<Place> starSystems, Collection<Place> centers, double radius){
+        IntersectsMapper distanceMapper = new IntersectsMapper(centers, radius*2, false, true);
+        Predicate<Place> isControlling = intersectsAnyPredicate(centers, radius);
+        Collection<Place> candidates = new ArrayList<>();
+        Collection<Place> checked = new ArrayList<>();
+        starSystems.filter(new FarDropper(centers, radius*2))
+                .forEach(p -> {
+                    if (isControlling != null && isControlling.test(p)) checked.add(p);
+                    else {
+                        if (p.getPower() == POWER.NONE) {
+                            candidates.add(p);
+                        }
+                    }
+                });
+        candidates.removeAll(centers);
+        IntersectsMapper checkedMapper = new IntersectsMapper(checked, radius, false, true);
+        return candidates.stream()
+                .map(checkedMapper)
+                .filter(IntersectData::isIntersect)
+                .sorted((d1, d2) -> {
+                    long pop1 = d1.getControllingSystems().stream().mapToLong(d -> d.center.getPopulation()).sum();
+                    long pop2 = d2.getControllingSystems().stream().mapToLong(d -> d.center.getPopulation()).sum();
+                    int cmp = Long.compare(pop2, pop1);
+                    if (cmp == 0) cmp = Integer.compare(d2.getCount(), d1.getCount());
+                    return cmp;
+                })
+                .map(IntersectData::getStarSystem)
+                .map(distanceMapper)
+                .filter(IntersectData::isIntersect);
     }
 
     public static Collection<IntersectData> getNearExpansions(Collection<Place> starSystems, Collection<Place> centers, double maxDistance){

@@ -232,6 +232,14 @@ public class PowerPlayController {
         }
     }
 
+    private void getMaxIntersect(){
+        Collection<Place> controlls = getControlSystems();
+        result.clear();
+        if (!controlls.isEmpty()){
+            Collection<PowerPlayAnalyzator.IntersectData> intersect = analyzator.getMaxIntersect(controlls);
+            result.addAll(BindingsHelper.observableList(intersect, ResultEntry::new));
+        }
+    }
 
     @FXML
     private void currentAsChecked(){
@@ -265,6 +273,9 @@ public class PowerPlayController {
         }
         if (rbExpansions.isSelected()){
             getNearExpansions();
+        }
+        if (rbMaxIntersect.isSelected()){
+            getMaxIntersect();
         }
     }
 
