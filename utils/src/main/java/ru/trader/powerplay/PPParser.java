@@ -75,8 +75,10 @@ public class PPParser {
         POWER_STATE state = getState(values[3]);
         String upkeep = values[4];
         String income = values[6];
+        String status = values[12];
         if (starSystemName == null || power == null || state == null) return;
         if (state.isControl()){
+            if ("FAIL".equals(status)) return;
             Place place = market.get(starSystemName);
             if (place != null){
                 if (upkeep != null){
