@@ -4,7 +4,10 @@ import au.com.bytecode.opencsv.CSVParser;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.trader.core.*;
+import ru.trader.core.Market;
+import ru.trader.core.POWER;
+import ru.trader.core.POWER_STATE;
+import ru.trader.core.Place;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -165,7 +168,7 @@ public class PPParser {
     private void updatePowerState(){
         if (controllingSystems.isEmpty()) return;
         for (Place starSystem : market.get()) {
-            if (starSystem.getFaction() == FACTION.NONE) continue;
+            if (!starSystem.isPopulated()) continue;
             if (starSystem.getPowerState() != POWER_STATE.HEADQUARTERS){
                 starSystem.setPower(POWER.NONE, POWER_STATE.NONE);
             }

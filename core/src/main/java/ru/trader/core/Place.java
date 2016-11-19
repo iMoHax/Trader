@@ -97,4 +97,20 @@ public interface Place extends Connectable<Place> {
     default Vendor asTransit(){
         return new TransitVendor(this);
     }
+
+    default boolean isPopulated(){
+        return getPopulation() > 0;
+    }
+
+    default long computeCC(long[] CCgroups){
+        long population = getPopulation();
+        if (population == 0) return 0;
+        for (int i = 0; i < CCgroups.length; i++) {
+            long minPop = CCgroups[i];
+            if (population < minPop){
+                return i+1;
+            }
+        }
+        return CCgroups.length+1;
+    }
 }

@@ -122,6 +122,9 @@
                         <cellFactory><DistanceCell /></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
                     </TableColumn>
+                    <TableColumn prefWidth="60" text="%market.cc">
+                        <cellValueFactory><PropertyValueFactory property="cc"/></cellValueFactory>
+                    </TableColumn>
                     <TableColumn prefWidth="60" text="%market.system.income">
                         <cellValueFactory><PropertyValueFactory property="income"/></cellValueFactory>
                     </TableColumn>
@@ -154,7 +157,12 @@
                     </ContextMenu>
                 </contextMenu>
             </TableView>
-                <HBox spacing="4" padding="$summPadding"><Label text="%powerplay.label.populationSumm" /><Label fx:id="resultPopSumm" /></HBox>
+                <ScrollPane minHeight="50">
+                    <VBox spacing="4" padding="$summPadding">
+                        <HBox spacing="4"><Label text="%powerplay.label.populationSumm" /><Label fx:id="resultPopSumm" /></HBox>
+                        <HBox spacing="4"><Label fx:id="resultCCSumm" wrapText="true"/></HBox>
+                    </VBox>
+                </ScrollPane>
             </VBox>
         </TitledPane>
         </masterNode>
@@ -182,6 +190,9 @@
                         <cellFactory><TextCell><converter><FactionStringConverter /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
                     </TableColumn>
+                    <TableColumn prefWidth="60" text="%market.cc">
+                        <cellValueFactory><PropertyValueFactory property="cc"/></cellValueFactory>
+                    </TableColumn>
                     <TableColumn prefWidth="60" text="%market.system.income">
                         <cellValueFactory><PropertyValueFactory property="income"/></cellValueFactory>
                     </TableColumn>
@@ -207,7 +218,12 @@
                     </ContextMenu>
                 </contextMenu>
             </TableView>
-                <HBox spacing="4" padding="$summPadding"><Label text="%powerplay.label.populationSumm" /><Label fx:id="detailPopSumm" /></HBox>
+                <ScrollPane minHeight="50">
+                    <VBox spacing="4" padding="$summPadding">
+                        <HBox spacing="4"><Label text="%powerplay.label.populationSumm" /><Label fx:id="detailPopSumm" /></HBox>
+                        <HBox spacing="4"><Label fx:id="detailCCSumm" wrapText="true"/></HBox>
+                    </VBox>
+                </ScrollPane>
             </VBox>
         </TitledPane>
         </detailNode>

@@ -17,6 +17,7 @@ import ru.trader.analysis.PowerPlayAnalyzator;
 import ru.trader.core.*;
 import ru.trader.model.*;
 import ru.trader.model.support.BindingsHelper;
+import ru.trader.view.support.Localization;
 import ru.trader.view.support.PowerStateStringConverter;
 import ru.trader.view.support.PowerStringConverter;
 import ru.trader.view.support.ViewUtils;
@@ -25,6 +26,7 @@ import ru.trader.view.support.autocomplete.CachedSuggestionProvider;
 import ru.trader.view.support.autocomplete.SystemsProvider;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -67,6 +69,10 @@ public class PowerPlayController {
     private Label resultPopSumm;
     @FXML
     private Label detailPopSumm;
+    @FXML
+    private Label resultCCSumm;
+    @FXML
+    private Label detailCCSumm;
 
     private MarketModel world;
     private ProfileModel profile;
@@ -173,11 +179,15 @@ public class PowerPlayController {
         });
         tblDetail.setOnDragDetected(new StarSystemDragDetect(tblDetail));
         NumberStringConverter converter = new NumberStringConverter("#,##0.##");
-        result.addListener((InvalidationListener) i ->
-            resultPopSumm.setText(converter.toString(getPopulationSumm(result)))
+        result.addListener((InvalidationListener) i -> {
+                    resultPopSumm.setText(converter.toString(getPopulationSumm(result)));
+                    resultCCSumm.setText(getCCSummText(result));
+                }
         );
-        detail.addListener((InvalidationListener) i ->
-                        detailPopSumm.setText(converter.toString(getPopulationSumm(detail)))
+        detail.addListener((InvalidationListener) i -> {
+                    detailPopSumm.setText(converter.toString(getPopulationSumm(detail)));
+                    detailCCSumm.setText(getCCSummText(detail));
+                }
         );
     }
 
@@ -185,11 +195,46 @@ public class PowerPlayController {
         return collection.stream().mapToLong(ResultEntry::getPopulation).sum();
     }
 
+    private String getCCSummText(Collection<ResultEntry> collection){
+        String ccFormat = Localization.getString("powerplay.label.summcc");
+        String pwCCFormat = Localization.getString("powerplay.label.cc");
+        PowerStringConverter converter = new PowerStringConverter();
+        long[] contestedCc = new long[POWER.values().length];
+        long[] totalCc = new long[POWER.values().length];
+        long contested = 0;
+        long summCc = 0;
+        for (ResultEntry entry : collection) {
+            long cc = entry.getCc();
+            summCc += cc;
+            if (entry.getPower() == null || entry.getPowerState() == null) continue;
+            if (entry.getPowerState() != POWER_STATE.NONE){
+                contested += cc;
+                if (entry.getPowerState() == POWER_STATE.CONTESTED){
+                    for (Place place : entry.getControllingSystems()){
+                        contestedCc[place.getPower().ordinal()] += cc;
+                    }
+                } else {
+                    totalCc[entry.getPower().ordinal()] += cc;
+                }
+            }
+        }
+        StringBuilder builder = new StringBuilder();
+        builder.append(String.format(ccFormat, summCc, contested, summCc - contested));
+        for (int i = 0; i < POWER.values().length; i++) {
+            if (totalCc[i] > 0 || contestedCc[i] > 0){
+                builder.append("\n");
+                builder.append(String.format(pwCCFormat, converter.toString(POWER.values()[i]), totalCc[i], contestedCc[i]));
+            }
+        }
+        return builder.toString();
+    }
+
     private void fillDetail(SystemModel detailSystem) {
         final Place starSystem = ModelFabric.get(detailSystem);
         detail.clear();
         if (starSystem != null){
             Collection<PowerPlayAnalyzator.IntersectData> controllings = analyzator.getControlling(starSystem);
+            controllings.add(new PowerPlayAnalyzator.IntersectData(starSystem));
             detail.addAll(BindingsHelper.observableList(controllings, d -> new ResultEntry(d, starSystem)));
         }
     }
@@ -210,6 +255,7 @@ public class PowerPlayController {
         result.clear();
         if (starSystem != null){
             Collection<PowerPlayAnalyzator.IntersectData> controllings = analyzator.getControlling(starSystem);
+            controllings.add(new PowerPlayAnalyzator.IntersectData(starSystem));
             result.addAll(BindingsHelper.observableList(controllings,d -> new ResultEntry(d, starSystem)));
         }
     }
@@ -366,6 +412,7 @@ public class PowerPlayController {
         private final ReadOnlyLongProperty population;
         private final ReadOnlyLongProperty upkeep;
         private final ReadOnlyLongProperty income;
+        private final ReadOnlyLongProperty cc;
 
         public ResultEntry(PowerPlayAnalyzator.IntersectData data) {
             this(data, null);
@@ -383,7 +430,7 @@ public class PowerPlayController {
             population = new SimpleLongProperty(data.getStarSystem().getPopulation());
             upkeep = new SimpleLongProperty(data.getStarSystem().getUpkeep());
             income = new SimpleLongProperty(data.getStarSystem().getIncome());
-
+            cc = new SimpleLongProperty(data.getStarSystem().computeCC(ModelFabric.get(profile).getCCgroups()));
         }
 
         private String getControllingString(Collection<PowerPlayAnalyzator.ControllingData> controllings) {
@@ -461,6 +508,11 @@ public class PowerPlayController {
             return intersectCount;
         }
 
+        private Collection<Place> getControllingSystems(){
+            Place place = ModelFabric.get(starSystem);
+            return place != null ? place.getControllingSystems() : Collections.emptyList();
+        }
+
         public ReadOnlyStringProperty controllingProperty() {
             return controlling;
         }
@@ -487,6 +539,14 @@ public class PowerPlayController {
 
         public ReadOnlyStringProperty nearStationsProperty() {
             return nearStations;
+        }
+
+        public long getCc() {
+            return cc.get();
+        }
+
+        public ReadOnlyLongProperty ccProperty() {
+            return cc;
         }
     }
 

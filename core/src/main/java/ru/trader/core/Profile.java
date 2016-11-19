@@ -3,7 +3,7 @@ package ru.trader.core;
 import java.util.Properties;
 
 public class Profile {
-    public static enum PATH_PRIORITY {FAST, ECO}
+    public enum PATH_PRIORITY {FAST, ECO}
 
     private String name;
     private double balance;
@@ -25,6 +25,7 @@ public class Profile {
     private double rechargeTime;
     private double fuelPrice;
     private PATH_PRIORITY pathPriority;
+    private long[] CCgroups;
 
     public Profile(Ship ship) {
         this.ship = ship;
@@ -41,6 +42,7 @@ public class Profile {
         jumpTime = 32;
         rechargeTime = 12;
         pathPriority = PATH_PRIORITY.FAST;
+        CCgroups = new long[]{0,0,0,3_000,30_000,300_000,3_000_000,30_000_000,300_000_000,3_000_000_000L};
     }
 
     protected Profile(Profile profile){
@@ -63,6 +65,7 @@ public class Profile {
         this.system = profile.system;
         this.station = profile.station;
         this.ship = Ship.clone(profile.ship);
+        this.CCgroups = profile.CCgroups;
     }
 
     public String getName() {
@@ -217,6 +220,14 @@ public class Profile {
         this.pathPriority = pathPriority;
     }
 
+    public long[] getCCgroups() {
+        return CCgroups;
+    }
+
+    public void setCCgroups(long[] CCgroups) {
+        this.CCgroups = CCgroups;
+    }
+
     public static Profile readFrom(Properties values, Market market){
         Ship ship = Ship.readFrom(values);
         Profile profile = new Profile(ship);
@@ -236,7 +247,7 @@ public class Profile {
             profile.setSystem(null);
             profile.setStation(null);
         }
-        profile.setDocked(Boolean.valueOf(values.getProperty("profile.docked","false")));
+        profile.setDocked(Boolean.valueOf(values.getProperty("profile.docked", "false")));
         profile.setJumps(Integer.valueOf(values.getProperty("profile.jumps", "3")));
         profile.setLands(Integer.valueOf(values.getProperty("profile.lands", "4")));
         profile.setPathPriority(PATH_PRIORITY.valueOf(values.getProperty("profile.search.priority", "FAST")));
@@ -249,6 +260,15 @@ public class Profile {
         profile.setTakeoffTime(Double.valueOf(values.getProperty("profile.search.times.takeoff", "40")));
         profile.setJumpTime(Double.valueOf(values.getProperty("profile.search.times.jump", "32")));
         profile.setRechargeTime(Double.valueOf(values.getProperty("profile.search.times.recharge", "12")));
+        v = values.getProperty("profile.powerplay.cc", null);
+        if (v != null){
+            String[] strings = v.split(",");
+            long[] cc = new long[strings.length];
+            for (int i = 0; i < strings.length; i++) {
+                cc[i] = Long.valueOf(strings[i]);
+            }
+            profile.setCCgroups(cc);
+        }
         return profile;
     }
 
@@ -270,6 +290,12 @@ public class Profile {
         values.setProperty("profile.search.times.takeoff", String.valueOf(takeoffTime));
         values.setProperty("profile.search.times.jump", String.valueOf(jumpTime));
         values.setProperty("profile.search.times.recharge", String.valueOf(rechargeTime));
+        StringBuilder builder = new StringBuilder();
+        for (long cc : CCgroups) {
+            if (builder.length() > 0) builder.append(",");
+            builder.append(cc);
+        }
+        values.setProperty("profile.powerplay.cc", builder.toString());
         ship.writeTo(values);
     }
 

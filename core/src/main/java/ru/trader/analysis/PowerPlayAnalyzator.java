@@ -31,7 +31,7 @@ public class PowerPlayAnalyzator {
     }
 
     public Collection<IntersectData> getControlling(Place starSystem){
-        Stream<Place> candidates = market.get().stream().filter(p -> p.getFaction() != FACTION.NONE);
+        Stream<Place> candidates = market.get().stream().filter(Place::isPopulated);
         return getControlling(starSystem, candidates, Market.CONTROLLING_RADIUS).collect(Collectors.toList());
     }
 
@@ -40,17 +40,17 @@ public class PowerPlayAnalyzator {
     }
 
     public Collection<IntersectData> getIntersects(Place starSystem, Collection<Place> starSystems){
-        Stream<Place> candidates = market.get().stream().filter(p -> p.getFaction() != FACTION.NONE);
+        Stream<Place> candidates = market.get().stream().filter(Place::isPopulated);
         return getIntersects(starSystem, candidates, starSystems, Market.CONTROLLING_RADIUS).collect(Collectors.toList());
     }
 
     public Collection<IntersectData> getMaxIntersect(Collection<Place> starSystems){
-        Stream<Place> candidates = market.get().stream().filter(p -> p.getFaction() != FACTION.NONE);
+        Stream<Place> candidates = market.get().stream().filter(Place::isPopulated);
         return getMaxIntersect(candidates, starSystems, Market.CONTROLLING_RADIUS).collect(Collectors.toList());
     }
 
     public Collection<IntersectData> getNear(Collection<Place> starSystems){
-        Stream<Place> candidates = market.get().stream().filter(p -> p.getFaction() != FACTION.NONE);
+        Stream<Place> candidates = market.get().stream().filter(Place::isPopulated);
         return getNear(candidates, starSystems, Market.CONTROLLING_RADIUS, Market.CONTROLLING_RADIUS * 2).collect(Collectors.toList());
     }
 
