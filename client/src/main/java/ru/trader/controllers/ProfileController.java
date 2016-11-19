@@ -125,7 +125,6 @@ public class ProfileController {
     }
 
     void init(){
-        profile = MainController.getProfile();
         MarketModel world = MainController.getWorld();
         world.getNotificator().add(marketChangeListener);
         SystemsProvider provider = world.getSystemsProvider();
@@ -135,6 +134,7 @@ public class ProfileController {
             system.setSuggestions(provider.getPossibleSuggestions());
             system.setConverter(provider.getConverter());
         }
+        setProfile(MainController.getProfile());
     }
 
     private void initListeners(){
