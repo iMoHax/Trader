@@ -21,6 +21,7 @@ public class PPImportTest extends Assert {
     public void testImportSystems() throws Exception {
         InputStream is = getClass().getResourceAsStream("/world.xml");
         Market market = Store.loadFromFile(is);
+        market.get().forEach(p -> p.setPopulation(1));
         Place opala = market.get("Opala");
         Place aulin = market.get("Aulin");
         Place draconis = market.get("26 Draconis");
