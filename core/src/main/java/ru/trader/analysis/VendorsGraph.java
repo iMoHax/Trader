@@ -8,7 +8,6 @@ import ru.trader.analysis.graph.Path;
 import ru.trader.analysis.graph.Vertex;
 import ru.trader.core.Order;
 import ru.trader.core.Profile;
-import ru.trader.core.TransitVendor;
 import ru.trader.core.Vendor;
 
 import java.util.*;
@@ -20,6 +19,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
 
     private final Scorer scorer;
     private final List<VendorsGraphBuilder> deferredTasks = new ArrayList<>();
+    private final static int MAX_DEFERRED_TASKS = 5000;
 
     public VendorsGraph(Scorer scorer, AnalysisCallBack callback) {
         super(scorer.getProfile(), callback);
@@ -62,6 +62,12 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
     protected void holdTask(VendorsGraphBuilder task){
         synchronized (deferredTasks){
             deferredTasks.add(task);
+        }
+    }
+
+    protected boolean canHoldTask(){
+        synchronized (deferredTasks){
+            return deferredTasks.size() < MAX_DEFERRED_TASKS;
         }
     }
 
@@ -257,7 +263,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         protected void addSubTask(Edge<Vendor> edge, double nextLimit) {
             Vertex<Vendor> next = edge.getTarget();
             if (next.getLevel() >= deep && next.getEntry().isTransit()) {
-                if (deep > 0){
+                if (deep > 0 && canHoldTask()){
                     VendorsGraphBuilder task = new VendorsGraphBuilder(this, (BuildEdge) edge, set, deep - 1, nextLimit);
                     task.isAdding = true;
                     holdTask(task);
