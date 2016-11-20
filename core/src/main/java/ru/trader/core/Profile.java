@@ -42,7 +42,7 @@ public class Profile {
         jumpTime = 32;
         rechargeTime = 12;
         pathPriority = PATH_PRIORITY.FAST;
-        CCgroups = new long[]{0,0,0,3_000,30_000,300_000,3_000_000,30_000_000,300_000_000,3_000_000_000L};
+        CCgroups = new long[]{0,0,0,3_140,31_530,316_000,3_160_000,31_620_000,320_000_000,3_162_000_000L};
     }
 
     protected Profile(Profile profile){
