@@ -15,7 +15,7 @@
     <fx:define><Insets fx:id="tablePadding" left="0" right="0" top="0" bottom="0" /></fx:define>
     <fx:define><Insets fx:id="summPadding" left="4" right="4" top="4" bottom="4" /></fx:define>
     <TitledPane text="%powerplay.analyze.title" collapsible="false">
-    <HBox spacing="50" alignment="CENTER" minHeight="210" maxHeight="210">
+    <HBox spacing="50" alignment="CENTER" minHeight="230" maxHeight="230">
         <VBox minWidth="250" maxWidth="250" spacing="4">
             <Label text="%powerplay.label.checked" />
             <HBox spacing="4" alignment="BASELINE_LEFT">
@@ -47,6 +47,7 @@
             <fx:define><ToggleGroup fx:id="analyzeType" /></fx:define>
             <RadioButton fx:id="rbIntersect" text="%powerplay.analyze.intersect" selected="true" toggleGroup="$analyzeType"/>
             <RadioButton fx:id="rbNear" text="%powerplay.analyze.near" selected="false" toggleGroup="$analyzeType"/>
+            <RadioButton fx:id="rbMaxProfit" text="%powerplay.analyze.maxProfit" selected="false" toggleGroup="$analyzeType"/>
             <RadioButton fx:id="rbMaxIntersect" text="%powerplay.analyze.maxIntersect" selected="false" toggleGroup="$analyzeType"/>
             <RadioButton fx:id="rbExpansions" text="%powerplay.analyze.expansions" selected="false" toggleGroup="$analyzeType"/>
             <RadioButton fx:id="rbControlling" text="%powerplay.analyze.controlling" selected="false" toggleGroup="$analyzeType"/>
@@ -129,7 +130,7 @@
                         <cellValueFactory><PropertyValueFactory property="income"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn prefWidth="60" text="%market.system.upkeep">
-                        <cellValueFactory><PropertyValueFactory property="upkeep"/></cellValueFactory>
+                        <cellValueFactory><PropertyValueFactory property="currentUpkeep"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn prefWidth="80" text="%market.population">
                         <cellFactory><TextCell><converter><CustomNumberStringConverter pattern="#,##0.##" /></converter></TextCell></cellFactory>

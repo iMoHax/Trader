@@ -12,6 +12,8 @@ import javafx.scene.input.*;
 import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.MasterDetailPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.trader.Main;
 import ru.trader.analysis.PowerPlayAnalyzator;
 import ru.trader.core.*;
@@ -31,6 +33,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class PowerPlayController {
+    private final static Logger LOG = LoggerFactory.getLogger(PowerPlayController.class);
 
     @FXML
     private TextField checkedSystemText;
@@ -56,6 +59,8 @@ public class PowerPlayController {
     @FXML
     private RadioButton rbControlling;
     @FXML
+    private RadioButton rbMaxProfit;
+    @FXML
     private ListView<SystemModel> historySystems;
     @FXML
     private ListView<SystemModel> controlSystems;
@@ -80,7 +85,7 @@ public class PowerPlayController {
     private PowerPlayAnalyzator analyzator;
     private final ObservableList<ResultEntry> result = FXCollections.observableArrayList();
     private final ObservableList<ResultEntry> detail = FXCollections.observableArrayList();
-
+    private Place detailSystem;
 
     @FXML
     private void initialize(){
@@ -181,12 +186,12 @@ public class PowerPlayController {
         NumberStringConverter converter = new NumberStringConverter("#,##0.##");
         result.addListener((InvalidationListener) i -> {
                     resultPopSumm.setText(converter.toString(getPopulationSumm(result)));
-                    resultCCSumm.setText(getCCSummText(result));
+                    resultCCSumm.setText(getCCSummText(result, getCheckedSystem()));
                 }
         );
         detail.addListener((InvalidationListener) i -> {
                     detailPopSumm.setText(converter.toString(getPopulationSumm(detail)));
-                    detailCCSumm.setText(getCCSummText(detail));
+                    detailCCSumm.setText(getCCSummText(detail, detailSystem));
                 }
         );
     }
@@ -195,7 +200,7 @@ public class PowerPlayController {
         return collection.stream().mapToLong(ResultEntry::getPopulation).sum();
     }
 
-    private String getCCSummText(Collection<ResultEntry> collection){
+    private String getCCSummText(Collection<ResultEntry> collection, Place starSystem){
         String ccFormat = Localization.getString("powerplay.label.summcc");
         String pwCCFormat = Localization.getString("powerplay.label.cc");
         PowerStringConverter converter = new PowerStringConverter();
@@ -218,8 +223,13 @@ public class PowerPlayController {
                 }
             }
         }
+        double upkeep = 0;
+        if (hqSystem.isPresent() && starSystem != null){
+            upkeep = starSystem.computeUpkeep(ModelFabric.get(hqSystem.get()));
+        }
+
         StringBuilder builder = new StringBuilder();
-        builder.append(String.format(ccFormat, summCc, contested, summCc - contested));
+        builder.append(String.format(ccFormat, summCc, contested, upkeep, summCc - contested - upkeep));
         for (int i = 0; i < POWER.values().length; i++) {
             if (totalCc[i] > 0 || contestedCc[i] > 0){
                 builder.append("\n");
@@ -231,6 +241,7 @@ public class PowerPlayController {
 
     private void fillDetail(SystemModel detailSystem) {
         final Place starSystem = ModelFabric.get(detailSystem);
+        this.detailSystem = starSystem;
         detail.clear();
         if (starSystem != null){
             Collection<PowerPlayAnalyzator.IntersectData> controllings = analyzator.getControlling(starSystem);
@@ -239,9 +250,12 @@ public class PowerPlayController {
         }
     }
 
+    private Place getCheckedSystem(){
+        return ModelFabric.get(checkedSystem.getValue());
+    }
 
     private void getIntersects(){
-        Place starSystem = ModelFabric.get(checkedSystem.getValue());
+        Place starSystem = getCheckedSystem();
         Collection<Place> controlls = getControlSystems();
         result.clear();
         if (starSystem != null && !controlls.isEmpty()){
@@ -251,7 +265,7 @@ public class PowerPlayController {
     }
 
     private void getControlling(){
-        final Place starSystem = ModelFabric.get(checkedSystem.getValue());
+        final Place starSystem = getCheckedSystem();
         result.clear();
         if (starSystem != null){
             Collection<PowerPlayAnalyzator.IntersectData> controllings = analyzator.getControlling(starSystem);
@@ -265,6 +279,16 @@ public class PowerPlayController {
         result.clear();
         if (!controlls.isEmpty()){
             Collection<PowerPlayAnalyzator.IntersectData> near = analyzator.getNear(controlls);
+            result.addAll(BindingsHelper.observableList(near, ResultEntry::new));
+        }
+    }
+
+    private void getMaxProfit(){
+        final Place hq = ModelFabric.get(hqSystem.get());
+        if (hq != null){
+            Collection<Place> controlls = getControlSystems();
+            result.clear();
+            Collection<PowerPlayAnalyzator.IntersectData> near = analyzator.getMaxProfit(hq, controlls);
             result.addAll(BindingsHelper.observableList(near, ResultEntry::new));
         }
     }
@@ -322,6 +346,9 @@ public class PowerPlayController {
         }
         if (rbMaxIntersect.isSelected()){
             getMaxIntersect();
+        }
+        if (rbMaxProfit.isSelected()){
+            getMaxProfit();
         }
     }
 
@@ -410,8 +437,9 @@ public class PowerPlayController {
         private final ReadOnlyStringProperty intersecting;
         private final ReadOnlyStringProperty controlling;
         private final ReadOnlyLongProperty population;
-        private final ReadOnlyLongProperty upkeep;
+        private final ReadOnlyLongProperty currentUpkeep;
         private final ReadOnlyLongProperty income;
+        private final ReadOnlyDoubleProperty upkeep;
         private final ReadOnlyLongProperty cc;
 
         public ResultEntry(PowerPlayAnalyzator.IntersectData data) {
@@ -428,7 +456,8 @@ public class PowerPlayController {
             Place hq = ModelFabric.get(hqSystem.orElse(null));
             distanceHQ = new SimpleDoubleProperty(hq != null ? hq.getDistance(data.getStarSystem()) : Double.NaN);
             population = new SimpleLongProperty(data.getStarSystem().getPopulation());
-            upkeep = new SimpleLongProperty(data.getStarSystem().getUpkeep());
+            currentUpkeep = new SimpleLongProperty(data.getStarSystem().getUpkeep());
+            upkeep = new SimpleDoubleProperty(hq != null ? data.getStarSystem().computeUpkeep(hq) : Double.NaN);
             income = new SimpleLongProperty(data.getStarSystem().getIncome());
             cc = new SimpleLongProperty(data.getStarSystem().computeCC(ModelFabric.get(profile).getCCgroups()));
         }
@@ -529,8 +558,12 @@ public class PowerPlayController {
             return population;
         }
 
-        public ReadOnlyLongProperty upkeepProperty() {
+        public ReadOnlyDoubleProperty upkeepProperty() {
             return upkeep;
+        }
+
+        public ReadOnlyLongProperty currentUpkeepProperty() {
+            return currentUpkeep;
         }
 
         public ReadOnlyLongProperty incomeProperty() {

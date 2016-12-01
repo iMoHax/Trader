@@ -44,6 +44,11 @@ public class PowerPlayAnalyzator {
         return getIntersects(starSystem, candidates, starSystems, Market.CONTROLLING_RADIUS).collect(Collectors.toList());
     }
 
+    public Collection<IntersectData> getMaxProfit(Place headquarter, Collection<Place> starSystems){
+        Stream<Place> candidates = market.get().stream().filter(Place::isPopulated);
+        return getMaxProfit(candidates, headquarter, starSystems, Market.CONTROLLING_RADIUS, 200).collect(Collectors.toList());
+    }
+
     public Collection<IntersectData> getMaxIntersect(Collection<Place> starSystems){
         Stream<Place> candidates = market.get().stream().filter(Place::isPopulated);
         return getMaxIntersect(candidates, starSystems, Market.CONTROLLING_RADIUS).collect(Collectors.toList());
@@ -120,15 +125,39 @@ public class PowerPlayAnalyzator {
                 .map(checkedMapper)
                 .filter(IntersectData::isIntersect)
                 .sorted((d1, d2) -> {
-                    long pop1 = d1.getControllingSystems().stream().mapToLong(d -> d.center.getPopulation()).sum();
-                    long pop2 = d2.getControllingSystems().stream().mapToLong(d -> d.center.getPopulation()).sum();
-                    int cmp = Long.compare(pop2, pop1);
+                    long cc1 = d1.getControllingIncome();
+                    long cc2 = d2.getControllingIncome();
+                    int cmp = Long.compare(cc2, cc1);
                     if (cmp == 0) cmp = Integer.compare(d2.getCount(), d1.getCount());
                     return cmp;
                 })
                 .map(IntersectData::getStarSystem)
                 .map(distanceMapper)
                 .filter(IntersectData::isIntersect);
+    }
+
+    public static Stream<IntersectData> getMaxProfit(Stream<Place> starSystems, Place headquarter, Collection<Place> centers, double radius, double maxDistance){
+        Collection<Place> candidates = new ArrayList<>();
+        starSystems.filter(p ->p.getPower() == POWER.NONE && p.getDistance(headquarter) <= maxDistance)
+                .forEach(candidates::add);
+        IntersectsMapper candidatesMapper = new IntersectsMapper(candidates, radius, false, true);
+        IntersectsMapper centersMapper = new IntersectsMapper(centers, radius*2, false, true);
+
+        return candidates.stream()
+                .map(candidatesMapper)
+                .filter(IntersectData::isIntersect)
+                .sorted((d1, d2) -> {
+                    double upkeep1 = d1.getStarSystem().computeUpkeep(headquarter);
+                    double upkeep2 = d2.getStarSystem().computeUpkeep(headquarter);
+                    double profit1 = d1.getIncome() - upkeep1;
+                    double profit2 = d2.getIncome() - upkeep2;
+                    int cmp = Double.compare(profit2, profit1);
+                    if (cmp == 0) cmp = Integer.compare(d1.getCount(), d2.getCount());
+                    return cmp;
+                })
+                .map(IntersectData::getStarSystem)
+                .map(centersMapper)
+                ;
     }
 
     public static Collection<IntersectData> getNearExpansions(Collection<Place> starSystems, Collection<Place> centers, double maxDistance){
@@ -310,22 +339,26 @@ public class PowerPlayAnalyzator {
     public static class IntersectData {
         private final Place starSystem;
         private final ControllingData[] contollings;
+        private final long income;
 
         public IntersectData(Place starSystem) {
             this.starSystem = starSystem;
             this.contollings = new ControllingData[0];
+            this.income = computeIncome();
         }
 
 
         public IntersectData(Place starSystem, Place control, double distance) {
             this.starSystem = starSystem;
             this.contollings = new ControllingData[]{new ControllingData(control,distance)};
+            this.income = computeIncome();
         }
 
         public IntersectData(Place starSystem, Collection<ControllingData> controlling) {
             this.starSystem = starSystem;
             this.contollings = controlling.toArray(new ControllingData[controlling.size()]);
             Arrays.sort(contollings);
+            this.income = computeIncome();
         }
 
         public Place getStarSystem() {
@@ -346,6 +379,25 @@ public class PowerPlayAnalyzator {
 
         public boolean isIntersect(){
             return contollings.length > 0;
+        }
+
+        public long getIncome() {
+            return income;
+        }
+
+        public long getControllingIncome(){
+            long income = 0;
+            for (ControllingData contolling : contollings) {
+                Place place = contolling.center;
+                if (place.getPowerState() != POWER_STATE.CONTESTED){
+                    income += place.computeCC();
+                }
+            }
+            return income;
+        }
+
+        private long computeIncome(){
+            return starSystem.computeCC() + getControllingIncome();
         }
     }
 
