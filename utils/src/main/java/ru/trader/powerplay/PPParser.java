@@ -78,10 +78,14 @@ public class PPParser {
         POWER_STATE state = getState(values[3]);
         String upkeep = values[4];
         String income = values[6];
+        String trigger = values[11];
         String status = values[12];
         if (starSystemName == null || power == null || state == null) return;
         if (state.isControl()){
             if ("FAIL".equals(status)) return;
+            if ("1000000000".equals(trigger)){
+                state = POWER_STATE.HEADQUARTERS;
+            }
             Place place = market.get(starSystemName);
             if (place != null){
                 if (upkeep != null){
@@ -169,14 +173,10 @@ public class PPParser {
         if (controllingSystems.isEmpty()) return;
         for (Place starSystem : market.get()) {
             if (!starSystem.isPopulated()) continue;
-            if (starSystem.getPowerState() != POWER_STATE.HEADQUARTERS){
-                starSystem.setPower(POWER.NONE, POWER_STATE.NONE);
-            }
+            starSystem.setPower(POWER.NONE, POWER_STATE.NONE);
             for (PowerData powerData : controllingSystems){
                 if (starSystem.equals(powerData.starSystem)){
-                    if (starSystem.getPowerState() != POWER_STATE.HEADQUARTERS){
-                        starSystem.setPower(powerData.power, powerData.state);
-                    }
+                    starSystem.setPower(powerData.power, powerData.state);
                 } else {
                     if (!powerData.state.isControl()) continue;
                     if (starSystem.getDistance(powerData.starSystem) <= Market.CONTROLLING_RADIUS){
