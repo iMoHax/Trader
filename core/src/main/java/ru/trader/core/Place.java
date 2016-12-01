@@ -102,6 +102,19 @@ public interface Place extends Connectable<Place> {
         return getPopulation() > 0;
     }
 
+
+    default double computeUpkeep(Place headquarter){
+        double distance = getDistance(headquarter);
+        return distance * distance * 0.001  + 20.5;
+    }
+
+    //возможно log(0.32 * Население)
+    static long[] CCgroups = new long[]{0,0,0,3_140,31_530,316_000,3_160_000,31_620_000,320_000_000,3_162_000_000L};
+
+    default long computeCC(){
+        return computeCC(CCgroups);
+    }
+
     default long computeCC(long[] CCgroups){
         long population = getPopulation();
         if (population == 0) return 0;
