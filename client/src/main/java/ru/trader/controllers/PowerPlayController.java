@@ -284,8 +284,8 @@ public class PowerPlayController {
     }
 
     private void getMaxProfit(){
-        final Place hq = ModelFabric.get(hqSystem.get());
-        if (hq != null){
+        if (hqSystem.isPresent()){
+            final Place hq = ModelFabric.get(hqSystem.get());
             Collection<Place> controlls = getControlSystems();
             result.clear();
             Collection<PowerPlayAnalyzator.IntersectData> near = analyzator.getMaxProfit(hq, controlls);
