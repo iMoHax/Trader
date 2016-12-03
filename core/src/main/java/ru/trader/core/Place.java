@@ -108,22 +108,8 @@ public interface Place extends Connectable<Place> {
         return distance * distance * 0.001  + 20.5;
     }
 
-    //возможно log(0.32 * Население)
-    static long[] CCgroups = new long[]{0,0,0,3_140,31_530,316_000,3_160_000,31_620_000,320_000_000,3_162_000_000L};
-
     default long computeCC(){
-        return computeCC(CCgroups);
+        return Math.round(Math.log10(getPopulation())+1);
     }
 
-    default long computeCC(long[] CCgroups){
-        long population = getPopulation();
-        if (population == 0) return 0;
-        for (int i = 0; i < CCgroups.length; i++) {
-            long minPop = CCgroups[i];
-            if (population < minPop){
-                return i+1;
-            }
-        }
-        return CCgroups.length+1;
-    }
 }
