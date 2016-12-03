@@ -146,6 +146,7 @@ public class PowerPlayAnalyzator {
         return candidates.stream()
                 .map(candidatesMapper)
                 .filter(IntersectData::isIntersect)
+                .filter(d -> d.getIncome() - d.getStarSystem().computeUpkeep(headquarter) > 0)
                 .sorted((d1, d2) -> {
                     double upkeep1 = d1.getStarSystem().computeUpkeep(headquarter);
                     double upkeep2 = d2.getStarSystem().computeUpkeep(headquarter);
