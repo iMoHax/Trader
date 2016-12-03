@@ -30,6 +30,7 @@ import ru.trader.view.support.autocomplete.SystemsProvider;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PowerPlayController {
@@ -204,7 +205,9 @@ public class PowerPlayController {
         String ccFormat = Localization.getString("powerplay.label.summcc");
         String pwCCFormat = Localization.getString("powerplay.label.cc");
         PowerStringConverter converter = new PowerStringConverter();
+        Place hq = ModelFabric.get(hqSystem.orElse(null));
         long[] contestedCc = new long[POWER.values().length];
+        long[] intersectedCc = new long[POWER.values().length];
         long[] totalCc = new long[POWER.values().length];
         long contested = 0;
         long summCc = 0;
@@ -213,27 +216,34 @@ public class PowerPlayController {
             summCc += cc;
             if (entry.getPower() == null || entry.getPowerState() == null) continue;
             if (entry.getPowerState() != POWER_STATE.NONE){
-                contested += cc;
+                if (hq == null || !entry.getPowerState().isExploited() && !entry.getPowerState().isControl()
+                    || entry.getPower() != hq.getPower()) {
+                    contested += cc;
+                }
+                Set<POWER> powers = entry.getControllingSystems().stream().map(Place::getPower).collect(Collectors.toSet());
                 if (entry.getPowerState() == POWER_STATE.CONTESTED){
-                    for (Place place : entry.getControllingSystems()){
-                        contestedCc[place.getPower().ordinal()] += cc;
+                    for (POWER power : powers){
+                        contestedCc[power.ordinal()] += cc;
                     }
                 } else {
+                    if (entry.getControllingSystems().size()>1){
+                        intersectedCc[entry.getPower().ordinal()] += cc;
+                    }
                     totalCc[entry.getPower().ordinal()] += cc;
                 }
             }
         }
         double upkeep = 0;
-        if (hqSystem.isPresent() && starSystem != null){
-            upkeep = starSystem.computeUpkeep(ModelFabric.get(hqSystem.get()));
+        if (hq != null && starSystem != null){
+            upkeep = starSystem.computeUpkeep(hq);
         }
 
         StringBuilder builder = new StringBuilder();
-        builder.append(String.format(ccFormat, summCc, contested, upkeep, summCc - contested - upkeep));
+        builder.append(String.format(ccFormat, summCc, contested, summCc - contested, upkeep, summCc - contested - upkeep));
         for (int i = 0; i < POWER.values().length; i++) {
             if (totalCc[i] > 0 || contestedCc[i] > 0){
                 builder.append("\n");
-                builder.append(String.format(pwCCFormat, converter.toString(POWER.values()[i]), totalCc[i], contestedCc[i]));
+                builder.append(String.format(pwCCFormat, converter.toString(POWER.values()[i]), totalCc[i], contestedCc[i], intersectedCc[i]));
             }
         }
         return builder.toString();
@@ -459,7 +469,7 @@ public class PowerPlayController {
             currentUpkeep = new SimpleLongProperty(data.getStarSystem().getUpkeep());
             upkeep = new SimpleDoubleProperty(hq != null ? data.getStarSystem().computeUpkeep(hq) : Double.NaN);
             income = new SimpleLongProperty(data.getStarSystem().getIncome());
-            cc = new SimpleLongProperty(data.getStarSystem().computeCC(ModelFabric.get(profile).getCCgroups()));
+            cc = new SimpleLongProperty(data.getStarSystem().computeCC());
         }
 
         private String getControllingString(Collection<PowerPlayAnalyzator.ControllingData> controllings) {
