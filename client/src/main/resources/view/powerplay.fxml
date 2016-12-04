@@ -160,7 +160,6 @@
             </TableView>
                 <ScrollPane minHeight="50">
                     <VBox spacing="4" padding="$summPadding">
-                        <HBox spacing="4"><Label text="%powerplay.label.populationSumm" /><Label fx:id="resultPopSumm" /></HBox>
                         <HBox spacing="4"><Label fx:id="resultCCSumm" wrapText="true"/></HBox>
                     </VBox>
                 </ScrollPane>
@@ -198,7 +197,7 @@
                         <cellValueFactory><PropertyValueFactory property="income"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn prefWidth="60" text="%market.system.upkeep">
-                        <cellValueFactory><PropertyValueFactory property="upkeep"/></cellValueFactory>
+                        <cellValueFactory><PropertyValueFactory property="currentUpkeep"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn prefWidth="80" text="%market.population">
                         <cellFactory><TextCell><converter><CustomNumberStringConverter pattern="#,##0.##" /></converter></TextCell></cellFactory>
@@ -221,7 +220,6 @@
             </TableView>
                 <ScrollPane minHeight="50">
                     <VBox spacing="4" padding="$summPadding">
-                        <HBox spacing="4"><Label text="%powerplay.label.populationSumm" /><Label fx:id="detailPopSumm" /></HBox>
                         <HBox spacing="4"><Label fx:id="detailCCSumm" wrapText="true"/></HBox>
                     </VBox>
                 </ScrollPane>

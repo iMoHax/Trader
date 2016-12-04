@@ -10,4 +10,12 @@ public enum POWER_STATE {
     public boolean isExploited(){
         return this == EXPLOITED || this == BLOCKED;
     }
+
+    public boolean isExpansion(){
+        return this == EXPANSION;
+    }
+
+    public boolean isContested(){
+        return this == CONTESTED;
+    }
 }

@@ -72,10 +72,6 @@ public class PowerPlayController {
     @FXML
     private TableView<ResultEntry> tblDetail;
     @FXML
-    private Label resultPopSumm;
-    @FXML
-    private Label detailPopSumm;
-    @FXML
     private Label resultCCSumm;
     @FXML
     private Label detailCCSumm;
@@ -186,19 +182,13 @@ public class PowerPlayController {
         tblDetail.setOnDragDetected(new StarSystemDragDetect(tblDetail));
         NumberStringConverter converter = new NumberStringConverter("#,##0.##");
         result.addListener((InvalidationListener) i -> {
-                    resultPopSumm.setText(converter.toString(getPopulationSumm(result)));
                     resultCCSumm.setText(getCCSummText(result, getCheckedSystem()));
                 }
         );
         detail.addListener((InvalidationListener) i -> {
-                    detailPopSumm.setText(converter.toString(getPopulationSumm(detail)));
                     detailCCSumm.setText(getCCSummText(detail, detailSystem));
                 }
         );
-    }
-
-    private long getPopulationSumm(Collection<ResultEntry> collection){
-        return collection.stream().mapToLong(ResultEntry::getPopulation).sum();
     }
 
     private String getCCSummText(Collection<ResultEntry> collection, Place starSystem){
@@ -210,18 +200,21 @@ public class PowerPlayController {
         long[] intersectedCc = new long[POWER.values().length];
         long[] totalCc = new long[POWER.values().length];
         long contested = 0;
+        long intersected = 0;
         long summCc = 0;
         for (ResultEntry entry : collection) {
             long cc = entry.getCc();
             summCc += cc;
             if (entry.getPower() == null || entry.getPowerState() == null) continue;
             if (entry.getPowerState() != POWER_STATE.NONE){
-                if (hq == null || !entry.getPowerState().isExploited() && !entry.getPowerState().isControl()
-                    || entry.getPower() != hq.getPower()) {
+                if (hq == null || entry.getPowerState().isContested() || entry.getPower() != hq.getPower()) {
                     contested += cc;
                 }
+                if (hq != null && entry.getPowerState().isExploited() && entry.getPower() == hq.getPower()) {
+                    intersected += cc;
+                }
                 Set<POWER> powers = entry.getControllingSystems().stream().map(Place::getPower).collect(Collectors.toSet());
-                if (entry.getPowerState() == POWER_STATE.CONTESTED){
+                if (entry.getPowerState().isContested()){
                     for (POWER power : powers){
                         contestedCc[power.ordinal()] += cc;
                     }
@@ -229,7 +222,9 @@ public class PowerPlayController {
                     if (entry.getControllingSystems().size()>1){
                         intersectedCc[entry.getPower().ordinal()] += cc;
                     }
-                    totalCc[entry.getPower().ordinal()] += cc;
+                    if (entry.getPowerState().isControl() || entry.getPowerState().isExploited()) {
+                        totalCc[entry.getPower().ordinal()] += cc;
+                    }
                 }
             }
         }
@@ -239,7 +234,7 @@ public class PowerPlayController {
         }
 
         StringBuilder builder = new StringBuilder();
-        builder.append(String.format(ccFormat, summCc, contested, summCc - contested, upkeep, summCc - contested - upkeep));
+        builder.append(String.format(ccFormat, summCc, contested, summCc - contested, upkeep, intersected, summCc - contested - upkeep - intersected));
         for (int i = 0; i < POWER.values().length; i++) {
             if (totalCc[i] > 0 || contestedCc[i] > 0){
                 builder.append("\n");
