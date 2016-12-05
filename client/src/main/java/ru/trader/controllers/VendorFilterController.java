@@ -15,7 +15,9 @@ import ru.trader.model.ItemModel;
 import ru.trader.model.MarketModel;
 import ru.trader.model.ModelFabric;
 import ru.trader.view.support.Localization;
+import ru.trader.view.support.NumberField;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
@@ -35,6 +37,11 @@ public class VendorFilterController {
     private CheckBox cbSkipIllegal;
     @FXML
     private CheckBox cbIllegalOnly;
+    @FXML
+    private NumberField minSupply;
+    @FXML
+    private NumberField minDemand;
+
 
     private VendorFilter filter;
     private Dialog<VendorFilter> dlg;
@@ -56,7 +63,9 @@ public class VendorFilterController {
         int column = -1;
         int row = -1;
         GroupModel currentGroup = null;
-        for (ItemModel item : items) {
+        ArrayList<ItemModel> sortedItems = new ArrayList<>(items);
+        sortedItems.sort((i1, i2) -> i1.getGroup().getName().compareTo(i2.getGroup().getName()));
+        for (ItemModel item : sortedItems) {
             row++;
             if (column == -1 || !Objects.equals(currentGroup, item.getGroup())){
                 column++;
@@ -97,6 +106,8 @@ public class VendorFilterController {
         cbDontBuy.setSelected(filter.isDontBuy());
         fillCheckboxes(sellCbs, filter.getSellExcludes());
         fillCheckboxes(buyCbs, filter.getBuyExcludes());
+        minSupply.setValue(filter.getMinSupply());
+        minDemand.setValue(filter.getMinDemand());
     }
 
     private void fillCheckboxes(Pane checkboxes, Collection<Item> excludes) {
@@ -115,6 +126,8 @@ public class VendorFilterController {
 
     private void save() {
         LOG.trace("Old filter", filter);
+        filter.setMinSupply(minSupply.getValue().longValue());
+        filter.setMinDemand(minDemand.getValue().longValue());
         filter.setIllegalOnly(cbIllegalOnly.isSelected());
         filter.setSkipIllegal(cbSkipIllegal.isSelected());
         filter.dontSell(cbDontSell.isSelected());

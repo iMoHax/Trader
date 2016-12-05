@@ -1,24 +1,29 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import ru.trader.view.support.NumberField?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.trader.controllers.VendorFilterController"
               styleClass="dialog" spacing="10">
         <HBox spacing="10">
-            <CheckBox fx:id="cbIllegalOnly" text="%filter.stations.illegalOnly"/>
-            <CheckBox fx:id="cbSkipIllegal" text="%filter.stations.legalOnly"/>
+            <CheckBox fx:id="cbSkipIllegal" text="%filter.stations.legalOnly" prefWidth="200" />
+            <CheckBox fx:id="cbDontSell" text="%filter.stations.notBuy" prefWidth="120" />
+            <Label text="%filter.stations.label.minSupply" prefWidth="120" />
+            <NumberField fx:id="minSupply" prefWidth="120" />
         </HBox>
         <HBox spacing="10">
-            <CheckBox fx:id="cbDontSell" text="%filter.stations.notBuy"/>
-            <CheckBox fx:id="cbDontBuy" text="%filter.stations.notSell"/>
+            <CheckBox fx:id="cbIllegalOnly" text="%filter.stations.illegalOnly" prefWidth="200" />
+            <CheckBox fx:id="cbDontBuy" text="%filter.stations.notSell" prefWidth="120" />
+            <Label text="%filter.stations.label.minDemand" prefWidth="120" />
+            <NumberField fx:id="minDemand" prefWidth="120" />
         </HBox>
         <VBox spacing="4">
             <Label text="%filter.stations.label.notBuy"/>
-            <ScrollPane maxHeight="200" maxWidth="400">
+            <ScrollPane maxHeight="200" maxWidth="600">
                 <GridPane fx:id="sellCbs" hgap="5" vgap="5"/>
             </ScrollPane>
         </VBox>
         <VBox spacing="4">
             <Label text="%filter.stations.label.notSell"/>
-            <ScrollPane maxHeight="200" maxWidth="400">
+            <ScrollPane maxHeight="200" maxWidth="600">
                 <GridPane fx:id="buyCbs" hgap="5" vgap="5"/>
             </ScrollPane>
         </VBox>

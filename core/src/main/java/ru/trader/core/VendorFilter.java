@@ -14,12 +14,18 @@ public class VendorFilter {
     private boolean illegalOnly;
     private boolean dontBuy;
     private boolean dontSell;
+    private long minSupply;
+    private long minDemand;
     private final Collection<Item> buyExcludes;
     private final Collection<Item> sellExcludes;
 
     public VendorFilter() {
         buyExcludes = new ArrayList<>();
         sellExcludes = new ArrayList<>();
+        minSupply = 0;
+        minDemand = 0;
+        dontSell = false;
+        dontBuy = false;
         skipIllegal = false;
         illegalOnly = false;
     }
@@ -30,6 +36,22 @@ public class VendorFilter {
 
     public void setDisable(boolean disable) {
         this.disable = disable;
+    }
+
+    public long getMinSupply() {
+        return minSupply;
+    }
+
+    public void setMinSupply(long minSupply) {
+        this.minSupply = minSupply;
+    }
+
+    public long getMinDemand() {
+        return minDemand;
+    }
+
+    public void setMinDemand(long minDemand) {
+        this.minDemand = minDemand;
     }
 
     public boolean isSkipIllegal() {
@@ -100,8 +122,8 @@ public class VendorFilter {
         if (disable) return false;
         if (skipIllegal && offer.isIllegal()) return true;
         switch (offer.getType()) {
-            case SELL: return dontSell || sellExcludes.contains(offer.getItem());
-            case BUY: return dontBuy || (illegalOnly && !offer.isIllegal()) || buyExcludes.contains(offer.getItem());
+            case SELL: return dontSell || sellExcludes.contains(offer.getItem()) || (offer.getCount() > 0 && offer.getCount() < minSupply);
+            case BUY: return dontBuy || (illegalOnly && !offer.isIllegal()) || buyExcludes.contains(offer.getItem()) || (offer.getCount() > 0 && offer.getCount() < minDemand);
         }
         return false;
     }
