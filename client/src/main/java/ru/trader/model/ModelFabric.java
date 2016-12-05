@@ -221,6 +221,16 @@ public class ModelFabric {
         }
 
         @Override
+        public long getPopulation() {
+            return 0;
+        }
+
+        @Override
+        public void setPopulation(long population) {
+            throw new UnsupportedOperationException("Is fake system, change unsupported");
+        }
+
+        @Override
         public FACTION getFaction() {
             return FACTION.NONE;
         }

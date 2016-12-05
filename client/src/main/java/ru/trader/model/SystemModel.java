@@ -113,6 +113,17 @@ public class SystemModel {
         system.setPosition(x, y, z);
     }
 
+    public long getPopulation(){
+        return system.getPopulation();
+    }
+
+    public void setPopulation(long population){
+        if (population == system.getPopulation()) return;
+        LOG.info("Change population of system {} to {}", this.system, population);
+        system.setPopulation(population);
+    }
+
+
     public double getDistance(SystemModel other){
         return system.getDistance(ModelFabric.get(other));
     }

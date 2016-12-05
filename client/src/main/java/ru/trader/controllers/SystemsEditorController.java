@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.converter.DefaultStringConverter;
 import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.LongStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.Main;
@@ -42,6 +43,8 @@ public class SystemsEditorController {
     private TableColumn<SystemData, POWER> clnPower;
     @FXML
     private TableColumn<SystemData, POWER_STATE> clnPowerState;
+    @FXML
+    private TableColumn<SystemData, Long> clnPopulation;
     @FXML
     private TableColumn<SystemData, Double> clnX;
     @FXML
@@ -90,6 +93,7 @@ public class SystemsEditorController {
         clnGovernment.setCellFactory(ComboBoxTableCell.forTableColumn(new GovernmentStringConverter(), FXCollections.observableArrayList(GOVERNMENT.values())));
         clnPower.setCellFactory(ComboBoxTableCell.forTableColumn(new PowerStringConverter(), FXCollections.observableArrayList(POWER.values())));
         clnPowerState.setCellFactory(ComboBoxTableCell.forTableColumn(new PowerStateStringConverter(), FXCollections.observableArrayList(POWER_STATE.values())));
+        clnPopulation.setCellFactory(TextFieldCell.forTableColumn(new LongStringConverter()));
         clnX.setCellFactory(TextFieldCell.forTableColumn(new DoubleStringConverter()));
         clnY.setCellFactory(TextFieldCell.forTableColumn(new DoubleStringConverter()));
         clnZ.setCellFactory(TextFieldCell.forTableColumn(new DoubleStringConverter()));
@@ -284,6 +288,7 @@ public class SystemsEditorController {
         private final DoubleProperty x;
         private final DoubleProperty y;
         private final DoubleProperty z;
+        private final LongProperty population;
         private final ObjectProperty<FACTION> faction;
         private final ObjectProperty<GOVERNMENT> government;
         private final ObjectProperty<POWER> power;
@@ -303,6 +308,7 @@ public class SystemsEditorController {
             x = new SimpleDoubleProperty(Double.NaN);
             y = new SimpleDoubleProperty(Double.NaN);
             z = new SimpleDoubleProperty(Double.NaN);
+            population = new SimpleLongProperty(0);
             faction = new SimpleObjectProperty<>(FACTION.NONE);
             government = new SimpleObjectProperty<>(GOVERNMENT.NONE);
             power = new SimpleObjectProperty<>(POWER.NONE);
@@ -315,6 +321,7 @@ public class SystemsEditorController {
             x = new SimpleDoubleProperty(system.getX());
             y = new SimpleDoubleProperty(system.getY());
             z = new SimpleDoubleProperty(system.getZ());
+            population = new SimpleLongProperty(system.getPopulation());
             faction = new SimpleObjectProperty<>(system.getFaction());
             government = new SimpleObjectProperty<>(system.getGovernment());
             power = new SimpleObjectProperty<>(system.getPower());
@@ -335,6 +342,10 @@ public class SystemsEditorController {
 
         public DoubleProperty zProperty() {
             return z;
+        }
+
+        public LongProperty populationProperty() {
+            return population;
         }
 
         public DoubleProperty s1Property() {
@@ -386,12 +397,14 @@ public class SystemsEditorController {
                 if (system != null){
                     system.setName(name.get());
                     system.setPosition(x.get(), y.get(), z.get());
+                    system.setPopulation(population.get());
                     system.setFaction(faction.get());
                     system.setGovernment(government.get());
                     system.setPower(power.get());
                     system.setPowerState(powerState.get());
                 } else {
                     SystemModel system = market.add(name.get(), x.get(), y.get(), z.get());
+                    system.setPopulation(population.get());
                     system.setFaction(faction.get());
                     system.setGovernment(government.get());
                     system.setPower(power.get());

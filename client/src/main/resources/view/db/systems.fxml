@@ -21,6 +21,9 @@
             <TableColumn minWidth="60" text="Z">
                 <cellValueFactory><PropertyValueFactory property="z"/></cellValueFactory>
             </TableColumn>
+            <TableColumn minWidth="100" text="%market.population">
+                <cellValueFactory><PropertyValueFactory property="population"/></cellValueFactory>
+            </TableColumn>
             <TableColumn fx:id="government" minWidth="100" text="%market.government">
                 <cellValueFactory><WritablePropertyValueFactory property="government"/></cellValueFactory>
             </TableColumn>

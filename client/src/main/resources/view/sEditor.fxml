@@ -76,6 +76,9 @@
             <TableColumn fx:id="clnZ" minWidth="60.0" text="z">
                 <cellValueFactory><PropertyValueFactory property="z"/></cellValueFactory>
             </TableColumn>
+            <TableColumn fx:id="clnPopulation" minWidth="100" text="%market.population">
+                <cellValueFactory><PropertyValueFactory property="population"/></cellValueFactory>
+            </TableColumn>
             <TableColumn text="%sEditor.table.distance">
                 <columns>
                     <TableColumn fx:id="clnS1" minWidth="60.0" text="">
