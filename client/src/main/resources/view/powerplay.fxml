@@ -14,6 +14,15 @@
       prefHeight="500"  >
     <fx:define><Insets fx:id="tablePadding" left="0" right="0" top="0" bottom="0" /></fx:define>
     <fx:define><Insets fx:id="summPadding" left="4" right="4" top="4" bottom="4" /></fx:define>
+    <fx:define>
+        <ContextMenu fx:id="ctxMenu">
+            <items>
+                <MenuItem text="%dialog.button.copy" accelerator="Shortcut+C" onAction="#copySystemToClipboard" />
+                <MenuItem text="%dialog.button.edit" accelerator="Shortcut+E" onAction="#editSystem" />
+            </items>
+        </ContextMenu>
+    </fx:define>
+
     <TitledPane text="%powerplay.analyze.title" collapsible="false">
     <HBox spacing="50" alignment="CENTER" minHeight="230" maxHeight="230">
         <VBox minWidth="250" maxWidth="250" spacing="4">
@@ -24,13 +33,7 @@
             </HBox>
             <HBox spacing="4" alignment="CENTER" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
                 <ListView fx:id="historySystems" HBox.hgrow="ALWAYS">
-                    <contextMenu>
-                        <ContextMenu>
-                            <items>
-                                <MenuItem text="%dialog.button.copy" accelerator="Shortcut+C" onAction="#copySystemToClipboard" />
-                            </items>
-                        </ContextMenu>
-                    </contextMenu>
+                    <contextMenu><fx:reference source="ctxMenu"/></contextMenu>
                 </ListView>
                 <VBox spacing="4">
                     <Button prefWidth="30" onAction="#addHistorySystem"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
@@ -71,13 +74,7 @@
             </HBox>
             <HBox spacing="4" alignment="CENTER" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
                 <ListView fx:id="controlSystems" HBox.hgrow="ALWAYS">
-                    <contextMenu>
-                        <ContextMenu>
-                            <items>
-                                <MenuItem text="%dialog.button.copy" accelerator="Shortcut+C" onAction="#copySystemToClipboard" />
-                            </items>
-                        </ContextMenu>
-                    </contextMenu>
+                    <contextMenu><fx:reference source="ctxMenu"/></contextMenu>
                 </ListView>
                 <VBox spacing="4">
                     <Button prefWidth="30" onAction="#addControlSystem"><graphic><Glyph text="FontAwesome|PLUS"/></graphic></Button>
@@ -150,13 +147,7 @@
                 <columnResizePolicy>
                     <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
                 </columnResizePolicy>
-                <contextMenu>
-                    <ContextMenu>
-                        <items>
-                            <MenuItem text="%dialog.button.copy" accelerator="Shortcut+C" onAction="#copySystemToClipboard" />
-                        </items>
-                    </ContextMenu>
-                </contextMenu>
+                <contextMenu><fx:reference source="ctxMenu"/></contextMenu>
             </TableView>
                 <ScrollPane minHeight="50">
                     <VBox spacing="4" padding="$summPadding">
@@ -210,13 +201,7 @@
                 <columnResizePolicy>
                     <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
                 </columnResizePolicy>
-                <contextMenu>
-                    <ContextMenu>
-                        <items>
-                            <MenuItem text="%dialog.button.copy" accelerator="Shortcut+C" onAction="#copySystemToClipboard" />
-                        </items>
-                    </ContextMenu>
-                </contextMenu>
+                <contextMenu><fx:reference source="ctxMenu"/></contextMenu>
             </TableView>
                 <ScrollPane minHeight="50">
                     <VBox spacing="4" padding="$summPadding">

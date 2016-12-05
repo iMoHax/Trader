@@ -414,24 +414,36 @@ public class PowerPlayController {
         historySystems.getItems().clear();
     }
 
-
-    @FXML
-    private void copySystemToClipboard(){
-        SystemModel starSystem = null;
-        if (historySystems.isFocused()) starSystem = historySystems.getSelectionModel().getSelectedItem();
-        if (controlSystems.isFocused()) starSystem = controlSystems.getSelectionModel().getSelectedItem();
+    private SystemModel getFocusedSystem(){
+        if (historySystems.isFocused()) return historySystems.getSelectionModel().getSelectedItem();
+        if (controlSystems.isFocused()) return controlSystems.getSelectionModel().getSelectedItem();
         if (tblResults.isFocused()){
             ResultEntry entry = tblResults.getSelectionModel().getSelectedItem();
-            starSystem = entry != null ? entry.starSystem : null;
+            return entry != null ? entry.starSystem : null;
         }
         if (tblDetail.isFocused()){
             ResultEntry entry = tblDetail.getSelectionModel().getSelectedItem();
-            starSystem = entry != null ? entry.starSystem : null;
+            return entry != null ? entry.starSystem : null;
         }
+        return null;
+    }
+
+    @FXML
+    private void copySystemToClipboard(){
+        SystemModel starSystem = getFocusedSystem();
         if (starSystem != null){
             Main.copyToClipboard(starSystem.getName());
         }
     }
+
+    @FXML
+    private void editSystem(){
+        SystemModel starSystem = getFocusedSystem();
+        if (starSystem != null){
+            Screeners.showSystemsEditor(starSystem);
+        }
+    }
+
 
     public class ResultEntry {
         private final SystemModel starSystem;
