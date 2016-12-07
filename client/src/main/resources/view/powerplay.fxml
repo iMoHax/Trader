@@ -88,8 +88,8 @@
     <MasterDetailPane fx:id="resultPane" detailSide="RIGHT" prefWidth="1190" dividerPosition="0.566" showDetailNode="false" VBox.vgrow="ALWAYS">
         <masterNode>
         <TitledPane text="%powerplay.result.title" collapsible="false">
-            <VBox spacing="4" padding="$tablePadding">
-            <TableView fx:id="tblResults" VBox.vgrow="ALWAYS">
+            <SplitPane padding="$tablePadding" dividerPositions="0.9" orientation="VERTICAL">
+              <TableView fx:id="tblResults" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn prefWidth="150" text="%market.system">
                         <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
@@ -148,19 +148,19 @@
                     <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
                 </columnResizePolicy>
                 <contextMenu><fx:reference source="ctxMenu"/></contextMenu>
-            </TableView>
+              </TableView>
                 <ScrollPane minHeight="50">
                     <VBox spacing="4" padding="$summPadding">
                         <HBox spacing="4"><Label fx:id="resultCCSumm" wrapText="true"/></HBox>
                     </VBox>
                 </ScrollPane>
-            </VBox>
+            </SplitPane>
         </TitledPane>
         </masterNode>
         <detailNode>
         <TitledPane text="%powerplay.detail.title" collapsible="false">
-            <VBox spacing="4" padding="$tablePadding">
-            <TableView fx:id="tblDetail" VBox.vgrow="ALWAYS">
+            <SplitPane padding="$tablePadding" dividerPositions="0.9" orientation="VERTICAL">
+              <TableView fx:id="tblDetail" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn prefWidth="100" text="%market.system">
                         <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
@@ -202,13 +202,13 @@
                     <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
                 </columnResizePolicy>
                 <contextMenu><fx:reference source="ctxMenu"/></contextMenu>
-            </TableView>
+              </TableView>
                 <ScrollPane minHeight="50">
                     <VBox spacing="4" padding="$summPadding">
                         <HBox spacing="4"><Label fx:id="detailCCSumm" wrapText="true"/></HBox>
                     </VBox>
                 </ScrollPane>
-            </VBox>
+            </SplitPane>
         </TitledPane>
         </detailNode>
     </MasterDetailPane>
