@@ -109,7 +109,9 @@ public interface Place extends Connectable<Place> {
     }
 
     default long computeCC(){
-        return Math.round(Math.log10(getPopulation())+1);
+        long population = getPopulation();
+        if (population <= 0) return 0;
+        return Math.round(Math.log10(population)+1);
     }
 
 }
