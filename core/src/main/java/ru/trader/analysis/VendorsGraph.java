@@ -166,7 +166,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             Vertex<Vendor> target = lastEdge.getTarget();
             assert vertex.getEntry().isTransit() && !target.getEntry().isTransit();
             VendorsGraphBuilder h = this;
-            Path<Vendor> path = new Path<>(Collections.singleton(lastEdge));
+            Path<Vendor> path = new Path<>(lastEdge);
             while (h != null && h.edge != null){
                 if (callback.isCancel()) break;
                 BuildEdge cEdge = h.edge;
@@ -175,7 +175,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
                     LOG.trace("Found loop, break");
                     break;
                 }
-                path = path.add(cEdge);
+                path = path.addFirst(cEdge);
                 if (path.getMinFuel() > path.getMaxFuel()){
                     LOG.trace("Path inaccessible");
                     break;
@@ -217,7 +217,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
             assert vertex.getEntry().isTransit() && !target.getEntry().isTransit();
             List<Path<Vendor>> paths = lastEdge.paths;
             int i = 1;
-            Path<Vendor> path = paths != null ? paths.get(0) : new Path<>(Collections.singleton((BuildEdge)lastEdge));
+            Path<Vendor> path = paths != null ? paths.get(0) : new Path<>(lastEdge);
             while (path != null){
                 if (callback.isCancel()) break;
                 VendorsGraphBuilder h = this;
@@ -230,7 +230,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
                             LOG.trace("Found loop, break");
                             break;
                         }
-                        path = path.add(cEdge);
+                        path = path.addFirst(cEdge);
                         if (path.getMinFuel() > path.getMaxFuel()){
                             LOG.trace("Path inaccessible");
                             break;
@@ -286,7 +286,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
 
         protected VendorsBuildEdge(BuildEdge edge) {
             super(edge.getSource(), edge.getTarget());
-            Path<Vendor> path = new Path<>(Collections.singleton(edge));
+            Path<Vendor> path = new Path<>(edge);
             paths.add(path);
             setFuel(path.getMinFuel(), path.getMaxFuel());
         }
@@ -319,7 +319,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         public Path<Vendor> getPath(double fuel){
             Path<Vendor> res = null;
             for (Path<Vendor> p : paths) {
-                if (((fuel - p.getMinFuel() > 0.05) || getSource().getEntry().canRefill()) && fuel <= p.getMaxFuel()) {
+                if ((fuel > p.getMinFuel() || getSource().getEntry().canRefill()) && fuel <= p.getMaxFuel()) {
                     if (getProfile().getPathPriority().equals(Profile.PATH_PRIORITY.FAST)) {
                         if (res == null || (p.getSize() < res.getSize() || p.getSize() == res.getSize() && p.getFuelCost() < res.getFuelCost()) && p.getRefillCount(fuel) <= res.getRefillCount(fuel)) {
                             res = p;
@@ -336,6 +336,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         }
 
         private boolean isRemove(Path<Vendor> path, Path<Vendor> best){
+            if (path.getMinFuel() > path.getMaxFuel()) return true;
             if (profile.getPathPriority() == Profile.PATH_PRIORITY.FAST){
                 return (path.getSize() > best.getSize() || (path.getSize() == best.getSize() && path.getFuelCost() >= best.getFuelCost()))
                         && (path.getSource().canRefill() || path.getMinFuel() >= best.getMinFuel() && path.getRefillCount() >= best.getRefillCount())

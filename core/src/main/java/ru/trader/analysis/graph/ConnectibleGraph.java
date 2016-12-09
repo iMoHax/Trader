@@ -53,7 +53,7 @@ public class ConnectibleGraph<T extends Connectable<T>> extends AbstractGraph<T>
             double distance = vertex.getEntry().getDistance(entry);
             if (distance > getShip().getMaxJumpRange()){
                 LOG.trace("Vertex {} is far away, {}", entry, distance);
-                return new BuildHelper<>(entry,-1);
+                return new CBuildHelper<>(entry,-1,0,0,distance);
             }
             double maxFuel = getShip().getMaxFuel(distance);
             double minFuel = getShip().getMinFuel(distance);
