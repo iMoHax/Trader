@@ -31,8 +31,12 @@ public class PowerPlayAnalyzator {
     }
 
     public Collection<IntersectData> getControlling(Place starSystem){
+        return getControlling(Collections.singleton(starSystem));
+    }
+
+    public Collection<IntersectData> getControlling(Collection<Place> starSystems){
         Stream<Place> candidates = market.get().stream().filter(Place::isPopulated);
-        return getControlling(starSystem, candidates, Market.CONTROLLING_RADIUS).collect(Collectors.toList());
+        return getControlling(starSystems, candidates, Market.CONTROLLING_RADIUS).collect(Collectors.toList());
     }
 
     public Collection<IntersectData> getIntersects(Collection<Place> starSystems){
@@ -63,12 +67,12 @@ public class PowerPlayAnalyzator {
         return getNearExpansions(market.get(), starSystems, Market.CONTROLLING_RADIUS * 2);
     }
 
-    public static Collection<IntersectData> getControlling(Place starSystem, Collection<Place> starSystems, double radius){
-        return getControlling(starSystem, starSystems.stream(), radius).collect(Collectors.toList());
+    public static Collection<IntersectData> getControlling(Collection<Place> checkedSystems, Collection<Place> starSystems, double radius){
+        return getControlling(checkedSystems, starSystems.stream(), radius).collect(Collectors.toList());
     }
 
-    public static Stream<IntersectData> getControlling(Place starSystem, Stream<Place> starSystems, double radius){
-        IntersectsMapper controllingMapper = new IntersectsMapper(Collections.singleton(starSystem), radius, true, true);
+    public static Stream<IntersectData> getControlling(Collection<Place> checkedSystems, Stream<Place> starSystems, double radius){
+        IntersectsMapper controllingMapper = new IntersectsMapper(checkedSystems, radius, true, true);
         return starSystems
                 .map(controllingMapper)
                 .filter(IntersectData::isIntersect);

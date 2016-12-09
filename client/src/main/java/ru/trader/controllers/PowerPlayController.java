@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
-import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.MasterDetailPane;
 import org.slf4j.Logger;
@@ -88,6 +87,8 @@ public class PowerPlayController {
     private void initialize(){
         init();
         profile = MainController.getProfile();
+
+        historySystems.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         cbCurrentPower.setConverter(new PowerStringConverter());
         cbCurrentPower.setItems(FXCollections.observableArrayList(POWER.values()));
@@ -180,18 +181,17 @@ public class PowerPlayController {
             }
         });
         tblDetail.setOnDragDetected(new StarSystemDragDetect(tblDetail));
-        NumberStringConverter converter = new NumberStringConverter("#,##0.##");
         result.addListener((InvalidationListener) i -> {
-                    resultCCSumm.setText(getCCSummText(result, getCheckedSystem()));
+                    resultCCSumm.setText(getCCSummText(result, getSelectedSystems()));
                 }
         );
         detail.addListener((InvalidationListener) i -> {
-                    detailCCSumm.setText(getCCSummText(detail, detailSystem));
+                    detailCCSumm.setText(getCCSummText(detail, detailSystem != null ? Collections.singleton(detailSystem) : null));
                 }
         );
     }
 
-    private String getCCSummText(Collection<ResultEntry> collection, Place starSystem){
+    private String getCCSummText(Collection<ResultEntry> collection, Collection<Place> starSystems){
         String ccFormat = Localization.getString("powerplay.label.summcc");
         String pwCCFormat = Localization.getString("powerplay.label.cc");
         PowerStringConverter converter = new PowerStringConverter();
@@ -229,8 +229,10 @@ public class PowerPlayController {
             }
         }
         double upkeep = 0;
-        if (hq != null && starSystem != null){
-            upkeep = starSystem.computeUpkeep(hq);
+        if (hq != null && starSystems != null){
+            for (Place starSystem : starSystems) {
+                upkeep += starSystem.computeUpkeep(hq);
+            }
         }
 
         StringBuilder builder = new StringBuilder();
@@ -259,6 +261,17 @@ public class PowerPlayController {
         return ModelFabric.get(checkedSystem.getValue());
     }
 
+    private Collection<Place> getSelectedSystems() {
+        Collection<Place> places = historySystems.getSelectionModel().getSelectedItems().stream().map(ModelFabric::get).collect(Collectors.toSet());
+        if (places.isEmpty()){
+            Place starSystem = getCheckedSystem();
+            if (starSystem != null){
+                return Collections.singleton(starSystem);
+            }
+        }
+        return places;
+    }
+
     private void getIntersects(){
         Place starSystem = getCheckedSystem();
         Collection<Place> controlls = getControlSystems();
@@ -271,9 +284,11 @@ public class PowerPlayController {
 
     private void getControlling(){
         final Place starSystem = getCheckedSystem();
+        final Collection<Place> selectedSystems = getSelectedSystems();
         result.clear();
-        if (starSystem != null){
-            Collection<PowerPlayAnalyzator.IntersectData> controllings = analyzator.getControlling(starSystem);
+        if (starSystem != null || !selectedSystems.isEmpty()){
+            Collection<PowerPlayAnalyzator.IntersectData> controllings =
+                    selectedSystems.isEmpty() ? analyzator.getControlling(starSystem) : analyzator.getControlling(selectedSystems);
             controllings.add(new PowerPlayAnalyzator.IntersectData(starSystem));
             result.addAll(BindingsHelper.observableList(controllings,d -> new ResultEntry(d, starSystem)));
         }
