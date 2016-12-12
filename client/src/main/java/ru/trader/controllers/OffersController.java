@@ -270,12 +270,6 @@ public class OffersController {
         }
     }
 
-    private void refresh(){
-        LOG.info("Refresh lists");
-        tblSell.getItems().forEach(OfferModel::refresh);
-        tblBuy.getItems().forEach(OfferModel::refresh);
-    }
-
     private void showOffers(Collection<StationModel> buyers){
         StationModel seller = getStation();
         MarketModel market = MainController.getMarket();
@@ -326,7 +320,6 @@ public class OffersController {
                 if (station.getSystem().equals(system.getValue())) {
                     stationsList.getItems().add(station);
                 }
-                refresh();
                 sort();
             });
         }
@@ -344,7 +337,6 @@ public class OffersController {
                 if (station.getSystem().equals(system.getValue())) {
                     stationsList.getItems().remove(station);
                 }
-                refresh();
                 sort();
             });
         }

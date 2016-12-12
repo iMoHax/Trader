@@ -5,9 +5,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.TextAlignment;
+import org.controlsfx.glyphfont.Glyph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trader.model.*;
@@ -22,6 +29,8 @@ public class ItemsController {
     @FXML
     private TableView<ItemModel> tblItems;
 
+    @FXML
+    private TableColumn<ItemModel, Number> itemNameColumn;
     @FXML
     private TableColumn<ItemModel, Number> minProfit;
     @FXML
@@ -41,6 +50,8 @@ public class ItemsController {
                 Screeners.showItemDesc(tblItems);
             }
         });
+        addRefreshButton(itemNameColumn);
+
         minProfit.setCellValueFactory((data) -> {
             ItemModel iDesc = data.getValue();
             return ModelBindings.diff(iDesc.minBuyProperty(),iDesc.maxSellProperty());
@@ -57,9 +68,15 @@ public class ItemsController {
         init();
     }
 
+    private void addRefreshButton(TableColumn<?, ?> itemNameColumn) {
+        Button refreshButton = new Button();
+        refreshButton.setGraphic(Glyph.create("FontAwesome|REFRESH"));
+        refreshButton.setOnAction(e -> refresh());
+        itemNameColumn.setGraphic(refreshButton);
+    }
+
     void init(){
         MarketModel market = MainController.getMarket();
-        market.getNotificator().add(new ItemsStatChangeListener());
         items.clear();
         items.addAll(market.itemsProperty());
         sort();
@@ -70,50 +87,11 @@ public class ItemsController {
             tblItems.sort();
     }
 
+    @FXML
     private void refresh(){
         LOG.info("Refresh all stats");
         tblItems.getItems().forEach(ItemModel::refresh);
         sort();
-    }
-
-    private void addItem(ItemModel item){
-        items.add(item);
-    }
-
-    private class ItemsStatChangeListener extends ChangeMarketListener {
-
-        @Override
-        public void add(ItemModel item) {
-            addItem(item);
-        }
-
-        @Override
-        public void remove(SystemModel system) {
-            if (!system.isEmpty()) refresh();
-        }
-
-        @Override
-        public void add(StationModel station) {
-            refresh();
-        }
-
-        @Override
-        public void remove(StationModel station) { refresh();}
-
-        @Override
-        public void add(OfferModel offer) {
-            sort();
-        }
-
-        @Override
-        public void remove(OfferModel offer) {
-            sort();
-        }
-
-        @Override
-        public void priceChange(OfferModel offer, double price, double value) {
-            sort();
-        }
     }
 
 
