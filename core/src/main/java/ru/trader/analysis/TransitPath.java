@@ -1,6 +1,8 @@
 package ru.trader.analysis;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.trader.analysis.graph.ConnectibleEdge;
 import ru.trader.analysis.graph.ConnectibleGraph;
 import ru.trader.analysis.graph.Path;
@@ -9,6 +11,7 @@ import ru.trader.core.Vendor;
 import java.util.*;
 
 public class TransitPath {
+    private final static Logger LOG = LoggerFactory.getLogger(TransitPath.class);
     private final List<ConnectibleEdge<Vendor>> entries;
     private double fuelCost;
     private double remain;
@@ -39,6 +42,7 @@ public class TransitPath {
                     fuel = refill(path, true);
                 }
                 if (fuel < 0)
+                    LOG.error("Incorrect path, path = {}, fuel = {}, ship = {}", path, fuel, edge.getShip());
                     throw new IllegalStateException("Is not exists path");
             } else {
                 fuel -= cost;
