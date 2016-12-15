@@ -412,6 +412,7 @@ public class PowerPlayController {
         if (!ModelFabric.isFake(starSystem)){
             if (!historySystems.getItems().contains(starSystem)) {
                 historySystems.getItems().add(starSystem);
+                historySystems.getSelectionModel().clearSelection();
             }
         }
     }
