@@ -188,11 +188,49 @@ public abstract class AbstractPlace implements Place {
             controlling = new ArrayList<>();
         }
         controlling.add(controllingSystem);
+        if (controlling.size() == 1){
+            this.setPower(controllingSystem.getPower(), POWER_STATE.EXPLOITED);
+        } else {
+            boolean singlePower = true;
+            POWER power = null;
+            for (Place place : controlling) {
+                if (power == null) power = place.getPower();
+                 else if (!power.equals(place.getPower())){
+                    singlePower = false;
+                    break;
+                }
+            }
+            if (singlePower){
+                this.setPower(getPower(), POWER_STATE.EXPLOITED);
+            } else {
+                this.setPower(getPower(), POWER_STATE.CONTESTED);
+            }
+        }
     }
 
     protected void removeControlling(Place controllingSystem){
         if (controlling != null) {
             controlling.remove(controllingSystem);
+            if (controlling.isEmpty()) this.setPower(POWER.NONE, POWER_STATE.NONE);
+            else if (controlling.size() == 1){
+                Place place = controlling.iterator().next();
+                this.setPower(place.getPower(), POWER_STATE.EXPLOITED);
+            } else {
+                boolean singlePower = true;
+                POWER power = null;
+                for (Place place : controlling) {
+                    if (power == null) power = place.getPower();
+                    else if (!power.equals(place.getPower())){
+                        singlePower = false;
+                        break;
+                    }
+                }
+                if (singlePower){
+                    this.setPower(getPower(), POWER_STATE.EXPLOITED);
+                } else {
+                    this.setPower(getPower(), POWER_STATE.CONTESTED);
+                }
+            }
         }
     }
 
