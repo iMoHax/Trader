@@ -10,7 +10,10 @@ import ru.trader.core.Order;
 import ru.trader.core.Profile;
 import ru.trader.core.Vendor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.function.Consumer;
 
 
@@ -319,7 +322,7 @@ public class VendorsGraph extends ConnectibleGraph<Vendor> {
         public Path<Vendor> getPath(double fuel){
             Path<Vendor> res = null;
             for (Path<Vendor> p : paths) {
-                if ((fuel > p.getMinFuel() || getSource().getEntry().canRefill()) && fuel <= p.getMaxFuel()) {
+                if ((fuel > p.getMinFuel() || getSource().getEntry().canRefill() && getShip().getRoundFuel(p.getMaxFuel()) >= p.getMinFuel()) && fuel <= p.getMaxFuel()) {
                     if (getProfile().getPathPriority().equals(Profile.PATH_PRIORITY.FAST)) {
                         if (res == null || (p.getSize() < res.getSize() || p.getSize() == res.getSize() && p.getFuelCost() < res.getFuelCost()) && p.getRefillCount(fuel) <= res.getRefillCount(fuel)) {
                             res = p;
