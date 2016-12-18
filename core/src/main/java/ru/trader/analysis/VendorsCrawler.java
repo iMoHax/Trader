@@ -1,6 +1,8 @@
 package ru.trader.analysis;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.trader.analysis.graph.*;
 import ru.trader.core.Order;
 import ru.trader.core.SERVICE_TYPE;
@@ -14,6 +16,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class VendorsCrawler extends Crawler<Vendor> {
+    private final static Logger LOG = LoggerFactory.getLogger(VendorsCrawler.class);
+
     private double startFuel;
     private double startBalance;
     private final VendorsCrawlerSpecification specification;
@@ -84,7 +88,13 @@ public class VendorsCrawler extends Crawler<Vendor> {
             VendorsGraph.VendorsBuildEdge edge = (VendorsGraph.VendorsBuildEdge) e;
             Path<Vendor> path = edge.getPath(fuel);
             if (path == null) return null;
-            VendorsEdge res = new VendorsEdge(edge.getSource(), edge.getTarget(), new TransitPath(path, fuel));
+            VendorsEdge res;
+            try {
+                res = new VendorsEdge(edge.getSource(), edge.getTarget(), new TransitPath(path, fuel));
+            } catch (IllegalStateException ex){
+                LOG.error("Wrong path, entry {}, fuel = {}", this, fuel);
+                return null;
+            }
             List<Order> orders = Collections.emptyList();
             if (edge.getSource().getEntry().has(SERVICE_TYPE.MARKET) || !edge.getTarget().getEntry().has(SERVICE_TYPE.MARKET)){
                 orders = edge.getOrders();
