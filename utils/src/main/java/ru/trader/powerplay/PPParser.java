@@ -86,6 +86,7 @@ public class PPParser {
             if ("1000000000".equals(trigger)){
                 state = POWER_STATE.HEADQUARTERS;
             }
+            if ("FAIL".equals(status)) return;
             Place place = market.get(starSystemName);
             if (place != null){
                 if (upkeep != null){
@@ -162,7 +163,7 @@ public class PPParser {
             case "control": return POWER_STATE.CONTROL;
             case "contested": return POWER_STATE.CONTESTED;
             case "takingControl": return POWER_STATE.CONTROL;
-            case "turmoil": return POWER_STATE.TURMOIL;
+            case "turmoil": return POWER_STATE.CONTROL;
             default:
                 LOG.warn("Unknown power state: {}", value);
         }
@@ -171,6 +172,7 @@ public class PPParser {
 
     private void updatePowerState(){
         if (controllingSystems.isEmpty()) return;
+        market.startBatch();
         for (Place starSystem : market.get()) {
             if (!starSystem.isPopulated()) continue;
             starSystem.setPower(POWER.NONE, POWER_STATE.NONE);
@@ -196,6 +198,7 @@ public class PPParser {
                 }
             }
         }
+        market.doBatch();
     }
 
     private enum FILE_TYPE {
