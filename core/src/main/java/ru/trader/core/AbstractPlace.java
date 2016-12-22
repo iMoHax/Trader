@@ -171,14 +171,24 @@ public abstract class AbstractPlace implements Place {
         if (market == null) return;
         if (oldState == null) oldState = POWER_STATE.NONE;
         if (newState == null) newState = POWER_STATE.NONE;
-        if (oldState.isControl() && !newState.isControl()){
+        if (oldState.isExpansion() && !newState.isExpansion()){
             market.getInControllingRadius(this).forEach(p -> {
-                if (p instanceof AbstractPlace) ((AbstractPlace)p).removeControlling(this);
+                if (p.getPowerState() == POWER_STATE.BLOCKED) p.setPower(getPower(), POWER_STATE.NONE);
             });
         }
         if (!oldState.isControl() && newState.isControl()){
             market.getInControllingRadius(this).forEach(p -> {
                 if (p instanceof AbstractPlace) ((AbstractPlace)p).addControlling(this);
+            });
+        }
+        if (oldState.isControl() && !newState.isControl()){
+            market.getInControllingRadius(this).forEach(p -> {
+                if (p instanceof AbstractPlace) ((AbstractPlace)p).removeControlling(this);
+            });
+        }
+        if (!oldState.isExpansion() && newState.isExpansion()){
+            market.getInControllingRadius(this).forEach(p -> {
+                if (p.getPowerState() == POWER_STATE.NONE) p.setPower(getPower(), POWER_STATE.BLOCKED);
             });
         }
     }
