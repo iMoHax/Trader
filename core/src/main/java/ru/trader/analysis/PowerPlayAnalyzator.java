@@ -142,7 +142,7 @@ public class PowerPlayAnalyzator {
 
     public static Stream<IntersectData> getMaxProfit(Stream<Place> starSystems, Place headquarter, Collection<Place> centers, double radius, double maxDistance){
         Collection<Place> candidates = new ArrayList<>();
-        starSystems.filter(p ->p.getPower() == POWER.NONE && p.getDistance(headquarter) <= maxDistance)
+        starSystems.filter(p ->p.getPowerState() == POWER_STATE.NONE && p.getDistance(headquarter) <= maxDistance)
                 .forEach(candidates::add);
         IntersectsMapper candidatesMapper = new IntersectsMapper(candidates, radius, false, true);
         IntersectsMapper centersMapper = new IntersectsMapper(centers, radius*2, false, true);
@@ -162,6 +162,7 @@ public class PowerPlayAnalyzator {
                 })
                 .map(IntersectData::getStarSystem)
                 .map(centersMapper)
+                .filter(d -> d.getMinDistance() > radius || Double.isNaN(d.getMinDistance()))
                 ;
     }
 
@@ -394,7 +395,7 @@ public class PowerPlayAnalyzator {
             long income = 0;
             for (ControllingData contolling : contollings) {
                 Place place = contolling.center;
-                if (place.getPowerState() != POWER_STATE.CONTESTED){
+                if (!place.getPowerState().isContested()){
                     income += place.computeCC();
                 }
             }
