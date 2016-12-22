@@ -18,4 +18,5 @@ public enum POWER_STATE {
     public boolean isContested(){
         return this == CONTESTED;
     }
+    public boolean isBlocked() { return  this == BLOCKED;}
 }

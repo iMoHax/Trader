@@ -210,7 +210,7 @@ public class PowerPlayController {
                 if (hq == null || entry.getPowerState().isContested() || entry.getPower() != hq.getPower()) {
                     contested += cc;
                 }
-                if (hq != null && entry.getPowerState().isExploited() && entry.getPower() == hq.getPower()) {
+                if (hq != null && (entry.getPowerState().isExploited() || entry.getPowerState().isBlocked()) && entry.getPower() == hq.getPower()) {
                     intersected += cc;
                 }
                 Set<POWER> powers = entry.getControllingSystems().stream().map(Place::getPower).collect(Collectors.toSet());

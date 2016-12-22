@@ -173,7 +173,7 @@ public class PowerPlayAnalyzator {
     public static Stream<IntersectData> getNearExpansions(Stream<Place> starSystems, Collection<Place> centers,  double maxDistance){
         IntersectsMapper mapper = new IntersectsMapper(centers, maxDistance, false, true);
         return starSystems.filter(new FarDropper(centers, maxDistance))
-                .filter(p -> p.getPowerState() == POWER_STATE.EXPANSION)
+                .filter(p -> p.getPowerState().isExpansion())
                 .map(mapper)
                 .sorted(new DistanceComparator());
     }
