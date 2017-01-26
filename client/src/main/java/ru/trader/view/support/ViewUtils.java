@@ -9,10 +9,12 @@ import javafx.event.EventHandler;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
+import ru.trader.model.StationModel;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.Collection;
 
 public class ViewUtils {
     public static final String ILLEGAL_ITEM_STYLE = "illegal_item";
@@ -102,6 +104,32 @@ public class ViewUtils {
 
     public static String fuelToString(double fuel, double tank){
         if (tank == 0) return String.format("%.0f t", fuel);
-        return String.format("%.1f%%", fuel*100 / tank);
+        return String.format("%.1f%%", fuel * 100 / tank);
     }
+
+    public static String stationsAsStringByType(Collection<StationModel> stations, boolean inline) {
+        StringBuilder res = new StringBuilder();
+        for (StationModel station : stations) {
+            if (res.length() != 0){
+                if (inline) res.append(", ");
+                    else res.append("\n");
+            }
+            if (station.getType() != null){
+                if (station.getType().isPlanetary()) {
+                    res.append("LP");
+                } else
+                if (station.getType().hasLargeLandpad()){
+                    res.append("L");
+                } else {
+                    res.append("M");
+                }
+            } else {
+                res.append("?");
+            }
+            res.append(" - ").append(station.getName());
+            res.append(" (").append(stationDistanceToString(station.getDistance())).append(")");
+        }
+        return res.toString();
+    }
+
 }

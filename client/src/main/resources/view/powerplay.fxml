@@ -94,11 +94,26 @@
                     <TableColumn prefWidth="150" text="%market.system">
                         <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="150" text="%powerplay.column.intersecting">
-                        <cellValueFactory><PropertyValueFactory property="intersecting"/></cellValueFactory>
+                    <TableColumn prefWidth="60" text="%market.system.income">
+                        <cellValueFactory><PropertyValueFactory property="income"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="90" text="%powerplay.column.intersectCount">
-                        <cellValueFactory><PropertyValueFactory property="intersectCount"/></cellValueFactory>
+                    <TableColumn prefWidth="60" text="%market.system.upkeep">
+                        <cellFactory><TextCell><converter><CustomNumberStringConverter pattern="#,##0" /></converter></TextCell></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="upkeep"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="60" text="%market.system.contested">
+                        <cellValueFactory><PropertyValueFactory property="contested"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="60" text="%market.system.profit">
+                        <cellFactory><TextCell><converter><CustomNumberStringConverter pattern="#,##0" /></converter></TextCell></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="profit"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="180" text="%market.station.landpad">
+                        <cellValueFactory><PropertyValueFactory property="nearStations"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="60" text="%powerplay.column.distanceHQ">
+                        <cellFactory><DistanceCell /></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="distanceHQ"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn prefWidth="100" text="%market.powerState">
                         <cellFactory><TextCell><converter><PowerStateStringConverter /></converter></TextCell></cellFactory>
@@ -116,6 +131,12 @@
                         <cellFactory><TextCell><converter><FactionStringConverter /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
                     </TableColumn>
+                    <TableColumn prefWidth="150" text="%powerplay.column.intersecting">
+                        <cellValueFactory><PropertyValueFactory property="intersecting"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="90" text="%powerplay.column.intersectCount">
+                        <cellValueFactory><PropertyValueFactory property="intersectCount"/></cellValueFactory>
+                    </TableColumn>
                     <TableColumn prefWidth="80" text="%market.order.distance">
                         <cellFactory><DistanceCell /></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="distance"/></cellValueFactory>
@@ -123,25 +144,12 @@
                     <TableColumn prefWidth="60" text="%market.cc">
                         <cellValueFactory><PropertyValueFactory property="cc"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="60" text="%market.system.income">
-                        <cellValueFactory><PropertyValueFactory property="income"/></cellValueFactory>
-                    </TableColumn>
-                    <TableColumn prefWidth="60" text="%market.system.upkeep">
-                        <cellValueFactory><PropertyValueFactory property="currentUpkeep"/></cellValueFactory>
-                    </TableColumn>
                     <TableColumn prefWidth="80" text="%market.population">
                         <cellFactory><TextCell><converter><CustomNumberStringConverter pattern="#,##0.##" /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="population"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="100" text="%market.station.landpad">
-                        <cellValueFactory><PropertyValueFactory property="nearStations"/></cellValueFactory>
-                    </TableColumn>
                     <TableColumn prefWidth="150" text="%market.system.controlling">
                         <cellValueFactory><PropertyValueFactory property="controlling"/></cellValueFactory>
-                    </TableColumn>
-                    <TableColumn prefWidth="80" text="%powerplay.column.distanceHQ">
-                        <cellFactory><DistanceCell /></cellFactory>
-                        <cellValueFactory><PropertyValueFactory property="distanceHQ"/></cellValueFactory>
                     </TableColumn>
                 </columns>
                 <columnResizePolicy>
@@ -149,9 +157,19 @@
                 </columnResizePolicy>
                 <contextMenu><fx:reference source="ctxMenu"/></contextMenu>
               </TableView>
-                <ScrollPane minHeight="50">
+                <ScrollPane minHeight="60">
                     <VBox spacing="4" padding="$summPadding">
-                        <HBox spacing="4"><Label fx:id="resultCCSumm" wrapText="true"/></HBox>
+                        <HBox spacing="4">
+                            <Label fx:id="resultCCSumm" wrapText="true">
+                                <contextMenu>
+                                    <ContextMenu>
+                                        <items>
+                                            <MenuItem text="%dialog.button.copy" onAction="#copyResultStatToClipboard" />
+                                        </items>
+                                    </ContextMenu>
+                                </contextMenu>
+                            </Label>
+                        </HBox>
                     </VBox>
                 </ScrollPane>
             </SplitPane>
@@ -173,6 +191,9 @@
                         <cellFactory><TextCell><converter><PowerStringConverter /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="power"/></cellValueFactory>
                     </TableColumn>
+                    <TableColumn prefWidth="60" text="%market.cc">
+                        <cellValueFactory><PropertyValueFactory property="cc"/></cellValueFactory>
+                    </TableColumn>
                     <TableColumn prefWidth="120" text="%market.government">
                         <cellFactory><TextCell><converter><GovernmentStringConverter /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="government"/></cellValueFactory>
@@ -181,14 +202,23 @@
                         <cellFactory><TextCell><converter><FactionStringConverter /></converter></TextCell></cellFactory>
                         <cellValueFactory><PropertyValueFactory property="faction"/></cellValueFactory>
                     </TableColumn>
-                    <TableColumn prefWidth="60" text="%market.cc">
-                        <cellValueFactory><PropertyValueFactory property="cc"/></cellValueFactory>
-                    </TableColumn>
                     <TableColumn prefWidth="60" text="%market.system.income">
                         <cellValueFactory><PropertyValueFactory property="income"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn prefWidth="60" text="%market.system.upkeep">
-                        <cellValueFactory><PropertyValueFactory property="currentUpkeep"/></cellValueFactory>
+                        <cellFactory><TextCell><converter><CustomNumberStringConverter pattern="#,##0" /></converter></TextCell></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="upkeep"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="60" text="%market.system.profit">
+                        <cellFactory><TextCell><converter><CustomNumberStringConverter pattern="#,##0" /></converter></TextCell></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="profit"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="180" text="%market.station.landpad">
+                        <cellValueFactory><PropertyValueFactory property="nearStations"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="80" text="%powerplay.column.distanceHQ">
+                        <cellFactory><DistanceCell /></cellFactory>
+                        <cellValueFactory><PropertyValueFactory property="distanceHQ"/></cellValueFactory>
                     </TableColumn>
                     <TableColumn prefWidth="80" text="%market.population">
                         <cellFactory><TextCell><converter><CustomNumberStringConverter pattern="#,##0.##" /></converter></TextCell></cellFactory>
@@ -203,9 +233,19 @@
                 </columnResizePolicy>
                 <contextMenu><fx:reference source="ctxMenu"/></contextMenu>
               </TableView>
-                <ScrollPane minHeight="50">
+                <ScrollPane minHeight="60">
                     <VBox spacing="4" padding="$summPadding">
-                        <HBox spacing="4"><Label fx:id="detailCCSumm" wrapText="true"/></HBox>
+                        <HBox spacing="4">
+                            <Label fx:id="detailCCSumm" wrapText="true">
+                                <contextMenu>
+                                    <ContextMenu>
+                                        <items>
+                                            <MenuItem text="%dialog.button.copy" onAction="#copyDetailStatToClipboard" />
+                                        </items>
+                                    </ContextMenu>
+                                </contextMenu>
+                            </Label>
+                        </HBox>
                     </VBox>
                 </ScrollPane>
             </SplitPane>

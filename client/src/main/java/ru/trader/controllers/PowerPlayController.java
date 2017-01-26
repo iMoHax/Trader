@@ -1,6 +1,5 @@
 package ru.trader.controllers;
 
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,7 +15,10 @@ import org.slf4j.LoggerFactory;
 import ru.trader.Main;
 import ru.trader.analysis.PowerPlayAnalyzator;
 import ru.trader.core.*;
-import ru.trader.model.*;
+import ru.trader.model.MarketModel;
+import ru.trader.model.ModelFabric;
+import ru.trader.model.ProfileModel;
+import ru.trader.model.SystemModel;
 import ru.trader.model.support.BindingsHelper;
 import ru.trader.view.support.Localization;
 import ru.trader.view.support.PowerStateStringConverter;
@@ -28,8 +30,8 @@ import ru.trader.view.support.autocomplete.SystemsProvider;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PowerPlayController {
@@ -82,6 +84,9 @@ public class PowerPlayController {
     private final ObservableList<ResultEntry> result = FXCollections.observableArrayList();
     private final ObservableList<ResultEntry> detail = FXCollections.observableArrayList();
     private Place detailSystem;
+
+    private PowerPlayAnalyzator.ControllingRadiusStat resultStat;
+    private PowerPlayAnalyzator.ControllingRadiusStat detailStat;
 
     @FXML
     private void initialize(){
@@ -181,69 +186,6 @@ public class PowerPlayController {
             }
         });
         tblDetail.setOnDragDetected(new StarSystemDragDetect(tblDetail));
-        result.addListener((InvalidationListener) i -> {
-                    resultCCSumm.setText(getCCSummText(result, getSelectedSystems()));
-                }
-        );
-        detail.addListener((InvalidationListener) i -> {
-                    detailCCSumm.setText(getCCSummText(detail, detailSystem != null ? Collections.singleton(detailSystem) : null));
-                }
-        );
-    }
-
-    private String getCCSummText(Collection<ResultEntry> collection, Collection<Place> starSystems){
-        String ccFormat = Localization.getString("powerplay.label.summcc");
-        String pwCCFormat = Localization.getString("powerplay.label.cc");
-        PowerStringConverter converter = new PowerStringConverter();
-        Place hq = ModelFabric.get(hqSystem.orElse(null));
-        long[] contestedCc = new long[POWER.values().length];
-        long[] intersectedCc = new long[POWER.values().length];
-        long[] totalCc = new long[POWER.values().length];
-        long contested = 0;
-        long intersected = 0;
-        long summCc = 0;
-        for (ResultEntry entry : collection) {
-            long cc = entry.getCc();
-            summCc += cc;
-            if (entry.getPower() == null || entry.getPowerState() == null) continue;
-            if (entry.getPowerState() != POWER_STATE.NONE){
-                if (hq == null || entry.getPowerState().isContested() || entry.getPower() != hq.getPower()) {
-                    contested += cc;
-                }
-                if (hq != null && (entry.getPowerState().isExploited() || entry.getPowerState().isBlocked()) && entry.getPower() == hq.getPower()) {
-                    intersected += cc;
-                }
-                Set<POWER> powers = entry.getControllingSystems().stream().map(Place::getPower).collect(Collectors.toSet());
-                if (entry.getPowerState().isContested()){
-                    for (POWER power : powers){
-                        contestedCc[power.ordinal()] += cc;
-                    }
-                } else {
-                    if (entry.getControllingSystems().size()>1){
-                        intersectedCc[entry.getPower().ordinal()] += cc;
-                    }
-                    if (entry.getPowerState().isControl() || entry.getPowerState().isExploited()) {
-                        totalCc[entry.getPower().ordinal()] += cc;
-                    }
-                }
-            }
-        }
-        double upkeep = 0;
-        if (hq != null && starSystems != null){
-            for (Place starSystem : starSystems) {
-                upkeep += starSystem.computeUpkeep(hq);
-            }
-        }
-
-        StringBuilder builder = new StringBuilder();
-        builder.append(String.format(ccFormat, summCc, contested, summCc - contested, upkeep, intersected, summCc - contested - upkeep - intersected));
-        for (int i = 0; i < POWER.values().length; i++) {
-            if (totalCc[i] > 0 || contestedCc[i] > 0){
-                builder.append("\n");
-                builder.append(String.format(pwCCFormat, converter.toString(POWER.values()[i]), totalCc[i], contestedCc[i], intersectedCc[i]));
-            }
-        }
-        return builder.toString();
     }
 
     private void fillDetail(SystemModel detailSystem) {
@@ -253,7 +195,7 @@ public class PowerPlayController {
         if (starSystem != null){
             Collection<PowerPlayAnalyzator.IntersectData> controllings = analyzator.getControlling(starSystem);
             controllings.add(new PowerPlayAnalyzator.IntersectData(starSystem));
-            detail.addAll(BindingsHelper.observableList(controllings, d -> new ResultEntry(d, starSystem)));
+            toDetail(controllings, starSystem);
         }
     }
 
@@ -278,7 +220,7 @@ public class PowerPlayController {
         result.clear();
         if (starSystem != null && !controlls.isEmpty()){
             Collection<PowerPlayAnalyzator.IntersectData> intersects = analyzator.getIntersects(starSystem, controlls);
-            result.addAll(BindingsHelper.observableList(intersects, d -> new ResultEntry(d, starSystem)));
+            toResult(intersects, starSystem);
         }
     }
 
@@ -290,7 +232,7 @@ public class PowerPlayController {
             Collection<PowerPlayAnalyzator.IntersectData> controllings =
                     selectedSystems.isEmpty() ? analyzator.getControlling(starSystem) : analyzator.getControlling(selectedSystems);
             controllings.add(new PowerPlayAnalyzator.IntersectData(starSystem));
-            result.addAll(BindingsHelper.observableList(controllings,d -> new ResultEntry(d, starSystem)));
+            toResult(controllings, starSystem);
         }
     }
 
@@ -299,7 +241,7 @@ public class PowerPlayController {
         result.clear();
         if (!controlls.isEmpty()){
             Collection<PowerPlayAnalyzator.IntersectData> near = analyzator.getNear(controlls);
-            result.addAll(BindingsHelper.observableList(near, ResultEntry::new));
+            toResult(near);
         }
     }
 
@@ -309,7 +251,7 @@ public class PowerPlayController {
             Collection<Place> controlls = getControlSystems();
             result.clear();
             Collection<PowerPlayAnalyzator.IntersectData> near = analyzator.getMaxProfit(hq, controlls);
-            result.addAll(BindingsHelper.observableList(near, ResultEntry::new));
+            toResult(near);
         }
     }
 
@@ -318,18 +260,102 @@ public class PowerPlayController {
         result.clear();
         if (!controlls.isEmpty()){
             Collection<PowerPlayAnalyzator.IntersectData> near = analyzator.getNearExpansions(controlls);
-            result.addAll(BindingsHelper.observableList(near, ResultEntry::new));
+            toResult(near);
         }
     }
 
-    private void getMaxIntersect(){
+    private void getMaxIntersect() {
         Collection<Place> controlls = getControlSystems();
         result.clear();
         if (!controlls.isEmpty()){
             Collection<PowerPlayAnalyzator.IntersectData> intersect = analyzator.getMaxIntersect(controlls);
-            result.addAll(BindingsHelper.observableList(intersect, ResultEntry::new));
+            toResult(intersect);
         }
     }
+
+    private void toDetail(Collection<PowerPlayAnalyzator.IntersectData> datas) {
+        toDetail(datas, null);
+    }
+
+    private void toDetail(Collection<PowerPlayAnalyzator.IntersectData> datas, Place from){
+        Place hq = ModelFabric.get(hqSystem.orElse(null));
+        Collection<Place> places = detailSystem != null ? Collections.singleton(detailSystem) : null;
+        detailStat = new PowerPlayAnalyzator.ControllingRadiusStat(places, hq, datas);
+
+        if (from != null){
+            detail.addAll(BindingsHelper.observableList(datas, d -> new ResultEntry(d, from)));
+        } else {
+            detail.addAll(BindingsHelper.observableList(datas, ResultEntry::new));
+        }
+
+        detailCCSumm.setText(statToText(detailStat, false));
+    }
+
+
+    private void toResult(Collection<PowerPlayAnalyzator.IntersectData> datas) {
+        toResult(datas, null);
+    }
+
+    private void toResult(Collection<PowerPlayAnalyzator.IntersectData> datas, Place from){
+        Place hq = ModelFabric.get(hqSystem.orElse(null));
+        Collection<Place> places = getSelectedSystems();
+        resultStat = new PowerPlayAnalyzator.ControllingRadiusStat(places, hq, datas);
+
+        if (from != null){
+            result.addAll(BindingsHelper.observableList(datas, d -> new ResultEntry(d, from)));
+        } else {
+            result.addAll(BindingsHelper.observableList(datas, ResultEntry::new));
+        }
+
+        resultCCSumm.setText(statToText(resultStat, false));
+    }
+
+    private String statToText(PowerPlayAnalyzator.ControllingRadiusStat stat, boolean full){
+        final String line = Localization.getString("powerplay.text.line");
+
+        StringBuilder builder = new StringBuilder();
+        PowerStringConverter converter = new PowerStringConverter();
+        if (full) {
+            int index = 0;
+            for (Place place : stat.getStarSystems()) {
+                if (index++ > 0) builder.append("\n");
+                builder.append(place.getName());
+                if (stat.getHeadquarter() != null) {
+                    builder.append(" ").append(ViewUtils.distanceToString(place.getDistance(stat.getHeadquarter()))).append(" ");
+                }
+                SystemModel model = world.getModeler().get(place);
+                builder.append(" (").append(ViewUtils.stationsAsStringByType(model.getNearByType(), true)).append(")");
+            }
+            builder.append("\n").append(line).append("\n");
+            builder.append(String.format(Localization.getString("powerplay.text.detail"), stat.getIncome(), stat.getUpkeep(), stat.getContest(),
+                    stat.getExploited(), stat.getEnemyExploited(), stat.getBlocked(), stat.getEnemyBlocked(), stat.getCurrentRadiusProfit()));
+            builder.append("\n").append(line).append("\n");
+            builder.append(Localization.getString("powerplay.text.summary.title")).append("\n");
+        }
+        builder.append(String.format(Localization.getString("powerplay.text.summary"), stat.getIncome(), stat.getUpkeep(), stat.getIncome()+stat.getUpkeep(),
+                    stat.getFutureContest(), stat.getFutureExploited(), stat.getFutureRadiusProfit()));
+        if (full) {
+            builder.append("\n").append(line).append("\n");
+            builder.append(Localization.getString("powerplay.text.contest.title"));
+        }
+        builder.append("\n");
+        for (Map.Entry<POWER, PowerPlayAnalyzator.StarSystemsStat> entry : stat.getContestStat().entrySet()) {
+            POWER power = entry.getKey();
+            PowerPlayAnalyzator.StarSystemsStat powerStat = entry.getValue();
+            builder.append(String.format(Localization.getString("powerplay.text.contest.powers"), converter.toString(power), powerStat.getExploited(), powerStat.getIntersect(), powerStat.getContest()));
+            builder.append("\n");
+            for (Map.Entry<Place, PowerPlayAnalyzator.StarSystemsStat> systemsStatEntry : stat.getContestStatByStarSystems().entrySet()) {
+                Place place = systemsStatEntry.getKey();
+                if (place.getPower() == power) {
+                    PowerPlayAnalyzator.StarSystemsStat systemStat = systemsStatEntry.getValue();
+                    builder.append(String.format(Localization.getString("powerplay.text.contest.systems"), place.getName(), systemStat.getExploited(), systemStat.getIntersect(), systemStat.getContest()));
+                    builder.append("\n");
+                }
+            }
+        }
+        return builder.toString();
+    }
+
 
     @FXML
     private void currentAsChecked(){
@@ -460,6 +486,20 @@ public class PowerPlayController {
         }
     }
 
+    @FXML
+    private void copyResultStatToClipboard(){
+        if (resultStat != null) {
+            Main.copyToClipboard(statToText(resultStat, true));
+        }
+    }
+
+    @FXML
+    private void copyDetailStatToClipboard(){
+        if (detailStat != null) {
+            Main.copyToClipboard(statToText(detailStat, true));
+        }
+    }
+
 
     public class ResultEntry {
         private final SystemModel starSystem;
@@ -473,6 +513,8 @@ public class PowerPlayController {
         private final ReadOnlyLongProperty currentUpkeep;
         private final ReadOnlyLongProperty income;
         private final ReadOnlyDoubleProperty upkeep;
+        private final ReadOnlyDoubleProperty profit;
+        private final ReadOnlyLongProperty contested;
         private final ReadOnlyLongProperty cc;
 
         public ResultEntry(PowerPlayAnalyzator.IntersectData data) {
@@ -482,7 +524,7 @@ public class PowerPlayController {
         public ResultEntry(PowerPlayAnalyzator.IntersectData data, Place from) {
             starSystem = world.getModeler().get(data.getStarSystem());
             intersectCount = new SimpleIntegerProperty(data.getCount());
-            nearStations = new SimpleStringProperty(getStationsString(starSystem.getNearByType()));
+            nearStations = new SimpleStringProperty(ViewUtils.stationsAsStringByType(starSystem.getNearByType(), false));
             intersecting = new SimpleStringProperty(getControllingString(data.getControllingSystems()));
             controlling = new SimpleStringProperty(getControllingString(data.getStarSystem()));
             distance = new SimpleDoubleProperty(from != null ? from.getDistance(data.getStarSystem()) : Double.NaN);
@@ -490,9 +532,16 @@ public class PowerPlayController {
             distanceHQ = new SimpleDoubleProperty(hq != null ? hq.getDistance(data.getStarSystem()) : Double.NaN);
             population = new SimpleLongProperty(data.getStarSystem().getPopulation());
             currentUpkeep = new SimpleLongProperty(data.getStarSystem().getUpkeep());
-            upkeep = new SimpleDoubleProperty(hq != null ? data.getStarSystem().computeUpkeep(hq) : Double.NaN);
-            income = new SimpleLongProperty(data.getStarSystem().getIncome());
             cc = new SimpleLongProperty(data.getStarSystem().computeCC());
+
+            Collection<PowerPlayAnalyzator.IntersectData> datas = analyzator.getControlling(data.getStarSystem());
+            datas.add(new PowerPlayAnalyzator.IntersectData(data.getStarSystem()));
+            PowerPlayAnalyzator.ControllingRadiusStat stat = new PowerPlayAnalyzator.ControllingRadiusStat(Collections.singleton(data.getStarSystem()), hq, datas);
+            income = new SimpleLongProperty(stat.getIncome());
+            upkeep = new SimpleDoubleProperty(stat.getUpkeep());
+            profit = new SimpleDoubleProperty(stat.getFutureRadiusProfit());
+            contested = new SimpleLongProperty(stat.getFutureContest());
+
         }
 
         private String getControllingString(Collection<PowerPlayAnalyzator.ControllingData> controllings) {
@@ -514,29 +563,6 @@ public class PowerPlayController {
             }
             return res.toString();
         }
-
-        private String getStationsString(Collection<StationModel> stations) {
-            StringBuilder res = new StringBuilder();
-            for (StationModel station : stations) {
-                if (res.length() != 0) res.append("\n");
-                if (station.getType() != null){
-                    if (station.getType().isPlanetary()) {
-                        res.append("LP");
-                    } else
-                    if (station.getType().hasLargeLandpad()){
-                        res.append("L");
-                    } else {
-                        res.append("M");
-                    }
-                } else {
-                    res.append("?");
-                }
-                res.append(" - ").append(station.getName());
-                res.append(" (").append(ViewUtils.stationDistanceToString(station.getDistance())).append(")");
-            }
-            return res.toString();
-        }
-
 
         public ReadOnlyStringProperty nameProperty(){
             return starSystem.nameProperty();
@@ -603,6 +629,14 @@ public class PowerPlayController {
             return income;
         }
 
+        public ReadOnlyDoubleProperty profitProperty() {
+            return profit;
+        }
+
+        public ReadOnlyLongProperty contestedProperty() {
+            return contested;
+        }
+
         public ReadOnlyStringProperty nearStationsProperty() {
             return nearStations;
         }
@@ -615,6 +649,7 @@ public class PowerPlayController {
             return cc;
         }
     }
+
 
     private class StarSystemDragDetect implements EventHandler<MouseEvent> {
         private final Node source;

@@ -431,5 +431,200 @@ public class PowerPlayAnalyzator {
         }
     }
 
+    public static class ControllingRadiusStat {
+        private final Collection<Place> starSystems;
+        private final Place headquarter;
+        private long income;
+        private double upkeep;
+        private long contest;
+        private long exploited;
+        private long enemyExploited;
+        private long blocked;
+        private long enemyBlocked;
+
+        Map<POWER, StarSystemsStat> contestStat;
+        Map<Place, StarSystemsStat> contestStatByStarSystems;
+
+
+        public ControllingRadiusStat(Collection<Place> starSystems, Place headquarter, Collection<IntersectData> exploitedSystems) {
+            this.starSystems = starSystems;
+            this.headquarter = headquarter;
+            contestStat = new HashMap<>();
+            contestStatByStarSystems = new HashMap<>();
+            fillStat(exploitedSystems);
+        }
+
+        private void fillStat(Collection<IntersectData> exploitedSystems) {
+            income = 0; contest = 0; exploited = 0; enemyExploited = 0; blocked = 0; enemyBlocked = 0; upkeep = 0;
+            if (headquarter != null && starSystems != null){
+                for (Place starSystem : starSystems) {
+                    upkeep += starSystem.computeUpkeep(headquarter);
+                }
+            }
+            contestStat.clear();
+            contestStatByStarSystems.clear();
+            for (IntersectData exploitedSystem : exploitedSystems) {
+                long cc = exploitedSystem.getStarSystem().computeCC();
+                income += cc;
+                POWER power = exploitedSystem.getStarSystem().getPower();
+                POWER_STATE state = exploitedSystem.getStarSystem().getPowerState();
+                if (state == null) continue;
+                if (state.isExploited() || state.isControl()){
+                    if (headquarter != null && headquarter.getPower() == power){
+                        exploited += cc;
+                    } else {
+                        enemyExploited += cc;
+                    }
+                } else
+                if (state.isExpansion() || state.isBlocked()){
+                    if (headquarter != null && headquarter.getPower() == power){
+                        blocked += cc;
+                    } else {
+                        enemyBlocked += cc;
+                    }
+                } else
+                if (state.isContested()){
+                    contest += cc;
+                }
+
+                Set<POWER> powers = EnumSet.noneOf(POWER.class);
+                for (Place system : exploitedSystem.getStarSystem().getControllingSystems()) {
+                    powers.add(system.getPower());
+                    StarSystemsStat stat = contestStatByStarSystems.get(system);
+                    if (stat == null){
+                        stat = new StarSystemsStat();
+                        contestStatByStarSystems.put(system, stat);
+                    }
+                    stat.put(exploitedSystem.getStarSystem());
+                }
+                if (state.isControl()){
+                    Place system = exploitedSystem.getStarSystem();
+                    powers.add(system.getPower());
+                    StarSystemsStat stat = contestStatByStarSystems.get(system);
+                    if (stat == null){
+                        stat = new StarSystemsStat();
+                        contestStatByStarSystems.put(system, stat);
+                    }
+                    stat.put(exploitedSystem.getStarSystem());
+                }
+                for (POWER p : powers) {
+                    StarSystemsStat stat = contestStat.get(p);
+                    if (stat == null){
+                        stat = new StarSystemsStat();
+                        contestStat.put(p, stat);
+                    }
+                    stat.put(exploitedSystem.getStarSystem());
+                }
+            }
+        }
+
+        public Collection<Place> getStarSystems() {
+            return starSystems;
+        }
+
+        public Place getHeadquarter() {
+            return headquarter;
+        }
+
+        public long getIncome() {
+            return income;
+        }
+
+        public double getUpkeep() {
+            return upkeep;
+        }
+
+        public long getContest() {
+            return contest;
+        }
+
+        public long getExploited() {
+            return exploited;
+        }
+
+        public long getEnemyExploited() {
+            return enemyExploited;
+        }
+
+        public long getBlocked() {
+            return blocked;
+        }
+
+        public long getEnemyBlocked() {
+            return enemyBlocked;
+        }
+
+        public double getCurrentRadiusProfit(){
+            return income - upkeep - contest - enemyExploited - exploited;
+        }
+
+        public double getFutureRadiusProfit(){
+            return income - upkeep - getFutureContest() - getFutureExploited();
+        }
+
+        public long getFutureContest(){
+            return contest + enemyExploited + enemyBlocked;
+        }
+
+        public long getFutureExploited(){
+            return exploited + blocked;
+        }
+
+        public Map<POWER, StarSystemsStat> getContestStat() {
+            return contestStat;
+        }
+
+        public Map<Place, StarSystemsStat> getContestStatByStarSystems() {
+            return contestStatByStarSystems;
+        }
+    }
+
+    public static class StarSystemsStat {
+        private long income;
+        private long contest;
+        private long intersect;
+        private long blocked;
+        private long exploited;
+
+        public void put(Place starSystem){
+            long cc = starSystem.computeCC();
+            income += cc;
+            if (starSystem.getPowerState() != null){
+                if (starSystem.getPowerState().isExploited() || starSystem.getPowerState().isControl()){
+                    exploited += cc;
+                    if (starSystem.getControllingSystems().size() > 1){
+                        intersect += cc;
+                    }
+                } else
+                if (starSystem.getPowerState().isContested()){
+                    contest += cc;
+                } else
+                if (starSystem.getPowerState().isBlocked() || starSystem.getPowerState().isExpansion()){
+                    blocked += cc;
+                }
+            }
+        }
+
+        public long getIncome() {
+            return income;
+        }
+
+        public long getExploited() {
+            return exploited;
+        }
+
+        public long getContest() {
+            return contest;
+        }
+
+        public long getIntersect() {
+            return intersect;
+        }
+
+        public long getBlocked() {
+            return blocked;
+        }
+    }
+
 }
 

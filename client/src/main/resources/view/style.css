@@ -253,3 +253,11 @@ HBox.fields-group hbox-margin{
 .dragged {
     -fx-base: darkblue;
 }
+
+#resultCCSumm {
+    -fx-font-family: monospace;
+}
+
+#detailCCSumm {
+    -fx-font-family: monospace;
+}
