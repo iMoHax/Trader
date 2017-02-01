@@ -143,6 +143,7 @@ public class PowerPlayAnalyzator {
     public static Stream<IntersectData> getMaxProfit(Stream<Place> starSystems, Place headquarter, Collection<Place> centers, double radius, double maxDistance){
         Collection<Place> candidates = new ArrayList<>();
         starSystems.filter(p ->p.getPowerState() == POWER_STATE.NONE && p.getDistance(headquarter) <= maxDistance)
+                .filter(p -> !centers.contains(p))
                 .forEach(candidates::add);
         IntersectsMapper candidatesMapper = new IntersectsMapper(candidates, radius, false, true);
         IntersectsMapper centersMapper = new IntersectsMapper(centers, radius*2, false, true);

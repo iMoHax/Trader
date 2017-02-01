@@ -217,6 +217,7 @@ public class PowerPlayController {
     private void getIntersects(){
         Place starSystem = getCheckedSystem();
         Collection<Place> controlls = getControlSystems();
+        controlls.remove(starSystem);
         result.clear();
         if (starSystem != null && !controlls.isEmpty()){
             Collection<PowerPlayAnalyzator.IntersectData> intersects = analyzator.getIntersects(starSystem, controlls);
@@ -348,7 +349,7 @@ public class PowerPlayController {
                 Place place = systemsStatEntry.getKey();
                 if (place.getPower() == power) {
                     PowerPlayAnalyzator.StarSystemsStat systemStat = systemsStatEntry.getValue();
-                    builder.append(String.format(Localization.getString("powerplay.text.contest.systems"), place.getName(), systemStat.getExploited(), systemStat.getIntersect(), systemStat.getContest()));
+                    builder.append(String.format(Localization.getString("powerplay.text.contest.systems"), place.getName(), systemStat.getExploited(), place.getIncome(), systemStat.getIntersect(), systemStat.getContest()));
                     builder.append("\n");
                 }
             }
