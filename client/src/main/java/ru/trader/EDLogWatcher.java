@@ -4,12 +4,18 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trader.core.FACTION;
+import ru.trader.core.GOVERNMENT;
+import ru.trader.core.Place;
+import ru.trader.core.Vendor;
+import ru.trader.edlog.EDJournalReader;
 import ru.trader.edlog.EDLogReader;
 import ru.trader.edlog.LogWatcher;
-import ru.trader.model.MarketModel;
-import ru.trader.model.ModelFabric;
-import ru.trader.model.ProfileModel;
-import ru.trader.model.SystemModel;
+import ru.trader.edlog.entities.DockedEvent;
+import ru.trader.edlog.entities.FSDJumpEvent;
+import ru.trader.model.*;
+import ru.trader.store.imp.SimpleImporter;
+import ru.trader.store.imp.entities.StarSystemData;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,25 +77,34 @@ public class EDLogWatcher {
         settings.activeProperty().removeListener(activeListener);
     }
 
-    private class EDLogHandler extends EDLogReader {
-        @Override
-        protected void changeSystem(String name, double x, double y, double z) {
-            super.changeSystem(name, x, y, z);
-            Platform.runLater(() -> {
-                SystemModel sModel = world.get(name);
-                boolean found = !ModelFabric.isFake(sModel);
-                if (!found) {
-                    LOG.warn("Not found system {}", name);
-                    sModel = world.add(name, x, y, z);
-                } else {
-                    if (Double.compare(sModel.getX(), x) != 0 || Double.compare(sModel.getY(), y) != 0 || Double.compare(sModel.getZ(), z) != 0) {
-                        LOG.warn("Wrong coordinates of system {} ({},{},{}), change to ({},{},{})", sModel.getName(), sModel.getX(), sModel.getY(), sModel.getZ(), x, y, z);
-                        sModel.setPosition(x, y, z);
-                    }
-                }
-                profile.setSystem(sModel);
+    private class EDLogHandler extends EDJournalReader {
+        private final SimpleImporter importer;
 
-            });
+        private EDLogHandler() {
+            importer = new SimpleImporter();
+        }
+
+        @Override
+        protected void docked(DockedEvent dockedEvent) {
+            super.docked(dockedEvent);
+            Vendor vendor = importer.importStation(World.getMarket(), dockedEvent.asImportData());
+            if (vendor != null){
+                StationModel sModel = world.getModeler().get(vendor);
+                Platform.runLater(() -> {
+                    profile.setStation(sModel);
+                    profile.setDocked(true);
+                });
+            }
+        }
+
+        @Override
+        protected void jump(FSDJumpEvent jumpEvent) {
+            super.jump(jumpEvent);
+            Place place = importer.importSystem(World.getMarket(), jumpEvent.asImportData());
+            if (place != null){
+                SystemModel sModel = world.getModeler().get(place);
+                Platform.runLater(() -> profile.setSystem(sModel));
+            }
         }
 
         @Override

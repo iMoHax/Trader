@@ -124,6 +124,7 @@
             <xs:enumeration value="EMPIRE"/>
             <xs:enumeration value="ALLIANCE"/>
             <xs:enumeration value="INDEPENDENT"/>
+            <xs:enumeration value="PIRATE"/>
             <xs:enumeration value="NONE"/>
         </xs:restriction>
     </xs:simpleType>
@@ -143,6 +144,8 @@
             <xs:enumeration value="PATRONAGE"/>
             <xs:enumeration value="PRISON_COLONY"/>
             <xs:enumeration value="THEOCRACY"/>
+            <xs:enumeration value="ENGINEER"/>
+            <xs:enumeration value="WORKSHOP"/>
             <xs:enumeration value="NONE"/>
         </xs:restriction>
     </xs:simpleType>
